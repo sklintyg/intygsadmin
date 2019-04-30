@@ -1,0 +1,43 @@
+{
+  "list": {
+    "category": {
+      "AKTUELLA": "aktiva",
+      "KLARA": "klarmarkerade",
+      "AVVISADE": "avvisade"
+    }
+  },
+
+  "error": {
+    "logid_footer": "Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand {inerakundtjanst} och uppge då följande logg id: {logId}",
+    "common": {
+      "unknown": {
+        "title": "Tekniskt fel",
+        "message": "Prova igen om en stund."
+      },
+      "network_error": {
+        "title": "Tekniskt fel",
+        "message": "Det verkar vara problem kommunikationsproblem med tjänsten. Vänligen kontrollera din nätverkskoppling."
+      },
+      "external_error": {
+        "title": "Ett tekniskt fel uppstod",
+        "message": "Ett tekniskt fel uppstod i kontakten med avsändaren av förfrågan eller beställningen."
+      },
+      "pu_error": {
+        "title": "Ett fel uppstod när personuppgifter skulle hämtas",
+        "message": "Åtgärden kan inte genomföras eftersom den kräver att personuppgifter kan hämtas från personuppgiftsregistret. Prova igen om en stund."
+      }
+    },
+    "user": {
+      "unauthorized": {
+        "title": "Behörighet saknas",
+        "message": "Du verkar sakna behörighet"
+      }
+    },
+    "appconfig": {
+      "unknown_internal_problem": {
+        "title": "Tekniskt fel",
+        "message": "Kunde inte hämta konfiguration. Prova igen om en stund."
+      }
+    }
+  }
+}

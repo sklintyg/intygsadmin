@@ -1,0 +1,376 @@
+@import 'ibColors';
+@import 'ibCommon';
+
+// Override default variables before the import
+$font-family-sans-serif: Roboto, 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, 'Noto Sans', sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+$font-size-base: 0.875rem; //This will set base font-size to equivalent of 14px ( default in browsers is 1rem = 16 px, so 16/14 = 0.875rem)
+
+//Set base default font color for body, so we only need to override where its different
+$body-color: $ib-color-08;
+$info: $ib-color-03;
+$primary: $ib-color-21;
+
+//We use icon to the left of actual alert-text, do decrease horizontal padding.
+$alert-padding-x: 0.5rem;
+
+// Import only what we use from Bootstrap scss components
+@import '~bootstrap/scss/_functions';
+@import '~bootstrap/scss/_variables';
+@import '~bootstrap/scss/_mixins';
+@import '~bootstrap/scss/_root';
+@import '~bootstrap/scss/_reboot';
+@import '~bootstrap/scss/_type';
+//@import '~bootstrap/scss/_images';
+//@import '~bootstrap/scss/_code';
+@import '~bootstrap/scss/_grid';
+@import '~bootstrap/scss/_tables';
+//@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_buttons';
+@import '~bootstrap/scss/_transitions';
+@import '~bootstrap/scss/_dropdown';
+//@import '~bootstrap/scss/_button-group';
+//@import '~bootstrap/scss/_input-group';
+//@import '~bootstrap/scss/_custom-forms';
+@import '~bootstrap/scss/_nav';
+@import '~bootstrap/scss/_navbar';
+//@import '~bootstrap/scss/_card';
+//@import '~bootstrap/scss/_breadcrumb';
+@import '~bootstrap/scss/_pagination';
+@import '~bootstrap/scss/_badge';
+//@import '~bootstrap/scss/_jumbotron';
+//@import '~bootstrap/scss/_alert';
+//@import '~bootstrap/scss/_progress';
+//@import '~bootstrap/scss/_media';
+//@import '~bootstrap/scss/_list-group';
+@import '~bootstrap/scss/_close';
+//@import '~bootstrap/scss/_toasts';
+@import '~bootstrap/scss/_modal';
+//@import '~bootstrap/scss/_tooltip';
+//@import '~bootstrap/scss/_popover';
+//@import '~bootstrap/scss/_carousel';
+@import '~bootstrap/scss/_spinners';
+@import '~bootstrap/scss/_utilities';
+//@import '~bootstrap/scss/_print';
+
+// Bootstrap non-variable overrides for those things we cannot affect with just using variables.
+
+//1. Modal footer buttons should be left aligned
+.modal-title {
+  @extend %ib-typo-02;
+  color: $ib-color-07;
+}
+
+.modal-body {
+  @extend %ib-typo-07;
+  color: $ib-color-07;
+
+  h5 {
+    @extend %ib-typo-06;
+    color: $ib-color-07;
+  }
+}
+
+.modal-footer {
+  justify-content: flex-start;
+}
+
+.alert-info {
+  color: $ib-color-06;
+}
+
+// Button override för ib-tema
+@mixin btn-common-mixin($color, $background, $border) {
+  font-weight: normal;
+  cursor: pointer;
+  white-space: nowrap;
+
+  border-color: $border;
+  background-color: $background;
+  color: $color;
+
+  &:focus,
+  &:active,
+  &:active:focus {
+    border-color: $border;
+    background-color: $background;
+    color: $color;
+    box-shadow: 2px 2px 4px 0 $black_12;
+  }
+
+  &:hover,
+  &:active:hover,
+  &.active,
+  &.active:hover,
+  &.active:focus {
+    background-color: $ib-color-21;
+    border-color: $ib-color-21;
+    color: $ib-color-00;
+    box-shadow: 2px 2px 4px 0 $black_12;
+  }
+
+  &,
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &.active {
+    &:disabled,
+    fieldset[disabled] & {
+      background-color: $ib-color-13;
+      border-color: $ib-color-13;
+      color: $ib-color-22;
+      opacity: 1;
+    }
+  }
+}
+
+.btn-primary {
+  @include btn-common-mixin($ib-color-00, $ib-color-14, $ib-color-14);
+}
+
+.btn-success {
+  @include btn-common-mixin($ib-color-00, $ib-color-16, $ib-color-16);
+}
+
+.btn-default {
+  @include btn-common-mixin($ib-color-17, $ib-color-00, $ib-color-17);
+}
+
+.btn-secondary {
+  @include btn-common-mixin($ib-color-08, $ib-color-15, $ib-color-15);
+}
+
+.btn-link {
+  padding: 0;
+  line-height: 1;
+  vertical-align: baseline;
+  // For some unknown reason, using the value "transparent" doesn't work.
+  // Something in the scss processing replaces it with "initial" which in turn causes btn-link to have a gray background in IE11
+  // As a workaround, setting an corresponding tranaparant rgb value works..
+  background-color: rgba(0,0,0,0);
+}
+
+th .btn-link {
+  color: $ib-color-19;
+
+  &:hover {
+    color: $ib-color-19;
+  }
+}
+
+// Table
+
+/* table striped style for all ib */
+.table-striped {
+  border-collapse: separate;
+  border-spacing: 0 0;
+  margin-bottom: 0;
+
+  .btn-primary {
+    padding: 7px 15px;
+    min-width: 50px;
+  }
+
+  .btn-secondary {
+    padding: 7px 15px;
+    min-width: 50px;
+  }
+
+  // Table header ---------------
+  > thead > tr > th {
+    padding: 7px 5px;
+    background-color: $ib-color-15;
+    @extend %ib-typo-06;
+    color: $ib-color-19;
+    border: none;
+
+    &:first-child {
+      padding-left: 21px;
+    }
+  }
+  // Table body ---------------
+  > tbody > tr {
+    height: 50px;
+
+    &:hover {
+      > td {
+        border-top: 1px solid $ib-color-21;
+        border-bottom: 1px solid $ib-color-21;
+      }
+
+      > td:first-child {
+        border-left: 1px solid $ib-color-21;
+        padding-left: 21px;
+      }
+
+      > td:last-child {
+        border-right: 1px solid $ib-color-21;
+      }
+    }
+
+    //a normal td
+    > td {
+      padding: 5px;
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid $ib-color-15;
+      //IE11 needs this explicitly to avoid column height behaviour -_--- (INTYG-7611)
+      height: 100%;
+      vertical-align: middle;
+
+      &:first-child {
+        padding-left: 21px;
+        border-left: 1px solid $ib-color-15;
+      }
+
+      &:last-child {
+        border-right: 1px solid $ib-color-15;
+        border-radius: 0;
+      }
+
+      &.nopadding {
+        padding: 0;
+      }
+    }
+  }
+}
+
+// Pagination
+
+.pagination {
+  > li > a {
+    border: none;
+  }
+
+  > li:first-child > a {
+    padding-left: 0;
+  }
+}
+
+// Font
+
+@mixin font-variant-light($font-size: 14px) {
+  font-family: $font-family-sans-serif;
+  font-size: $font-size;
+  font-weight: 300;
+}
+
+@mixin font-variant-regular($font-size: 14px) {
+  font-family: $font-family-sans-serif;
+  font-size: $font-size;
+  font-weight: 400;
+}
+
+@mixin font-variant-medium($font-size: 14px) {
+  font-family: $font-family-sans-serif;
+  font-size: $font-size;
+  font-weight: 500;
+}
+
+@mixin font-variant-bold($font-size: 14px) {
+  font-family: $font-family-sans-serif;
+  font-size: $font-size;
+  font-weight: 700;
+}
+
+%ib-typo-01 {
+  @include font-variant-light(25px);
+}
+
+%ib-typo-02 {
+  @include font-variant-medium(18px);
+}
+
+%ib-typo-03 {
+  @include font-variant-light(18px);
+}
+
+%ib-typo-04 {
+  @include font-variant-bold(18px);
+}
+
+%ib-typo-05 {
+  @include font-variant-medium(16px);
+}
+
+%ib-typo-06 {
+  @include font-variant-medium(14px);
+}
+
+%ib-typo-07 {
+  @include font-variant-regular(14px);
+}
+
+%ib-typo-08 {
+  @include font-variant-regular(14px);
+  text-decoration: underline;
+}
+
+%ib-typo-09 {
+  @include font-variant-regular(12px);
+}
+
+%ib-typo-10 {
+  @include font-variant-regular(16px);
+}
+
+%ib-typo-11 {
+  @include font-variant-regular(12px);
+  font-style: italic;
+}
+
+%ib-typo-12 {
+  @include font-variant-regular(14px);
+  font-style: italic;
+}
+
+%ib-typo-13 {
+  @include font-variant-bold(12px);
+}
+
+%ib-typo-14 {
+  @include font-variant-bold(14px);
+}
+
+// Dropdown
+.dropdown-menu {
+  border-color: $ib-color-21;
+  padding: 0;
+}
+
+.dropdown-toggle {
+  &:active,
+  &:focus {
+    background-color: $ib-color-21 !important;
+    box-shadow: 2px 2px 4px 0 $black_12 !important;
+  }
+
+  &.up-icon::after {
+    border-bottom: 0.3em solid;
+    border-right: 0.3em solid transparent;
+    border-top: 0;
+    border-left: 0.3em solid transparent;
+  }
+}
+
+.dropdown-item {
+  &:hover,
+  &:focus {
+    background-color: $ib-color-21;
+    color: $ib-color-00;
+  }
+}
+
+// Badge
+
+.badge {
+  border-radius: 9px;
+}
+
+a {
+  text-decoration: underline;
+  color: $ib-color-17;
+  &:hover {
+    color: $ib-color-21;
+  }
+}

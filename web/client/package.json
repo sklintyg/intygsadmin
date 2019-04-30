@@ -1,0 +1,63 @@
+{
+  "name": "intygsadmin",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "connected-react-router": "^6.4.0",
+    "core-js": "2.6.5",
+    "flat": "^4.1.0",
+    "lodash": "^4.11.2",
+    "node-sass": "^4.11.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-js-pagination": "3.0.2",
+    "react-redux": "^6.0.1",
+    "react-responsive-modal": "^3.6.0",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "3.0.0",
+    "reactstrap": "^7.1.0",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^4.2.0",
+    "typeface-roboto": "0.0.54"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "prettier": {
+    "printWidth": 140,
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "jsxSingleQuote": false,
+    "bracketSpacing": true,
+    "jsxBracketSameLine": true,
+    "arrowParens": "always"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all",
+    "ie 11"
+  ],
+  "devDependencies": {
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "eslint-plugin-react-hooks": "^1.6.0",
+    "fetch-mock": "^7.3.3",
+    "http-proxy-middleware": "^0.19.1",
+    "prettier": "^1.17.0",
+    "redux-mock-store": "^1.5.3",
+    "sinon": "^7.3.2",
+    "uuid": "^3.3.2"
+  }
+}
