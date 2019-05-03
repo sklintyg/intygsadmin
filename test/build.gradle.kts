@@ -23,7 +23,7 @@ tasks {
 
     setScript(file("scripts/run.js"))
 
-    setArgs(listOf("baseUrl=${baseUrl}"))
+    setArgs(listOf("baseUrl=$baseUrl"))
   }
 }
 

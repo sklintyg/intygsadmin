@@ -1,12 +1,10 @@
+
 import com.moowork.gradle.node.npm.NpmTask
 import org.gradle.internal.os.OperatingSystem
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
-import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 
 // FIXME: Openshift build pipeline passes useMinifiedJavaScript to build (not client)
 val buildClient = project.hasProperty("client") || project.hasProperty("useMinifiedJavaScript")
-
-val infraBuildVersion = extra["intygInfraVersion"]
 
 plugins {
   id("org.springframework.boot")
@@ -16,47 +14,16 @@ plugins {
 dependencies {
 
   // Project dependencies
-  implementation(project(":${rootProject.name}-common"))
-  implementation(project(":${rootProject.name}-integration"))
   implementation(project(":${rootProject.name}-persistence"))
-  implementation(project(":${rootProject.name}-mail-sender"))
-
-  implementation("${extra["infraGroupId"]}:hsa-integration:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:log-messages:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:monitoring:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:pu-integration:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:security-authorities:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:security-common:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:security-siths:${extra["intygInfraVersion"]}")
-  implementation("${extra["infraGroupId"]}:security-filter:${extra["intygInfraVersion"]}")
 
   // External dependencies
   implementation("org.springframework.boot:spring-boot-starter-web")
-  implementation("org.springframework.boot:spring-boot-starter-data-redis")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-  implementation("net.javacrumbs.shedlock:shedlock-spring:${Dependencies.shedlockVersion}")
+  compileOnly("org.projectlombok:lombok")
+  annotationProcessor("org.projectlombok:lombok")
 
-  implementation("com.itextpdf:itext7-core:${Dependencies.itext7Version}")
-
-  //api documentation
-  implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
-  implementation("io.springfox:springfox-swagger-ui:${Dependencies.swaggerVersion}")
-
-
-  implementation("jakarta.jws:jakarta.jws-api:${Dependencies.jakartaJwsVersion}")
-  implementation("javax.xml.ws:jaxws-api:${Dependencies.jaxVersion}")
-  implementation("javax.servlet:javax.servlet-api:${Dependencies.jaxServletApiVersion}")
-
-  implementation("org.springframework.security.extensions:spring-security-saml2-core:${Dependencies.springSecuritySaml2Version}")
   implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
-
-  // FIXME: shall not be bundled with app!
-  implementation("se.inera.intyg.refdata:refdata:${extra["refDataVersion"]}")
-
-  testImplementation("com.jayway.restassured:rest-assured:${TestDependencies.restAssuredVersion}")
-  testImplementation("com.jayway.restassured:json-schema-validator:${TestDependencies.restAssuredVersion}")
-  testImplementation("org.antlr:ST4:${TestDependencies.stAntlr4Version}")
-
 }
 
 node {
