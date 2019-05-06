@@ -18,6 +18,10 @@ allprojects {
   group = "se.inera.intyg.intygsadmin"
   version = System.getProperty("buildVersion", "0-SNAPSHOT")
 
+  extra.apply {
+    set("errorproneExclude", "true") //FIXME: Errorprone does not support Kotlin and KAPT. Until it does this will exclude the errorprone task for this project
+  }
+
   repositories {
     mavenLocal()
     maven {
