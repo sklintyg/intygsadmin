@@ -98,7 +98,7 @@ tasks {
   bootJar {
     manifest {
       attributes("Main-Class" to "org.springframework.boot.loader.PropertiesLauncher")
-      attributes("Start-Class" to  "se.inera.intyg.intygsadmin.web.IntygsbestallningApplication")
+      attributes("Start-Class" to  "se.inera.intyg.intygsadmin.web.IntygsadminApplication")
     }
   }
 
