@@ -1,5 +1,7 @@
 
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
+import se.inera.intyg.IntygPluginCheckstyleExtension
+import se.inera.intyg.JavaVersion
 import se.inera.intyg.TagReleaseTask
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
 import se.inera.intyg.intygsadmin.build.Config.Jvm
@@ -49,6 +51,12 @@ subprojects {
   apply(plugin = "se.inera.intyg.plugin.common")
 
   apply<DependencyManagementPlugin>()
+
+  configure<IntygPluginCheckstyleExtension> {
+    javaVersion = JavaVersion.JAVA11
+    showViolations = true
+    ignoreFailures = false
+  }
 
   dependencyManagement {
     imports {
