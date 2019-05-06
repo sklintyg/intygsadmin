@@ -26,4 +26,28 @@ public class BannerService {
 
         return new ArrayList<>();
     }
+
+    public BannerDTO createBanner(BannerDTO bannerDTO) {
+
+        BannerEntity map = new BannerEntity();
+
+        BannerEntity entity = bannerPersistenceService.create(map);
+
+        return bannerDTO;
+    }
+
+    public BannerDTO save(BannerDTO bannerDTO) {
+
+        BannerEntity map = new BannerEntity();
+
+        BannerEntity entity = bannerPersistenceService.update(map);
+
+        return bannerDTO;
+    }
+
+    public boolean deleteBanner(Long id) {
+        bannerPersistenceService.delete(id);
+
+        return true;
+    }
 }

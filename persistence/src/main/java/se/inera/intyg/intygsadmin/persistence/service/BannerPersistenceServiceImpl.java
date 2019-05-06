@@ -30,4 +30,15 @@ public class BannerPersistenceServiceImpl {
         return allBanners;
     }
 
+    public BannerEntity create(BannerEntity bannerEntity) {
+        return bannerRepository.save(bannerEntity);
+    }
+
+    public BannerEntity update(BannerEntity bannerEntity) {
+        return bannerRepository.save(bannerEntity);
+    }
+
+    public void delete(Long id) {
+        bannerRepository.deleteById(id);
+    }
 }

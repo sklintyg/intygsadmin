@@ -25,9 +25,11 @@ object Config {
     const val querydslVersion = "4.2.1"
     const val hibernateJpsVersion = "1.0.2.Final"
     const val javaxAnnotationVersion = "1.3.2"
+    const val commonsIOVersion = "2.6"
   }
 
   object TestDependencies {
     const val junit5Version = "5.4.1"
+    const val restAssuredVersion = "3.3.0"
   }
 }

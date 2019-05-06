@@ -1,6 +1,5 @@
 
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import se.inera.intyg.TagReleaseTask
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
 import se.inera.intyg.intygsadmin.build.Config.Jvm
@@ -44,7 +43,6 @@ subprojects {
   apply(plugin = "org.gradle.maven")
   apply(plugin = "org.gradle.maven-publish")
   apply(plugin = "se.inera.intyg.plugin.common")
-  apply(plugin = "kotlin")
 
   apply<DependencyManagementPlugin>()
 
@@ -58,6 +56,8 @@ subprojects {
   dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
   }
@@ -72,10 +72,6 @@ subprojects {
       sourceCompatibility = Jvm.sourceCompatibility
       targetCompatibility = Jvm.targetCompatibility
       options.encoding = Jvm.encoding
-    }
-
-    withType<KotlinCompile> {
-      kotlinOptions.jvmTarget = Jvm.kotlinJvmTarget
     }
   }
 }

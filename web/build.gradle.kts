@@ -2,6 +2,7 @@
 import com.moowork.gradle.node.npm.NpmTask
 import org.gradle.internal.os.OperatingSystem
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
+import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 
 // FIXME: Openshift build pipeline passes useMinifiedJavaScript to build (not client)
 val buildClient = project.hasProperty("client") || project.hasProperty("useMinifiedJavaScript")
@@ -24,6 +25,10 @@ dependencies {
   annotationProcessor("org.projectlombok:lombok")
 
   implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
+
+  testImplementation("commons-io:commons-io:${Dependencies.commonsIOVersion}")
+  testImplementation("io.rest-assured:rest-assured:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:json-schema-validator:${TestDependencies.restAssuredVersion}")
 }
 
 node {
@@ -52,7 +57,7 @@ tasks {
 
     setEnvironment(mapOf("CI" to true))
 
-    setArgs(listOf("run", "test"))
+    setArgs(listOf("run", "test", "--", "--coverage"))
   }
 
   val copyReactbuild by creating(Copy::class) {
@@ -72,7 +77,7 @@ tasks {
            .map { it.toURI().toURL().toString().replaceFirst("file:/", "/") }
            .joinToString(separator = " ")
 
-        val mainClass = "se.inera.intyg.intygsadmin.web.IntygsbestallningApplication"
+        val mainClass = "se.inera.intyg.intygsadmin.web.IntygsadminApplication"
 
         attributes["Class-Path"] = classpath
         attributes["Main-Class"] = mainClass
@@ -82,7 +87,7 @@ tasks {
 
   val restAssuredTest by creating(Test::class) {
     outputs.upToDateWhen { false }
-    systemProperty("integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8080"))
+    systemProperty("integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8680"))
     include("**/*IT*")
   }
 
@@ -108,7 +113,6 @@ tasks {
       doFirst {
         classpath = files(
            "${project.projectDir}/build/classes/java/main",
-           "${project.projectDir}/build/classes/kotlin/main",
            "${project.projectDir}/src/main/resources",
            "${project.projectDir}/build/resources/main",
            pathingJar.archiveFile)
