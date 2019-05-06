@@ -5,14 +5,13 @@ object Config {
   object Jvm {
     const val sourceCompatibility = "11"
     const val targetCompatibility = "11"
-    const val kotlinJvmTarget = "1.8"
     const val encoding = "UTF-8"
   }
 
   object Dependencies {
 
     //Project dependencies
-    const val intygPluginVersion = "2.0.3"
+    const val intygPluginVersion = "2.0.4"
 
     //External dependencies
     const val nodePluginVersion = "1.3.1"
