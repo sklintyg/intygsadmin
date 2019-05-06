@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  SPRING_PROFILES_ACTIVE: "default,dev"
+  SPRING_DATASOURCE_URL: "jdbc:mysql://${mysql.service.host}:${mysql.service.port}/${database.name}?useSSL=false"
+  REDIS_PORT: "${redis.service.port}"
+  REDIS_HOST: "${redis.service.host}"
+  IB_HOST_URL: "https://intygsadmin-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net"
+  CONFIG_FOLDER: "/opt/intygsadmin-demo/config"
+  CERTIFICATE_FOLDER: "/opt/intygsadmin-demo/env"
+  MAIL_HOST: "${ib.host.url}"
+kind: ConfigMap
+metadata:
+  name: intygsadmin-demo-configmap-envvar
+type: Opaque
