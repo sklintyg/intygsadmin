@@ -50,9 +50,6 @@ describe('actions', () => {
         type: 'test'
       };
 
-      api.changeEnhet = () => {
-        return Promise.resolve(reponse);
-      };
       modals.closeAllModals = () => (modalAction);
 
       const expectedActions = [
@@ -67,9 +64,6 @@ describe('actions', () => {
     })
 
     it('failure', () => {
-      api.changeEnhet = () => {
-        return Promise.reject({message: 'failed', errorCode: 'ERRORCODE'});
-      }
 
       const expectedActions = [
         { type: actions.SET_ENHET },

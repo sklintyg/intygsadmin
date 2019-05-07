@@ -1,12 +1,9 @@
 import React, {Fragment} from 'react';
 import Logo from "./logo/Logo";
-import Unit from "./unit/Unit";
-
 import User from "./user/User";
 import styled from "styled-components";
 import IbColors from "../styles/IbColors";
 import {HeaderSectionContainerHoverable} from "./styles";
-import ChangeEnhet from "./changeEnhet";
 import ibValues from '../styles/IbValues'
 import Logout from "./logout/Logout";
 
@@ -39,13 +36,7 @@ const Header = ({isAuthenticated, namn, userRole, logoutUrl, unitContext, totalt
       <StyledHeader>
         <Logo className={(isAuthenticated ? 'd-none d-md-flex' : '')} />
         {isAuthenticated && <User id="currentUser" userName={namn} userRole={userRole} />}
-        {isAuthenticated && unitContext &&
-        <Unit vg={unitContext.parentHsaName} ve={unitContext.name} />}
         <HeaderActionsWrapper>
-          {isAuthenticated && unitContext && (totaltAntalVardenheter > 1) &&
-          <HeaderSectionContainerHoverable>
-            <ChangeEnhet />
-          </HeaderSectionContainerHoverable>}
           {isAuthenticated &&
             <Fragment>
               <HeaderSectionContainerHoverable>

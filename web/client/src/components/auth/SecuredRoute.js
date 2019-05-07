@@ -20,10 +20,7 @@ const SecuredRoute = ({component: Component, isAuthenticated, isLoading, hasCurr
   return (
     <Route {...rest} render={(props) => {
       if (!isAuthenticated) {
-        return <Redirect to='/' />;
-      }
-      if (!hasCurrentUnit && !allowMissingUnit) {
-        return <Redirect to='/valj-enhet' />;
+        return <Redirect to='/banner' />;
       }
 
       return (<Component {...props}/>)

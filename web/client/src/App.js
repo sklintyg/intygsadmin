@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import { HashRouter, Switch } from 'react-router-dom'
 import HomePage from './pages/IndexPage'
-import SelectEnhetPage from './pages/SelectEnhetPage'
+import BannerPage from './pages/BannerPage'
 import Header from './components/header'
 import { getUser } from './store/actions/user'
 import { connect } from 'react-redux'
@@ -29,7 +29,7 @@ const App = () => {
           <Switch>
             <UnsecuredRoute exact path="/" component={HomePage} />
             <UnsecuredRoute path="/loggedout/:method" component={HomePage} />
-            <SecuredRoute allowMissingUnit={true} path="/valj-enhet" component={SelectEnhetPage} />
+            <SecuredRoute path="/banner" component={BannerPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>

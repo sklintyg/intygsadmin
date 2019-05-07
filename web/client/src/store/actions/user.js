@@ -1,7 +1,4 @@
-import {changeEnhet, fetchAnvandare} from "../../api/userApi";
-import {push} from 'connected-react-router'
-import {closeAllModals} from "./modal";
-import {requestPollUpdate} from './sessionPoll'
+import {fetchAnvandare} from "../../api/userApi";
 
 export const GET_USER = 'GET_USER';
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
@@ -25,31 +22,6 @@ export const getUser = () => {
     ).catch(
       errorResponse => dispatch({
         type: GET_USER_FAILURE,
-        payload: errorResponse
-      })
-    );
-  }
-};
-
-export const selectEnhet = (hsaId) => {
-  return (dispatch) => {
-
-    dispatch({
-      type: SET_ENHET
-    });
-    return changeEnhet(hsaId).then(json => {
-        dispatch({
-          type: SET_ENHET_SUCCESS,
-          payload: json
-        });
-
-        dispatch(push('/bestallningar'));
-        dispatch(closeAllModals());
-        dispatch(requestPollUpdate());
-      }
-    ).catch(
-      errorResponse => dispatch({
-        type: SET_ENHET_FAILURE,
         payload: errorResponse
       })
     );

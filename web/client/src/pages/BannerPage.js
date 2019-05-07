@@ -1,6 +1,5 @@
 import React from 'react'
 import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/ibLayout'
-import SelectEnhet from '../components/selectEnhet'
 import styled from 'styled-components'
 import ibValues from '../components/styles/IbValues'
 import { IbTypo06 } from '../components/styles/IbTypography'
@@ -23,18 +22,17 @@ const PageContainer = styled(WorkareaContainer)`
     padding-bottom: 20px;
   }
 `
-const SelectEnhetPage = () => {
+const BannerPage = () => {
   return (
     <FlexColumnContainer>
       <CustomScrollingContainer>
         <PageContainer>
-          <IbTypo06 as="h1" color={IbColors.IB_COLOR_07}>Välj enhet</IbTypo06>
-          <p>Du har behörighet för flera vårdenheter. Välj den du vill logga in på nu. Du kan byta enhet även efter inloggning.</p>
-          <SelectEnhet />
+          <IbTypo06 as="h1" color={IbColors.IB_COLOR_07}>Banner</IbTypo06>
+          <p>Text.</p>
         </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )
 }
 
-export default SelectEnhetPage
+export default BannerPage
