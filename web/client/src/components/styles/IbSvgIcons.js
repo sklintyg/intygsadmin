@@ -51,12 +51,6 @@ export const ChangeUnitIcon = () => (
   </svg>
 )
 
-export const AboutIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill={IbColors.IB_COLOR_20} width="24px" height="24px" viewBox="0 0 24 24">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-  </svg>
-)
-
 export const UserIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill={IbColors.IB_COLOR_20} width="36px" height="36px" viewBox="0 0 24 24">
     <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />

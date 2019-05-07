@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlexColumnContainer, ScrollingContainer, WorkareaContainer} from "../components/styles/ibLayout";
-import AppFooter from "../components/appFooter/AppFooter";
 import styled from "styled-components";
 import {ErrorPageIcon} from "../components/styles/IbSvgIcons";
 import ErrorMessageFormatter from '../messages/ErrorMessageFormatter'
@@ -58,7 +57,6 @@ const ErrorPage = ({match}) => {
           <br />
           <ErrorMessageFormatter error={activeError} />
         </PageContainer>
-        <AppFooter />
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )

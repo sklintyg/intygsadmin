@@ -1,7 +1,6 @@
 import React from 'react'
 import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/ibLayout'
 import SelectEnhet from '../components/selectEnhet'
-import AppFooter from '../components/appFooter/AppFooter'
 import styled from 'styled-components'
 import ibValues from '../components/styles/IbValues'
 import { IbTypo06 } from '../components/styles/IbTypography'
@@ -33,7 +32,6 @@ const SelectEnhetPage = () => {
           <p>Du har behörighet för flera vårdenheter. Välj den du vill logga in på nu. Du kan byta enhet även efter inloggning.</p>
           <SelectEnhet />
         </PageContainer>
-        <AppFooter />
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )

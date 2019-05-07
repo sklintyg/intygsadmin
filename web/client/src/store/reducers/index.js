@@ -3,7 +3,6 @@ import user from './user'
 import {connectRouter} from 'connected-react-router'
 import modal from './modal'
 import sessionPoll from './sessionPoll'
-import cookieBanner from './cookieBanner'
 import appConfig from './appConfig'
 
 const appReducer = (history) =>
@@ -12,7 +11,6 @@ const appReducer = (history) =>
     router: connectRouter(history),
     modal,
     sessionPoll,
-    cookieBanner,
     appConfig
   })
 

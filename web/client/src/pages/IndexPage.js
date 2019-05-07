@@ -1,7 +1,6 @@
 import React from 'react'
 import landing from './landningssida-min.png'
 import styled from 'styled-components'
-import AppFooter from '../components/appFooter/AppFooter'
 import { IbTypo02, IbTypo07 } from '../components/styles/IbTypography'
 import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/ibLayout'
 import ibValues from '../components/styles/IbValues'
@@ -69,7 +68,6 @@ const HomePage = ({ match }) => {
             </Row>
           </Container>
         </PageContainer>
-        <AppFooter />
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )
