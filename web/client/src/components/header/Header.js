@@ -30,7 +30,7 @@ const HeaderActionsWrapper = styled.div`
 
 `
 
-const Header = ({isAuthenticated, namn, userRole, logoutUrl, unitContext, totaltAntalVardenheter}) => {
+const Header = ({isAuthenticated, namn, userRole, logoutUrl}) => {
   return (
     <ComponentWrapper>
       <StyledHeader>
