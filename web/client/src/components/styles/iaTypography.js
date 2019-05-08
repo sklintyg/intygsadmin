@@ -18,7 +18,7 @@ const SpecialRubrik = Styled(Typo.IaTypo02)`
   color: ${Colors.IA_COLOR_06};
 `;
 
-in bootstrap-overrides, the base font of the body is IaTypo07 with color IbColor08 which will be inherited
+in bootstrap-overrides, the base font of the body is IaTypo07 with color IaColor08 which will be inherited
 if not specified as something else.
  */
 

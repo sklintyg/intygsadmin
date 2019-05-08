@@ -19,7 +19,7 @@ const ButtonType6 = styled(Button)`
     }
   }
 `
-const IbButton6 = ({ label, ...rest }) => {
+const IaButton6 = ({ label, ...rest }) => {
   return (
     <ButtonType6 color="default" {...rest}>
       {label}{' '}
@@ -31,8 +31,8 @@ const IbButton6 = ({ label, ...rest }) => {
   )
 }
 
-IbButton6.propTypes = {
+IaButton6.propTypes = {
   label: PropTypes.string,
 }
 
-export default IbButton6
+export default IaButton6

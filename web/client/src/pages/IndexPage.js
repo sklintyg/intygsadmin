@@ -5,7 +5,7 @@ import { IaTypo02, IaTypo07 } from '../components/styles/iaTypography'
 import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/iaLayout'
 import ibValues from '../components/styles/iaValues'
 import { Col, Container, Row } from 'reactstrap'
-import IbAlert, { alertType } from '../components/alert/Alert'
+import IaAlert, { alertType } from '../components/alert/Alert'
 import LoginOptions from '../components/loginOptions'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
@@ -44,10 +44,10 @@ const HomePage = ({ match }) => {
                 </IaTypo07>
                 {method === 't' && (
                   <Section>
-                    <IbAlert type={alertType.OBSERVANDUM}>
+                    <IaAlert type={alertType.OBSERVANDUM}>
                       Du har blivit utloggad från Intygsadmin på grund av inaktivitet. Om du vill fortsätta använda Intygsadmin
                       behöver du logga in igen.
-                    </IbAlert>
+                    </IaAlert>
                   </Section>
                 )}
 
@@ -56,10 +56,10 @@ const HomePage = ({ match }) => {
                     För att logga in behöver du ett giltigt e-tjänstekort (exempelvis SITHS-kort) samt behörighet att ta del av
                     förfrågningar och beställningar för din vårdenhet.
                   </IaTypo07>
-                  <IbAlert type={alertType.INFO}>
+                  <IaAlert type={alertType.INFO}>
                     De förfrågningar och beställningar som hanteras i Intygsadmin är journalhandlingar och all aktivitet i tjänsten
                     loggas i enlighet med Patientdatalagen.
-                  </IbAlert>
+                  </IaAlert>
                 </Section>
                 <Section/>
                 <LoginOptions />

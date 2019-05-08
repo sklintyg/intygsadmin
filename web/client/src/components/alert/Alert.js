@@ -46,7 +46,7 @@ const Alert = styled.div`
   padding: 4px 8px;
 `
 
-const IbAlert = ({type, children, className}) => {
+const IaAlert = ({type, children, className}) => {
   function getIcon(type) {
     switch (type) {
     case alertType.INFO:
@@ -72,8 +72,8 @@ const IbAlert = ({type, children, className}) => {
   );
 }
 
-IbAlert.propTypes = {
+IaAlert.propTypes = {
   type: PropTypes.oneOf(Object.values(alertType)).isRequired
 }
 
-export default IbAlert;
+export default IaAlert;

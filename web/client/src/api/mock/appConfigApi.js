@@ -10,7 +10,7 @@ export const fetchAppConfig = () =>
     };
     throw error*/
     return {
-      versionInfo: { applicationName: 'ib', buildVersion: '0', buildTimestamp: 'now', activeProfiles: 'some,profiles' },
+      versionInfo: { applicationName: 'ia', buildVersion: '0', buildTimestamp: 'now', activeProfiles: 'some,profiles' },
       loginUrl: 'LoginUrlFromServerConfig',
     }
   })
