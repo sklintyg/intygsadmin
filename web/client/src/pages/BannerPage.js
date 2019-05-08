@@ -3,7 +3,7 @@ import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../c
 import styled from 'styled-components'
 import ibValues from '../components/styles/IbValues'
 import { IbTypo06 } from '../components/styles/IbTypography'
-import IbColors from '../components/styles/IbColors'
+import IaColors from '../components/styles/IaColors'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
   max-width: none;
@@ -27,7 +27,7 @@ const BannerPage = () => {
     <FlexColumnContainer>
       <CustomScrollingContainer>
         <PageContainer>
-          <IbTypo06 as="h1" color={IbColors.IB_COLOR_07}>Banner</IbTypo06>
+          <IbTypo06 as="h1" color={IaColors.AG_COLOR_06}>Banner</IbTypo06>
           <p>Text.</p>
         </PageContainer>
       </CustomScrollingContainer>

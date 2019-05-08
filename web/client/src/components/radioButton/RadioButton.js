@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
-import IbColors from '../styles/IbColors'
+import IaColors from '../styles/IaColors'
 import { IbTypo07 } from '../styles/IbTypography'
 
 const RadioWrapper = styled.div`
@@ -28,15 +28,15 @@ const Label = styled(IbTypo07)`
 
   .circle {
     content: '';
-    border: 1px solid ${IbColors.IB_COLOR_23};
+    border: 1px solid ${IaColors.AG_COLOR_11};
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.24);
-    background-color: ${IbColors.IB_COLOR_00};
+    background-color: ${IaColors.AG_COLOR_00};
   }
 
   .dot {
     display: none;
     border: none;
-    background-color: ${IbColors.IB_COLOR_00};
+    background-color: ${IaColors.AG_COLOR_00};
     height: 8px;
     width: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -63,7 +63,7 @@ const Input = styled.input`
   }
 
   &:checked + ${Label} .circle {
-    background-color: ${IbColors.IB_COLOR_21};
+    background-color: ${IaColors.AG_COLOR_05};
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.5);
     border: none;
   }
@@ -79,17 +79,17 @@ const Input = styled.input`
 
     & + ${Label} {
       cursor: not-allowed;
-      color: ${IbColors.IB_COLOR_09};
+      color: ${IaColors.AG_COLOR_12};
     }
 
     & + ${Label} .circle {
-      background-color: ${IbColors.IB_COLOR_20};
-      color: ${IbColors.IB_COLOR_09};
+      background-color: ${IaColors.AG_COLOR_03};
+      color: ${IaColors.AG_COLOR_12};
       cursor: not-allowed;
     }
 
     & + ${Label} .dot {
-      background-color: ${IbColors.IB_COLOR_09};
+      background-color: ${IaColors.AG_COLOR_12};
     }
   }
 `

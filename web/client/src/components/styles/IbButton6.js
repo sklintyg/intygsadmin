@@ -1,7 +1,7 @@
 import React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
-import IbColors from '../styles/IbColors'
+import IaColors from './IaColors'
 import { Button } from 'reactstrap'
 
 /**
@@ -9,13 +9,13 @@ import { Button } from 'reactstrap'
  * see https://inera-certificate.atlassian.net/wiki/spaces/IT/pages/900727150/D+-+IB+Knappar
  */
 const ButtonType6 = styled(Button)`
-  color: ${IbColors.IB_COLOR_17};
+  color: ${IaColors.AG_COLOR_02};
   svg {
-    fill: ${IbColors.IB_COLOR_17};
+    fill: ${IaColors.AG_COLOR_02};
   }
   &:hover {
     svg {
-      fill: ${IbColors.IB_COLOR_00};
+      fill: ${IaColors.AG_COLOR_00};
     }
   }
 `

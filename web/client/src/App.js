@@ -29,7 +29,7 @@ const App = () => {
           <Switch>
             <UnsecuredRoute exact path="/" component={HomePage} />
             <UnsecuredRoute path="/loggedout/:method" component={HomePage} />
-            <SecuredRoute path="/banner" component={BannerPage} />
+            <UnsecuredRoute path="/banner" component={BannerPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>

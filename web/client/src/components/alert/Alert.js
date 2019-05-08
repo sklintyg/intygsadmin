@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {InfoIcon, Security, Check, ErrorOutline, Warning} from "../styles/IbSvgIcons";
-import IbColors from "../styles/IbColors";
+import {InfoIcon, Security, Check, ErrorOutline, Warning} from "../styles/IaSvgIcons";
+import IaColors from "../styles/IaColors";
 import styled from 'styled-components'
 
 export const alertType = {
@@ -15,15 +15,15 @@ export const alertType = {
 function getColor(type) {
   switch (type) {
   case alertType.INFO:
-    return {text:IbColors.IB_COLOR_06, background:IbColors.IB_COLOR_03};
+    return {text:IaColors.AG_COLOR_19, background:IaColors.AG_COLOR_18};
   case alertType.SEKRETESS:
-    return {text:IbColors.IB_COLOR_05, background:IbColors.IB_COLOR_02};
+    return {text:IaColors.AG_COLOR_21, background:IaColors.AG_COLOR_20};
   case alertType.OBSERVANDUM:
-    return {text:IbColors.IB_COLOR_05, background:IbColors.IB_COLOR_02};
+    return {text:IaColors.AG_COLOR_21, background:IaColors.AG_COLOR_20};
   case alertType.CONFIRM:
-    return {text:IbColors.IB_COLOR_30, background:IbColors.IB_COLOR_29};
+    return {text:IaColors.AG_COLOR_97, background:IaColors.AG_COLOR_98};
   case alertType.ERROR:
-    return {text:IbColors.IB_COLOR_04, background:IbColors.IB_COLOR_01};
+    return {text:IaColors.AG_COLOR_23, background:IaColors.AG_COLOR_22};
   default:
     return {text:'#fff', background:'#000'};
   }
@@ -50,15 +50,15 @@ const IbAlert = ({type, children, className}) => {
   function getIcon(type) {
     switch (type) {
     case alertType.INFO:
-      return <InfoIcon color={IbColors.IB_COLOR_06} />;
+      return <InfoIcon color={IaColors.AG_COLOR_19} />;
     case alertType.SEKRETESS:
-      return <Security color={IbColors.IB_COLOR_05} />;
+      return <Security color={IaColors.AG_COLOR_21} />;
     case alertType.OBSERVANDUM:
-      return <ErrorOutline color={IbColors.IB_COLOR_05} />;
+      return <ErrorOutline color={IaColors.AG_COLOR_21} />;
     case alertType.CONFIRM:
-      return <Check color={IbColors.IB_COLOR_30} />;
+      return <Check color={IaColors.AG_COLOR_97} />;
     case alertType.ERROR:
-      return <Warning color={IbColors.IB_COLOR_04} />;
+      return <Warning color={IaColors.AG_COLOR_23} />;
     default:
       return null;
     }

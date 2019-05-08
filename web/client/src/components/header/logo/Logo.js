@@ -1,34 +1,42 @@
 import React from 'react'
 import styled from 'styled-components'
 import { HeaderSectionContainer } from '../styles'
-import IbColors from '../../styles/IbColors'
-import { NavLink } from 'react-router-dom'
+import IaColors from '../../styles/IaColors'
+import {LogoIcon} from '../../styles/IaSvgIcons'
 
 const ComponentWrapper = styled(HeaderSectionContainer)`
-
-  flex: 1;
   height: 100%;
-  min-width: 200px;
-  max-width: 253px;
-  background-color: ${IbColors.IB_COLOR_19}
-  justify-content: center;
+  background-color: ${IaColors.AG_COLOR_01};
   padding: 0 30px;
 
   border-image: linear-gradient(to left, rgba(0, 0, 0, 0.1), rgba(42, 48, 78, 0.1)) 1 100%;
-  color: ${IbColors.IB_COLOR_20};
+  color: ${IaColors.AG_COLOR_03};
 
 `
 const SvgLogo = styled.div`
-  width: 180px;
-  height: 26px;
-  background: no-repeat center url(data:image/svg+xml;base64,);
+  background-color: ${IaColors.AG_COLOR_00};
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  fill: ${IaColors.AG_COLOR_01};
 `
+const LogoIconWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`
+
+const LogoText = styled.div`
+  padding-left: 10px;
+  color: ${IaColors.AG_COLOR_00};
+`
+
 const Logo = ({ className }) => {
   return (
     <ComponentWrapper className={className}>
-      <NavLink to="/bestallningar">
-        <SvgLogo />
-      </NavLink>
+        <SvgLogo><LogoIconWrapper><LogoIcon/></LogoIconWrapper></SvgLogo><LogoText>Administrationsgränssnitt</LogoText>
     </ComponentWrapper>
   )
 }

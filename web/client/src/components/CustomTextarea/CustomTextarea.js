@@ -1,19 +1,19 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
-import colors from '../styles/IbColors'
+import colors from '../styles/IaColors'
 
 const CustomDiv = styled.div`
   margin: 8px 0;
   padding: 8px;
   min-height: 100px;
-  border: 1px solid ${colors.IB_COLOR_15};
+  border: 1px solid ${colors.AG_COLOR_08};
   border-radius: 4px;
   transition: border-color 0.36s ease-in-out, box-shadow 0.36s ease-in-out;
 
   &:focus {
     outline: none;
-    border: 1px solid ${colors.IB_COLOR_21};
+    border: 1px solid ${colors.AG_COLOR_05};
     box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.12);
   }
 `

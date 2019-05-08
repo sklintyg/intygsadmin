@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import * as PropTypes from "prop-types";
 import {ActionButton} from "../styles";
-import {LogoutIcon} from "../../styles/IbSvgIcons";
+import {LogoutIcon} from "../../styles/IaSvgIcons";
 
 const Logout = ({logoutUrl}) =>
   (

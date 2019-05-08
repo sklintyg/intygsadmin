@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import sinon from 'sinon';
 
 import Toggler from './Toggler';
-import {CollapseIcon, ExpandIcon} from "../styles/IbSvgIcons";
+import {CollapseIcon, ExpandIcon} from "../styles/IaSvgIcons";
 
 describe('<Toggler />', () => {
   it('renders a CollapseIcon when expanded = false', () => {

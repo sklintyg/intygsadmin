@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import * as PropTypes from "prop-types";
-import {CollapseIcon, ExpandIcon} from "../styles/IbSvgIcons";
+import {CollapseIcon, ExpandIcon} from "../styles/IaSvgIcons";
 
 const TogglerTag = styled.button`
   padding: 4px;

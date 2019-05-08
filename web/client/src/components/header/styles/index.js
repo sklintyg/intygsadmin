@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import dividerImage from './divider-border.png'
-import IbColors from "../../styles/IbColors";
+import IaColors from "../../styles/IaColors";
 
 export const HeaderSectionContainer = styled.div`
   display: flex;
@@ -11,11 +11,11 @@ export const HeaderSectionContainer = styled.div`
   border-image-source: url(${dividerImage});
   border-image-slice: 0 50%;
   border-image-repeat: round;
-  
+
 `
 export const HeaderSectionContainerHoverable = styled(HeaderSectionContainer)`
   &:hover {
-      background-color: ${IbColors.IB_COLOR_21}
+      background-color: ${IaColors.AG_COLOR_05}
     }
 `
 
@@ -36,13 +36,13 @@ export const ActionButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 12px;
-  color: ${IbColors.IB_COLOR_20};
+  color: ${IaColors.AG_COLOR_03};
   padding: 8px;
   height: 100%;
   min-width: 90px;
   white-space: nowrap;
-  
- 
-  
+
+
+
 `
 
