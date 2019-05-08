@@ -26,15 +26,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceServiceImpl;
+import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 
 @Service
 public class BannerService {
 
-    private BannerPersistenceServiceImpl bannerPersistenceService;
+    private BannerPersistenceService bannerPersistenceService;
 
-    public BannerService(BannerPersistenceServiceImpl bannerPersistenceService) {
+    public BannerService(BannerPersistenceService bannerPersistenceService) {
         this.bannerPersistenceService = bannerPersistenceService;
     }
 

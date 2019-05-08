@@ -52,7 +52,7 @@ public class BannerController {
         return ResponseEntity.ok(bannerDTOS);
     }
 
-    @PutMapping("}")
+    @PutMapping
     public ResponseEntity<BannerDTO> createBanner(@RequestBody BannerDTO bannerDTO) {
         BannerDTO savedDTO = bannerService.createBanner(bannerDTO);
 

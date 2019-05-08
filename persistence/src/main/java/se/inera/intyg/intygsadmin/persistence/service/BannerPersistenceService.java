@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
+import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -32,11 +33,11 @@ import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 
 @Service
 @Transactional
-public class BannerPersistenceServiceImpl {
+public class BannerPersistenceService {
 
     private BannerRepository bannerRepository;
 
-    public BannerPersistenceServiceImpl(BannerRepository bannerRepository) {
+    public BannerPersistenceService(BannerRepository bannerRepository) {
         this.bannerRepository = bannerRepository;
     }
 
@@ -44,9 +45,11 @@ public class BannerPersistenceServiceImpl {
         BooleanBuilder builder = new BooleanBuilder();
         Predicate predicate = builder.getValue();
 
-        Page<BannerEntity> allBanners = bannerRepository.findAll(predicate, pageable);
+        return bannerRepository.findAll(predicate, pageable);
+    }
 
-        return allBanners;
+    public Optional<BannerEntity> findOne(Long id) {
+        return bannerRepository.findById(id);
     }
 
     public BannerEntity create(BannerEntity bannerEntity) {

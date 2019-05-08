@@ -10,6 +10,25 @@
       <column name="ID" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
         <constraints primaryKey="true" nullable="false"/>
       </column>
+
+      <column name="created_at" type="datetime">
+        <constraints nullable="false"/>
+      </column>
+      <column name="application" type="varchar(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="message" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="display_from" type="datetime">
+        <constraints nullable="false"/>
+      </column>
+      <column name="display_to" type="datetime">
+        <constraints nullable="false"/>
+      </column>
+      <column name="priority" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
     </createTable>
 
   </changeSet>

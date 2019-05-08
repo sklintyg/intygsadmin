@@ -19,15 +19,22 @@
 
 package se.inera.intyg.intygsadmin.persistence.entity;
 
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 
 @Entity
 @Table(name = "BANNER")
@@ -39,4 +46,14 @@ public class BannerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private Application application;
+    private String message;
+    private LocalDateTime displayFrom;
+    private LocalDateTime displayTo;
+    @Enumerated(EnumType.STRING)
+    private BannerPriority priority;
 }

@@ -71,6 +71,8 @@ subprojects {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.github.benas:random-beans:${TestDependencies.randomBeansVersion}")
+    
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
   }
 
