@@ -1,9 +1,9 @@
 import React from 'react'
-import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/ibLayout2'
+import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/iaLayout'
 import styled from 'styled-components'
-import ibValues from '../components/styles/ibValues2'
-import { IaTypo06 } from '../components/styles/iaTypography2'
-import IaColors from '../components/styles/iaColors2'
+import ibValues from '../components/styles/iaValues'
+import { IaTypo06 } from '../components/styles/iaTypography'
+import IaColors from '../components/styles/iaColors'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
   max-width: none;

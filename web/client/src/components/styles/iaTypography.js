@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import colors from './iaColors2';
+import colors from './iaColors';
 
 /*
 100 = Roboto Thin

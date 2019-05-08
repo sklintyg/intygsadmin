@@ -1,7 +1,7 @@
 import React from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
-import IaColors from './iaColors2'
+import IaColors from './iaColors'
 import { Button } from 'reactstrap'
 
 /**

@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { HeaderSectionContainer, SingleTextRowContainer, VerticalContainer } from '../styles'
-import IaColors from '../../styles/iaColors2'
-import { UserIcon } from '../../styles/iaSvgIcons2'
+import IaColors from '../../styles/iaColors'
+import { UserIcon } from '../../styles/iaSvgIcons'
 
 const UserComponentWrapper = styled(HeaderSectionContainer)`
   flex: 1 1 auto;

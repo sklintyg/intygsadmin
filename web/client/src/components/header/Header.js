@@ -2,9 +2,9 @@ import React, {Fragment} from 'react';
 import Logo from "./logo/Logo";
 import User from "./user/User";
 import styled from "styled-components";
-import IaColors from "../styles/iaColors2";
+import IaColors from "../styles/iaColors";
 import {HeaderSectionContainerHoverable} from "./styles";
-import ibValues from '../styles/ibValues2'
+import ibValues from '../styles/iaValues'
 import Logout from "./logout/Logout";
 
 const ComponentWrapper = styled.div`

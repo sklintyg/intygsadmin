@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
-import colors from '../styles/iaColors2'
+import colors from '../styles/iaColors'
 import styled from 'styled-components'
-import { ExternalIcon } from '../styles/iaSvgIcons2'
+import { ExternalIcon } from '../styles/iaSvgIcons'
 
 const Link = styled.a`
   color: ${colors.IA_COLOR_02};

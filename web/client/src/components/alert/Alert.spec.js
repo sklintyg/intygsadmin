@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import IbAlert, { alertType } from './Alert';
-import { InfoIcon, Security, ErrorOutline, Check, Warning } from '../styles/iaSvgIcons2';
+import { InfoIcon, Security, ErrorOutline, Check, Warning } from '../styles/iaSvgIcons';
 
 describe('<IBAlert />', () => {
   it('Render alert and children', () => {

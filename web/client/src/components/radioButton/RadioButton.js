@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
-import IaColors from '../styles/iaColors2'
-import { IaTypo07 } from '../styles/iaTypography2'
+import IaColors from '../styles/iaColors'
+import { IaTypo07 } from '../styles/iaTypography'
 
 const RadioWrapper = styled.div`
   display: inline-block;

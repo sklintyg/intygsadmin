@@ -1,5 +1,5 @@
 import React from 'react'
-import IaColors from './iaColors2'
+import IaColors from './iaColors'
 
 // ia-ikon-01
 export const UserIcon = () => (

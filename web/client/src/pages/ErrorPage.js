@@ -1,7 +1,7 @@
 import React from 'react';
-import {FlexColumnContainer, ScrollingContainer, WorkareaContainer} from "../components/styles/ibLayout2";
+import {FlexColumnContainer, ScrollingContainer, WorkareaContainer} from "../components/styles/iaLayout";
 import styled from "styled-components";
-import {ErrorPageIcon} from "../components/styles/iaSvgIcons2";
+import {ErrorPageIcon} from "../components/styles/iaSvgIcons";
 import ErrorMessageFormatter from '../messages/ErrorMessageFormatter'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`

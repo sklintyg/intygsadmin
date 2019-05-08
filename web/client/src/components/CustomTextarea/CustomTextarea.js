@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
-import colors from '../styles/iaColors2'
+import colors from '../styles/iaColors'
 
 const CustomDiv = styled.div`
   margin: 8px 0;

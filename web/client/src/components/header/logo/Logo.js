@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { HeaderSectionContainer } from '../styles'
-import IaColors from '../../styles/iaColors2'
-import {LogoIcon} from '../../styles/iaSvgIcons2'
-import {IaTypo09} from '../../styles/iaTypography2'
+import IaColors from '../../styles/iaColors'
+import {LogoIcon} from '../../styles/iaSvgIcons'
+import {IaTypo09} from '../../styles/iaTypography'
 
 const ComponentWrapper = styled(HeaderSectionContainer)`
   height: 100%;

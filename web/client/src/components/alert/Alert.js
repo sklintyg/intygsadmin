@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {InfoIcon, Security, Check, ErrorOutline, Warning} from "../styles/iaSvgIcons2";
-import IaColors from "../styles/iaColors2";
+import {InfoIcon, Security, Check, ErrorOutline, Warning} from "../styles/iaSvgIcons";
+import IaColors from "../styles/iaColors";
 import styled from 'styled-components'
 
 export const alertType = {
