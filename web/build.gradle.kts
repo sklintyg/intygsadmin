@@ -20,11 +20,13 @@ dependencies {
   // External dependencies
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  implementation("org.mapstruct:mapstruct:${Dependencies.mapstructVersion}")
+  implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
 
   compileOnly("org.projectlombok:lombok")
-  annotationProcessor("org.projectlombok:lombok")
 
-  implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
+  annotationProcessor("org.mapstruct:mapstruct-processor:${Dependencies.mapstructVersion}")
+  annotationProcessor("org.projectlombok:lombok")
 
   testImplementation("commons-io:commons-io:${Dependencies.commonsIOVersion}")
   testImplementation("io.rest-assured:rest-assured:${TestDependencies.restAssuredVersion}")

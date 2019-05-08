@@ -19,13 +19,21 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDateTime;
+import java.util.Collection;
+
 import org.junit.jupiter.api.Test;
 
-import io.restassured.response.ResponseBody;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
+import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class BannerControllerIT extends BaseRestIntegrationTest {
 
@@ -33,27 +41,48 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetBanners() {
-        ResponseBody responseBody = given().expect().statusCode(OK)
+        given().expect().statusCode(OK)
                 .when()
-                .get(BANNER_API_ENDPOINT)
-                .getBody();
+                .get(BANNER_API_ENDPOINT);
     }
 
     @Test
-    @Disabled
-    public void testGetBanner() {
+    public void testCreatBanner() {
+        Response response = given().expect().statusCode(OK)
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .extract().response();
 
+        Collection<BannerDTO> result = response.body().as(Collection.class);
+        int sizeBefore = result.size();
 
-        ResponseBody created = given().expect().statusCode(OK)
+        BannerDTO bannerDTO = new BannerDTO();
+
+        bannerDTO.setMessage("hej");
+        bannerDTO.setApplication(Application.WEBCERT);
+        bannerDTO.setPriority(BannerPriority.HIGH);
+        bannerDTO.setDisplayFrom(LocalDateTime.MIN);
+        bannerDTO.setDisplayTo(LocalDateTime.MAX);
+
+        Integer bannerId = given()
+                .contentType(ContentType.JSON)
+                .body(bannerDTO)
+                .expect().statusCode(OK)
                 .when()
                 .put(BANNER_API_ENDPOINT)
-                .getBody();
+                .then()
+                .extract()
+                    .path("id");
 
 
-        ResponseBody responseBody = given().expect().statusCode(OK)
+        given().expect().statusCode(OK)
                 .when()
-                .get(BANNER_API_ENDPOINT + "/1")
-                .getBody();
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body("size()", is(sizeBefore + 1))
+                .body("find { it.id == " + bannerId + " }.message",
+                        equalTo("hej"));
     }
 
 }

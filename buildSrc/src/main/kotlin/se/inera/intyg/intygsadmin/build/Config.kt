@@ -21,6 +21,7 @@ object Config {
     const val springBootVersion = "2.1.4.RELEASE"
     const val springDependencyManagementVersion = "1.0.7.RELEASE"
 
+    const val mapstructVersion = "1.3.0.Final"
     const val querydslVersion = "4.2.1"
     const val hibernateJpsVersion = "1.0.2.Final"
     const val javaxAnnotationVersion = "1.3.2"

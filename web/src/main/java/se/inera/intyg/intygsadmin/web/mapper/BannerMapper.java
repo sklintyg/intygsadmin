@@ -17,29 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.mapper;
 
+import java.util.List;
 
-import java.time.LocalDateTime;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.factory.Mappers;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
+import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BannerDTO {
-    private Long id;
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface BannerMapper {
+    BannerMapper INSTANCE = Mappers.getMapper(BannerMapper.class);
 
-    private LocalDateTime createdAt;
-    private Application application;
-    private String message;
-    private LocalDateTime displayFrom;
-    private LocalDateTime displayTo;
-    private BannerPriority priority;
+    BannerDTO toDTO(BannerEntity s);
 
-    private BannerStatus status;
+    List<BannerDTO> toListDTO(List<BannerEntity> s);
+
+    BannerEntity toEntity(BannerDTO newSourceAccount);
+
 }

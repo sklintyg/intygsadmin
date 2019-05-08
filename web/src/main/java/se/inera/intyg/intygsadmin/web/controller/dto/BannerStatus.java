@@ -19,27 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-
-import java.time.LocalDateTime;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BannerDTO {
-    private Long id;
-
-    private LocalDateTime createdAt;
-    private Application application;
-    private String message;
-    private LocalDateTime displayFrom;
-    private LocalDateTime displayTo;
-    private BannerPriority priority;
-
-    private BannerStatus status;
+public enum BannerStatus {
+    FUTRURE, ONGOING, FINISHED
 }

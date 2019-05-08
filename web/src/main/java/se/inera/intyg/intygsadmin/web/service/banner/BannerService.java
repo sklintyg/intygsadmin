@@ -19,48 +19,50 @@
 
 package se.inera.intyg.intygsadmin.web.service.banner;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 @Service
 public class BannerService {
 
     private BannerPersistenceService bannerPersistenceService;
+    private BannerMapper bannerMapper;
 
-    public BannerService(BannerPersistenceService bannerPersistenceService) {
+    public BannerService(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper) {
         this.bannerPersistenceService = bannerPersistenceService;
+        this.bannerMapper = bannerMapper;
     }
 
     public List<BannerDTO> getBanners(Pageable pageable) {
+        Page<BannerEntity> banners = bannerPersistenceService.findAll(pageable);
 
-        bannerPersistenceService.findAll(pageable);
-
-        return new ArrayList<>();
+        return bannerMapper.toListDTO(banners.getContent());
     }
 
     public BannerDTO createBanner(BannerDTO bannerDTO) {
 
-        BannerEntity map = new BannerEntity();
+        BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
-        bannerPersistenceService.create(map);
+        BannerEntity createdEntity = bannerPersistenceService.create(map);
 
-        return bannerDTO;
+        return bannerMapper.toDTO(createdEntity);
     }
 
     public BannerDTO save(BannerDTO bannerDTO) {
 
-        BannerEntity map = new BannerEntity();
+        BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
-        bannerPersistenceService.update(map);
+        BannerEntity updatedEntity = bannerPersistenceService.update(map);
 
-        return bannerDTO;
+        return bannerMapper.toDTO(updatedEntity);
     }
 
     public boolean deleteBanner(Long id) {
