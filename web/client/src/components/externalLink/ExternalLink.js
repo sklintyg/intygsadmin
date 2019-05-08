@@ -1,19 +1,19 @@
 import React, { Fragment } from 'react'
-import colors from '../styles/IaColors'
+import colors from '../styles/iaColors2'
 import styled from 'styled-components'
-import { ExternalIcon } from '../styles/IaSvgIcons'
+import { ExternalIcon } from '../styles/iaSvgIcons2'
 
 const Link = styled.a`
-  color: ${colors.AG_COLOR_02};
+  color: ${colors.IA_COLOR_02};
 
   svg {
     margin-left: 4px;
   }
   &:hover {
-    color: ${colors.AG_COLOR_05};
+    color: ${colors.IA_COLOR_05};
 
     svg {
-      fill: ${colors.AG_COLOR_05};
+      fill: ${colors.IA_COLOR_05};
     }
   }
 `
@@ -22,7 +22,7 @@ export default ({ href, children }) => (
   <Fragment>
     <Link href={href} rel="noopener noreferrer" target="_blank">
       {children}
-      <ExternalIcon color={colors.AG_COLOR_02} />
+      <ExternalIcon color={colors.IA_COLOR_02} />
     </Link>
   </Fragment>
 )

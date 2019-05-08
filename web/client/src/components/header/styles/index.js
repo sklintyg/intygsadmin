@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import dividerImage from './divider-border.png'
-import IaColors from "../../styles/IaColors";
+import IaColors from "../../styles/iaColors2";
 
 export const HeaderSectionContainer = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ export const HeaderSectionContainer = styled.div`
 `
 export const HeaderSectionContainerHoverable = styled(HeaderSectionContainer)`
   &:hover {
-      background-color: ${IaColors.AG_COLOR_05}
+      background-color: ${IaColors.IA_COLOR_05}
     }
 `
 
@@ -36,7 +36,7 @@ export const ActionButton = styled.button`
   border: none;
   cursor: pointer;
   font-size: 12px;
-  color: ${IaColors.AG_COLOR_03};
+  color: ${IaColors.IA_COLOR_03};
   padding: 8px;
   height: 100%;
   min-width: 90px;

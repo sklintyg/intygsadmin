@@ -1,9 +1,9 @@
 import React from 'react'
 import landing from './landningssida-min.png'
 import styled from 'styled-components'
-import { IbTypo02, IbTypo07 } from '../components/styles/IbTypography'
-import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/ibLayout'
-import ibValues from '../components/styles/IbValues'
+import { IaTypo02, IaTypo07 } from '../components/styles/iaTypography2'
+import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/ibLayout2'
+import ibValues from '../components/styles/ibValues2'
 import { Col, Container, Row } from 'reactstrap'
 import IbAlert, { alertType } from '../components/alert/Alert'
 import LoginOptions from '../components/loginOptions'
@@ -37,11 +37,11 @@ const HomePage = ({ match }) => {
                 <img src={landing} alt="Landningssida med illustration av stetoskop" />
               </Col>
               <Col xs="12" md="5">
-                <IbTypo02 as="h1">Välkommen till Intygsadmin!</IbTypo02>
-                <IbTypo07 as="p">
+                <IaTypo02 as="h1">Välkommen till Intygsadmin!</IaTypo02>
+                <IaTypo07 as="p">
                   Intygsadmin är en tjänst för att hantera förfrågningar och beställningar av medicinska utlåtanden och intyg till
                   vården.
-                </IbTypo07>
+                </IaTypo07>
                 {method === 't' && (
                   <Section>
                     <IbAlert type={alertType.OBSERVANDUM}>
@@ -52,10 +52,10 @@ const HomePage = ({ match }) => {
                 )}
 
                 <Section>
-                  <IbTypo07 as="p">
+                  <IaTypo07 as="p">
                     För att logga in behöver du ett giltigt e-tjänstekort (exempelvis SITHS-kort) samt behörighet att ta del av
                     förfrågningar och beställningar för din vårdenhet.
-                  </IbTypo07>
+                  </IaTypo07>
                   <IbAlert type={alertType.INFO}>
                     De förfrågningar och beställningar som hanteras i Intygsadmin är journalhandlingar och all aktivitet i tjänsten
                     loggas i enlighet med Patientdatalagen.

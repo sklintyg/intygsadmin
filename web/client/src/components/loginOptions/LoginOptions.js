@@ -1,6 +1,6 @@
 import React from 'react'
-import { Section } from '../styles/ibLayout'
-import IbButton6 from '../styles/IbButton6'
+import { Section } from '../styles/ibLayout2'
+import IbButton6 from '../styles/ibButton62'
 import { Spinner } from 'reactstrap'
 import ErrorMessageFormatter from '../../messages/ErrorMessageFormatter'
 import IbAlert, { alertType } from '../alert/Alert'

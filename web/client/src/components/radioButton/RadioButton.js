@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
-import IaColors from '../styles/IaColors'
-import { IbTypo07 } from '../styles/IbTypography'
+import IaColors from '../styles/iaColors2'
+import { IaTypo07 } from '../styles/iaTypography2'
 
 const RadioWrapper = styled.div`
   display: inline-block;
   padding: 0 22px 12px 22px;
 `
 
-const Label = styled(IbTypo07)`
+const Label = styled(IaTypo07)`
   display: inline-block;
   position: relative;
   padding: 0 0 0 6px;
@@ -28,15 +28,15 @@ const Label = styled(IbTypo07)`
 
   .circle {
     content: '';
-    border: 1px solid ${IaColors.AG_COLOR_11};
+    border: 1px solid ${IaColors.IA_COLOR_11};
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.24);
-    background-color: ${IaColors.AG_COLOR_00};
+    background-color: ${IaColors.IA_COLOR_00};
   }
 
   .dot {
     display: none;
     border: none;
-    background-color: ${IaColors.AG_COLOR_00};
+    background-color: ${IaColors.IA_COLOR_00};
     height: 8px;
     width: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -63,7 +63,7 @@ const Input = styled.input`
   }
 
   &:checked + ${Label} .circle {
-    background-color: ${IaColors.AG_COLOR_05};
+    background-color: ${IaColors.IA_COLOR_05};
     box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.5);
     border: none;
   }
@@ -79,17 +79,17 @@ const Input = styled.input`
 
     & + ${Label} {
       cursor: not-allowed;
-      color: ${IaColors.AG_COLOR_12};
+      color: ${IaColors.IA_COLOR_12};
     }
 
     & + ${Label} .circle {
-      background-color: ${IaColors.AG_COLOR_03};
-      color: ${IaColors.AG_COLOR_12};
+      background-color: ${IaColors.IA_COLOR_03};
+      color: ${IaColors.IA_COLOR_12};
       cursor: not-allowed;
     }
 
     & + ${Label} .dot {
-      background-color: ${IaColors.AG_COLOR_12};
+      background-color: ${IaColors.IA_COLOR_12};
     }
   }
 `

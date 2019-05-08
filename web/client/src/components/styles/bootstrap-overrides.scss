@@ -1,4 +1,4 @@
-@import 'iaColors';
+@import 'iaColors2';
 @import 'ibCommon';
 
 // Override default variables before the import
@@ -7,9 +7,9 @@ $font-family-sans-serif: Roboto, 'Helvetica Neue', -apple-system, BlinkMacSystem
 $font-size-base: 0.875rem; //This will set base font-size to equivalent of 14px ( default in browsers is 1rem = 16 px, so 16/14 = 0.875rem)
 
 //Set base default font color for body, so we only need to override where its different
-$body-color: $ib-color-08;
-$info: $ib-color-03;
-$primary: $ib-color-21;
+$body-color: $ia-color-08;
+$info: $ia-color-03;
+$primary: $ia-color-21;
 
 //We use icon to the left of actual alert-text, do decrease horizontal padding.
 $alert-padding-x: 0.5rem;
@@ -57,17 +57,17 @@ $alert-padding-x: 0.5rem;
 
 //1. Modal footer buttons should be left aligned
 .modal-title {
-  @extend %ib-typo-02;
-  color: $ib-color-07;
+  @extend %ia-typo-01;
+  color: $ia-color-07;
 }
 
 .modal-body {
-  @extend %ib-typo-07;
-  color: $ib-color-07;
+  @extend %ia-typo-07;
+  color: $ia-color-07;
 
   h5 {
-    @extend %ib-typo-06;
-    color: $ib-color-07;
+    @extend %ia-typo-06;
+    color: $ia-color-07;
   }
 }
 
@@ -76,7 +76,7 @@ $alert-padding-x: 0.5rem;
 }
 
 .alert-info {
-  color: $ib-color-06;
+  color: $ia-color-06;
 }
 
 // Button override för ib-tema
@@ -103,9 +103,9 @@ $alert-padding-x: 0.5rem;
   &.active,
   &.active:hover,
   &.active:focus {
-    background-color: $ib-color-21;
-    border-color: $ib-color-21;
-    color: $ib-color-00;
+    background-color: $ia-color-21;
+    border-color: $ia-color-21;
+    color: $ia-color-00;
     box-shadow: 2px 2px 4px 0 $black_12;
   }
 
@@ -117,28 +117,28 @@ $alert-padding-x: 0.5rem;
   &.active {
     &:disabled,
     fieldset[disabled] & {
-      background-color: $ib-color-13;
-      border-color: $ib-color-13;
-      color: $ib-color-22;
+      background-color: $ia-color-13;
+      border-color: $ia-color-13;
+      color: $ia-color-22;
       opacity: 1;
     }
   }
 }
 
 .btn-primary {
-  @include btn-common-mixin($ib-color-00, $ib-color-14, $ib-color-14);
+  @include btn-common-mixin($ia-color-00, $ia-color-14, $ia-color-14);
 }
 
 .btn-success {
-  @include btn-common-mixin($ib-color-00, $ib-color-16, $ib-color-16);
+  @include btn-common-mixin($ia-color-00, $ia-color-16, $ia-color-16);
 }
 
 .btn-default {
-  @include btn-common-mixin($ib-color-17, $ib-color-00, $ib-color-17);
+  @include btn-common-mixin($ia-color-17, $ia-color-00, $ia-color-17);
 }
 
 .btn-secondary {
-  @include btn-common-mixin($ib-color-08, $ib-color-15, $ib-color-15);
+  @include btn-common-mixin($ia-color-08, $ia-color-15, $ia-color-15);
 }
 
 .btn-link {
@@ -152,10 +152,10 @@ $alert-padding-x: 0.5rem;
 }
 
 th .btn-link {
-  color: $ib-color-19;
+  color: $ia-color-19;
 
   &:hover {
-    color: $ib-color-19;
+    color: $ia-color-19;
   }
 }
 
@@ -180,9 +180,9 @@ th .btn-link {
   // Table header ---------------
   > thead > tr > th {
     padding: 7px 5px;
-    background-color: $ib-color-15;
-    @extend %ib-typo-06;
-    color: $ib-color-19;
+    background-color: $ia-color-15;
+    @extend %ia-typo-06;
+    color: $ia-color-19;
     border: none;
 
     &:first-child {
@@ -195,17 +195,17 @@ th .btn-link {
 
     &:hover {
       > td {
-        border-top: 1px solid $ib-color-21;
-        border-bottom: 1px solid $ib-color-21;
+        border-top: 1px solid $ia-color-21;
+        border-bottom: 1px solid $ia-color-21;
       }
 
       > td:first-child {
-        border-left: 1px solid $ib-color-21;
+        border-left: 1px solid $ia-color-21;
         padding-left: 21px;
       }
 
       > td:last-child {
-        border-right: 1px solid $ib-color-21;
+        border-right: 1px solid $ia-color-21;
       }
     }
 
@@ -213,18 +213,18 @@ th .btn-link {
     > td {
       padding: 5px;
       border-top: 1px solid transparent;
-      border-bottom: 1px solid $ib-color-15;
+      border-bottom: 1px solid $ia-color-15;
       //IE11 needs this explicitly to avoid column height behaviour -_--- (INTYG-7611)
       height: 100%;
       vertical-align: middle;
 
       &:first-child {
         padding-left: 21px;
-        border-left: 1px solid $ib-color-15;
+        border-left: 1px solid $ia-color-15;
       }
 
       &:last-child {
-        border-right: 1px solid $ib-color-15;
+        border-right: 1px solid $ia-color-15;
         border-radius: 0;
       }
 
@@ -273,75 +273,53 @@ th .btn-link {
   font-weight: 700;
 }
 
-%ib-typo-01 {
-  @include font-variant-light(25px);
-}
-
-%ib-typo-02 {
+%ia-typo-01 {
   @include font-variant-medium(18px);
 }
 
-%ib-typo-03 {
-  @include font-variant-light(18px);
-}
-
-%ib-typo-04 {
-  @include font-variant-bold(18px);
-}
-
-%ib-typo-05 {
-  @include font-variant-medium(16px);
-}
-
-%ib-typo-06 {
-  @include font-variant-medium(14px);
-}
-
-%ib-typo-07 {
-  @include font-variant-regular(14px);
-}
-
-%ib-typo-08 {
-  @include font-variant-regular(14px);
-  text-decoration: underline;
-}
-
-%ib-typo-09 {
-  @include font-variant-regular(12px);
-}
-
-%ib-typo-10 {
+%ia-typo-02 {
   @include font-variant-regular(16px);
 }
 
-%ib-typo-11 {
-  @include font-variant-regular(12px);
-  font-style: italic;
+%ia-typo-03 {
+  @include font-variant-medium(16px);
 }
 
-%ib-typo-12 {
+%ia-typo-04 {
+  @include font-variant-medium(14px);
+}
+
+%ia-typo-05 {
+  @include font-variant-regular(14px);
+}
+
+%ia-typo-06 {
+  @include font-variant-regular(12px);
+}
+
+%ia-typo-07 {
+  @include font-variant-bold(14px);
+}
+
+%ia-typo-08 {
   @include font-variant-regular(14px);
   font-style: italic;
 }
 
-%ib-typo-13 {
-  @include font-variant-bold(12px);
-}
-
-%ib-typo-14 {
-  @include font-variant-bold(14px);
+%ia-typo-09 {
+  @include font-variant-bold(20px);
 }
 
 // Dropdown
 .dropdown-menu {
-  border-color: $ib-color-21;
+  border-color: $ia-color-21;
   padding: 0;
 }
 
 .dropdown-toggle {
   &:active,
   &:focus {
-    background-color: $ib-color-21 !important;
+    background-color: $ia-color-21 !important;
     box-shadow: 2px 2px 4px 0 $black_12 !important;
   }
 
@@ -356,8 +334,8 @@ th .btn-link {
 .dropdown-item {
   &:hover,
   &:focus {
-    background-color: $ib-color-21;
-    color: $ib-color-00;
+    background-color: $ia-color-21;
+    color: $ia-color-00;
   }
 }
 
@@ -369,8 +347,8 @@ th .btn-link {
 
 a {
   text-decoration: underline;
-  color: $ib-color-17;
+  color: $ia-color-17;
   &:hover {
-    color: $ib-color-21;
+    color: $ia-color-21;
   }
 }

@@ -2,14 +2,14 @@ import React, {Fragment} from 'react';
 import Logo from "./logo/Logo";
 import User from "./user/User";
 import styled from "styled-components";
-import IaColors from "../styles/IaColors";
+import IaColors from "../styles/iaColors2";
 import {HeaderSectionContainerHoverable} from "./styles";
-import ibValues from '../styles/IbValues'
+import ibValues from '../styles/ibValues2'
 import Logout from "./logout/Logout";
 
 const ComponentWrapper = styled.div`
   display: block;
-  background-color: ${IaColors.AG_COLOR_02};
+  background-color: ${IaColors.IA_COLOR_02};
 `
 
 const StyledHeader = styled.div`
@@ -17,10 +17,10 @@ const StyledHeader = styled.div`
   align-items: stretch;
   justify-content: space-between;
   height: ${ibValues.headerHeight};
-  background-color: ${IaColors.AG_COLOR_02};
+  background-color: ${IaColors.IA_COLOR_02};
   margin: auto;
   max-width: ${ibValues.maxContentWidth};
-  color: ${IaColors.AG_COLOR_03};
+  color: ${IaColors.IA_COLOR_03};
 `
 
 const HeaderActionsWrapper = styled.div`

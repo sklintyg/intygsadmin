@@ -1,9 +1,9 @@
 import React from 'react'
-import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/ibLayout'
+import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/ibLayout2'
 import styled from 'styled-components'
-import ibValues from '../components/styles/IbValues'
-import { IbTypo06 } from '../components/styles/IbTypography'
-import IaColors from '../components/styles/IaColors'
+import ibValues from '../components/styles/ibValues2'
+import { IaTypo06 } from '../components/styles/iaTypography2'
+import IaColors from '../components/styles/iaColors2'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
   max-width: none;
@@ -27,7 +27,7 @@ const BannerPage = () => {
     <FlexColumnContainer>
       <CustomScrollingContainer>
         <PageContainer>
-          <IbTypo06 as="h1" color={IaColors.AG_COLOR_06}>Banner</IbTypo06>
+          <IaTypo06 as="h1" color={IaColors.IA_COLOR_06}>Banner</IaTypo06>
           <p>Text.</p>
         </PageContainer>
       </CustomScrollingContainer>
