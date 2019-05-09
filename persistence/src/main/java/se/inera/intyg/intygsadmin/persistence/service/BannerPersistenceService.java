@@ -19,6 +19,8 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 
 @Service
@@ -46,6 +49,10 @@ public class BannerPersistenceService {
         Predicate predicate = builder.getValue();
 
         return bannerRepository.findAll(predicate, pageable);
+    }
+
+    public List<BannerEntity> findActiveAndFuture(LocalDateTime from, Application application) {
+        return bannerRepository.findAllByApplicationEqualsAndDisplayToAfter(application, from);
     }
 
     public Optional<BannerEntity> findOne(Long id) {

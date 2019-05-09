@@ -19,7 +19,7 @@ tasks {
   register<NodeTask>("cypressTest") {
     dependsOn("npmInstall")
 
-    val baseUrl = project.findProperty("baseUrl") ?: "http://localhost:8080"
+    val baseUrl = project.findProperty("baseUrl") ?: "http://localhost:8680"
 
     setScript(file("scripts/run.js"))
 

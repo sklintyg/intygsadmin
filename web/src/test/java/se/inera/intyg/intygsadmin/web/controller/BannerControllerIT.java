@@ -30,6 +30,7 @@ import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -41,11 +42,14 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
     public void testGetBanners() {
         given().expect().statusCode(OK)
                 .when()
-                .get(BANNER_API_ENDPOINT);
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"));
     }
 
     @Test
     public void testCreatBanner() {
+        LocalDateTime today = LocalDateTime.now();
         Integer totalElementsBefore  = given().expect().statusCode(OK)
                 .when()
                 .get(BANNER_API_ENDPOINT)
@@ -58,8 +62,8 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
         bannerDTO.setMessage("hej");
         bannerDTO.setApplication(Application.WEBCERT);
         bannerDTO.setPriority(BannerPriority.HIGH);
-        bannerDTO.setDisplayFrom(LocalDateTime.MIN);
-        bannerDTO.setDisplayTo(LocalDateTime.MAX);
+        bannerDTO.setDisplayFrom(today.minusDays(10));
+        bannerDTO.setDisplayTo(today.plusDays(10));
 
         Integer bannerId = given()
                 .contentType(ContentType.JSON)
@@ -68,6 +72,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
                 .when()
                 .put(BANNER_API_ENDPOINT)
                 .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"))
                 .extract()
                     .path("id");
 
@@ -76,6 +81,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
                 .when()
                 .get(BANNER_API_ENDPOINT)
                 .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
                 .body("totalElements", is(totalElementsBefore + 1))
                 .body("content.find { it.id == " + bannerId + " }.message",
                         equalTo("hej"));

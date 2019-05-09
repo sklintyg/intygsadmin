@@ -1,0 +1,46 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "createdAt",
+      "application",
+      "message",
+      "displayFrom",
+      "displayTo",
+      "priority",
+      "status"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "createdAt": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "application": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "displayFrom": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "displayTo": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "priority": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      }
+    }
+  }
+}

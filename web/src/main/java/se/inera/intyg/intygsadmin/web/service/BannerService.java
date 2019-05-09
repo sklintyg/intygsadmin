@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
@@ -61,6 +62,21 @@ public class BannerService {
         return new PageImpl<>(mapBanners, pageable, banners.getTotalElements());
     }
 
+    public List<BannerDTO> getActiveAndFutureBanners(Application application) {
+        LocalDateTime today = LocalDateTime.now();
+
+        List<BannerEntity> banners = bannerPersistenceService.findActiveAndFuture(today, application);
+
+        return banners.stream()
+                .map(bannerEntity -> {
+                    BannerDTO dto = bannerMapper.toDTO(bannerEntity);
+                    dto.setStatus(getBannerStatus(dto));
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
     private BannerStatus getBannerStatus(BannerDTO dto) {
         LocalDateTime today = LocalDateTime.now();
 
@@ -72,23 +88,27 @@ public class BannerService {
             return BannerStatus.FINISHED;
         }
 
-        return BannerStatus.ONGOING;
+        return BannerStatus.ACTIVE;
     }
 
     public BannerDTO createBanner(BannerDTO bannerDTO) {
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity createdEntity = bannerPersistenceService.create(map);
+        BannerDTO dto = bannerMapper.toDTO(createdEntity);
+        dto.setStatus(getBannerStatus(dto));
 
-        return bannerMapper.toDTO(createdEntity);
+        return dto;
     }
 
     public BannerDTO save(BannerDTO bannerDTO) {
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity updatedEntity = bannerPersistenceService.update(map);
+        BannerDTO dto = bannerMapper.toDTO(updatedEntity);
+        dto.setStatus(getBannerStatus(dto));
 
-        return bannerMapper.toDTO(updatedEntity);
+        return dto;
     }
 
     public boolean deleteBanner(Long id) {

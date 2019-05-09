@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Import;
 
 import se.inera.intyg.intygsadmin.persistence.PersistenceConfig;
 
-//CHECKSTYLE:OFF HideUtilityClassConstructor
 @SpringBootApplication
 @Import({
         PersistenceConfig.class
@@ -35,4 +34,3 @@ public class IntygsadminApplication {
         SpringApplication.run(IntygsadminApplication.class, args);
     }
 }
-//CHECKSTYLE:ON HideUtilityClassConstructor

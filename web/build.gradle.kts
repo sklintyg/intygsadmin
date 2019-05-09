@@ -20,6 +20,7 @@ dependencies {
   // External dependencies
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.mapstruct:mapstruct:${Dependencies.mapstructVersion}")
   implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
 
@@ -90,6 +91,7 @@ tasks {
   val restAssuredTest by creating(Test::class) {
     outputs.upToDateWhen { false }
     systemProperty("integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8680"))
+    systemProperty("integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8681"))
     include("**/*IT*")
   }
 

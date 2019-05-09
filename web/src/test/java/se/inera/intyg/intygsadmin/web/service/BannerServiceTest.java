@@ -106,6 +106,6 @@ public class BannerServiceTest {
         assertEquals(3, bannerDTOPage.getTotalElements());
         assertEquals(BannerStatus.FINISHED, bannerDTOPage.getContent().get(0).getStatus());
         assertEquals(BannerStatus.FUTURE, bannerDTOPage.getContent().get(1).getStatus());
-        assertEquals(BannerStatus.ONGOING, bannerDTOPage.getContent().get(2).getStatus());
+        assertEquals(BannerStatus.ACTIVE, bannerDTOPage.getContent().get(2).getStatus());
     }
 }
