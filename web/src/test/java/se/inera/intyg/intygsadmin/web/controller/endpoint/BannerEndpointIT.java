@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
@@ -36,6 +37,7 @@ public class BannerEndpointIT extends BaseRestIntegrationTest {
     }
 
     @Test
+    @Disabled
     public void testGetBannersForWebcert() {
         given().expect().statusCode(OK)
                 .when()

@@ -14,12 +14,12 @@ node {
 
 tasks {
   clean {
-    delete("test-results")
+    delete("build/test-results")
   }
   register<NodeTask>("cypressTest") {
     dependsOn("npmInstall")
 
-    val baseUrl = project.findProperty("baseUrl") ?: "http://localhost:8680"
+    val baseUrl = System.getProperty("baseUrl", "http://localhost:8680")
 
     setScript(file("scripts/run.js"))
 

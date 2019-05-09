@@ -1,10 +1,10 @@
 {
   "baseUrl": "http://localhost:3000",
   "video": false,
-  "screenshotsFolder": "test-results/screenshots/",
+  "screenshotsFolder": "build/test-results/screenshots/",
   "reporter": "mochawesome",
   "reporterOptions": {
-    "reportDir": "test-results",
+    "reportDir": "build/test-results",
     "inlineAssets": true,
     "quiet": true,
     "overwrite": false,

@@ -4,7 +4,7 @@ const { merge } = require('mochawesome-merge');
 const fs = require('fs');
 
 
-const dir = 'test-results';
+const dir = 'build/test-results';
 
 if (!fs.existsSync(dir)){
   fs.mkdirSync(dir);
