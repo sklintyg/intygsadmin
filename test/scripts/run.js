@@ -31,15 +31,19 @@ const cypressOption = {
 };
 
 cypress.run(cypressOption).then(
-  () => {
-    generateReport(options)
-  },
-  error => {
-    generateReport(options);
-    console.error(error);
+  (results) => {
+  //console.log(results);
+  generateReport(options);
+
+  if (results.totalFailed > 0) {
     process.exit(1)
   }
-);
+}
+).catch(error => {
+    generateReport(options);
+  console.error(error);
+  process.exit(1)
+});
 
 function generateReport(options) {
     return merge(options).then(report => marge.create(report, options))
