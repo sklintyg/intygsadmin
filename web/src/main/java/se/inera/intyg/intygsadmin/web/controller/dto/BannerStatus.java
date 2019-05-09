@@ -20,5 +20,5 @@
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
 public enum BannerStatus {
-    FUTRURE, ONGOING, FINISHED
+    FUTURE, ONGOING, FINISHED
 }

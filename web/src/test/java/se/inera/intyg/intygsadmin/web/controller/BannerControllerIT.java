@@ -20,12 +20,10 @@
 package se.inera.intyg.intygsadmin.web.controller;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 
 import org.junit.jupiter.api.Test;
 
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
@@ -48,14 +46,12 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testCreatBanner() {
-        Response response = given().expect().statusCode(OK)
+        Integer totalElementsBefore  = given().expect().statusCode(OK)
                 .when()
                 .get(BANNER_API_ENDPOINT)
                 .then()
-                .extract().response();
-
-        Collection<BannerDTO> result = response.body().as(Collection.class);
-        int sizeBefore = result.size();
+                .extract()
+                    .path("totalElements");
 
         BannerDTO bannerDTO = new BannerDTO();
 
@@ -80,8 +76,8 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
                 .when()
                 .get(BANNER_API_ENDPOINT)
                 .then()
-                .body("size()", is(sizeBefore + 1))
-                .body("find { it.id == " + bannerId + " }.message",
+                .body("totalElements", is(totalElementsBefore + 1))
+                .body("content.find { it.id == " + bannerId + " }.message",
                         equalTo("hej"));
     }
 

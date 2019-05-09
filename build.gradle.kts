@@ -72,6 +72,8 @@ subprojects {
     testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.github.benas:random-beans:${TestDependencies.randomBeansVersion}")
+    testImplementation("org.mockito:mockito-core:${TestDependencies.mockitoCoreVersion}")
+    testImplementation("org.mockito:mockito-junit-jupiter:${TestDependencies.mockitoCoreVersion}")
     
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
   }

@@ -19,8 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
-import se.inera.intyg.intygsadmin.web.service.banner.BannerService;
+import se.inera.intyg.intygsadmin.web.service.BannerService;
 
 @RestController
 @RequestMapping("/api/banner")
@@ -46,8 +45,8 @@ public class BannerController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BannerDTO>> listBanners(Pageable pageable) {
-        List<BannerDTO> bannerDTOS = bannerService.getBanners(pageable);
+    public ResponseEntity<Page<BannerDTO>> listBanners(Pageable pageable) {
+        Page<BannerDTO> bannerDTOS = bannerService.getBanners(pageable);
 
         return ResponseEntity.ok(bannerDTOS);
     }

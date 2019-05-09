@@ -29,6 +29,7 @@ object Config {
   }
 
   object TestDependencies {
+    const val mockitoCoreVersion = "2.27.0"
     const val junit5Version = "5.4.1"
     const val randomBeansVersion = "3.9.0"
     const val restAssuredVersion = "3.3.0"
