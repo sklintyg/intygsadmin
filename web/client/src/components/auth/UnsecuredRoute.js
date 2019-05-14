@@ -19,7 +19,7 @@ const UnsecuredRoute = ({component: Component, isAuthenticated, isErrorPage, isL
   return (
     <Route {...rest} render={(props) => {
       if (isAuthenticated && !isErrorPage) {
-        return <Redirect to='/bestallningar' />;
+        return <Redirect to='/banner' />;
       }
       return (<Component {...props}/>)
     }} />

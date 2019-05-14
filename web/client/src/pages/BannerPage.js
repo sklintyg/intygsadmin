@@ -2,8 +2,8 @@ import React from 'react'
 import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/iaLayout'
 import styled from 'styled-components'
 import ibValues from '../components/styles/iaValues'
-import { IaTypo06 } from '../components/styles/iaTypography'
-import IaColors from '../components/styles/iaColors'
+import PaginatedListContainer from '../components/bannerList/PaginatedListContainer'
+import BannerPageHeader from '../components/bannerList/BannerPageHeader'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
   max-width: none;
@@ -26,9 +26,9 @@ const BannerPage = () => {
   return (
     <FlexColumnContainer>
       <CustomScrollingContainer>
+        <BannerPageHeader />
         <PageContainer>
-          <IaTypo06 as="h1" color={IaColors.IA_COLOR_06}>Banner</IaTypo06>
-          <p>Text.</p>
+          <PaginatedListContainer />
         </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>

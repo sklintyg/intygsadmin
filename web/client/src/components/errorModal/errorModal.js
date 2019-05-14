@@ -4,7 +4,7 @@ import { compose } from 'recompose'
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
 import ErrorMessageFormatter from '../../messages/ErrorMessageFormatter'
 
-const BorttagenBestallning = ({ handleClose, isOpen, data }) => {
+const BorttagenBanner = ({ handleClose, isOpen, data }) => {
   if (!data) return null
 
   const error = { ...data, title: '' }
@@ -27,4 +27,4 @@ const BorttagenBestallning = ({ handleClose, isOpen, data }) => {
   )
 }
 
-export default compose(modalContainer('errorModal'))(BorttagenBestallning)
+export default compose(modalContainer('errorModal'))(BorttagenBanner)
