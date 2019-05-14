@@ -1,26 +1,12 @@
-import reducer, { BestallningListDefaultState } from './bannerList'
+import reducer, { BannerListDefaultState } from './bannerList'
 import * as actions from '../actions/bannerList'
 import { createStore } from 'redux'
 
 describe('bannerlist reducer', () => {
   let stateBefore = {
-    listBestallningarByFilter: {
-      AKTUELLA: {
-        bannerList: { ...BestallningListDefaultState },
-        errorMessage: null,
-        isFetching: false,
-      },
-      AVVISADE: {
-        bannerList: { ...BestallningListDefaultState },
-        errorMessage: null,
-        isFetching: false,
-      },
-      KLARA: {
-        bannerList: { ...BestallningListDefaultState },
-        errorMessage: null,
-        isFetching: false,
-      },
-    },
+    bannerList: { ...BannerListDefaultState },
+    errorMessage: null,
+    isFetching: false,
   }
 
   let store
@@ -32,20 +18,39 @@ describe('bannerlist reducer', () => {
     expect(reducer(undefined, {})).toEqual(stateBefore)
   })
 
-  test('should return statebefore for aktuella', () => {
-    expect(store.getState().listBestallningarByFilter.AKTUELLA).toEqual(stateBefore.listBestallningarByFilter.AKTUELLA)
+  test('should return statebefore', () => {
+    expect(store.getState()).toEqual(stateBefore)
   })
 
-  test('should add item in bestallninList for aktuella', () => {
+  test('should add item in bannerList', () => {
     let action = {
       type: actions.FETCH_BANNERLIST_SUCCESS,
-      categoryFilter: 'AKTUELLA',
-      response: { id: 1 },
+      response: {
+        listData: [{ id: 1 }],
+        numberOfElements: 0,
+        pageIndex: 0,
+        sortColumn: 'ID',
+        sortDirection: 'ASC',
+        totalElements: 0,
+        totalPages: 0,
+      },
     }
 
     store.dispatch(action)
 
-    let stateAfter = { ...stateBefore.listBestallningarByFilter.AKTUELLA, bannerList: { id: 1 } }
-    expect(store.getState().listBestallningarByFilter.AKTUELLA).toEqual(stateAfter)
+    let stateAfter = {
+      ...stateBefore,
+      bannerList: {
+        listData: [{ id: 1 }],
+        numberOfElements: 0,
+        pageIndex: 0,
+        sortColumn: 'ID',
+        sortDirection: 'ASC',
+        totalElements: 0,
+        totalPages: 0,
+      },
+    }
+
+    expect(store.getState()).toEqual(stateAfter)
   })
 })

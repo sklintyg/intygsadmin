@@ -12,7 +12,7 @@ export const BannerListDefaultState = {
   sortDirection: 'ASC',
 }
 
-const listData = (state = { ...BannerListDefaultState }, action) => {
+const bannerList = (state = { ...BannerListDefaultState }, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_BANNERLIST_SUCCESS:
       return action.response
@@ -48,7 +48,7 @@ const errorMessage = (state = null, action) => {
 }
 
 const bannerListReducer = combineReducers({
-  listData,
+  bannerList,
   isFetching,
   errorMessage,
 })
@@ -57,7 +57,7 @@ export default bannerListReducer
 
 // Selectors
 
-export const getBannerList = (state) => state.bannerList.listData
+export const getBannerList = (state) => state.bannerList.bannerList
 
 export const getIsFetching = (state) => state.bannerList.isFetching
 

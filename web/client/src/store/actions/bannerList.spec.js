@@ -2,33 +2,35 @@ import { functionToTest, mockStore } from '../../testUtils/actionUtils'
 import * as actions from '../actions/bannerList'
 import * as api from '../../api/bannerListApi'
 
-describe('beställningList actions', () => {
+describe('bannerList actions', () => {
   let store
 
   beforeEach(() => {
     store = mockStore({
       bannerList: {
-        listBestallningarByFilter: { AKTUELLA: { isFetching: false } },
+        listData: {},
+        errorMessage: null,
+        isFetching: false,
       },
     })
   })
 
-  describe('fetchBestallningList', () => {
+  describe('fetchBannerList', () => {
     test('success', () => {
       const response = [{}]
 
-      api.fetchBestallningList = () => {
+      api.fetchBannerList = () => {
         return Promise.resolve(response)
       }
 
       const expectedActions = [
-        { type: actions.FETCH_BANNERLIST_REQUEST, categoryFilter: 'AKTUELLA' },
-        { type: actions.FETCH_BANNERLIST_SUCCESS, categoryFilter: 'AKTUELLA', response },
+        { type: actions.FETCH_BANNERLIST_REQUEST },
+        { type: actions.FETCH_BANNERLIST_SUCCESS, response },
       ]
 
       return functionToTest(
         store,
-        () => actions.fetchBestallningList({ categoryFilter: 'AKTUELLA', textFilter: '', sortColumn: '', sortDirection: '' }),
+        () => actions.fetchBannerList({ sortColumn: '', sortDirection: '' }),
         expectedActions
       )
     })
@@ -36,18 +38,18 @@ describe('beställningList actions', () => {
     test('failure', () => {
       const response = [{}]
 
-      api.fetchBestallningList = () => {
+      api.fetchBannerList = () => {
         return Promise.reject(response)
       }
 
       const expectedActions = [
-        { type: actions.FETCH_BANNERLIST_REQUEST, categoryFilter: 'AKTUELLA' },
-        { type: actions.FETCH_BANNERLIST_FAILURE, categoryFilter: 'AKTUELLA', payload: response },
+        { type: actions.FETCH_BANNERLIST_REQUEST },
+        { type: actions.FETCH_BANNERLIST_FAILURE, payload: response },
       ]
 
       return functionToTest(
         store,
-        () => actions.fetchBestallningList({ categoryFilter: 'AKTUELLA', textFilter: '', sortColumn: '', sortDirection: '' }),
+        () => actions.fetchBannerList({ sortColumn: '', sortDirection: '' }),
         expectedActions
       )
     })
