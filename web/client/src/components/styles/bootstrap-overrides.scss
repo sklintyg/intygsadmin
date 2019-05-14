@@ -58,16 +58,16 @@ $alert-padding-x: 0.5rem;
 //1. Modal footer buttons should be left aligned
 .modal-title {
   @extend %ia-typo-01;
-  color: $ia-color-07;
+  color: $ia-color-06;
 }
 
 .modal-body {
-  @extend %ia-typo-07;
-  color: $ia-color-07;
+  @extend %ia-typo-05;
+  color: $ia-color-06;
 
   h5 {
-    @extend %ia-typo-06;
-    color: $ia-color-07;
+    @extend %ia-typo-04;
+    color: $ia-color-06;
   }
 }
 
@@ -103,8 +103,8 @@ $alert-padding-x: 0.5rem;
   &.active,
   &.active:hover,
   &.active:focus {
-    background-color: $ia-color-21;
-    border-color: $ia-color-21;
+    background-color: $ia-color-05;
+    border-color: $ia-color-05;
     color: $ia-color-00;
     box-shadow: 2px 2px 4px 0 $black_12;
   }
@@ -117,24 +117,24 @@ $alert-padding-x: 0.5rem;
   &.active {
     &:disabled,
     fieldset[disabled] & {
-      background-color: $ia-color-13;
-      border-color: $ia-color-13;
-      color: $ia-color-22;
+      background-color: $ia-color-14;
+      border-color: $ia-color-14;
+      color: $ia-color-10;
       opacity: 1;
     }
   }
 }
 
 .btn-primary {
-  @include btn-common-mixin($ia-color-00, $ia-color-14, $ia-color-14);
+  @include btn-common-mixin($ia-color-00, $ia-color-09, $ia-color-09);
 }
 
 .btn-success {
-  @include btn-common-mixin($ia-color-00, $ia-color-16, $ia-color-16);
+  @include btn-common-mixin($ia-color-00, $ia-color-17, $ia-color-17);
 }
 
 .btn-default {
-  @include btn-common-mixin($ia-color-17, $ia-color-00, $ia-color-17);
+  @include btn-common-mixin($ia-color-02, $ia-color-00, $ia-color-02);
 }
 
 .btn-secondary {
