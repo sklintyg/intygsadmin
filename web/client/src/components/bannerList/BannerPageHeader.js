@@ -3,7 +3,7 @@ import BannerActionBar from './BannerActionBar'
 import iaValues from '../styles/iaValues'
 import styled from 'styled-components'
 import IaColors from '../styles/iaColors'
-import { IaTypo09 } from '../styles/iaTypography'
+import { IaTypo01, IaTypo05 } from '../styles/iaTypography'
 import { InfoIcon } from '../styles/iaSvgIcons'
 
 const CenterContainer = styled.div`
@@ -80,11 +80,11 @@ const BannerPageHeader = ({ props }) => {
         <ButtonRow>
           <PageHeaderRow>
             <PageHeaderRow>
-              <IconWrapper><InfoIcon /></IconWrapper>
+              <IconWrapper><InfoIcon color={IaColors.IA_COLOR_02} /></IconWrapper>
             </PageHeaderRow>
             <PageHeaderCol>
-              <IaTypo09>Driftbanner</IaTypo09>
-              Skapa och redigera driftbanners som informerar användaren om kommande eller pågående händelser.
+              <IaTypo01>Driftbanner</IaTypo01>
+              <IaTypo05>Skapa och redigera driftbanners som informerar användaren om kommande eller pågående händelser.</IaTypo05>
             </PageHeaderCol>
           </PageHeaderRow>
           <BannerActionBar />
