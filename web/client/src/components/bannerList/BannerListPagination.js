@@ -13,17 +13,17 @@ const Wrapper = styled.div`
 
   & .page-item .page-link:hover {
     background-color: transparent;
-    color: ${ibColors.IA_COLOR_06}
+    color: ${ibColors.IA_COLOR_05}
   }
 
   & .page-item.active .page-link:hover {
-    color: ${ibColors.IA_COLOR_06}
+    color: ${ibColors.IA_COLOR_05}
     background-color: transparent;
   }
 
   & .page-item.active .page-link {
     background-color: transparent;
-    color: ${ibColors.IA_COLOR_06}
+    color: ${ibColors.IA_COLOR_05}
   }
 
   & .page-item.disabled .page-link {
