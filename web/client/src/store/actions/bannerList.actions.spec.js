@@ -1,6 +1,6 @@
 import { functionToTest, mockStore } from '../../testUtils/actionUtils'
-import * as actions from '../actions/bannerList'
-import * as api from '../../api/bannerListApi'
+import * as actions from './bannerList.actions'
+import * as api from '../../api/bannerList.api'
 
 describe('bannerList actions', () => {
   let store

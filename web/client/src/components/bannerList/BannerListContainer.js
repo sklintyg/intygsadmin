@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { compose, lifecycle } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import * as actions from '../../store/actions/bannerList'
-import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList'
+import * as actions from '../../store/actions/bannerList.actions'
+import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList.reducer'
 import BannerList from './BannerList'
 import styled from 'styled-components'
 import LoadingSpinner from '../loadingSpinner'
@@ -31,18 +31,16 @@ const BannerListContainer = (props) => {
     <Fragment>
       <ListWrapper>
         <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} />
-        {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar beställningar'} />}
+        {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar driftbannerlista'} />}
       </ListWrapper>
     </Fragment>
   )
 }
 
 BannerListContainer.propTypes = {
-  filter: PropTypes.string,
   errorMessage: PropTypes.string,
   bannerList: PropTypes.object,
   isFetching: PropTypes.bool,
-  fetchBanner: PropTypes.func,
 }
 
 const fetchData = ({ fetchBannerList, sortColumn, sortDirection }) => {
@@ -52,11 +50,6 @@ const fetchData = ({ fetchBannerList, sortColumn, sortDirection }) => {
 const lifeCycleValues = {
   componentDidMount() {
     fetchData(this.props)
-  },
-  componentDidUpdate(prevProps) {
-    if (this.props.categoryFilter !== prevProps.categoryFilter || this.props.textFilter !== prevProps.textFilter) {
-      fetchData(this.props)
-    }
   },
 }
 

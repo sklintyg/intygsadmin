@@ -1,5 +1,5 @@
-import * as api from '../../api/bannerListApi'
-import { getIsFetching } from '../reducers/bannerList'
+import * as api from '../../api/bannerList.api'
+import { getIsFetching } from '../reducers/bannerList.reducer'
 
 export const FETCH_BANNERLIST_REQUEST = 'FETCH_BANNERLIST_REQUEST'
 export const FETCH_BANNERLIST_SUCCESS = 'FETCH_BANNERLIST_SUCCESS'

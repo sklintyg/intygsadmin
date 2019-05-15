@@ -1,5 +1,5 @@
 import React from "react";
-import * as actions from "../../store/actions/bannerList";
+import * as actions from "../../store/actions/bannerList.actions";
 import BannerListContainer from "./BannerListContainer";
 import { compose } from "recompose";
 import { connect } from "react-redux";
@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 import BannerListPagination from "./BannerListPagination";
 import {
   getBannerList
-} from "../../store/reducers/bannerList";
+} from "../../store/reducers/bannerList.reducer";
 
 const PaginatedListContainer = (props) => {
   const { bannerList } = props;

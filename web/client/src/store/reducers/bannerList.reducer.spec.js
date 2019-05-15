@@ -1,5 +1,5 @@
-import reducer, { BannerListDefaultState } from './bannerList'
-import * as actions from '../actions/bannerList'
+import reducer, { BannerListDefaultState } from './bannerList.reducer'
+import * as actions from '../actions/bannerList.actions'
 import { createStore } from 'redux'
 
 describe('bannerlist reducer', () => {

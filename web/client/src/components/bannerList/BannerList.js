@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import TableSortHead from './TableSortHead'
 //import { Error } from '../styles/iaSvgIcons'
@@ -45,42 +44,42 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Skapat"
-              sortId="ID"
+              sortId="CREATEDAT"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Tjänst"
-              sortId="INTYG_TYP"
+              sortId="APPLICATION"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Visningsperiod"
-              sortId="INVANARE_PERSON_ID"
+              sortId="DISPLAY_DATES"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Prioritet"
-              sortId="STATUS"
+              sortId="PRIORITY"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Meddelandetext"
-              sortId="ANKOMST_DATUM"
+              sortId="MESSAGE"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Visningsstatus"
-              sortId="ANKOMST_DATUM"
+              sortId="STATUS"
               onSort={handleSort}
             />
             <th />
@@ -96,28 +95,22 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
             </tr>
           )}
           {!errorMessage &&
-           bannerList.bannerList &&
-           bannerList.bannerList.map((banner) => (
+           bannerList.listData &&
+           bannerList.listData.map((banner) => (
               <tr key={banner.id}>
-                <td>{banner.id}</td>
-                <td>{banner.intygTyp}</td>
-                <td>{banner.invanare.personId}</td>
+                <td>{banner.createdAt}</td>
+                <td>{banner.application}</td>
                 <td>
-                  {banner.status === 'Oläst' ? 'Fel' : null} {banner.status}
+                  {banner.displayFrom}<br/>{banner.displayTo}
                 </td>
-                <td>{banner.ankomstDatum}</td>
-                <td>{banner.ankomstDatum}</td>
-                <td>{banner.ankomstDatum}</td>
+                <td>{banner.priority}</td>
+                <td>{banner.message}</td>
+                <td>{banner.status}</td>
                 <td>
-                  <Link
-                    to={{
-                      pathname: '/banner/' +banner.id,
-                      search: '',
-                      hash: '',
-                    }}
-                    id={'BannerListButton-' +banner.id}>
-                    <Button color="primary">Visa</Button>
-                  </Link>
+                    <Button color="primary">Ändra</Button>
+                </td>
+                <td>
+                    <Button color="primary">Avsluta</Button>
                 </td>
               </tr>
             ))}

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { buildClientError } from './util'
-import * as ActionConstants from '../actions/bannerList'
+import * as ActionConstants from '../actions/bannerList.actions'
 
 export const BannerListDefaultState = {
   listData: [],
