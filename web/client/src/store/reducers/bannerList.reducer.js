@@ -3,19 +3,26 @@ import { buildClientError } from './util'
 import * as ActionConstants from '../actions/bannerList.actions'
 
 export const BannerListDefaultState = {
-  listData: [],
+  content: [],
   pageIndex: 0,
-  totalPages: 0,
+  start: 0,
+  end: 0,
   numberOfElements: 0,
   totalElements: 0,
-  sortColumn: 'ID',
-  sortDirection: 'ASC',
+  sortColumn: 'createdAt',
+  sortDirection: 'DESC',
 }
 
 const bannerList = (state = { ...BannerListDefaultState }, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_BANNERLIST_SUCCESS:
-      return action.response
+      return { ...state,
+        content: action.response.content,
+        numberOfElements: action.response.numberOfElements,
+        start: action.response.number * action.response.size,
+        end: action.response.number * action.response.size + action.response.numberOfElements,
+        totalElements: action.response.totalElements
+      }
     default:
       return state
   }

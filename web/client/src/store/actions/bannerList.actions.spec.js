@@ -8,7 +8,7 @@ describe('bannerList actions', () => {
   beforeEach(() => {
     store = mockStore({
       bannerList: {
-        listData: {},
+        content: {},
         errorMessage: null,
         isFetching: false,
       },

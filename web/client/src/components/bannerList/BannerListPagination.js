@@ -32,7 +32,7 @@ const Wrapper = styled.div`
   `
 
 const BannerListPagination = props => {
-  if (!props.bannerList.listData || props.bannerList.listData.length < 1) {
+  if (!props.bannerList.content || props.bannerList.content.length < 1) {
     return null
   }
 

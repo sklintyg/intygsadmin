@@ -15,7 +15,7 @@ export const fetchBannerList = (bannerListRequest) => {
   }
 
   if(!sortColumn) {
-    sortColumn = 'CREATEDBY'
+    sortColumn = 'createdAt'
   }
 
   if(!sortDirection) {

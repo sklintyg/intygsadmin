@@ -17,7 +17,7 @@ export const fetchBannerList = ({pageIndex, sortColumn, sortDirection}) => {
     }
 
     return {
-      listData: bannerListDb,
+      content: bannerListDb,
       pageIndex,
       sortColumn,
       sortDirection,

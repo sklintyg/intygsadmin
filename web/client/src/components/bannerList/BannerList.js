@@ -44,42 +44,42 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Skapat"
-              sortId="CREATEDAT"
+              sortId="createdAt"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Tjänst"
-              sortId="APPLICATION"
+              sortId="application"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Visningsperiod"
-              sortId="DISPLAY_DATES"
+              sortId="displayFrom"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Prioritet"
-              sortId="PRIORITY"
+              sortId="priority"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Meddelandetext"
-              sortId="MESSAGE"
+              sortId="message"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Visningsstatus"
-              sortId="STATUS"
+              sortId="status"
               onSort={handleSort}
             />
             <th />
@@ -95,8 +95,8 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
             </tr>
           )}
           {!errorMessage &&
-           bannerList.listData &&
-           bannerList.listData.map((banner) => (
+           bannerList.content &&
+           bannerList.content.map((banner) => (
               <tr key={banner.id}>
                 <td>{banner.createdAt}</td>
                 <td>{banner.application}</td>
