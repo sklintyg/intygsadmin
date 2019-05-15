@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import IaColors from '../styles/iaColors'
-import { IaTypo07 } from '../styles/iaTypography'
+import { IaTypo05 } from '../styles/iaTypography'
 
 const RadioWrapper = styled.div`
   display: inline-block;
   padding: 0 22px 12px 22px;
 `
 
-const Label = styled(IaTypo07)`
+const Label = styled(IaTypo05)`
   display: inline-block;
   position: relative;
   padding: 0 0 0 6px;

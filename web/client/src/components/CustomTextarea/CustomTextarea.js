@@ -18,8 +18,7 @@ const CustomDiv = styled.div`
   }
 `
 
-const CustomTextarea = ({ children }) => {
-  const [currentHTML, setCurrentHTML] = useState()
+const CustomTextarea = ({ children, onChange }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
   const [linkText, setLinkText] = useState('')
@@ -37,7 +36,7 @@ const CustomTextarea = ({ children }) => {
       link.innerText = linkText
       currentRange.insertNode(link)
     }
-    setCurrentHTML(textArea.current.innerHTML)
+    onChange(textArea.current.innerHTML)
   }
 
   const extractSelection = () => {
@@ -65,7 +64,7 @@ const CustomTextarea = ({ children }) => {
   }
 
   const handleBlur = (evt) => {
-    setCurrentHTML(textArea.current.innerHTML)
+    onChange(textArea.current.innerHTML)
   }
 
   const handlePaste = (evt) => {
@@ -114,8 +113,6 @@ const CustomTextarea = ({ children }) => {
         onKeyPress={handleKeyPress}>
         {children}
       </CustomDiv>
-
-      <div>{currentHTML}</div>
     </>
   )
 }
