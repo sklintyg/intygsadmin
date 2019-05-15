@@ -19,26 +19,77 @@
 
 package se.inera.intyg.intygsadmin.web.config;
 
+import java.lang.reflect.Type;
+import java.util.Arrays;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+
+import com.fasterxml.classmate.TypeResolver;
+import springfox.documentation.builders.AlternateTypeBuilder;
+import springfox.documentation.builders.AlternateTypePropertyBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import static springfox.documentation.schema.AlternateTypeRules.newRule;
+
 @Profile("dev")
 @EnableSwagger2
 @Configuration
 public class SwaggerConfig {
 
+    private final TypeResolver typeResolver;
+    private final RepositoryRestConfiguration restConfiguration;
+
+    public SwaggerConfig(TypeResolver typeResolver, RepositoryRestConfiguration restConfiguration) {
+        this.typeResolver = typeResolver;
+        this.restConfiguration = restConfiguration;
+    }
+
     @Bean
+    @ConditionalOnMissingBean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
+        return new Docket(DocumentationType.SWAGGER_2)
+                .alternateTypeRules(newRule(typeResolver.resolve(Pageable.class),
+                        pageableMixin(restConfiguration),
+                        Ordered.HIGHEST_PRECEDENCE))
+                .select()
                 .apis(RequestHandlerSelectors
                         .basePackage("se.inera.intyg.intygsadmin.web.controller"))
                 .paths(PathSelectors.regex("/.*"))
                 .build();
+    }
+
+    private Type pageableMixin(RepositoryRestConfiguration restConfiguration) {
+        return new AlternateTypeBuilder()
+                .fullyQualifiedClassName(
+                        String.format("%s.generated.%s",
+                                Pageable.class.getPackage().getName(),
+                                Pageable.class.getSimpleName()))
+                .withProperties(Arrays.asList(
+                        property(Integer.class,
+                                restConfiguration.getPageParamName()),
+                        property(Integer.class,
+                                restConfiguration.getLimitParamName()),
+                        property(String.class,
+                                restConfiguration.getSortParamName())
+                ))
+                .build();
+    }
+
+    private AlternateTypePropertyBuilder property(Class<?> type, String name) {
+        return new AlternateTypePropertyBuilder()
+                .withName(name)
+                .withType(type)
+                .withCanRead(true)
+                .withCanWrite(true);
     }
 }

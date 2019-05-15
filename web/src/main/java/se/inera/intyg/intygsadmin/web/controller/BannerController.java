@@ -23,8 +23,7 @@ import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.SortDefault;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.service.BannerService;
 
@@ -51,20 +48,8 @@ public class BannerController {
     }
 
     @GetMapping
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
-                    value = "Results page you want to retrieve (0..N)"),
-            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "Number of records per page."),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
-                    value = "Sorting criteria in the format: property(,asc|desc). "
-                            + "Default sort order is ascending. "
-                            + "Multiple sort criteria are supported.")
-    })
     public ResponseEntity<Page<BannerDTO>> listBanners(
-            @SortDefault.SortDefaults({
-                    @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)
-            })
+            @PageableDefault(size = 20, sort = "createdAt")
             Pageable pageable) {
         Page<BannerDTO> bannerDTOS = bannerService.getBanners(pageable);
 
