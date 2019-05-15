@@ -26,6 +26,7 @@ object Config {
     const val hibernateJpsVersion = "1.0.2.Final"
     const val javaxAnnotationVersion = "1.3.2"
     const val commonsIOVersion = "2.6"
+    const val swaggerVersion = "2.9.2"
   }
 
   object TestDependencies {

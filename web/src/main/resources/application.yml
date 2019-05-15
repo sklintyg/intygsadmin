@@ -12,3 +12,5 @@ management:
 spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
+  profiles:
+    active: default, dev

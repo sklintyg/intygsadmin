@@ -24,6 +24,10 @@ dependencies {
   implementation("org.mapstruct:mapstruct:${Dependencies.mapstructVersion}")
   implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
 
+  //api documentation
+  implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
+  implementation("io.springfox:springfox-swagger-ui:${Dependencies.swaggerVersion}")
+
   compileOnly("org.projectlombok:lombok")
 
   annotationProcessor("org.mapstruct:mapstruct-processor:${Dependencies.mapstructVersion}")
