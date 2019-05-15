@@ -7,10 +7,9 @@
   <changeSet id="1" author="martin hesslund">
 
     <createTable tableName="BANNER">
-      <column name="ID" type="bigint" autoIncrement="true" startWith="1" incrementBy="1">
+      <column name="ID" type="varchar(40)">
         <constraints primaryKey="true" nullable="false"/>
       </column>
-
       <column name="created_at" type="datetime">
         <constraints nullable="false"/>
       </column>

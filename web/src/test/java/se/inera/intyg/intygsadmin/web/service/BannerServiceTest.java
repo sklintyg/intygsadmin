@@ -22,6 +22,7 @@ package se.inera.intyg.intygsadmin.web.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -79,17 +80,17 @@ public class BannerServiceTest {
 
         List<BannerEntity> bannerEntities = new ArrayList<>();
         BannerEntity bannerEntity1 = new BannerEntity();
-        bannerEntity1.setId(1L);
+        bannerEntity1.setId(UUID.randomUUID());
         bannerEntity1.setDisplayFrom(today.minusDays(10));
         bannerEntity1.setDisplayTo(today.minusDays(2));
 
         BannerEntity bannerEntity2 = new BannerEntity();
-        bannerEntity2.setId(2L);
+        bannerEntity2.setId(UUID.randomUUID());
         bannerEntity2.setDisplayFrom(today.plusDays(2));
         bannerEntity2.setDisplayTo(today.plusDays(10));
 
         BannerEntity bannerEntity3 = new BannerEntity();
-        bannerEntity3.setId(3L);
+        bannerEntity3.setId(UUID.randomUUID());
         bannerEntity3.setDisplayFrom(today.minusDays(10));
         bannerEntity3.setDisplayTo(today.plusDays(2));
 

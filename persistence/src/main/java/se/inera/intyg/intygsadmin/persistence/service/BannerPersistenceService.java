@@ -22,6 +22,7 @@ package se.inera.intyg.intygsadmin.persistence.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -55,7 +56,7 @@ public class BannerPersistenceService {
         return bannerRepository.findAllByApplicationEqualsAndDisplayToAfter(application, from);
     }
 
-    public Optional<BannerEntity> findOne(Long id) {
+    public Optional<BannerEntity> findOne(UUID id) {
         return bannerRepository.findById(id);
     }
 
@@ -67,7 +68,7 @@ public class BannerPersistenceService {
         return bannerRepository.save(bannerEntity);
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         bannerRepository.deleteById(id);
     }
 }

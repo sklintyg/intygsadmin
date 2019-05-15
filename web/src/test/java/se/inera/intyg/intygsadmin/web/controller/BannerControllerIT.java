@@ -65,7 +65,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
         bannerDTO.setDisplayFrom(today.minusDays(10));
         bannerDTO.setDisplayTo(today.plusDays(10));
 
-        Integer bannerId = given()
+        String bannerId = given()
                 .contentType(ContentType.JSON)
                 .body(bannerDTO)
                 .expect().statusCode(OK)
@@ -83,7 +83,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
                 .then()
                 .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
                 .body("totalElements", is(totalElementsBefore + 1))
-                .body("content.find { it.id == " + bannerId + " }.message",
+                .body("content.find { it.id == '" + bannerId + "' }.message",
                         equalTo("hej"));
     }
 

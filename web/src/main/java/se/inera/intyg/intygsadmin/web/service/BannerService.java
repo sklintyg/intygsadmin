@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -111,7 +112,7 @@ public class BannerService {
         return dto;
     }
 
-    public boolean deleteBanner(Long id) {
+    public boolean deleteBanner(UUID id) {
         bannerPersistenceService.delete(id);
 
         return true;

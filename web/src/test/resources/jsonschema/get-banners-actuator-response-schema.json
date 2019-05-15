@@ -15,11 +15,10 @@
     "additionalProperties": false,
     "properties": {
       "id": {
-        "type": "integer"
+        "type": "string"
       },
       "createdAt": {
-        "type": "string",
-        "format": "date-time"
+        "type": "string"
       },
       "application": {
         "type": "string"
@@ -28,12 +27,10 @@
         "type": "string"
       },
       "displayFrom": {
-        "type": "string",
-        "format": "date-time"
+        "type": "string"
       },
       "displayTo": {
-        "type": "string",
-        "format": "date-time"
+        "type": "string"
       },
       "priority": {
         "type": "string"

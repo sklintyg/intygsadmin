@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -44,8 +45,8 @@ import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 public class BannerEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.controller.dto;
 
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +33,7 @@ import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BannerDTO {
-    private Long id;
+    private UUID id;
 
     private LocalDateTime createdAt;
     private Application application;

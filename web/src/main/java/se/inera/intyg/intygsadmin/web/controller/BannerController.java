@@ -19,6 +19,8 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +61,7 @@ public class BannerController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<BannerDTO> updateBanner(@PathVariable Long id, @RequestBody BannerDTO bannerDTO) {
+    public ResponseEntity<BannerDTO> updateBanner(@PathVariable UUID id, @RequestBody BannerDTO bannerDTO) {
         bannerDTO.setId(id);
         BannerDTO savedDTO = bannerService.save(bannerDTO);
 
@@ -67,7 +69,7 @@ public class BannerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteBanner(@PathVariable Long id) {
+    public ResponseEntity deleteBanner(@PathVariable UUID id) {
         bannerService.deleteBanner(id);
 
         return ResponseEntity.ok().build();

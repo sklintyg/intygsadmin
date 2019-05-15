@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.persistence.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -30,7 +31,7 @@ import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 
 @Repository
-public interface BannerRepository extends JpaRepository<BannerEntity, Long>,
+public interface BannerRepository extends JpaRepository<BannerEntity, UUID>,
         QuerydslPredicateExecutor<BannerEntity> {
 
     List<BannerEntity> findAllByApplicationEqualsAndDisplayToAfter(Application application, LocalDateTime displayTo);
