@@ -1,6 +1,6 @@
 let api;
 
-if (process.env.NODE_ENV === 'production' || false) {
+if (process.env.NODE_ENV === 'production' || true) {
   api = require('./real/bannerList.api')
 } else {
   api = require('./mock/bannerList.api');
