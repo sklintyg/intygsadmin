@@ -8,26 +8,26 @@ const Wrapper = styled.div`
 
   & .page-item .page-link {
     text-decoration: none;
-    color: ${ibColors.IA_COLOR_07}
+    color: ${ibColors.IA_COLOR_06}
   }
 
   & .page-item .page-link:hover {
     background-color: transparent;
-    color: ${ibColors.IA_COLOR_21}
+    color: ${ibColors.IA_COLOR_06}
   }
 
   & .page-item.active .page-link:hover {
-    color: ${ibColors.IA_COLOR_21}
+    color: ${ibColors.IA_COLOR_06}
     background-color: transparent;
   }
 
   & .page-item.active .page-link {
     background-color: transparent;
-    color: ${ibColors.IA_COLOR_21}
+    color: ${ibColors.IA_COLOR_06}
   }
 
   & .page-item.disabled .page-link {
-    color: ${ibColors.IA_COLOR_22}
+    color: ${ibColors.IA_COLOR_10}
   }
   `
 

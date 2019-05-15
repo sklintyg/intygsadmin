@@ -16,11 +16,11 @@ const Wrapper = styled.div`
 `
 
 const BannerList = ({bannerList, onSort, errorMessage }) => {
-  if (bannerList.banners && bannerList.banners.length === 0) {
-    if (bannerList.ingaRegistreradeBanners) {
+  if (bannerList.content && bannerList.content.length === 0) {
+    if (bannerList.totalElements === 0) {
       return (
         <ResultLine>
-          Det finns inga driftbanners
+          Det finns inga driftbanners att visa ännu.
         </ResultLine>
       )
     } else {

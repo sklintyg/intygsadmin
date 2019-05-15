@@ -152,10 +152,10 @@ $alert-padding-x: 0.5rem;
 }
 
 th .btn-link {
-  color: $ia-color-19;
+  color: $ia-color-06;
 
   &:hover {
-    color: $ia-color-19;
+    color: $ia-color-06;
   }
 }
 
@@ -180,9 +180,9 @@ th .btn-link {
   // Table header ---------------
   > thead > tr > th {
     padding: 7px 5px;
-    background-color: $ia-color-15;
-    @extend %ia-typo-06;
-    color: $ia-color-19;
+    background-color: $ia-color-08;
+    @extend %ia-typo-04;
+    color: $ia-color-01;
     border: none;
 
     &:first-child {
@@ -195,17 +195,17 @@ th .btn-link {
 
     &:hover {
       > td {
-        border-top: 1px solid $ia-color-21;
-        border-bottom: 1px solid $ia-color-21;
+        border-top: 1px solid $ia-color-05;
+        border-bottom: 1px solid $ia-color-05;
       }
 
       > td:first-child {
-        border-left: 1px solid $ia-color-21;
+        border-left: 1px solid $ia-color-05;
         padding-left: 21px;
       }
 
       > td:last-child {
-        border-right: 1px solid $ia-color-21;
+        border-right: 1px solid $ia-color-05;
       }
     }
 
