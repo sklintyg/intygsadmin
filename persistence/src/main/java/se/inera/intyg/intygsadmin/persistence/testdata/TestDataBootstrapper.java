@@ -70,21 +70,21 @@ public class TestDataBootstrapper {
 
     private void generateBanners(Application application, List<BannerEntity> bannerEntities) {
         BannerEntity currentEntity = new BannerEntity();
-        currentEntity.setMessage("Current test message" + application);
+        currentEntity.setMessage("Current test message " + application);
         currentEntity.setApplication(application);
         currentEntity.setPriority(BannerPriority.HIGH);
         currentEntity.setDisplayFrom(randomizePastDate());
         currentEntity.setDisplayTo(randomizeFutureDate());
 
         BannerEntity futureEntity = new BannerEntity();
-        futureEntity.setMessage("Future test message" + application);
+        futureEntity.setMessage("Future test message " + application);
         futureEntity.setApplication(application);
         futureEntity.setPriority(BannerPriority.MEDIUM);
         futureEntity.setDisplayFrom(randomizeFutureDate());
         futureEntity.setDisplayTo(randomizeFutureDate(futureEntity.getDisplayFrom()));
 
         BannerEntity prevEntity = new BannerEntity();
-        prevEntity.setMessage("Past test message" + application);
+        prevEntity.setMessage("Past test message " + application);
         prevEntity.setApplication(application);
         prevEntity.setPriority(BannerPriority.LOW);
         prevEntity.setDisplayTo(randomizePastDate());
@@ -105,7 +105,7 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizeFutureDate() {
-        return randomizePastDate(LocalDateTime.now());
+        return randomizeFutureDate(LocalDateTime.now());
     }
 
     private LocalDateTime randomizeFutureDate(LocalDateTime fromDate) {
