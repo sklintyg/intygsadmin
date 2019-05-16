@@ -55,6 +55,8 @@ describe('bannerlist reducer', () => {
         },
         totalPages: 1,
       },
+      sortColumn: 'createdAt',
+      sortDirection: 'DESC',
     }
 
     store.dispatch(action)
@@ -77,7 +79,7 @@ describe('bannerlist reducer', () => {
         sortColumn: 'createdAt',
         sortDirection: 'DESC',
         totalElements: 1,
-        start: 0,
+        start: 1,
         end: 1
       },
     }
