@@ -19,6 +19,8 @@ export const fetchBannerList = (bannerRequest) => (dispatch, getState) => {
       dispatch({
         type: 'FETCH_BANNERLIST_SUCCESS',
         response: response,
+        sortColumn: bannerRequest.sortColumn,
+        sortDirection: bannerRequest.sortDirection
       })
     },
     (errorResponse) => {

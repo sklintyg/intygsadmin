@@ -1,41 +1,42 @@
-import React, {Fragment} from "react";
-import {DownIcon, UpDownIcon, UpIcon} from "../styles/iaSvgIcons";
-import {Button} from 'reactstrap'
+import React from 'react'
+import { DownIcon, UpDownIcon, UpIcon } from '../styles/iaSvgIcons'
+import { Button } from 'reactstrap'
 
-const TableSortHead = ({
-  currentSortColumn,
-  currentSortDirection,
-  text,
-  sortId,
-  onSort
-}) => {
-  const handleSort = sortColumn => {
-    onSort(sortColumn);
-  };
+const TableSortHead = ({ currentSortColumn, currentSortDirection, text, sortId, onSort }) => {
+  const handleSort = (sortColumn) => {
+    onSort(sortColumn)
+  }
 
-  const renderSortIcon = sortColumn => {
+  const renderSortIcon = (sortColumn) => {
     if (currentSortColumn === sortColumn) {
-      return currentSortDirection === "DESC" ? <DownIcon /> : <UpIcon />;
+      return currentSortDirection === 'DESC' ? <DownIcon /> : <UpIcon />
     } else {
-      return <UpDownIcon />;
+      return <UpDownIcon />
     }
-  };
+  }
+
+  if (!sortId) {
+    return (
+      <>
+        <th>{text}</th>
+      </>
+    )
+  }
 
   return (
-    <Fragment>
+    <>
       <th>
         <Button
           color="link"
           onClick={() => {
-            handleSort(sortId);
-          }}
-        >
+            handleSort(sortId)
+          }}>
           {text}
-        </Button>{" "}
+        </Button>{' '}
         {renderSortIcon(sortId)}
       </th>
-    </Fragment>
-  );
-};
+    </>
+  )
+}
 
-export default TableSortHead;
+export default TableSortHead

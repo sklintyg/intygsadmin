@@ -19,9 +19,12 @@ const bannerList = (state = { ...BannerListDefaultState }, action) => {
       return { ...state,
         content: action.response.content,
         numberOfElements: action.response.numberOfElements,
-        start: action.response.number * action.response.size,
+        pageIndex: action.response.number,
+        start: action.response.number * action.response.size + 1,
         end: action.response.number * action.response.size + action.response.numberOfElements,
-        totalElements: action.response.totalElements
+        totalElements: action.response.totalElements,
+        sortColumn: action.sortColumn,
+        sortDirection: action.sortDirection,
       }
     default:
       return state

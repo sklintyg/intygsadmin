@@ -79,7 +79,6 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Visningsstatus"
-              sortId="status"
               onSort={handleSort}
             />
             <th />
@@ -104,7 +103,7 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
                   {banner.displayFrom}<br/>{banner.displayTo}
                 </td>
                 <td>{banner.priority}</td>
-                <td>{banner.message}</td>
+                <td dangerouslySetInnerHTML={{__html: banner.message}}></td>
                 <td>{banner.status}</td>
                 <td>
                     <Button color="primary">Ändra</Button>

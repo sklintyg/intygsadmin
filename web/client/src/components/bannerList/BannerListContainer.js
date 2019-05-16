@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { compose, lifecycle } from 'recompose'
 import { connect } from 'react-redux'
@@ -28,12 +28,12 @@ const BannerListContainer = (props) => {
   }
 
   return (
-    <Fragment>
+    <>
       <ListWrapper>
         <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} />
         {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar driftbannerlista'} />}
       </ListWrapper>
-    </Fragment>
+    </>
   )
 }
 
