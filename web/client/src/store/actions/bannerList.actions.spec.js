@@ -25,12 +25,12 @@ describe('bannerList actions', () => {
 
       const expectedActions = [
         { type: actions.FETCH_BANNERLIST_REQUEST },
-        { type: actions.FETCH_BANNERLIST_SUCCESS, response },
+        { type: actions.FETCH_BANNERLIST_SUCCESS, response, sortColumn: 'createdAt', sortDirection: 'DESC' },
       ]
 
       return functionToTest(
         store,
-        () => actions.fetchBannerList({ sortColumn: '', sortDirection: '' }),
+        () => actions.fetchBannerList({ sortColumn: 'createdAt', sortDirection: 'DESC' }),
         expectedActions
       )
     })
