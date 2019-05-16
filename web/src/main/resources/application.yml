@@ -14,3 +14,28 @@ spring:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
     active: default, dev
+  # Spring security configuration
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          inera:
+#            client-id: http://localhost:8680
+#            client-secret: f2e71e76-4afa-455e-9b01-9dedead4590b
+#            scope: openid
+#            client-authentication-method: post
+#
+#        provider:
+#          inera:
+#            issuer-uri: https://idp.ineradev.org:443/oidc
+
+inera:
+  idp:
+    client-id: http://localhost:8680
+    client-secret: f2e71e76-4afa-455e-9b01-9dedead4590b
+    redirect-uri: http://localhost:8680/inera-login
+    issuer-uri: https://idp.ineradev.org:443/oidc
+
+logging:
+  level:
+    org.springframework: debug
