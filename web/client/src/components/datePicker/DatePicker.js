@@ -23,7 +23,7 @@ class DatePickerInput extends React.Component {
   render() {
     return (
       <>
-        <StyledInput type="text" value={this.props.value} onChange={this.props.onChange}/>
+        <StyledInput type="text" value={this.props.value} onChange={this.props.onChange} placeholder={'åååå-mm-dd'}/>
         <StyledButton onClick={this.props.onClick} color={'default'}><Calendar/></StyledButton>
       </>
     )
@@ -31,7 +31,7 @@ class DatePickerInput extends React.Component {
 }
 
 const DatePicker = ({date, onChange}) => {
-  return <ReactDatePicker customInput={<DatePickerInput />} selected={date} locale={sv} dateFormat={'yyyy-MM-dd'} onChange={onChange} placeholderText="åååå-mm-dd"/>
+  return <ReactDatePicker customInput={<DatePickerInput />} selected={date} locale={sv} dateFormat={'yyyy-MM-dd'} onChange={onChange}/>
 }
 
 export default DatePicker

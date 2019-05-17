@@ -7,6 +7,7 @@ import CustomTextarea from '../CustomTextarea'
 import DatePicker from '../datePicker'
 import * as actions from '../../store/actions/banner'
 import { connect } from 'react-redux'
+import TimePicker from '../timePicker'
 
 const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   const [tjanst, setTjanst] = useState(undefined)
@@ -32,7 +33,13 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   }
 
   const send = () => {
-    createBanner({ application: tjanst, message: meddelande, displayFrom: fromDate, displayTo: toDate, priority: prio }).then(()=>handleClose())
+    createBanner({
+      application: tjanst,
+      message: meddelande,
+      displayFrom: fromDate.toLocaleString().replace(' ', 'T'),
+      displayTo: toDate.toLocaleString().replace(' ', 'T'),
+      priority: prio,
+    }).then(() => handleClose())
   }
 
   const tjanstButtons = [
@@ -55,8 +62,11 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
           <h5>Ange visningsperiod</h5>
           Från:
           <DatePicker date={fromDate} onChange={onFromDateChange} />
+          <TimePicker date={fromDate} onChange={onFromDateChange} />
+          <br />
           Till:
           <DatePicker date={toDate} onChange={onToDateChange} />
+          <TimePicker date={toDate} onChange={onToDateChange} />
           <h5>Välj prioritet</h5>
           <RadioWrapper radioButtons={prioButtons} onChange={onPrioChange} selected={prio} />
         </ModalBody>
