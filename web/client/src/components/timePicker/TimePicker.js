@@ -29,7 +29,12 @@ const Popup = styled.div`
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
-  display: none;
+  &.open {
+    display: block;
+  }
+  &.closed {
+    display: none;
+  }
 `
 
 const TimeDiv = styled.div`
@@ -53,6 +58,7 @@ const TimePicker = ({ date, onChange }) => {
   const popup = useRef(null)
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
+  const [popupOpen, setPopupOpen] = useState(false)
 
   const parseTimeFromDate = () => {
     if (value) {
@@ -82,52 +88,70 @@ const TimePicker = ({ date, onChange }) => {
       //INVALID
     }
     setValue(inputValue)
+    console.log('change')
+  }
+
+  const toggleTimePopup = () => {
+    if (popupOpen) {
+      closeTimePopup()
+    } else {
+      openTimePopup()
+    }
   }
 
   const openTimePopup = () => {
+    setPopupOpen(true)
     parseTimeFromDate()
-    if (popup.current.style.display !== 'block') {
-      popup.current.style.display = 'block'
+  }
+
+  const closeTimePopup = () => {
+    let newDate
+    if (date) {
+      newDate = new Date(date)
     } else {
-      popup.current.style.display = 'none'
+      newDate = new Date()
     }
+    newDate.setHours(parseInt(hours))
+    newDate.setMinutes(parseInt(minutes))
+    onChange(newDate)
+    setPopupOpen(false)
   }
 
   const hoursUp = () => {
     let newHours = parseInt(hours) + 1
     if (newHours === 24) newHours = 0
     setHours(newHours < 10 ? '0' + newHours : newHours)
-    setValue(hours + ':' + minutes)
+    setValue((newHours < 10 ? '0' + newHours : newHours) + ':' + minutes)
   }
 
   const minutesUp = () => {
     let newMinutes = parseInt(minutes) + 10
     if (newMinutes > 59) newMinutes -= 60
     setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
-    setValue(hours + ':' + minutes)
+    setValue(hours + ':' + (newMinutes < 10 ? '0' + newMinutes : newMinutes))
   }
 
   const hoursDown = () => {
     let newHours = parseInt(hours) - 1
     if (newHours === -1) newHours = 23
     setHours(newHours < 10 ? '0' + newHours : newHours)
-    setValue(hours + ':' + minutes)
+    setValue((newHours < 10 ? '0' + newHours : newHours) + ':' + minutes)
   }
 
   const minutesDown = () => {
     let newMinutes = parseInt(minutes) - 10
     if (newMinutes < 0) newMinutes += 60
     setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
-    setValue(hours + ':' + minutes)
+    setValue(hours + ':' + (newMinutes < 10 ? '0' + newMinutes : newMinutes))
   }
 
   return (
     <Container>
       <StyledInput type="text" value={value} onChange={internalOnChange} placeholder={'hh:mm'} />
-      <StyledButton onClick={openTimePopup} color={'default'}>
+      <StyledButton onClick={toggleTimePopup} color={'default'}>
         <TimeIcon />
       </StyledButton>
-      <Popup ref={popup}>
+      <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
         <ArrowDiv>
           <Button color={'Link'} onClick={hoursUp}>
             <ExpandIcon />

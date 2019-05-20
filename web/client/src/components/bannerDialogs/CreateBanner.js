@@ -8,6 +8,62 @@ import DatePicker from '../datePicker'
 import * as actions from '../../store/actions/banner'
 import { connect } from 'react-redux'
 import TimePicker from '../timePicker'
+import Toggler from '../toggler/Toggler'
+import styled from 'styled-components'
+import colors from '../styles/iaColors'
+import { IaTypo05, IaTypo04 } from '../styles/iaTypography'
+
+const StyledBody = styled(ModalBody)`
+  h5 {
+    padding: 12px 0 4px;
+    &:first-of-type {
+      padding: 4px 0;
+    }
+  }
+`
+
+const HelpDiv = styled.div`
+  &.visible {
+    display: block;
+  }
+  &.hidden {
+    display: none;
+  }
+
+  border-radius: 2px;
+  background-color: ${colors.IA_COLOR_15};
+  max-height: 160px;
+  padding: 12px 18px;
+  overflow-y: scroll;
+  margin-bottom: 12px;
+`
+
+const HelpRoof = styled.div`
+  margin-top: -25px;
+  &.visible {
+    display: block;
+  }
+  &.hidden {
+    display: none;
+  }
+  height: 20px;
+  width: 20px;
+  border: 10px solid ${colors.IA_COLOR_15};
+  margin-left: 20px;
+  border-top: 10px solid #fff;
+  border-left: 10px solid #fff;
+  border-right: 10px solid #fff;
+`
+
+const HelpHeader = styled(IaTypo04)`
+  color: ${colors.IA_COLOR_06}
+  padding: 4px 0;
+`
+
+const HelpText = styled(IaTypo05)`
+  color: ${colors.IA_COLOR_06}
+  padding: 4px 0;
+`
 
 const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   const [tjanst, setTjanst] = useState(undefined)
@@ -15,6 +71,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   const [fromDate, setFromDate] = useState(undefined)
   const [toDate, setToDate] = useState(undefined)
   const [meddelande, setMeddelande] = useState('')
+  const [prioHelpExpanded, setPrioHelpExpanded] = useState(false)
 
   const onTjanstChange = (e) => {
     setTjanst(e.target.value)
@@ -30,6 +87,10 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   }
   const onToDateChange = (value) => {
     setToDate(value)
+  }
+
+  const prioHelpToggler = () => {
+    setPrioHelpExpanded(!prioHelpExpanded)
   }
 
   const send = () => {
@@ -54,24 +115,40 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
     <Fragment>
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={handleClose}>
         <ModalHeader toggle={handleClose}>Skapa driftbanner</ModalHeader>
-        <ModalBody>
+        <StyledBody>
           <h5>Välj tjänst</h5>
           <RadioWrapper radioButtons={tjanstButtons} onChange={onTjanstChange} selected={tjanst} />
           <h5>Skriv meddelandetext</h5>
           <CustomTextarea onChange={onMeddelandeChange} />
           <h5>Ange visningsperiod</h5>
-          Från:
-          <DatePicker date={fromDate} onChange={onFromDateChange} />
+          Från <DatePicker date={fromDate} onChange={onFromDateChange} />
           <TimePicker date={fromDate} onChange={onFromDateChange} />
           <br />
-          Till:
-          <DatePicker date={toDate} onChange={onToDateChange} />
+          till <DatePicker date={toDate} onChange={onToDateChange} />
           <TimePicker date={toDate} onChange={onToDateChange} />
-          <h5>Välj prioritet</h5>
+          <h5>
+            Välj prioritet<Toggler expanded={prioHelpExpanded} handleToggle={prioHelpToggler} />
+          </h5>
+          <HelpRoof className={prioHelpExpanded ? 'visible' : 'hidden'}></HelpRoof>
+          <HelpDiv className={prioHelpExpanded ? 'visible' : 'hidden'}>
+            <HelpHeader>Låg prioritet</HelpHeader>
+            <HelpText>Används för information som inte påverkar användandet av tjänsten. En blå driftbanner visas.</HelpText>
+            <HelpHeader>Medel prioritet</HelpHeader>
+            <HelpText>
+              Används för information som användaren bör uppmärksamma och för händelser som inte påverkar användandet av tjänsten, till
+              exempel vid kommande driftstörningar. En gul driftbanner visas.
+            </HelpText>
+            <HelpHeader>Hög prioritet</HelpHeader>
+            <HelpText>
+              Används för information som användaren behöver uppmärksamma och för händelser som påverkar användandet av tjänsten, till
+              exempel vid pågående driftstörningar. En röd driftbanner visas.
+            </HelpText>
+          </HelpDiv>
           <RadioWrapper radioButtons={prioButtons} onChange={onPrioChange} selected={prio} />
-        </ModalBody>
+        </StyledBody>
         <ModalFooter>
           <Button
+            disabled={!(tjanst && meddelande && fromDate && toDate && prio)}
             color={'primary'}
             onClick={() => {
               send()
