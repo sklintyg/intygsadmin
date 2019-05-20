@@ -61,6 +61,26 @@ const BannerList = ({bannerList, onSort, errorMessage, openModal, removeBanner, 
     })
   }
 
+  const prioText = {
+    'LOW': 'Låg',
+    'MEDIUM': 'Medel',
+    'HIGH': 'Hög',
+  }
+
+  const serviceText = {
+    'STATISTIK': 'Intygsstatistik',
+    'WEBCERT': 'Webcert',
+    'REHABSTOD': 'Rehabstöd',
+  }
+
+  const statusText = {
+    'FUTURE': 'Kommande',
+    'ACTIVE': 'Pågående',
+    'FINISHED': 'Avslutad',
+  }
+
+  const dateShowPeriodOptions = {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'};
+
   return (
     <Wrapper>
       <ResultLine>
@@ -126,14 +146,14 @@ const BannerList = ({bannerList, onSort, errorMessage, openModal, removeBanner, 
            bannerList.content &&
            bannerList.content.map((banner) => (
               <tr key={banner.id}>
-                <td>{banner.createdAt}</td>
-                <td>{banner.application}</td>
+                <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
+                <td>{serviceText[banner.application]}</td>
                 <td>
-                  {banner.displayFrom}<br/>{banner.displayTo}
+                  {new Date(banner.displayFrom).toLocaleString('sv-SE', dateShowPeriodOptions)}<br/>{new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
                 </td>
-                <td>{banner.priority}</td>
+                <td>{prioText[banner.priority]}</td>
                 <td dangerouslySetInnerHTML={{__html: banner.message}}></td>
-                <td>{banner.status}</td>
+                <td>{statusText[banner.status]}</td>
                 <td>
                     <Button disabled={banner.status === 'FINISHED'} color="primary">Ändra</Button>
                 </td>
