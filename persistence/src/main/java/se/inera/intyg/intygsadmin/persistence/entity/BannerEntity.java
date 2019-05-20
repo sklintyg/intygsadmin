@@ -38,7 +38,7 @@ import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 
 @Entity
-@Table(name = "BANNER")
+@Table(name = "banner")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
