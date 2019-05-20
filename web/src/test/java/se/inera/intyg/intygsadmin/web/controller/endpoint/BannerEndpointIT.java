@@ -37,7 +37,6 @@ public class BannerEndpointIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    @Disabled
     public void testGetBannersForWebcert() {
         given().expect().statusCode(OK)
                 .when()
