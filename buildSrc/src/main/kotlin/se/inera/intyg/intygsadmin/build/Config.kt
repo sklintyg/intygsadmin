@@ -18,7 +18,7 @@ object Config {
     const val nodeVersion = "10.15.1"
 
     const val kotlinVersion = "1.3.31"
-    const val springBootVersion = "2.1.4.RELEASE"
+    const val springBootVersion = "2.1.5.RELEASE"
     const val springDependencyManagementVersion = "1.0.7.RELEASE"
 
     const val mapstructVersion = "1.3.0.Final"

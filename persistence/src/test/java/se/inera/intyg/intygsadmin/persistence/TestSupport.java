@@ -19,6 +19,7 @@
 package se.inera.intyg.intygsadmin.persistence;
 
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import com.google.common.base.Charsets;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
@@ -35,7 +36,7 @@ public abstract class TestSupport {
             .randomizationDepth(10)
             .collectionSizeRange(1, 20)
             .charset(Charsets.UTF_8)
-            .excludeField(named("id").and(ofType(Long.class)))
+            .excludeField(named("id").and(ofType(UUID.class)))
             .scanClasspathForConcreteTypes(true)
             .build();
 
