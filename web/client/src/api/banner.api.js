@@ -1,4 +1,4 @@
-let api = require('./real/bannerApi');
+let api = require('./real/banner.api');
 
 export const createBanner = (banner) => api.createBanner(banner);
 

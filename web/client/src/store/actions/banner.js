@@ -1,4 +1,4 @@
-import * as api from '../../api/bannerApi'
+import * as api from '../../api/banner.api'
 import { getIsFetching } from '../reducers/banner'
 
 export const CREATE_BANNER_REQUEST = 'CREATE_BANNER_REQUEST'
@@ -55,6 +55,8 @@ export const removeBanner = (id) => (dispatch, getState) => {
         type: 'REMOVE_BANNER_FAILURE',
         payload: errorResponse,
       })
+
+      throw errorResponse
     }
   )
 }
