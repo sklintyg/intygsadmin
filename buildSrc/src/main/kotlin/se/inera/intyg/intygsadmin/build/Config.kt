@@ -27,6 +27,7 @@ object Config {
     const val javaxAnnotationVersion = "1.3.2"
     const val commonsIOVersion = "2.6"
     const val swaggerVersion = "2.9.2"
+    const val commonsLang3Version = "3.9"
   }
 
   object TestDependencies {

@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "required": [
+    "applicationName",
+    "buildVersion",
+    "buildTimestamp",
+    "activeProfiles"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "applicationName": {
+      "type": "string"
+    },
+    "buildVersion": {
+      "type": "string"
+    },
+    "buildTimestamp": {
+      "type": "string"
+    },
+    "activeProfiles": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "required": [
+    "versionInfo",
+    "loginUrl"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "versionInfo": {
+      "type": "object",
+      "required": [
+        "applicationName",
+        "buildVersion",
+        "buildTimestamp",
+        "activeProfiles"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "applicationName": {
+          "type": "string"
+        },
+        "buildVersion": {
+          "type": "string"
+        },
+        "buildTimestamp": {
+          "type": "string"
+        },
+        "activeProfiles": {
+          "type": "string"
+        }
+      }
+    },
+    "loginUrl": {
+      "type": "string",
+      "additionalProperties": false
+    }
+  }
+}
