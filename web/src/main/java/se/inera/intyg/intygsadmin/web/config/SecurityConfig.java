@@ -29,9 +29,15 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
+import se.inera.intyg.intygsadmin.web.auth.IndividualClaimsOuth2ContextFilter;
+import se.inera.intyg.intygsadmin.web.auth.IneraOidcFilter;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -40,11 +46,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${inera.idp.client-id}")
     private String clientId;
 
+    @Value("${inera.idp.redirect-uri}")
+    private String redirectUri;
+
+    @Value("${inera.idp.requested-claims}")
+    private List<String> requestedClaims;
+
     @Autowired
     private OIDCProviderMetadata ineraOIDCProviderMetadata;
 
     @Autowired
     private OAuth2RestTemplate restTemplate;
+
+    @Autowired
+    private UserPersistenceService userPersistenceService;
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -55,23 +70,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/version.html");
         web.ignoring().antMatchers("/welcome.html");
         web.ignoring().antMatchers("/error/**");
-        web.ignoring().antMatchers("/**");
     }
 
     @Bean
-    public IneraOidcFilter ineraOidcFilter() {
-        final IneraOidcFilter filter = new IneraOidcFilter("/inera-login", clientId, ineraOIDCProviderMetadata.getIssuer().toString(),
-                ineraOIDCProviderMetadata.getJWKSetURI().toString());
-        filter.setRestTemplate(restTemplate);
-        return filter;
+    public IndividualClaimsOuth2ContextFilter outh2ContextFilter() {
+        return new IndividualClaimsOuth2ContextFilter(requestedClaims);
+    }
+
+    @Bean
+    public IneraOidcFilter ineraOidcFilter() throws MalformedURLException {
+        return new IneraOidcFilter(new URL(redirectUri).getPath(), ineraOIDCProviderMetadata, clientId,
+                restTemplate, userPersistenceService);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-                .addFilterAfter(ineraOidcFilter(), OAuth2ClientContextFilter.class)
-                .httpBasic().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/inera-login"))
+                .addFilterAfter(outh2ContextFilter(),
+                        AbstractPreAuthenticatedProcessingFilter.class)
+                .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
+                .httpBasic().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(new URL(redirectUri).getPath()))
                 .and()
                 .authorizeRequests()
                 // .antMatchers("/","/index*").permitAll()

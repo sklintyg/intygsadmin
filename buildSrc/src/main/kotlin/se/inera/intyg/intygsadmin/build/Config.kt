@@ -18,16 +18,14 @@ object Config {
         const val nodeVersion = "10.15.1"
 
         const val kotlinVersion = "1.3.31"
-        const val springBootVersion = "2.1.4.RELEASE"
+        const val springBootVersion = "2.1.5.RELEASE"
         const val springDependencyManagementVersion = "1.0.7.RELEASE"
         const val springSecurityOauth2Version = "2.3.5.RELEASE"
 
-    const val mapstructVersion = "1.3.0.Final"
-    const val querydslVersion = "4.2.1"
-    const val hibernateJpsVersion = "1.0.2.Final"
-    const val javaxAnnotationVersion = "1.3.2"
-    const val commonsIOVersion = "2.6"
-    const val swaggerVersion = "2.9.2"
+        const val mapstructVersion = "1.3.0.Final"
+        const val hibernateJpsVersion = "1.0.2.Final"
+        const val commonsIOVersion = "2.6"
+        const val swaggerVersion = "2.9.2"
     }
 
     object TestDependencies {

@@ -17,46 +17,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.config;
+package se.inera.intyg.intygsadmin.web.auth;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.IARole;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 public class IneraOidcUserDetails implements UserDetails {
 
     private String userId;
     private OAuth2AccessToken token;
+    private IARole iaRole;
 
-    public IneraOidcUserDetails(Map<String, String> userInfo, OAuth2AccessToken token) {
-        this.userId = userInfo.get("sub");
+    public IneraOidcUserDetails(UserEntity userEntity, OAuth2AccessToken token) {
+        this.userId = userEntity.getEmployeeHsaId();
+        this.iaRole = userEntity.getIaRole();
         this.token = token;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return Arrays.asList(new SimpleGrantedAuthority(iaRole.name()));
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public OAuth2AccessToken getToken() {
         return token;
     }
 
-    public void setToken(OAuth2AccessToken token) {
-        this.token = token;
+    public IARole getIARole() {
+        return iaRole;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class IneraOidcUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.userId;
     }
 
     @Override

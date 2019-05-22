@@ -22,11 +22,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.security.oauth:spring-security-oauth2:${Dependencies.springSecurityOauth2Version}")
-//    implementation("io.jsonwebtoken:jjwt:0.9.1")
-//    implementation("org.springframework.security:spring-security-jwt:1.0.10.RELEASE")
-//    implementation("com.auth0:jwks-rsa:0.8.1")
     implementation("org.mapstruct:mapstruct:${Dependencies.mapstructVersion}")
-    implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
+    implementation("com.querydsl:querydsl-core")
 
     //api documentation
     implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
