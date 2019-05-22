@@ -65,6 +65,10 @@ public class BannerPersistenceService {
     }
 
     public BannerEntity update(BannerEntity bannerEntity) {
+        BannerEntity entity = bannerRepository.getOne(bannerEntity.getId());
+
+        bannerEntity.setCreatedAt(entity.getCreatedAt());
+
         return bannerRepository.save(bannerEntity);
     }
 

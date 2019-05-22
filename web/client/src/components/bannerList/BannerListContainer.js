@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import * as actions from '../../store/actions/bannerList.actions'
 import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList.reducer'
+import RemoveBanner from '../bannerDialogs/RemoveBanner.dialog'
 import BannerList from './BannerList'
 import styled from 'styled-components'
 import LoadingSpinner from '../loadingSpinner'
@@ -27,10 +28,15 @@ const BannerListContainer = (props) => {
     fetchData({ ...props, sortColumn, sortDirection })
   }
 
+  const onActionComplete = () => {
+    fetchData(props)
+  }
+
   return (
     <>
       <ListWrapper>
-        <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} />
+        <RemoveBanner onComplete={onActionComplete}></RemoveBanner>
+        <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} onActionComplete={onActionComplete} />
         {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar driftbannerlista'} />}
       </ListWrapper>
     </>

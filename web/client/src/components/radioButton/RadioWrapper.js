@@ -8,10 +8,10 @@ const RadioWrapper = ({ radioButtons, selected, onChange }) => {
     <>
       {radioButtons.map((rb, i) => {
         return (
-        <>
-          <RadioButton key={i} label={rb.label} selected={selected} onChange={onChange} value={rb.value}/>
-          {(numberOfRadioButtons > 2 ? <br/> : null)}
-          </>
+          <span key={i}>
+            <RadioButton label={rb.label} selected={selected} onChange={onChange} value={rb.value}/>
+            {(numberOfRadioButtons > 2 ? <br/> : null)}
+          </span>
         )
       })}
     </>

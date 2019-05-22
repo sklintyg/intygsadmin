@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.persistence.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -76,6 +77,36 @@ public class BannerPersistenceServiceTest extends TestSupport {
     }
 
     @Test
+    public void findActiveAndFutureBannersTest() {
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        List<BannerEntity> list = bannerPersistenceService.findActiveAndFuture(localDateTime, Application.WEBCERT);
+        int beforeSize = list.size();
+
+        BannerEntity entity = new BannerEntity();
+        entity.setMessage("Test message");
+        entity.setApplication(Application.WEBCERT);
+        entity.setPriority(BannerPriority.HIGH);
+        entity.setDisplayFrom(localDateTime.minusDays(30));
+        entity.setDisplayTo(localDateTime.minusDays(10));
+
+        bannerPersistenceService.create(entity);
+
+        BannerEntity currentEntity = new BannerEntity();
+        currentEntity.setMessage("Test message");
+        currentEntity.setApplication(Application.WEBCERT);
+        currentEntity.setPriority(BannerPriority.HIGH);
+        currentEntity.setDisplayFrom(localDateTime);
+        currentEntity.setDisplayTo(localDateTime.plusDays(30));
+
+        bannerPersistenceService.create(currentEntity);
+
+        List<BannerEntity> listAfter = bannerPersistenceService.findActiveAndFuture(localDateTime, Application.WEBCERT);
+
+        assertEquals(beforeSize + 1, listAfter.size());
+    }
+
+    @Test
     public void createDeleteBannersTest() {
         BannerEntity entity = new BannerEntity();
         entity.setMessage("Test message");
@@ -92,6 +123,15 @@ public class BannerPersistenceServiceTest extends TestSupport {
         BannerEntity loadedEntity = bannerPersistenceService.findOne(savedEntity.getId()).orElse(null);
         assertNotNull(loadedEntity);
         assertEquals(entity.getMessage(), loadedEntity.getMessage());
+
+        // Update
+        loadedEntity.setMessage("new Message");
+        bannerPersistenceService.update(loadedEntity);
+
+        // Load updated
+        BannerEntity updatedEntity = bannerPersistenceService.findOne(loadedEntity.getId()).orElse(null);
+        assertNotNull(updatedEntity);
+        assertEquals(loadedEntity.getMessage(), updatedEntity.getMessage());
 
         // Remove
         bannerPersistenceService.delete(savedEntity.getId());

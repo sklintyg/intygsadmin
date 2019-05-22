@@ -1,9 +1,14 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'recompose'
 import styled from 'styled-components'
 import TableSortHead from './TableSortHead'
 //import { Error } from '../styles/iaSvgIcons'
 import { Table, Button } from 'reactstrap'
 import FetchError from './FetchError'
+import {RemoveBannerId} from '../bannerDialogs/RemoveBanner.dialog'
+import * as modalActions from '../../store/actions/modal'
+import * as actions from '../../store/actions/banner'
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -15,7 +20,7 @@ const Wrapper = styled.div`
   }
 `
 
-const BannerList = ({bannerList, onSort, errorMessage }) => {
+const BannerList = ({bannerList, onSort, errorMessage, openModal, removeBanner, onActionComplete }) => {
   if (bannerList.content && bannerList.content.length === 0) {
     if (bannerList.totalElements === 0) {
       return (
@@ -31,6 +36,50 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
   const handleSort = (sortColumn) => {
     onSort(sortColumn)
   }
+
+  const openRemoveModal = (bannerId, bannerStatus) => {
+    let text = ''
+
+    switch(bannerStatus){
+      case 'FUTURE':
+      text = 'Att avsluta en kommande driftbanner innebär att den inte kommer att visas i Webcert. Den kommer också att tas bort från tabellen.'
+      break
+      case 'ACTIVE':
+      text = 'Att avsluta en pågående driftbanner innebär att den omedelbart tas bort från Webcert.<br><br>Datum och tid för driftbannerns avslut sätts till nuvarande tidpunkt.'
+      break
+      case 'FINISHED':
+      break
+      default:
+      break
+    }
+
+    openModal(RemoveBannerId, {
+      text,
+      removeBanner,
+      bannerId,
+      bannerStatus
+    })
+  }
+
+  const prioText = {
+    'LOW': 'Låg',
+    'MEDIUM': 'Medel',
+    'HIGH': 'Hög',
+  }
+
+  const serviceText = {
+    'STATISTIK': 'Intygsstatistik',
+    'WEBCERT': 'Webcert',
+    'REHABSTOD': 'Rehabstöd',
+  }
+
+  const statusText = {
+    'FUTURE': 'Kommande',
+    'ACTIVE': 'Pågående',
+    'FINISHED': 'Avslutad',
+  }
+
+  const dateShowPeriodOptions = {year: 'numeric', month: '2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'};
 
   return (
     <Wrapper>
@@ -97,19 +146,19 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
            bannerList.content &&
            bannerList.content.map((banner) => (
               <tr key={banner.id}>
-                <td>{banner.createdAt}</td>
-                <td>{banner.application}</td>
+                <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
+                <td>{serviceText[banner.application]}</td>
                 <td>
-                  {banner.displayFrom}<br/>{banner.displayTo}
+                  {new Date(banner.displayFrom).toLocaleString('sv-SE', dateShowPeriodOptions)}<br/>{new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
                 </td>
-                <td>{banner.priority}</td>
+                <td>{prioText[banner.priority]}</td>
                 <td dangerouslySetInnerHTML={{__html: banner.message}}></td>
-                <td>{banner.status}</td>
+                <td>{statusText[banner.status]}</td>
                 <td>
-                    <Button color="primary">Ändra</Button>
+                    <Button disabled={banner.status === 'FINISHED'} color="primary">Ändra</Button>
                 </td>
                 <td>
-                    <Button color="primary">Avsluta</Button>
+                    <Button disabled={banner.status === 'FINISHED'} onClick={() => {openRemoveModal(banner.id, banner.status)}} color="primary">Avsluta</Button>
                 </td>
               </tr>
             ))}
@@ -119,4 +168,9 @@ const BannerList = ({bannerList, onSort, errorMessage }) => {
   )
 }
 
-export default BannerList
+export default compose(
+  connect(
+    null,
+    { ...actions, ...modalActions }
+  )
+)(BannerList)

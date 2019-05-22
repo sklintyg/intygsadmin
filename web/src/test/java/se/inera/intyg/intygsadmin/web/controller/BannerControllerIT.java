@@ -48,7 +48,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    public void testCreatBanner() {
+    public void testCreateUpdateDeleteBanner() {
         LocalDateTime today = LocalDateTime.now();
         Integer totalElementsBefore  = given().expect().statusCode(OK)
                 .when()
@@ -85,6 +85,41 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
                 .body("totalElements", is(totalElementsBefore + 1))
                 .body("content.find { it.id == '" + bannerId + "' }.message",
                         equalTo("hej"));
+
+        // Update
+        bannerDTO.setMessage("New message");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(bannerDTO)
+                .expect().statusCode(OK)
+                .when()
+                .post(BANNER_API_ENDPOINT + "/" + bannerId)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"));
+
+        given().expect().statusCode(OK)
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
+                .body("totalElements", is(totalElementsBefore + 1))
+                .body("content.find { it.id == '" + bannerId + "' }.message",
+                        equalTo("New message"));
+
+        // Delete
+        given()
+                .contentType(ContentType.JSON)
+                .expect().statusCode(OK)
+                .when()
+                .delete(BANNER_API_ENDPOINT + "/" + bannerId);
+
+        given().expect().statusCode(OK)
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
+                .body("totalElements", is(totalElementsBefore));
     }
 
 }
