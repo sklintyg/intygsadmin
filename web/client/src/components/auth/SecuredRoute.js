@@ -20,7 +20,7 @@ const SecuredRoute = ({component: Component, isAuthenticated, isLoading, hasCurr
   return (
     <Route {...rest} render={(props) => {
       if (!isAuthenticated) {
-        return <Redirect to='/banner' />;
+        return <Redirect to='/' />;
       }
 
       return (<Component {...props}/>)

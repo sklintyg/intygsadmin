@@ -1,6 +1,6 @@
 import React from 'react'
 import { Section } from '../styles/iaLayout'
-import IaButton6 from '../styles/iaButton6'
+import IaButton4 from '../styles/iaButton4'
 import { Spinner } from 'reactstrap'
 import ErrorMessageFormatter from '../../messages/ErrorMessageFormatter'
 import IaAlert, { alertType } from '../alert/Alert'
@@ -16,7 +16,7 @@ const LoginOptions = ({ settings, isFetching, errorMessage }) => {
           <Spinner size="sm" color="secondary" /> Hämtar konfiguration...{' '}
         </span>
       )}
-      {!isFetching && !errorMessage && <IaButton6 onClick={doLogin(settings.loginUrl)} label="Logga in med SITHS-kort" />}
+      {!isFetching && !errorMessage && <IaButton4 onClick={doLogin(settings.loginUrl)} label="Logga in med SITHS-kort" />}
       {errorMessage && (
         <IaAlert type={alertType.ERROR}>
           {' '}

@@ -6,7 +6,6 @@ import IaColors from "../styles/iaColors";
 import {HeaderSectionContainerHoverable} from "./styles";
 import ibValues from '../styles/iaValues'
 import Logout from "./logout/Logout";
-import MenuBar from '../iaMenu/MenuBar';
 
 const ComponentWrapper = styled.div`
   display: block;
@@ -47,7 +46,6 @@ const Header = ({isAuthenticated, namn, userRole, logoutUrl}) => {
           }
         </HeaderActionsWrapper>
       </StyledHeader>
-      <MenuBar/>
     </ComponentWrapper>
   )
 };
