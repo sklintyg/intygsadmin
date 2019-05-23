@@ -63,17 +63,23 @@ const ArrowDiv = styled.div`
   text-align: center;
 `
 
-const TimePicker = ({ date, onChange, className }) => {
-  const [value, setValue] = useState('')
+const TimePicker = ({ value, onChange, className }) => {
+  const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
   const [popupOpen, setPopupOpen] = useState(false)
 
+  useEffect(() => {
+    if (value) {
+      setInternalValue(value)
+    }
+  }, [value])
+
   const parseTimeFromValue = () => {
-    if (value.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
-      setHours(value.split(':')[0])
-      setMinutes(value.split(':')[1])
+    if (internalValue.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
+      setHours(internalValue.split(':')[0])
+      setMinutes(internalValue.split(':')[1])
     } else {
       setHours('00')
       setMinutes('00')
@@ -82,13 +88,13 @@ const TimePicker = ({ date, onChange, className }) => {
 
   useEffect(() => {
     if (hours && minutes) {
-      setValue(hours + ':' + minutes)
+      setInternalValue(hours + ':' + minutes)
     }
   }, [hours, minutes])
 
   const inputOnChange = (event) => {
     let inputValue = event.target.value
-    setValue(inputValue)
+    setInternalValue(inputValue)
     onChange(inputValue)
   }
 
@@ -107,7 +113,7 @@ const TimePicker = ({ date, onChange, className }) => {
 
   const closeTimePopup = () => {
     setPopupOpen(false)
-    onChange(value)
+    onChange(internalValue)
   }
 
   useOnClickOutside(popup, closeTimePopup)
@@ -138,7 +144,7 @@ const TimePicker = ({ date, onChange, className }) => {
 
   return (
     <Container className={className}>
-      <StyledInput type="text" value={value} onChange={inputOnChange} placeholder={'hh:mm'} />
+      <StyledInput type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} />
       <StyledButton onClick={toggleTimePopup} color={'default'}>
         <TimeIcon />
       </StyledButton>

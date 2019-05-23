@@ -56,9 +56,27 @@ const tjanstButtons = [
 
 const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
 
-const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
+const CreateBanner = ({ handleClose, isOpen, createBanner, updateBanner, data }) => {
   const [validationMessages, setValidationMessages] = useState({})
+  const [update, setUpdate] = useState(false)
   const [banner, setBanner] = useState(initialBanner)
+
+  useEffect(() => {
+    if (data && data.banner) {
+      setUpdate(true)
+      console.log(data.banner)
+      let displayFrom = new Date(data.banner.displayFrom)
+      let displayTo = new Date(data.banner.displayTo)
+      setBanner({
+        ...data.banner,
+        displayFrom,
+        displayTo,
+        displayFromTime: displayFrom.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}),
+        displayToTime: displayTo.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}),
+      })
+
+    }
+  }, [data])
 
   useEffect(() => {
     if (isEqual(previousBanner.current, banner)) {
@@ -77,13 +95,23 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   }
 
   const send = () => {
-    createBanner({
-      application: banner.application,
-      message: banner.message,
-      displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
-      displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
-      priority: banner.prio,
-    }).then(() => cancel())
+    if(update) {
+      updateBanner({
+        application: banner.application,
+        message: banner.message,
+        displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
+        displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
+        priority: banner.priority,
+      }, data.banner.id).then(() => cancel())
+    } else {
+      createBanner({
+        application: banner.application,
+        message: banner.message,
+        displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
+        displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
+        priority: banner.priority,
+      }).then(() => cancel())
+  }
   }
 
   const cancel = () => {
@@ -94,7 +122,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   return (
     <Fragment>
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-        <ModalHeader toggle={cancel}>Skapa driftbanner</ModalHeader>
+        <ModalHeader toggle={cancel}>{data ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
         <StyledBody>
           <h5>Välj tjänst</h5>
           <RadioWrapper
@@ -103,7 +131,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             selected={banner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message}></CustomTextarea>
+          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message} />
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
@@ -116,7 +144,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             </span>
             <span>
               <TimePicker
-                date={banner.displayFromTime}
+                value={banner.displayFromTime}
                 onChange={(value) => onChange(value, 'displayFromTime')}
                 className={validationMessages.displayFromTime ? 'error' : ''}
               />
@@ -135,7 +163,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             </span>
             <span>
               <TimePicker
-                date={banner.displayToTime}
+                value={banner.displayToTime}
                 onChange={(value) => onChange(value, 'displayToTime')}
                 className={validationMessages.displayToTime ? 'error' : ''}
               />
@@ -157,7 +185,11 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
               exempel vid pågående driftstörningar. En röd driftbanner visas.
             </p>
           </HelpChevron>
-          <RadioWrapper radioButtons={prioButtons} onChange={(event) => onChange(event.target.value, 'prio')} selected={banner.prio} />
+          <RadioWrapper
+            radioButtons={prioButtons}
+            onChange={(event) => onChange(event.target.value, 'priority')}
+            selected={banner.priority}
+          />
         </StyledBody>
         <ModalFooter>
           <Button
@@ -167,7 +199,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
                 banner.message &&
                 banner.displayFrom &&
                 banner.displayTo &&
-                banner.prio &&
+                banner.priority &&
                 isEmpty(validationMessages)
               )
             }
@@ -175,7 +207,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             onClick={() => {
               send()
             }}>
-            Skapa
+            {data ? 'Ändra': 'Skapa'}
           </Button>
           <Button
             color={'default'}

@@ -6,7 +6,7 @@ import TableSortHead from './TableSortHead'
 //import { Error } from '../styles/iaSvgIcons'
 import { Table, Button } from 'reactstrap'
 import FetchError from './FetchError'
-import {RemoveBannerId} from '../bannerDialogs/RemoveBanner.dialog'
+import { RemoveBannerId, CreateBannerId} from '../bannerDialogs'
 import * as modalActions from '../../store/actions/modal'
 import * as actions from '../../store/actions/banner'
 
@@ -58,6 +58,12 @@ const BannerList = ({bannerList, onSort, errorMessage, openModal, removeBanner, 
       removeBanner,
       bannerId,
       bannerStatus
+    })
+  }
+
+  const openChangeBanner = (banner) => {
+    openModal(CreateBannerId, {
+      banner
     })
   }
 
@@ -155,7 +161,7 @@ const BannerList = ({bannerList, onSort, errorMessage, openModal, removeBanner, 
                 <td dangerouslySetInnerHTML={{__html: banner.message}}></td>
                 <td>{statusText[banner.status]}</td>
                 <td>
-                    <Button disabled={banner.status === 'FINISHED'} color="primary">Ändra</Button>
+                    <Button disabled={banner.status === 'FINISHED'} onClick={() => {openChangeBanner(banner)}} color="primary">Ändra</Button>
                 </td>
                 <td>
                     <Button disabled={banner.status === 'FINISHED'} onClick={() => {openRemoveModal(banner.id, banner.status)}} color="primary">Avsluta</Button>
