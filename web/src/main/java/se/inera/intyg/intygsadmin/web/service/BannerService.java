@@ -34,6 +34,8 @@ import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
+import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
+import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
 import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 @Service
@@ -71,6 +73,20 @@ public class BannerService {
     }
 
     public BannerDTO save(BannerDTO bannerDTO) {
+        Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(bannerDTO.getId());
+
+        if (optionalBanner.isEmpty()) {
+            throw new IaServiceException(IaErrorCode.NOT_FOUND);
+        }
+
+        BannerEntity banner = optionalBanner.get();
+        BannerStatus status = bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
+
+        // Not allowed to update a finished banner
+        if (BannerStatus.FINISHED.equals(status)) {
+            throw new IaServiceException(IaErrorCode.BAD_STATE);
+        }
+
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity updatedEntity = bannerPersistenceService.update(map);
@@ -87,13 +103,16 @@ public class BannerService {
         BannerEntity banner = optionalBanner.get();
         BannerStatus status = bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
 
-        if (BannerStatus.FUTURE.equals(status)) {
-            bannerPersistenceService.delete(id);
-        } else {
-            banner.setDisplayTo(LocalDateTime.now());
-            bannerPersistenceService.update(banner);
+        switch (status) {
+            case FUTURE:
+                bannerPersistenceService.delete(id);
+                return true;
+            case ACTIVE:
+                banner.setDisplayTo(LocalDateTime.now());
+                bannerPersistenceService.update(banner);
+                return true;
+            default:
+                throw new IaServiceException(IaErrorCode.BAD_STATE);
         }
-
-        return true;
     }
 }
