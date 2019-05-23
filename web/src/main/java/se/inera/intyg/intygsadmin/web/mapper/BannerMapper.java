@@ -19,23 +19,43 @@
 
 package se.inera.intyg.intygsadmin.web.mapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.factory.Mappers;
 
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BannerMapper {
-    BannerMapper INSTANCE = Mappers.getMapper(BannerMapper.class);
-
     BannerDTO toDTO(BannerEntity s);
 
     List<BannerDTO> toListDTO(List<BannerEntity> s);
 
     BannerEntity toEntity(BannerDTO newSourceAccount);
 
+
+    @AfterMapping
+    default void calculateStatue(BannerEntity bannerEntity, @MappingTarget BannerDTO dto) {
+        dto.setStatus(getBannerStatus(bannerEntity.getDisplayFrom(), bannerEntity.getDisplayTo()));
+    }
+
+    default BannerStatus getBannerStatus(LocalDateTime from, LocalDateTime to) {
+        LocalDateTime today = LocalDateTime.now();
+
+        if (from.isAfter(today)) {
+            return BannerStatus.FUTURE;
+        }
+
+        if (to.isBefore(today)) {
+            return BannerStatus.FINISHED;
+        }
+
+        return BannerStatus.ACTIVE;
+    }
 }

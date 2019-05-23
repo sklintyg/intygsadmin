@@ -46,7 +46,9 @@ import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -144,6 +146,40 @@ public class BannerServiceTest {
         assertEquals(2, banners.size());
         assertEquals(BannerStatus.FUTURE, banners.get(0).getStatus());
         assertEquals(BannerStatus.ACTIVE, banners.get(1).getStatus());
+    }
+
+    @Test
+    public void testSaveBanner() {
+        BannerDTO bannerDTO = new BannerDTO();
+        bannerDTO.setId(UUID.randomUUID());
+        bannerDTO.setMessage("new message");
+        bannerDTO.setDisplayFrom(LocalDateTime.now().minusDays(10));
+        bannerDTO.setDisplayTo(LocalDateTime.now().plusDays(10));
+
+        when(bannerPersistenceService.update(any())).then(returnsFirstArg());
+
+        BannerDTO saved = bannerService.save(bannerDTO);
+
+        assertNotNull(saved);
+        assertEquals("new message", saved.getMessage());
+        verify(bannerPersistenceService, times(1)).update(any());
+    }
+
+    @Test
+    public void testCreateBanner() {
+        BannerDTO bannerDTO = new BannerDTO();
+        bannerDTO.setId(UUID.randomUUID());
+        bannerDTO.setMessage("new message");
+        bannerDTO.setDisplayFrom(LocalDateTime.now().minusDays(10));
+        bannerDTO.setDisplayTo(LocalDateTime.now().plusDays(10));
+
+        when(bannerPersistenceService.create(any())).then(returnsFirstArg());
+
+        BannerDTO created = bannerService.createBanner(bannerDTO);
+
+        assertNotNull(created);
+        assertEquals("new message", created.getMessage());
+        verify(bannerPersistenceService, times(1)).create(any());
     }
 
     @Test

@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -51,15 +50,7 @@ public class BannerService {
     public Page<BannerDTO> getBanners(Pageable pageable) {
         Page<BannerEntity> banners = bannerPersistenceService.findAll(pageable);
 
-        List<BannerDTO> mapBanners = banners.getContent().stream()
-                .map(bannerEntity -> {
-
-                    BannerDTO dto = bannerMapper.toDTO(bannerEntity);
-                    dto.setStatus(getBannerStatus(dto));
-
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        List<BannerDTO> mapBanners = bannerMapper.toListDTO(banners.getContent());
 
         return new PageImpl<>(mapBanners, pageable, banners.getTotalElements());
     }
@@ -69,34 +60,21 @@ public class BannerService {
 
         List<BannerEntity> banners = bannerPersistenceService.findActiveAndFuture(today, application);
 
-        return banners.stream()
-                .map(bannerEntity -> {
-                    BannerDTO dto = bannerMapper.toDTO(bannerEntity);
-                    dto.setStatus(getBannerStatus(dto));
-
-                    return dto;
-                })
-                .collect(Collectors.toList());
+        return bannerMapper.toListDTO(banners);
     }
 
     public BannerDTO createBanner(BannerDTO bannerDTO) {
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity createdEntity = bannerPersistenceService.create(map);
-        BannerDTO dto = bannerMapper.toDTO(createdEntity);
-        dto.setStatus(getBannerStatus(dto));
-
-        return dto;
+        return bannerMapper.toDTO(createdEntity);
     }
 
     public BannerDTO save(BannerDTO bannerDTO) {
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity updatedEntity = bannerPersistenceService.update(map);
-        BannerDTO dto = bannerMapper.toDTO(updatedEntity);
-        dto.setStatus(getBannerStatus(dto));
-
-        return dto;
+        return bannerMapper.toDTO(updatedEntity);
     }
 
     public boolean deleteBanner(UUID id) {
@@ -107,7 +85,7 @@ public class BannerService {
         }
 
         BannerEntity banner = optionalBanner.get();
-        BannerStatus status = getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
+        BannerStatus status = bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
 
         if (BannerStatus.FUTURE.equals(status)) {
             bannerPersistenceService.delete(id);
@@ -117,23 +95,5 @@ public class BannerService {
         }
 
         return true;
-    }
-
-    private BannerStatus getBannerStatus(BannerDTO dto) {
-        return getBannerStatus(dto.getDisplayFrom(), dto.getDisplayTo());
-    }
-
-    private BannerStatus getBannerStatus(LocalDateTime from, LocalDateTime to) {
-        LocalDateTime today = LocalDateTime.now();
-
-        if (from.isAfter(today)) {
-            return BannerStatus.FUTURE;
-        }
-
-        if (to.isBefore(today)) {
-            return BannerStatus.FINISHED;
-        }
-
-        return BannerStatus.ACTIVE;
     }
 }
