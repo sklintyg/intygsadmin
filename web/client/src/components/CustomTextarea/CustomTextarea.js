@@ -63,14 +63,18 @@ const Container = styled.div`
   }
 `
 
-const CustomTextarea = ({ onChange }) => {
+const CustomTextarea = ({ onChange, value }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
   const [linkText, setLinkText] = useState('')
   const [linkHref, setLinkHref] = useState('')
-  const textArea = useRef(null)
+  const textArea = useRef()
   const popup = useRef()
   const [popupOpen, setPopupOpen] = useState(false)
+
+  const onBlur = () => {
+    onChange(textArea.current.innerHTML)
+  }
 
   const replaceSelectedText = () => {
     if (currentLinkElement) {
@@ -162,7 +166,9 @@ const CustomTextarea = ({ onChange }) => {
         suppressContentEditableWarning="true"
         onSelect={handleSelect}
         onPaste={handlePaste}
-        onKeyPress={handleKeyPress}>
+        onKeyPress={handleKeyPress}
+        onBlur={onBlur}
+        dangerouslySetInnerHTML={{ __html: value }}>
       </CustomDiv>
       <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
         <div>

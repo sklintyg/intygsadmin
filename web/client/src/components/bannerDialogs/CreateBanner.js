@@ -103,7 +103,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             selected={banner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={(value) => onChange(value, 'message')}>{banner.message}</CustomTextarea>
+          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message}></CustomTextarea>
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
