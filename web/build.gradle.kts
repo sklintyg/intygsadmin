@@ -37,6 +37,8 @@ dependencies {
   testImplementation("commons-io:commons-io:${Dependencies.commonsIOVersion}")
   testImplementation("io.rest-assured:rest-assured:${TestDependencies.restAssuredVersion}")
   testImplementation("io.rest-assured:json-schema-validator:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:json-path:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:xml-path:${TestDependencies.restAssuredVersion}")
 }
 
 node {
