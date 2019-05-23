@@ -23,12 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import se.inera.intyg.intygsadmin.web.controller.dto.UserResponseDTO;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(UserController.API_ANVANDARE)
 public class UserController {
+
+    public static final String API_ANVANDARE = "/api/anvandare";
 
     @GetMapping
     public ResponseEntity<UserResponseDTO> getUser() {

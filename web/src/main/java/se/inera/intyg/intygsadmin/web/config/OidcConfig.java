@@ -21,7 +21,8 @@ package se.inera.intyg.intygsadmin.web.config;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -31,36 +32,33 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 
 import java.util.Arrays;
 
 @Configuration
 @EnableOAuth2Client
+@EnableConfigurationProperties(value = { IdpProperties.class })
 public class OidcConfig {
 
-    @Value("${inera.idp.client-id}")
-    private String clientId;
+    private IdpProperties idpProperties;
 
-    @Value("${inera.idp.client-secret}")
-    private String clientSecret;
-
-    @Value("${inera.idp.redirect-uri}")
-    private String redirectUri;
-
-    @Value("${inera.idp.issuer-uri}")
-    private String issuerUri;
+    @Autowired
+    public OidcConfig(IdpProperties idpProperties) {
+        this.idpProperties = idpProperties;
+    }
 
     @Bean
     public OAuth2ProtectedResourceDetails ineraOpenId(OIDCProviderMetadata ineraOIDCProviderMetadata) {
         AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
-        details.setClientId(clientId);
-        details.setClientSecret(clientSecret);
+        details.setClientId(idpProperties.getClientId());
+        details.setClientSecret(idpProperties.getClientSecret());
         details.setAccessTokenUri(ineraOIDCProviderMetadata.getTokenEndpointURI().toString());
         details.setUserAuthorizationUri(ineraOIDCProviderMetadata.getAuthorizationEndpointURI().toString());
         details.setScope(Arrays.asList("openid"));
         details.setClientAuthenticationScheme(AuthenticationScheme.form);
         details.setUseCurrentUri(false);
-        details.setPreEstablishedRedirectUri(redirectUri);
+        details.setPreEstablishedRedirectUri(idpProperties.getRedirectUri().toString());
         return details;
     }
 
@@ -71,7 +69,7 @@ public class OidcConfig {
 
     @Bean
     public OIDCProviderMetadata ineraOIDCProviderMetadata() {
-        String openidConfiguration = getOpenidConfiguration(issuerUri);
+        String openidConfiguration = getOpenidConfiguration(idpProperties.getIssuerUri().toString());
         try {
             return OIDCProviderMetadata.parse(openidConfiguration);
         } catch (ParseException e) {

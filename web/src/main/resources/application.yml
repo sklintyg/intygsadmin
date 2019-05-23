@@ -23,5 +23,9 @@ inera:
     client-id: http://localhost:8680
     client-secret: f2e71e76-4afa-455e-9b01-9dedead4590b
     redirect-uri: http://localhost:8680/login/inera
+    logout-redirect-uri: http://localhost:8680/loggedout
     issuer-uri: https://idp.ineradev.org:443/oidc
-    requested-claims: employeeHsaId, given_name, family_name
+
+logging:
+  level:
+    org.springframework: DEBUG
