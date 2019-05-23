@@ -62,7 +62,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
         bannerDTO.setMessage("hej");
         bannerDTO.setApplication(Application.WEBCERT);
         bannerDTO.setPriority(BannerPriority.HIGH);
-        bannerDTO.setDisplayFrom(today.minusDays(10));
+        bannerDTO.setDisplayFrom(today.plusDays(5));
         bannerDTO.setDisplayTo(today.plusDays(10));
 
         String bannerId = given()

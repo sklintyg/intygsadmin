@@ -22,14 +22,15 @@ package se.inera.intyg.intygsadmin.web.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -37,11 +38,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
+import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -50,8 +55,10 @@ import static org.mockito.Mockito.when;
 
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(JUnitPlatform.class)
 public class BannerServiceTest {
+
+    @Spy
+    private BannerMapper bannerMapper = Mappers.getMapper(BannerMapper.class);
 
     @Mock
     private BannerPersistenceService bannerPersistenceService;
@@ -108,5 +115,78 @@ public class BannerServiceTest {
         assertEquals(BannerStatus.FINISHED, bannerDTOPage.getContent().get(0).getStatus());
         assertEquals(BannerStatus.FUTURE, bannerDTOPage.getContent().get(1).getStatus());
         assertEquals(BannerStatus.ACTIVE, bannerDTOPage.getContent().get(2).getStatus());
+    }
+
+    @Test
+    public void testGetActiveAndFutureBanners() {
+        LocalDateTime today = LocalDateTime.now();
+
+        List<BannerEntity> bannerEntities = new ArrayList<>();
+        BannerEntity bannerEntity2 = new BannerEntity();
+        bannerEntity2.setId(UUID.randomUUID());
+        bannerEntity2.setDisplayFrom(today.plusDays(2));
+        bannerEntity2.setDisplayTo(today.plusDays(10));
+
+        BannerEntity bannerEntity3 = new BannerEntity();
+        bannerEntity3.setId(UUID.randomUUID());
+        bannerEntity3.setDisplayFrom(today.minusDays(10));
+        bannerEntity3.setDisplayTo(today.plusDays(2));
+
+        bannerEntities.add(bannerEntity2);
+        bannerEntities.add(bannerEntity3);
+
+        when(bannerPersistenceService.findActiveAndFuture(any(), eq(Application.WEBCERT))).thenReturn(bannerEntities);
+
+
+        List<BannerDTO> banners = bannerService.getActiveAndFutureBanners(Application.WEBCERT);
+
+        verify(bannerPersistenceService, times(1)).findActiveAndFuture(any(), eq(Application.WEBCERT));
+        assertEquals(2, banners.size());
+        assertEquals(BannerStatus.FUTURE, banners.get(0).getStatus());
+        assertEquals(BannerStatus.ACTIVE, banners.get(1).getStatus());
+    }
+
+    @Test
+    public void testDeleteBanner_notFound() {
+        UUID notFoundId = UUID.randomUUID();
+
+        when(bannerPersistenceService.findOne(eq(notFoundId))).thenReturn(Optional.empty());
+
+        boolean deleted = bannerService.deleteBanner(notFoundId);
+
+        assertFalse(deleted);
+        verify(bannerPersistenceService, times(0)).delete(any());
+    }
+
+    @Test
+    public void testDeleteBanner_futureBanner() {
+        UUID id = UUID.randomUUID();
+        BannerEntity bannerEntity = new BannerEntity();
+        bannerEntity.setDisplayFrom(LocalDateTime.now().plusDays(5));
+        bannerEntity.setDisplayTo(LocalDateTime.now().plusDays(10));
+
+        when(bannerPersistenceService.findOne(eq(id))).thenReturn(Optional.of(bannerEntity));
+
+        boolean deleted = bannerService.deleteBanner(id);
+
+        assertTrue(deleted);
+        verify(bannerPersistenceService, times(1)).delete(eq(id));
+        verify(bannerPersistenceService, times(0)).update(any());
+    }
+
+    @Test
+    public void testDeleteBanner_activeBanner() {
+        UUID id = UUID.randomUUID();
+        BannerEntity bannerEntity = new BannerEntity();
+        bannerEntity.setDisplayFrom(LocalDateTime.now().minusDays(5));
+        bannerEntity.setDisplayTo(LocalDateTime.now().plusDays(10));
+
+        when(bannerPersistenceService.findOne(eq(id))).thenReturn(Optional.of(bannerEntity));
+
+        boolean deleted = bannerService.deleteBanner(id);
+
+        assertTrue(deleted);
+        verify(bannerPersistenceService, times(0)).delete(any());
+        verify(bannerPersistenceService, times(1)).update(eq(bannerEntity));
     }
 }

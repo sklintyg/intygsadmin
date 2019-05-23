@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -78,20 +79,6 @@ public class BannerService {
                 .collect(Collectors.toList());
     }
 
-    private BannerStatus getBannerStatus(BannerDTO dto) {
-        LocalDateTime today = LocalDateTime.now();
-
-        if (dto.getDisplayFrom().isAfter(today)) {
-            return BannerStatus.FUTURE;
-        }
-
-        if (dto.getDisplayTo().isBefore(today)) {
-            return BannerStatus.FINISHED;
-        }
-
-        return BannerStatus.ACTIVE;
-    }
-
     public BannerDTO createBanner(BannerDTO bannerDTO) {
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
@@ -113,8 +100,40 @@ public class BannerService {
     }
 
     public boolean deleteBanner(UUID id) {
-        bannerPersistenceService.delete(id);
+        Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(id);
+
+        if (optionalBanner.isEmpty()) {
+            return false;
+        }
+
+        BannerEntity banner = optionalBanner.get();
+        BannerStatus status = getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
+
+        if (BannerStatus.FUTURE.equals(status)) {
+            bannerPersistenceService.delete(id);
+        } else {
+            banner.setDisplayTo(LocalDateTime.now());
+            bannerPersistenceService.update(banner);
+        }
 
         return true;
+    }
+
+    private BannerStatus getBannerStatus(BannerDTO dto) {
+        return getBannerStatus(dto.getDisplayFrom(), dto.getDisplayTo());
+    }
+
+    private BannerStatus getBannerStatus(LocalDateTime from, LocalDateTime to) {
+        LocalDateTime today = LocalDateTime.now();
+
+        if (from.isAfter(today)) {
+            return BannerStatus.FUTURE;
+        }
+
+        if (to.isBefore(today)) {
+            return BannerStatus.FINISHED;
+        }
+
+        return BannerStatus.ACTIVE;
     }
 }
