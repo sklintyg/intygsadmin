@@ -13,6 +13,7 @@ import isEqual from 'lodash/isEqual'
 import isEmpty from 'lodash/isEmpty'
 import { validateBanner } from './BannerValidator'
 import HelpChevron from '../helpChevron'
+import colors from '../styles/iaColors'
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -34,21 +35,30 @@ const FlexDiv = styled.div`
 `
 
 const ValidationMessage = styled.div`
-  color: red;
+  color: ${colors.IA_COLOR_16};
 `
+
+const initialBanner = {
+  application: undefined,
+  message: '',
+  displayFrom: undefined,
+  displayTo: undefined,
+  displayFromTime: undefined,
+  displayToTime: undefined,
+  priority: undefined,
+}
+
+const tjanstButtons = [
+  { label: 'Intygsstatistik', value: 'STATISTIK' },
+  { label: 'Rehabstöd', value: 'REHABSTOD' },
+  { label: 'Webcert', value: 'WEBCERT' },
+]
+
+const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
 
 const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   const [validationMessages, setValidationMessages] = useState({})
-
-  const [banner, setBanner] = useState({
-    application: undefined,
-    message: '',
-    displayFrom: undefined,
-    displayTo: undefined,
-    displayFromTime: undefined,
-    displayToTime: undefined,
-    priority: undefined,
-  })
+  const [banner, setBanner] = useState(initialBanner)
 
   useEffect(() => {
     if (isEqual(previousBanner.current, banner)) {
@@ -76,18 +86,15 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
     }).then(() => handleClose())
   }
 
-  const tjanstButtons = [
-    { label: 'Intygsstatistik', value: 'STATISTIK' },
-    { label: 'Rehabstöd', value: 'REHABSTOD' },
-    { label: 'Webcert', value: 'WEBCERT' },
-  ]
-
-  const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
+  const cancel = () => {
+    setBanner(initialBanner)
+    handleClose()
+  }
 
   return (
     <Fragment>
-      <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={handleClose}>
-        <ModalHeader toggle={handleClose}>Skapa driftbanner</ModalHeader>
+      <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
+        <ModalHeader toggle={cancel}>Skapa driftbanner</ModalHeader>
         <StyledBody>
           <h5>Välj tjänst</h5>
           <RadioWrapper
@@ -173,7 +180,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
           <Button
             color={'default'}
             onClick={() => {
-              handleClose()
+              cancel()
             }}>
             Avbryt
           </Button>

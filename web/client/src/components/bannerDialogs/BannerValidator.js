@@ -24,7 +24,6 @@ export const validateBanner = (banner) => {
       invalid = { ...invalid, displayToTime: valid }
     }
   }
-  console.log('BannerValidation', invalid)
   return invalid
 }
 
