@@ -83,7 +83,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
       displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
       displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
       priority: banner.prio,
-    }).then(() => handleClose())
+    }).then(() => cancel())
   }
 
   const cancel = () => {
