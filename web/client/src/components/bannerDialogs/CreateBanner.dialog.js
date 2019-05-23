@@ -130,6 +130,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }
 
   const cancel = () => {
+    setErrorActive(false)
     setBanner(initialBanner)
     handleClose()
   }
