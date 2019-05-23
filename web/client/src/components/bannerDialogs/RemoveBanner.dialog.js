@@ -5,15 +5,7 @@ import { compose } from 'recompose'
 import * as actions from '../../store/actions/banner'
 import { connect } from 'react-redux'
 import IaAlert, { alertType } from '../alert/Alert'
-import styled from 'styled-components'
-
-const ErrorSection = styled.div`
-  border-top: 1px solid #dee2e6;
-`
-
-const ErrorWrapper = styled.div`
-  margin: 15px 15px 0 15px;
-`
+import {ErrorSection, ErrorWrapper } from '../styles/iaLayout'
 
 const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
 
@@ -27,7 +19,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
 
   const remove = () => {
     setErrorActive(false)
-    removeBanner(bannerId).then((data) => {
+    removeBanner(bannerId).then(() => {
       handleClose()
       onComplete()
     }).catch((data)=>{

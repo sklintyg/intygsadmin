@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import * as actions from '../../store/actions/bannerList.actions'
 import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList.reducer'
-import { getErrorMessage as getRemoveErrorMessage} from '../../store/reducers/banner'
+import CreateBanner from '../bannerDialogs/CreateBanner.dialog'
 import RemoveBanner from '../bannerDialogs/RemoveBanner.dialog'
 import BannerList from './BannerList'
 import styled from 'styled-components'
@@ -16,7 +16,7 @@ const ListWrapper = styled.div`
 `
 
 const BannerListContainer = (props) => {
-  const { isFetching, errorMessage, bannerList, removeErrorMessage } = props
+  const { isFetching, errorMessage, bannerList } = props
 
   const handleSort = (newSortColumn) => {
     let { sortColumn, sortDirection } = bannerList
@@ -36,7 +36,8 @@ const BannerListContainer = (props) => {
   return (
     <>
       <ListWrapper>
-        <RemoveBanner errorMessage={removeErrorMessage} onComplete={onActionComplete}></RemoveBanner>
+        <RemoveBanner onComplete={onActionComplete}/>
+        <CreateBanner onComplete={onActionComplete}/>
         <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} onActionComplete={onActionComplete} />
         {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar driftbannerlista'} />}
       </ListWrapper>
@@ -64,8 +65,7 @@ const mapStateToProps = (state) => {
   return {
     bannerList: getBannerList(state),
     isFetching: getIsFetching(state),
-    errorMessage: getErrorMessage(state),
-    removeErrorMessage: getRemoveErrorMessage(state)
+    errorMessage: getErrorMessage(state)
   }
 }
 

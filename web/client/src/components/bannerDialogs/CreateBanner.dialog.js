@@ -14,6 +14,8 @@ import isEmpty from 'lodash/isEmpty'
 import { validateBanner } from './BannerValidator'
 import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
+import {ErrorSection, ErrorWrapper } from '../styles/iaLayout'
+import IaAlert, { alertType } from '../alert/Alert'
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -56,10 +58,11 @@ const tjanstButtons = [
 
 const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
 
-const CreateBanner = ({ handleClose, isOpen, createBanner, updateBanner, data }) => {
+const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data }) => {
   const [validationMessages, setValidationMessages] = useState({})
   const [update, setUpdate] = useState(false)
   const [banner, setBanner] = useState(initialBanner)
+  const [errorActive, setErrorActive] = useState(false)
 
   useEffect(() => {
     if (data && data.banner) {
@@ -102,7 +105,13 @@ const CreateBanner = ({ handleClose, isOpen, createBanner, updateBanner, data })
         displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
         displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
         priority: banner.priority,
-      }, data.banner.id).then(() => cancel())
+      }, data.banner.id).then(() => {
+        cancel()
+        onComplete()
+      }).catch((data)=>{
+        console.log(data)
+        setErrorActive(true)
+      })
     } else {
       createBanner({
         application: banner.application,
@@ -110,7 +119,13 @@ const CreateBanner = ({ handleClose, isOpen, createBanner, updateBanner, data })
         displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
         displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
         priority: banner.priority,
-      }).then(() => cancel())
+      }).then(() => {
+        cancel()
+        onComplete()
+      }).catch((data)=>{
+        console.log(data)
+        setErrorActive(true)
+      })
   }
   }
 
@@ -191,7 +206,16 @@ const CreateBanner = ({ handleClose, isOpen, createBanner, updateBanner, data })
             selected={banner.priority}
           />
         </StyledBody>
-        <ModalFooter>
+        <ErrorSection>
+          {errorActive && (
+            <ErrorWrapper>
+              <IaAlert type={alertType.ERROR}>
+                Driftbannern kunde inte { data ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
+              </IaAlert>
+            </ErrorWrapper>
+          )}
+        </ErrorSection>
+        <ModalFooter className="no-border">
           <Button
             disabled={
               !(
