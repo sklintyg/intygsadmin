@@ -14,7 +14,7 @@ import isEmpty from 'lodash/isEmpty'
 import { validateBanner } from './BannerValidator'
 import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
-import {ErrorSection, ErrorWrapper } from '../styles/iaLayout'
+import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
 import IaAlert, { alertType } from '../alert/Alert'
 
 const StyledBody = styled(ModalBody)`
@@ -64,21 +64,21 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   const [update, setUpdate] = useState(false)
   const [banner, setBanner] = useState(initialBanner)
   const [errorActive, setErrorActive] = useState(false)
+  const [initialMessageValue, setInitialMessageValue] = useState('')
 
   useEffect(() => {
     if (data && data.banner) {
       setUpdate(true)
-      console.log(data.banner)
+      setInitialMessageValue(data.banner.message)
       let displayFrom = new Date(data.banner.displayFrom)
       let displayTo = new Date(data.banner.displayTo)
       setBanner({
         ...data.banner,
         displayFrom,
         displayTo,
-        displayFromTime: displayFrom.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}),
-        displayToTime: displayTo.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}),
+        displayFromTime: displayFrom.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+        displayToTime: displayTo.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
       })
-
     }
   }, [data])
 
@@ -99,38 +99,41 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }
 
   const createSendObject = () => {
-    return ({
+    return {
       application: banner.application,
       message: banner.message,
       displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
       displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
       priority: banner.priority,
-    })
+    }
   }
 
   const send = () => {
-    if(update) {
-      updateBanner(createSendObject(), data.banner.id).then(() => {
-        cancel()
-        onComplete()
-      }).catch((data)=>{
-        console.log(data)
-        setErrorActive(true)
-      })
+    if (update) {
+      updateBanner(createSendObject(), data.banner.id)
+        .then(() => {
+          cancel()
+          onComplete()
+        })
+        .catch((data) => {
+          setErrorActive(true)
+        })
     } else {
-      createBanner(createSendObject()).then(() => {
-        cancel()
-        onComplete()
-      }).catch((data)=>{
-        console.log(data)
-        setErrorActive(true)
-      })
-  }
+      createBanner(createSendObject())
+        .then(() => {
+          cancel()
+          onComplete()
+        })
+        .catch((data) => {
+          setErrorActive(true)
+        })
+    }
   }
 
   const cancel = () => {
     setErrorActive(false)
     setBanner(initialBanner)
+    setInitialMessageValue('')
     handleClose()
   }
 
@@ -146,7 +149,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             selected={banner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message} limit={200}/>
+          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
@@ -210,7 +213,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
           {errorActive && (
             <ErrorWrapper>
               <IaAlert type={alertType.ERROR}>
-                Driftbannern kunde inte { data ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
+                Driftbannern kunde inte {data ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
               </IaAlert>
             </ErrorWrapper>
           )}
@@ -231,7 +234,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             onClick={() => {
               send()
             }}>
-            {data ? 'Ändra': 'Skapa'}
+            {data ? 'Ändra' : 'Skapa'}
           </Button>
           <Button
             color={'default'}

@@ -7,11 +7,11 @@ import useOnClickOutside from '../hooks/UseOnClickOutside'
 import { IaTypo06 } from '../styles/iaTypography'
 
 const CustomDiv = styled.div`
-  margin: 8px 0;
+  margin: 0 0 8px;
   padding: 8px;
   min-height: 100px;
   border: 1px solid ${colors.IA_COLOR_08};
-  border-radius: 4px;
+  border-radius: 0 0 4px 4px;
   transition: border-color 0.36s ease-in-out, box-shadow 0.36s ease-in-out;
 
   &:focus {
@@ -27,9 +27,10 @@ const Popup = styled.div`
   top: 45px;
   left: 30px;
   z-index: 1;
-  border: 1px solid #ccc;
+  border: 1px solid ${colors.IA_COLOR_08};
   border-radius: 4px;
   background-color: #fff;
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.12);
   padding: 8px;
   &.open {
     display: flex;
@@ -68,6 +69,22 @@ const TextLimit = styled(IaTypo06)`
   color: ${colors.IA_COLOR_12};
 `
 
+const ActionBar = styled.div`
+  width: 100%;
+  height: 38px;
+  border: 1px solid ${colors.IA_COLOR_08};
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  button {
+    padding: 9px;
+    &:hover {
+      svg {
+        fill: ${colors.IA_COLOR_05};
+      }
+    }
+  }
+`
+
 const CustomTextarea = ({ onChange, value, limit }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
@@ -93,6 +110,14 @@ const CustomTextarea = ({ onChange, value, limit }) => {
       currentRange.insertNode(link)
     }
     onChange(textArea.current.innerHTML)
+  }
+
+  const replaceCurrentLink = () => {
+    if (currentLinkElement && currentLinkElement.parentNode) {
+      let textNode = document.createTextNode(linkText)
+      currentLinkElement.parentNode.replaceChild(textNode, currentLinkElement)
+    }
+    setPopupOpen(false)
   }
 
   const extractSelection = () => {
@@ -171,7 +196,7 @@ const CustomTextarea = ({ onChange, value, limit }) => {
     setLinkHref(evt.target.value)
   }
 
-  const openLinkPopup = (event) => {
+  const openLinkPopup = () => {
     setPopupOpen(true)
   }
 
@@ -184,9 +209,11 @@ const CustomTextarea = ({ onChange, value, limit }) => {
 
   return (
     <Container>
-      <Button color={'default'} onClick={openLinkPopup}>
-        <InsertLinkIcon />
-      </Button>
+      <ActionBar>
+        <Button color={'link'} onClick={openLinkPopup}>
+          <InsertLinkIcon />
+        </Button>
+      </ActionBar>
       <CustomDiv
         ref={textArea}
         contentEditable="true"
@@ -205,7 +232,7 @@ const CustomTextarea = ({ onChange, value, limit }) => {
           <span>Visa</span>
           <input type="text" placeholder="Länktext" value={linkText} onChange={handleTextChange} />
         </div>
-        <Button color={'default'} onClick={replaceSelectedText}>
+        <Button color={'default'} onClick={replaceCurrentLink}>
           <RemoveLinkIcon />
         </Button>
       </Popup>
