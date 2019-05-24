@@ -105,7 +105,9 @@ const CustomTextarea = ({ onChange, value, limit }) => {
     } else if (currentRange) {
       currentRange.deleteContents()
       let link = document.createElement('a')
-      link.setAttribute('href', linkHref)
+      link.setAttribute('href', !(linkHref.startsWith('http://') || linkHref.startsWith('https://')) ? 'http://' + linkHref : linkHref)
+      link.setAttribute('target', '_blank')
+      link.setAttribute('rel', 'noopener noreferrer')
       link.innerText = linkText
       currentRange.insertNode(link)
     }
