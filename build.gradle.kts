@@ -68,6 +68,8 @@ subprojects {
   dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    implementation("org.apache.commons:commons-lang3:${Dependencies.commonsLang3Version}")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

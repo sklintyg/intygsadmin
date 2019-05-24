@@ -19,43 +19,37 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.IARole;
+import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public class IneraOidcUserDetails implements UserDetails {
+@Getter
+public class IntygsadminUser implements UserDetails {
 
     private String userId;
+    private String name;
     private OAuth2AccessToken token;
-    private IARole iaRole;
+    private IntygsadminRole intygsadminRole;
+    private AuthenticationMethod authenticationMethod;
 
-    public IneraOidcUserDetails(UserEntity userEntity, OAuth2AccessToken token) {
+    public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OAuth2AccessToken token, String name) {
         this.userId = userEntity.getEmployeeHsaId();
-        this.iaRole = userEntity.getIaRole();
+        this.intygsadminRole = userEntity.getIntygsadminRole();
+        this.authenticationMethod = authenticationMethod;
         this.token = token;
+        this.name = name;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(iaRole.name()));
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public OAuth2AccessToken getToken() {
-        return token;
-    }
-
-    public IARole getIARole() {
-        return iaRole;
+        return Arrays.asList(new SimpleGrantedAuthority(intygsadminRole.name()));
     }
 
     @Override

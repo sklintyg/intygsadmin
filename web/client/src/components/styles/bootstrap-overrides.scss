@@ -73,6 +73,10 @@ $alert-padding-x: 0.5rem;
 
 .modal-footer {
   justify-content: flex-start;
+
+  &.no-border {
+    border-top: none;
+  }
 }
 
 .alert-info {

@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.enums;
+package se.inera.intyg.intygsadmin.web.auth;
 
-public enum IARole {
-    BASIC,
-    ADMIN
+public enum AuthenticationMethod {
+    FAKE,
+    OIDC
+
 }

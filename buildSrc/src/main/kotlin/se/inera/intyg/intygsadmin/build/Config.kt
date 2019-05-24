@@ -26,7 +26,8 @@ object Config {
     const val hibernateJpsVersion = "1.0.2.Final"
     const val commonsIOVersion = "2.6"
     const val swaggerVersion = "2.9.2"
-    }
+    const val commonsLang3Version = "3.9"
+  }
 
   object TestDependencies {
     const val mockitoCoreVersion = "2.27.0"

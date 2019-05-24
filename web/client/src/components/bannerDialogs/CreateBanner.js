@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
 import { compose } from 'recompose'
@@ -8,10 +8,12 @@ import DatePicker from '../datePicker'
 import * as actions from '../../store/actions/banner'
 import { connect } from 'react-redux'
 import TimePicker from '../timePicker'
-import Toggler from '../toggler/Toggler'
 import styled from 'styled-components'
+import isEqual from 'lodash/isEqual'
+import isEmpty from 'lodash/isEmpty'
+import { validateBanner } from './BannerValidator'
+import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
-import { IaTypo05, IaTypo04 } from '../styles/iaTypography'
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -22,133 +24,153 @@ const StyledBody = styled(ModalBody)`
   }
 `
 
-const HelpDiv = styled.div`
-  &.visible {
-    display: block;
+const FlexDiv = styled.div`
+  display: flex;
+  > span {
+    flex: 0 0 150px;
+    &:first-of-type {
+      flex: 0 0 50px;
+    }
   }
-  &.hidden {
-    display: none;
-  }
-
-  border-radius: 2px;
-  background-color: ${colors.IA_COLOR_15};
-  max-height: 160px;
-  padding: 12px 18px;
-  overflow-y: scroll;
-  margin-bottom: 12px;
 `
 
-const HelpRoof = styled.div`
-  margin-top: -25px;
-  &.visible {
-    display: block;
-  }
-  &.hidden {
-    display: none;
-  }
-  height: 20px;
-  width: 20px;
-  border: 10px solid ${colors.IA_COLOR_15};
-  margin-left: 20px;
-  border-top: 10px solid #fff;
-  border-left: 10px solid #fff;
-  border-right: 10px solid #fff;
+const ValidationMessage = styled.div`
+  color: ${colors.IA_COLOR_16};
 `
 
-const HelpHeader = styled(IaTypo04)`
-  color: ${colors.IA_COLOR_06}
-  padding: 4px 0;
-`
+const initialBanner = {
+  application: undefined,
+  message: '',
+  displayFrom: undefined,
+  displayTo: undefined,
+  displayFromTime: undefined,
+  displayToTime: undefined,
+  priority: undefined,
+}
 
-const HelpText = styled(IaTypo05)`
-  color: ${colors.IA_COLOR_06}
-  padding: 4px 0;
-`
+const tjanstButtons = [
+  { label: 'Intygsstatistik', value: 'STATISTIK' },
+  { label: 'Rehabstöd', value: 'REHABSTOD' },
+  { label: 'Webcert', value: 'WEBCERT' },
+]
+
+const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
 
 const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
-  const [tjanst, setTjanst] = useState(undefined)
-  const [prio, setPrio] = useState(undefined)
-  const [fromDate, setFromDate] = useState(undefined)
-  const [toDate, setToDate] = useState(undefined)
-  const [meddelande, setMeddelande] = useState('')
-  const [prioHelpExpanded, setPrioHelpExpanded] = useState(false)
+  const [validationMessages, setValidationMessages] = useState({})
+  const [banner, setBanner] = useState(initialBanner)
 
-  const onTjanstChange = (e) => {
-    setTjanst(e.target.value)
-  }
-  const onPrioChange = (e) => {
-    setPrio(e.target.value)
-  }
-  const onMeddelandeChange = (value) => {
-    setMeddelande(value)
-  }
-  const onFromDateChange = (value) => {
-    setFromDate(value)
-  }
-  const onToDateChange = (value) => {
-    setToDate(value)
-  }
+  useEffect(() => {
+    if (isEqual(previousBanner.current, banner)) {
+      return
+    }
+    setValidationMessages(validateBanner(banner))
+  }, [banner])
 
-  const prioHelpToggler = () => {
-    setPrioHelpExpanded(!prioHelpExpanded)
+  const previousBanner = useRef()
+  useEffect(() => {
+    previousBanner.current = banner
+  })
+
+  const onChange = (value, prop) => {
+    setBanner({ ...banner, [prop]: value })
   }
 
   const send = () => {
     createBanner({
-      application: tjanst,
-      message: meddelande,
-      displayFrom: fromDate.toLocaleString().replace(' ', 'T'),
-      displayTo: toDate.toLocaleString().replace(' ', 'T'),
-      priority: prio,
+      application: banner.application,
+      message: banner.message,
+      displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
+      displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
+      priority: banner.prio,
     }).then(() => handleClose())
   }
 
-  const tjanstButtons = [
-    { label: 'Intygsstatistik', value: 'STATISTIK' },
-    { label: 'Rehabstöd', value: 'REHABSTOD' },
-    { label: 'Webcert', value: 'WEBCERT' },
-  ]
-
-  const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
+  const cancel = () => {
+    setBanner(initialBanner)
+    handleClose()
+  }
 
   return (
     <Fragment>
-      <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={handleClose}>
-        <ModalHeader toggle={handleClose}>Skapa driftbanner</ModalHeader>
+      <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
+        <ModalHeader toggle={cancel}>Skapa driftbanner</ModalHeader>
         <StyledBody>
           <h5>Välj tjänst</h5>
-          <RadioWrapper radioButtons={tjanstButtons} onChange={onTjanstChange} selected={tjanst} />
+          <RadioWrapper
+            radioButtons={tjanstButtons}
+            onChange={(event) => onChange(event.target.value, 'application')}
+            selected={banner.application}
+          />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={onMeddelandeChange} />
+          <CustomTextarea onChange={(value) => onChange(value, 'message')}>{banner.message}</CustomTextarea>
           <h5>Ange visningsperiod</h5>
-          Från <DatePicker date={fromDate} onChange={onFromDateChange} />
-          <TimePicker date={fromDate} onChange={onFromDateChange} />
-          <br />
-          till <DatePicker date={toDate} onChange={onToDateChange} />
-          <TimePicker date={toDate} onChange={onToDateChange} />
-          <h5>
-            Välj prioritet<Toggler expanded={prioHelpExpanded} handleToggle={prioHelpToggler} />
-          </h5>
-          <HelpRoof className={prioHelpExpanded ? 'visible' : 'hidden'}></HelpRoof>
-          <HelpDiv className={prioHelpExpanded ? 'visible' : 'hidden'}>
-            <HelpHeader>Låg prioritet</HelpHeader>
-            <HelpText>Används för information som inte påverkar användandet av tjänsten. En blå driftbanner visas.</HelpText>
-            <HelpHeader>Medel prioritet</HelpHeader>
-            <HelpText>
+          <FlexDiv>
+            <span>Från</span>
+            <span>
+              <DatePicker
+                date={banner.displayFrom}
+                onChange={(value) => onChange(value, 'displayFrom')}
+                className={validationMessages.displayFrom ? 'error' : ''}
+              />
+            </span>
+            <span>
+              <TimePicker
+                date={banner.displayFromTime}
+                onChange={(value) => onChange(value, 'displayFromTime')}
+                className={validationMessages.displayFromTime ? 'error' : ''}
+              />
+            </span>
+          </FlexDiv>
+          <ValidationMessage>{validationMessages.displayFrom}</ValidationMessage>
+          <ValidationMessage>{validationMessages.displayFromTime}</ValidationMessage>
+          <FlexDiv>
+            <span>till</span>
+            <span>
+              <DatePicker
+                date={banner.displayTo}
+                onChange={(value) => onChange(value, 'displayTo')}
+                className={validationMessages.displayTo ? 'error' : ''}
+              />
+            </span>
+            <span>
+              <TimePicker
+                date={banner.displayToTime}
+                onChange={(value) => onChange(value, 'displayToTime')}
+                className={validationMessages.displayToTime ? 'error' : ''}
+              />
+            </span>
+          </FlexDiv>
+          <ValidationMessage>{validationMessages.displayTo}</ValidationMessage>
+          <ValidationMessage>{validationMessages.displayToTime}</ValidationMessage>
+          <HelpChevron label={'Välj prioritet'}>
+            <h5>Låg prioritet</h5>
+            <p>Används för information som inte påverkar användandet av tjänsten. En blå driftbanner visas.</p>
+            <h5>Medel prioritet</h5>
+            <p>
               Används för information som användaren bör uppmärksamma och för händelser som inte påverkar användandet av tjänsten, till
               exempel vid kommande driftstörningar. En gul driftbanner visas.
-            </HelpText>
-            <HelpHeader>Hög prioritet</HelpHeader>
-            <HelpText>
+            </p>
+            <h5>Hög prioritet</h5>
+            <p>
               Används för information som användaren behöver uppmärksamma och för händelser som påverkar användandet av tjänsten, till
               exempel vid pågående driftstörningar. En röd driftbanner visas.
-            </HelpText>
-          </HelpDiv>
-          <RadioWrapper radioButtons={prioButtons} onChange={onPrioChange} selected={prio} />
+            </p>
+          </HelpChevron>
+          <RadioWrapper radioButtons={prioButtons} onChange={(event) => onChange(event.target.value, 'prio')} selected={banner.prio} />
         </StyledBody>
         <ModalFooter>
           <Button
-            disabled={!(tjanst && meddelande && fromDate && toDate && prio)}
+            disabled={
+              !(
+                banner.application &&
+                banner.message &&
+                banner.displayFrom &&
+                banner.displayTo &&
+                banner.prio &&
+                isEmpty(validationMessages)
+              )
+            }
             color={'primary'}
             onClick={() => {
               send()
@@ -158,7 +180,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
           <Button
             color={'default'}
             onClick={() => {
-              handleClose()
+              cancel()
             }}>
             Avbryt
           </Button>

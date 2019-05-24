@@ -52,7 +52,7 @@ public class UserPersistenceService {
         return userRepository.findById(id);
     }
 
-    public UserEntity findByEmployeeHsaId(String employeeHsaId) {
+    public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
         return userRepository.findByEmployeeHsaId(employeeHsaId);
     }
 

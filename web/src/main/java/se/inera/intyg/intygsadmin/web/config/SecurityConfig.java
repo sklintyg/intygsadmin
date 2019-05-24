@@ -19,7 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.config;
 
-import com.google.common.collect.Lists;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -29,24 +28,27 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
+import se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 import se.inera.intyg.intygsadmin.web.auth.IndividualClaimsOuth2ContextFilter;
 import se.inera.intyg.intygsadmin.web.auth.IneraOidcFilter;
-import se.inera.intyg.intygsadmin.web.auth.IneraOidcLogoutSuccessHandler;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminLogoutSuccessHandler;
+import se.inera.intyg.intygsadmin.web.auth.LoggingSessionRegistryImpl;
+import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
 
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-
+import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
 
 @Configuration
@@ -69,26 +71,46 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public SessionRegistry loggingSessionRegistry() {
+        return new LoggingSessionRegistryImpl(new MonitoringLogServiceImpl());
+    }
+
+    @Bean
+    public RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy() {
+        return new RegisterSessionAuthenticationStrategy(loggingSessionRegistry());
+    }
+
+    @Bean
+    public SimpleUrlAuthenticationSuccessHandler successRedirectHandler() {
+        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl("/");
+        handler.setAlwaysUseDefaultTargetUrl(true);
+        return handler;
+    }
+
+    @Bean
     public IndividualClaimsOuth2ContextFilter outh2ContextFilter() {
         return new IndividualClaimsOuth2ContextFilter(idpProperties.getRequestedClaims());
     }
 
     @Bean
-    public IneraOidcFilter ineraOidcFilter() throws MalformedURLException {
-        return new IneraOidcFilter(idpProperties.getRedirectUri().getPath(), ineraOIDCProviderMetadata, idpProperties.getClientId(),
+    public IneraOidcFilter ineraOidcFilter() {
+        IneraOidcFilter ineraOidcFilter = new IneraOidcFilter(idpProperties.getRedirectUri().getPath(), ineraOIDCProviderMetadata,
+                idpProperties.getClientId(),
                 restTemplate, userPersistenceService);
+        ineraOidcFilter.setAuthenticationSuccessHandler(successRedirectHandler());
+        ineraOidcFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
+        return ineraOidcFilter;
     }
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
-        return new IneraOidcLogoutSuccessHandler(ineraOIDCProviderMetadata, idpProperties);
-    }
-
-    @Bean
-    public static OrRequestMatcher loginRequestMatcher() {
-        ArrayList<RequestMatcher> matchers = Lists.newArrayList(
-                new AntPathRequestMatcher("/login*", null));
-        return new OrRequestMatcher(matchers);
+        return new IntygsadminLogoutSuccessHandler(ineraOIDCProviderMetadata, idpProperties);
     }
 
     @Override
@@ -96,7 +118,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // All static client resources could be completely ignored by Spring Security.
         // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
         // will stop IE from loading fonts properly.
-        web.ignoring().anyRequest();// antMatchers("/static/**");
+        // web.ignoring().antMatchers("/**"); // Used to disable
+        web.ignoring().antMatchers("/static/**");
     }
 
     @Override
@@ -116,8 +139,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/app/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/components/**").permitAll()
-                .antMatchers(API_ANVANDARE).permitAll();
-        // .antMatchers(APPCONFIG_REQUEST_MAPPING).permitAll()
+                .antMatchers(API_ANVANDARE).permitAll()
+                .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
         // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll();
 
         // @formatter:off
@@ -127,14 +150,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .fullyAuthenticated()
                 .and()
                     .exceptionHandling()
-                    .defaultAuthenticationEntryPointFor(new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()), loginRequestMatcher())
+                    .defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()),
+                                    new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL))
                     .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
                 .and()
                 .addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
                 .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
                 .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessHandler(logoutSuccessHandler());
+                    .invalidateHttpSession(true)
+                    .logoutUrl(AuthenticationConstansts.LOGOUT_URL)
+                    .logoutSuccessHandler(logoutSuccessHandler())
+                    .clearAuthentication(true)
+                .and()
+                .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
 
         http.csrf().disable();
         // @formatter:on

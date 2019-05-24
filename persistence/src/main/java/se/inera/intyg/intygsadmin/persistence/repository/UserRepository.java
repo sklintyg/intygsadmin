@@ -24,11 +24,12 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID>,
         QuerydslPredicateExecutor<UserEntity> {
 
-    UserEntity findByEmployeeHsaId(String employeeHsaId);
+    Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
 }

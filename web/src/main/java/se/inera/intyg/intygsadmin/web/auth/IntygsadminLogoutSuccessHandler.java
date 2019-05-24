@@ -32,13 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class IneraOidcLogoutSuccessHandler extends
+public class IntygsadminLogoutSuccessHandler extends
         SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private OIDCProviderMetadata ineraOIDCProviderMetadata;
     private IdpProperties idpProperties;
 
-    public IneraOidcLogoutSuccessHandler(OIDCProviderMetadata ineraOIDCProviderMetadata, IdpProperties idpProperties) {
+    public IntygsadminLogoutSuccessHandler(OIDCProviderMetadata ineraOIDCProviderMetadata, IdpProperties idpProperties) {
         this.ineraOIDCProviderMetadata = ineraOIDCProviderMetadata;
         this.idpProperties = idpProperties;
     }
@@ -50,35 +50,45 @@ public class IneraOidcLogoutSuccessHandler extends
         boolean isRedirected = false;
         if (authentication != null) {
             final Object principal = authentication.getPrincipal();
-            if (principal instanceof IneraOidcUserDetails) {
-                final IneraOidcUserDetails ineraOidcUserDetails = (IneraOidcUserDetails) principal;
+            if (principal instanceof IntygsadminUser) {
+                final IntygsadminUser intygsadminUser = (IntygsadminUser) principal;
 
-                final OAuth2AccessToken tokens = ineraOidcUserDetails.getToken();
-                if (tokens != null) {
-                    final String idTokenString = tokens.getAdditionalInformation().get("id_token").toString();
+                if (AuthenticationMethod.OIDC.equals(intygsadminUser.getAuthenticationMethod())) {
+                    // This is an OIDC login so we need to logout the SSO session aswell
 
-                    if (StringUtils.hasText(idTokenString)) {
-                        /*
-                         * If we have an ID_TOKEN we use this to end the sso session at the IdP/OP.
-                         * This will work in the most cases and the user will end up back in the application,
-                         * but in rare cases, when the ID_TOKEN is no longer present in the IdP/OP, then the
-                         * end user will instead get a "logged out" page from the IdP.
-                         */
+                    final OAuth2AccessToken tokens = intygsadminUser.getToken();
+                    if (tokens != null) {
+                        final String idTokenString = tokens.getAdditionalInformation().get("id_token").toString();
 
-                        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUri(ineraOIDCProviderMetadata.getEndSessionEndpointURI())
-                                .queryParam("id_token_hint", idTokenString)
-                                .queryParam("post_logout_redirect_uri", idpProperties.getLogoutRedirectUri().toString());
+                        if (StringUtils.hasText(idTokenString)) {
+                            /*
+                             * If we have an ID_TOKEN we use this to end the sso session at the IdP/OP.
+                             * This will work in the most cases and the user will end up back in the application,
+                             * but in rare cases, when the ID_TOKEN is no longer present in the IdP/OP, then the
+                             * end user will instead get a "logged out" page from the IdP.
+                             */
 
-                        isRedirected = true;
-                        getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
+                            UriComponentsBuilder uriBuilder = UriComponentsBuilder
+                                    .fromUri(ineraOIDCProviderMetadata.getEndSessionEndpointURI())
+                                    .queryParam("id_token_hint", idTokenString)
+                                    .queryParam("post_logout_redirect_uri", idpProperties.getLogoutRedirectUri().toString());
 
+                            isRedirected = true;
+                            getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
+
+                        }
                     }
+                } else {
+                    // FAKE login and the user will end up back at the welcome.html page
+
+                    isRedirected = true;
+                    getRedirectStrategy().sendRedirect(request, response, "/welcome.html");
                 }
             }
         }
         if (!isRedirected) {
             // Just send the user to the loggedOut url
-            getRedirectStrategy().sendRedirect(request, response, "/loggedout");
+            getRedirectStrategy().sendRedirect(request, response, "/#/loggedout/m");
         }
     }
 }

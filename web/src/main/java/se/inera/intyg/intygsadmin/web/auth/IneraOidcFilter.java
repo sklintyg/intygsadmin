@@ -56,7 +56,7 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
         this.restTemplate = restTemplate;
         this.clientId = clientId;
         this.userPersistenceService = userPersistenceService;
-        setAuthenticationManager(new NoopAuthenticationManager()); // TODO Check!
+        setAuthenticationManager(new NoopAuthenticationManager());
         try {
             idTokenValidator = new IDTokenValidator(oidcProviderMetadata.getIssuer(), new ClientID(clientId), JWSAlgorithm.RS256,
                     oidcProviderMetadata.getJWKSetURI().toURL());
@@ -82,12 +82,15 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
             final String employeeHsaId = idTokenClaimsSet.getStringClaim("employeeHsaId");
             UserEntity userEntity = userPersistenceService
-                    .findByEmployeeHsaId(employeeHsaId);
+                    .findByEmployeeHsaId(employeeHsaId).orElseThrow(
+                            () -> new BadCredentialsException("Failed authentication. No authority for employeeHsaId " + employeeHsaId));
 
-            // UserEntity userEntity = authorityOptional.orElseThrow(
-            // () -> new BadCredentialsException("Failed authentication. No authority for employeeHsaId " + employeeHsaId));
+            // Concatenate the user's name
+            final StringBuilder name = new StringBuilder(idTokenClaimsSet.getStringClaim("given_name"));
+            name.append(" ");
+            name.append(idTokenClaimsSet.getStringClaim("family_name"));
 
-            final IneraOidcUserDetails user = new IneraOidcUserDetails(userEntity, accessToken);
+            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken, name.toString());
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         } catch (final Exception e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);

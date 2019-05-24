@@ -17,19 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.auth;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
+public final class AuthenticationConstansts {
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserDTO {
+    public static final String LOGIN_URL = "/login";
+    public static final String LOGOUT_URL = "/logout";
+    public static final String FAKE_PROFILE = "fake";
+    public static final String FAKE_LOGIN_URL = "/welcome.html";
+    public static final String SUCCESSFUL_LOGOUT_REDIRECT_URL = "/#/loggedout/m";
 
-    private String employeeHsaId;
-    private IntygsadminRole intygsadminRole;
-    private String name;
+    // Prevent instantiation
+    private AuthenticationConstansts() {
+    }
 }

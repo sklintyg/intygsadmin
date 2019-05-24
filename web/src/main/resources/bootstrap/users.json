@@ -1,10 +1,10 @@
 [
   {
     "employeeHsaId": "TSTNMT2321000156-10KK",
-    "iaRole": "ADMIN"
+    "intygsadminRole": "ADMIN"
   },
   {
     "employeeHsaId": "TSTNMT2321000156-10KL",
-    "iaRole": "BASIC"
+    "intygsadminRole": "BASIC"
   }
 ]

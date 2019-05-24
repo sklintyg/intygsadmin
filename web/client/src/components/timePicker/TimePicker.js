@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { TimeIcon, CollapseIcon, ExpandIcon } from '../styles/iaSvgIcons'
+import colors from '../styles/iaColors'
 
 const StyledButton = styled(Button)`
   margin-left: 0px !important
@@ -18,6 +19,14 @@ const StyledInput = styled.input`
 const Container = styled.div`
   position: relative;
   display: inline-block;
+  &.error {
+    > input,
+    > input:focus,
+    > button,
+    > button:focus {
+      border-color: ${colors.IA_COLOR_16};
+    }
+  }
 `
 
 const Popup = styled.div`
@@ -53,15 +62,41 @@ const ArrowDiv = styled.div`
   text-align: center;
 `
 
-const TimePicker = ({ date, onChange }) => {
+const useOnClickOutside = (ref, handler) => {
+  useEffect(
+    () => {
+      const listener = (event) => {
+        // Do nothing if clicking ref's element or descendent elements
+        if (!ref.current || ref.current.contains(event.target)) {
+          return
+        }
+        handler(event)
+      }
+      document.addEventListener('mousedown', listener)
+
+      return () => {
+        document.removeEventListener('mousedown', listener)
+      }
+    },
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]
+  )
+}
+
+const TimePicker = ({ date, onChange, className }) => {
   const [value, setValue] = useState('')
-  const popup = useRef(null)
+  const popup = useRef()
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
   const [popupOpen, setPopupOpen] = useState(false)
 
-  const parseTimeFromDate = () => {
-    if (value) {
+  const parseTimeFromValue = () => {
+    if (value.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
       setHours(value.split(':')[0])
       setMinutes(value.split(':')[1])
     } else {
@@ -71,24 +106,15 @@ const TimePicker = ({ date, onChange }) => {
   }
 
   useEffect(() => {
-    if (date) {
-      setValue(date.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }))
+    if (hours && minutes) {
+      setValue(hours + ':' + minutes)
     }
-  }, [date])
+  }, [hours, minutes])
 
-  const internalOnChange = (evt) => {
-    let inputValue = evt.target.value
-    let match = inputValue.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')
-    if (match) {
-      let newDate = new Date(date)
-      newDate.setHours(match[1])
-      newDate.setMinutes(match[2])
-      onChange(newDate)
-    } else {
-      //INVALID
-    }
+  const inputOnChange = (event) => {
+    let inputValue = event.target.value
     setValue(inputValue)
-    console.log('change')
+    onChange(inputValue)
   }
 
   const toggleTimePopup = () => {
@@ -101,53 +127,43 @@ const TimePicker = ({ date, onChange }) => {
 
   const openTimePopup = () => {
     setPopupOpen(true)
-    parseTimeFromDate()
+    parseTimeFromValue()
   }
 
   const closeTimePopup = () => {
-    let newDate
-    if (date) {
-      newDate = new Date(date)
-    } else {
-      newDate = new Date()
-    }
-    newDate.setHours(parseInt(hours))
-    newDate.setMinutes(parseInt(minutes))
-    onChange(newDate)
     setPopupOpen(false)
+    onChange(value)
   }
+
+  useOnClickOutside(popup, closeTimePopup)
 
   const hoursUp = () => {
     let newHours = parseInt(hours) + 1
     if (newHours === 24) newHours = 0
     setHours(newHours < 10 ? '0' + newHours : newHours)
-    setValue((newHours < 10 ? '0' + newHours : newHours) + ':' + minutes)
   }
 
   const minutesUp = () => {
     let newMinutes = parseInt(minutes) + 10
     if (newMinutes > 59) newMinutes -= 60
     setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
-    setValue(hours + ':' + (newMinutes < 10 ? '0' + newMinutes : newMinutes))
   }
 
   const hoursDown = () => {
     let newHours = parseInt(hours) - 1
     if (newHours === -1) newHours = 23
     setHours(newHours < 10 ? '0' + newHours : newHours)
-    setValue((newHours < 10 ? '0' + newHours : newHours) + ':' + minutes)
   }
 
   const minutesDown = () => {
     let newMinutes = parseInt(minutes) - 10
     if (newMinutes < 0) newMinutes += 60
     setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
-    setValue(hours + ':' + (newMinutes < 10 ? '0' + newMinutes : newMinutes))
   }
 
   return (
-    <Container>
-      <StyledInput type="text" value={value} onChange={internalOnChange} placeholder={'hh:mm'} />
+    <Container className={className}>
+      <StyledInput type="text" value={value} onChange={inputOnChange} placeholder={'hh:mm'} />
       <StyledButton onClick={toggleTimePopup} color={'default'}>
         <TimeIcon />
       </StyledButton>

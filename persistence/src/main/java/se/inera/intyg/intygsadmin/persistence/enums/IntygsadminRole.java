@@ -17,19 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.persistence.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserDTO {
-
-    private String employeeHsaId;
-    private IntygsadminRole intygsadminRole;
-    private String name;
+public enum IntygsadminRole {
+    BASIC,
+    ADMIN
 }
