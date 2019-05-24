@@ -28,6 +28,7 @@ const StyledBody = styled(ModalBody)`
 
 const FlexDiv = styled.div`
   display: flex;
+  margin-bottom: 8px;
   > span {
     flex: 0 0 150px;
     &:first-of-type {
@@ -97,15 +98,19 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
     setBanner({ ...banner, [prop]: value })
   }
 
+  const createSendObject = () => {
+    return ({
+      application: banner.application,
+      message: banner.message,
+      displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
+      displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
+      priority: banner.priority,
+    })
+  }
+
   const send = () => {
     if(update) {
-      updateBanner({
-        application: banner.application,
-        message: banner.message,
-        displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
-        displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
-        priority: banner.priority,
-      }, data.banner.id).then(() => {
+      updateBanner(createSendObject(), data.banner.id).then(() => {
         cancel()
         onComplete()
       }).catch((data)=>{
@@ -113,13 +118,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
         setErrorActive(true)
       })
     } else {
-      createBanner({
-        application: banner.application,
-        message: banner.message,
-        displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
-        displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
-        priority: banner.priority,
-      }).then(() => {
+      createBanner(createSendObject()).then(() => {
         cancel()
         onComplete()
       }).catch((data)=>{
@@ -147,7 +146,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             selected={banner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message} />
+          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message} limit={200}/>
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
@@ -155,14 +154,14 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
               <DatePicker
                 date={banner.displayFrom}
                 onChange={(value) => onChange(value, 'displayFrom')}
-                className={validationMessages.displayFrom ? 'error' : ''}
+                className={validationMessages.displayFrom !== undefined ? 'error' : ''}
               />
             </span>
             <span>
               <TimePicker
                 value={banner.displayFromTime}
                 onChange={(value) => onChange(value, 'displayFromTime')}
-                className={validationMessages.displayFromTime ? 'error' : ''}
+                className={validationMessages.displayFromTime !== undefined ? 'error' : ''}
               />
             </span>
           </FlexDiv>
@@ -174,14 +173,14 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
               <DatePicker
                 date={banner.displayTo}
                 onChange={(value) => onChange(value, 'displayTo')}
-                className={validationMessages.displayTo ? 'error' : ''}
+                className={validationMessages.displayTo !== undefined ? 'error' : ''}
               />
             </span>
             <span>
               <TimePicker
                 value={banner.displayToTime}
                 onChange={(value) => onChange(value, 'displayToTime')}
-                className={validationMessages.displayToTime ? 'error' : ''}
+                className={validationMessages.displayToTime !== undefined ? 'error' : ''}
               />
             </span>
           </FlexDiv>

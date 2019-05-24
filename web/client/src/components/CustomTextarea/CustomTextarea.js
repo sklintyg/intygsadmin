@@ -4,6 +4,7 @@ import { Button } from 'reactstrap'
 import colors from '../styles/iaColors'
 import { InsertLinkIcon, RemoveLinkIcon } from '../styles/iaSvgIcons'
 import useOnClickOutside from '../hooks/UseOnClickOutside'
+import { IaTypo06 } from '../styles/iaTypography'
 
 const CustomDiv = styled.div`
   margin: 8px 0;
@@ -62,8 +63,12 @@ const Container = styled.div`
     }
   }
 `
+const TextLimit = styled(IaTypo06)`
+  text-align: right;
+  color: ${colors.IA_COLOR_12};
+`
 
-const CustomTextarea = ({ onChange, value }) => {
+const CustomTextarea = ({ onChange, value, limit }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
   const [linkText, setLinkText] = useState('')
@@ -122,9 +127,31 @@ const CustomTextarea = ({ onChange, value }) => {
     range.deleteContents()
     let textElement = document.createTextNode(text)
     range.insertNode(textElement)
+
+    // Klipp bort allt efter limit om man klistrar in för mycket text.
+    if (textArea.current.innerText.length > limit) {
+      textArea.current.innerText = textArea.current.innerText.substring(0, limit)
+    }
   }
 
   const handleKeyPress = (evt) => {
+    if (textArea.current.innerText.length >= limit) {
+      switch (evt.keyCode) {
+        case 8:
+        case 16:
+        case 17:
+        case 18:
+        case 46:
+        case 37:
+        case 38:
+        case 39:
+        case 40:
+          break
+        default:
+          evt.preventDefault()
+      }
+    }
+
     if (evt.key === 'Enter') {
       evt.preventDefault()
       const sel = extractSelection()
@@ -168,8 +195,9 @@ const CustomTextarea = ({ onChange, value }) => {
         onPaste={handlePaste}
         onKeyPress={handleKeyPress}
         onBlur={onBlur}
-        dangerouslySetInnerHTML={{ __html: value }}>
-      </CustomDiv>
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+      {textArea.current && limit ? <TextLimit>Tecken kvar: {limit - textArea.current.innerText.length}</TextLimit> : null}
       <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
         <div>
           <span>Länk</span>
