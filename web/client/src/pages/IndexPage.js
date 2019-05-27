@@ -35,7 +35,7 @@ const HomePage = ({ match }) => {
       <CustomScrollingContainer>
         <PageContainer>
           <Wrapper>
-            <IaTypo01 as="h1">Välkommen till Intygsadmin!</IaTypo01>
+            <IaTypo01 as="h1">Välkommen till Intygsadmin</IaTypo01>
             <IaTypo05 as="p">
               I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster skapa och hantera driftbanners som informerar
               Intygstjänsters användare om kommande eller pågående händelser.
