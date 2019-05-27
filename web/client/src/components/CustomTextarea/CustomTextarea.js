@@ -1,9 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import colors from '../styles/iaColors'
 import { InsertLinkIcon, RemoveLinkIcon } from '../styles/iaSvgIcons'
-import useOnClickOutside from '../hooks/UseOnClickOutside'
 import { IaTypo06 } from '../styles/iaTypography'
 
 const CustomDiv = styled.div`
@@ -32,22 +31,32 @@ const Popup = styled.div`
   background-color: #fff;
   box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.12);
   padding: 8px;
+  display: flex;
   &.open {
-    display: flex;
+    visibility: visible;
   }
   &.closed {
-    display: none;
+    visibility: hidden;
   }
   > div {
     flex: 0 0 180px;
+    &.button_container {
+      flex: 0 0 45px;
+    }
     span {
       display: inline-block;
       width: 40px;
+    }
+    input:first-of-type {
+      margin-bottom: 5px;
     }
   }
   button {
     flex: 0 0 42px;
     height: 35px;
+    &:first-of-type {
+      margin-bottom: 5px;
+    }
   }
 `
 
@@ -112,6 +121,7 @@ const CustomTextarea = ({ onChange, value, limit }) => {
       currentRange.insertNode(link)
     }
     onChange(textArea.current.innerHTML)
+    setPopupOpen(false)
   }
 
   const replaceCurrentLink = () => {
@@ -199,15 +209,25 @@ const CustomTextarea = ({ onChange, value, limit }) => {
   }
 
   const openLinkPopup = () => {
+    if (!currentRange) {
+      textArea.current.focus()
+    }
     setPopupOpen(true)
   }
 
-  useOnClickOutside(popup, () => {
-    if (popupOpen) {
-      replaceSelectedText()
+  useEffect(() => {
+    const listener = (event) => {
+      if (!popup.current || popup.current.contains(event.target)) {
+        return
+      }
+      setPopupOpen(false)
     }
-    setPopupOpen(false)
-  })
+    document.addEventListener('mousedown', listener)
+
+    return () => {
+      document.removeEventListener('mousedown', listener)
+    }
+  }, [])
 
   return (
     <Container>
@@ -234,9 +254,14 @@ const CustomTextarea = ({ onChange, value, limit }) => {
           <span>Visa</span>
           <input type="text" placeholder="Länktext" value={linkText} onChange={handleTextChange} />
         </div>
-        <Button color={'default'} onClick={replaceCurrentLink}>
-          <RemoveLinkIcon />
-        </Button>
+        <div className="button_container">
+          <Button color={'default'} onClick={replaceCurrentLink} title={'Ta bort aktuell länk'}>
+            <RemoveLinkIcon />
+          </Button>
+          <Button color={'default'} onClick={replaceSelectedText} title={'Infoga länk'}>
+            <InsertLinkIcon />
+          </Button>
+        </div>
       </Popup>
     </Container>
   )
