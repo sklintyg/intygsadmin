@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import ReactDatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { Calendar } from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
+import sv from 'date-fns/locale/sv'
 
 const StyledButton = styled(Button)`
   margin-left: 0px !important
@@ -67,6 +67,8 @@ const DatePicker = ({ date, onChange, className}) => {
       onChange={onChange}
       onChangeRaw={change}
       className={className}
+      locale={sv}
+      showWeekNumbers
     />
   )
 }
