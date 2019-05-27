@@ -64,7 +64,7 @@ export const IaTypo07 = styled(Div)`
 export const IaTypo08 = styled(Div)`
   font-weight: 400;
   font-size: 14px;
-  text-style: italic;
+  font-style: italic;
 `
 
 export const IaTypo09 = styled(Div)`
