@@ -16,6 +16,9 @@ export const fetchBannerList = ({pageIndex, sortColumn, sortDirection}) => {
       throw error
     }
 
+    // TEST empty
+    bannerListDb = []
+
     return {
       content: bannerListDb,
       pageIndex,

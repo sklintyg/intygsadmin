@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {InfoIcon, Security, Check, ErrorOutline, Warning} from "../styles/iaSvgIcons";
+import {InfoOutline, Security, Check, ErrorOutline, Warning} from "../styles/iaSvgIcons";
 import IaColors from "../styles/iaColors";
 import styled from 'styled-components'
 
@@ -50,7 +50,7 @@ const IaAlert = ({type, children, className}) => {
   function getIcon(type) {
     switch (type) {
     case alertType.INFO:
-      return <InfoIcon color={IaColors.IA_COLOR_19} />;
+      return <InfoOutline color={IaColors.IA_COLOR_19} />;
     case alertType.SEKRETESS:
       return <Security color={IaColors.IA_COLOR_21} />;
     case alertType.OBSERVANDUM:
