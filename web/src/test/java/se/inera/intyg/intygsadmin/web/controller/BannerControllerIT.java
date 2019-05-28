@@ -48,6 +48,15 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
+    public void testGetActiveAnfFutureBanners() {
+        given().expect().statusCode(OK)
+                .when()
+                .get(BANNER_API_ENDPOINT + "/activeAndFuture?application=" + Application.WEBCERT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
+    }
+
+    @Test
     public void testCreateUpdateDeleteBanner() {
         LocalDateTime today = LocalDateTime.now();
         Integer totalElementsBefore  = given().expect().statusCode(OK)
