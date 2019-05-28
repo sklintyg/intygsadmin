@@ -74,10 +74,10 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
       let displayTo = new Date(data.banner.displayTo)
       setBanner({
         ...data.banner,
-        displayFrom: displayFrom.toLocaleDateString('sv-SE'),
-        displayTo: displayTo.toLocaleDateString('sv-SE'),
-        displayFromTime: displayFrom.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
-        displayToTime: displayTo.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }),
+        displayFrom: displayFrom.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''),
+        displayTo: displayTo.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''),
+        displayFromTime: displayFrom.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }).replace(/[^ -~]/g, ''),
+        displayToTime: displayTo.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }).replace(/[^ -~]/g, ''),
       })
     }
   }, [data])
