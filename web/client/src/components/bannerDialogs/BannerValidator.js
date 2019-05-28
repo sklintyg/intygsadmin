@@ -59,7 +59,9 @@ const validateTime = (value) => {
   return 'Ange tid i formatet hh:mm'
 }
 
-const validateFromDateBeforeToDate = (from, to, fromTime, toTime) => {
+const validateFromDateBeforeToDate = (fromDate, toDate, fromTime, toTime) => {
+  let from = new Date(fromDate)
+  let to = new Date(toDate)
   if (from.getHours && !isNaN(from.getHours()) && to.getHours && !isNaN(to.getHours())) {
     if (from > to) {
       return 'toDateBeforeFrom'

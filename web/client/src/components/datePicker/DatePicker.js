@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
@@ -29,47 +29,136 @@ const Container = styled.div`
   }
 `
 
-class DatePickerInput extends React.Component {
-  render() {
-    return (
-      <Container className={this.props.className}>
-        <StyledInput
-          type="text"
-          value={this.props.value}
-          onChange={this.props.onChange}
-          placeholder={'åååå-mm-dd'}
-        />
-        <StyledButton onClick={this.props.onClick} color={'default'}>
-          <Calendar />
-        </StyledButton>
-      </Container>
-    )
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  button {
+    flex: 0 0 70px;
+    margin-right: 12px;
+    margin-bottom: 12px;
   }
-}
+`
 
-const DatePicker = ({ date, onChange, className}) => {
-  const [internalDate, setInternalDate] = useState(undefined)
+const PopUp = styled.div`
+  position: absolute;
+  width: 365px;
+  top: 40px;
+  left: 0;
+  z-index: 1;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 1px 1px 4px 4px rgba(0, 0, 0, 0.12);
+  &.open {
+    display: block;
+  }
+  &.closed {
+    display: none;
+  }
+`
+
+const DatePickerContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`
+
+const DatePicker = ({ date, onChange, className, onBlur }) => {
+  const [datePickerPopupOpen, setDatePickerPopupOpen] = useState(false)
+  const [internalValue, setInternalValue] = useState('')
+  const popupRef = useRef()
+
   const change = (event) => {
+    setInternalValue(event.target.value)
     onChange(event.target.value)
   }
 
+  const onClick = () => {
+    setDatePickerPopupOpen(!datePickerPopupOpen)
+  }
+
   useEffect(() => {
-    if (date && date.getHours) {
-      setInternalDate(date)
+    if (date) {
+      setInternalValue(date)
     }
   }, [date])
 
+  useEffect(() => {
+    const listener = (event) => {
+      if (!popupRef.current || popupRef.current.contains(event.target)) {
+        return
+      }
+      setDatePickerPopupOpen(false)
+    }
+    if (datePickerPopupOpen) {
+      document.addEventListener('mousedown', listener)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', listener)
+    }
+  }, [datePickerPopupOpen])
+
   return (
-    <ReactDatePicker
-      customInput={<DatePickerInput />}
-      selected={internalDate}
-      dateFormat={'yyyy-MM-dd'}
-      onChange={onChange}
-      onChangeRaw={change}
-      className={className}
-      locale={sv}
-      showWeekNumbers
-    />
+    <DatePickerContainer>
+      <Container className={className}>
+        <StyledInput type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={onBlur} />
+        <StyledButton onClick={onClick} color={'default'}>
+          <Calendar />
+        </StyledButton>
+      </Container>
+      <PopUp ref={popupRef} className={datePickerPopupOpen ? 'open' : 'closed'}>
+        <DatePickerPopup onChange={onChange} date={internalValue} open={datePickerPopupOpen} onSelect={onClick} />
+      </PopUp>
+    </DatePickerContainer>
+  )
+}
+
+const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
+  const [internalDate, setInternalDate] = useState(undefined)
+
+  useEffect(() => {
+    if (date && open && (date.match(/(\d{4}-(\d{2})-(\d{2}))/) && date.length === 10)) {
+      let newDate = new Date(date)
+      setInternalDate(newDate)
+    } else {
+      setInternalDate(new Date())
+    }
+  }, [date, open])
+
+  const clear = () => {
+    onSelect()
+    onChange('')
+    setInternalDate(undefined)
+  }
+
+  const handleChange = (value) => {
+    onChange(value.toLocaleDateString('sv-SE'))
+  }
+
+  const handleOk = () => {
+    onChange(internalDate.toLocaleDateString('sv-SE'))
+    onSelect()
+  }
+
+  return (
+    <>
+      <ReactDatePicker
+        selected={internalDate}
+        dateFormat={'yyyy-MM-dd'}
+        onChange={handleChange}
+        locale={sv}
+        showWeekNumbers
+        inline
+        onSelect={onSelect}
+      />
+      <ButtonContainer>
+        <Button color={'default'} onClick={clear}>
+          Rensa
+        </Button>
+        <Button color={'success'} onClick={handleOk}>
+          OK
+        </Button>
+      </ButtonContainer>
+    </>
   )
 }
 

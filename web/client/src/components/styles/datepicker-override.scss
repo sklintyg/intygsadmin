@@ -90,7 +90,6 @@ $datepicker__triangle-size: 8px !default;
   border-radius: $datepicker__border-radius;
   display: inline-block;
   position: relative;
-  box-shadow: 1px 1px 4px 4px $black_12;
 }
 
 .react-datepicker--time-only {
@@ -449,8 +448,7 @@ $datepicker__triangle-size: 8px !default;
   cursor: pointer;
 
   &:hover {
-    border-radius: $datepicker__border-radius;
-    background-color: $datepicker__background-color;
+    background-color: $ia-color-13;
   }
 
   &--today {
@@ -484,20 +482,12 @@ $datepicker__triangle-size: 8px !default;
     color: #fff;
     font-weight: bold;
     border-color: $ia_color_05;
-
-    &:hover {
-      background-color: darken($datepicker__selected-color, 5%);
-    }
   }
 
   &--keyboard-selected {
     border-radius: $datepicker__border-radius;
     background-color: lighten($datepicker__selected-color, 10%);
     color: #fff;
-
-    &:hover {
-      background-color: darken($datepicker__selected-color, 5%);
-    }
   }
 
   &--in-selecting-range:not(&--in-range) {
