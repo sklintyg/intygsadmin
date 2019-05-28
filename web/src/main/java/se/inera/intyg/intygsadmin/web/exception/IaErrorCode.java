@@ -17,19 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web;
+package se.inera.intyg.intygsadmin.web.exception;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-public class IntygsadminApplicationTests {
-
-	@Test
-	public void contextLoads() {
-	}
-
+public enum IaErrorCode {
+    BAD_REQUEST,
+    BAD_STATE,
+    ALREADY_EXISTS,
+    EXTERNAL_ERROR,
+    NOT_FOUND
 }

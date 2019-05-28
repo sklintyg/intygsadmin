@@ -17,19 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web;
+package se.inera.intyg.intygsadmin.web.exception;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-public class IntygsadminApplicationTests {
+@Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class IaServiceException extends RuntimeException {
 
-	@Test
-	public void contextLoads() {
-	}
+    private IaErrorCode errorCode;
+    private String logId;
 
+    public IaServiceException(IaErrorCode errorCode) {
+        super();
+        this.errorCode = errorCode;
+    }
 }

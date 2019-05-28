@@ -36,3 +36,11 @@ export const WorkareaContainer = styled.div`
 export const Section = styled.div`
   padding-bottom: 16px;
 `
+
+export const ErrorSection = styled.div`
+  border-top: 1px solid #dee2e6;
+`
+
+export const ErrorWrapper = styled.div`
+  margin: 15px 15px 0 15px;
+`

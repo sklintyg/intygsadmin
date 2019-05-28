@@ -14,6 +14,8 @@ import isEmpty from 'lodash/isEmpty'
 import { validateBanner } from './BannerValidator'
 import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
+import {ErrorSection, ErrorWrapper } from '../styles/iaLayout'
+import IaAlert, { alertType } from '../alert/Alert'
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -26,6 +28,7 @@ const StyledBody = styled(ModalBody)`
 
 const FlexDiv = styled.div`
   display: flex;
+  margin-bottom: 8px;
   > span {
     flex: 0 0 150px;
     &:first-of-type {
@@ -56,9 +59,28 @@ const tjanstButtons = [
 
 const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
 
-const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
+const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data }) => {
   const [validationMessages, setValidationMessages] = useState({})
+  const [update, setUpdate] = useState(false)
   const [banner, setBanner] = useState(initialBanner)
+  const [errorActive, setErrorActive] = useState(false)
+
+  useEffect(() => {
+    if (data && data.banner) {
+      setUpdate(true)
+      console.log(data.banner)
+      let displayFrom = new Date(data.banner.displayFrom)
+      let displayTo = new Date(data.banner.displayTo)
+      setBanner({
+        ...data.banner,
+        displayFrom,
+        displayTo,
+        displayFromTime: displayFrom.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}),
+        displayToTime: displayTo.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}),
+      })
+
+    }
+  }, [data])
 
   useEffect(() => {
     if (isEqual(previousBanner.current, banner)) {
@@ -76,17 +98,38 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
     setBanner({ ...banner, [prop]: value })
   }
 
-  const send = () => {
-    createBanner({
+  const createSendObject = () => {
+    return ({
       application: banner.application,
       message: banner.message,
       displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
       displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
-      priority: banner.prio,
-    }).then(() => handleClose())
+      priority: banner.priority,
+    })
+  }
+
+  const send = () => {
+    if(update) {
+      updateBanner(createSendObject(), data.banner.id).then(() => {
+        cancel()
+        onComplete()
+      }).catch((data)=>{
+        console.log(data)
+        setErrorActive(true)
+      })
+    } else {
+      createBanner(createSendObject()).then(() => {
+        cancel()
+        onComplete()
+      }).catch((data)=>{
+        console.log(data)
+        setErrorActive(true)
+      })
+  }
   }
 
   const cancel = () => {
+    setErrorActive(false)
     setBanner(initialBanner)
     handleClose()
   }
@@ -94,7 +137,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
   return (
     <Fragment>
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-        <ModalHeader toggle={cancel}>Skapa driftbanner</ModalHeader>
+        <ModalHeader toggle={cancel}>{data ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
         <StyledBody>
           <h5>Välj tjänst</h5>
           <RadioWrapper
@@ -103,7 +146,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             selected={banner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={(value) => onChange(value, 'message')}>{banner.message}</CustomTextarea>
+          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={banner.message} limit={200}/>
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
@@ -111,14 +154,14 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
               <DatePicker
                 date={banner.displayFrom}
                 onChange={(value) => onChange(value, 'displayFrom')}
-                className={validationMessages.displayFrom ? 'error' : ''}
+                className={validationMessages.displayFrom !== undefined ? 'error' : ''}
               />
             </span>
             <span>
               <TimePicker
-                date={banner.displayFromTime}
+                value={banner.displayFromTime}
                 onChange={(value) => onChange(value, 'displayFromTime')}
-                className={validationMessages.displayFromTime ? 'error' : ''}
+                className={validationMessages.displayFromTime !== undefined ? 'error' : ''}
               />
             </span>
           </FlexDiv>
@@ -130,14 +173,14 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
               <DatePicker
                 date={banner.displayTo}
                 onChange={(value) => onChange(value, 'displayTo')}
-                className={validationMessages.displayTo ? 'error' : ''}
+                className={validationMessages.displayTo !== undefined ? 'error' : ''}
               />
             </span>
             <span>
               <TimePicker
-                date={banner.displayToTime}
+                value={banner.displayToTime}
                 onChange={(value) => onChange(value, 'displayToTime')}
-                className={validationMessages.displayToTime ? 'error' : ''}
+                className={validationMessages.displayToTime !== undefined ? 'error' : ''}
               />
             </span>
           </FlexDiv>
@@ -157,9 +200,22 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
               exempel vid pågående driftstörningar. En röd driftbanner visas.
             </p>
           </HelpChevron>
-          <RadioWrapper radioButtons={prioButtons} onChange={(event) => onChange(event.target.value, 'prio')} selected={banner.prio} />
+          <RadioWrapper
+            radioButtons={prioButtons}
+            onChange={(event) => onChange(event.target.value, 'priority')}
+            selected={banner.priority}
+          />
         </StyledBody>
-        <ModalFooter>
+        <ErrorSection>
+          {errorActive && (
+            <ErrorWrapper>
+              <IaAlert type={alertType.ERROR}>
+                Driftbannern kunde inte { data ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
+              </IaAlert>
+            </ErrorWrapper>
+          )}
+        </ErrorSection>
+        <ModalFooter className="no-border">
           <Button
             disabled={
               !(
@@ -167,7 +223,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
                 banner.message &&
                 banner.displayFrom &&
                 banner.displayTo &&
-                banner.prio &&
+                banner.priority &&
                 isEmpty(validationMessages)
               )
             }
@@ -175,7 +231,7 @@ const CreateBanner = ({ handleClose, isOpen, createBanner }) => {
             onClick={() => {
               send()
             }}>
-            Skapa
+            {data ? 'Ändra': 'Skapa'}
           </Button>
           <Button
             color={'default'}

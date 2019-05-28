@@ -19,7 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import se.inera.intyg.intygsadmin.persistence.enums.Application;

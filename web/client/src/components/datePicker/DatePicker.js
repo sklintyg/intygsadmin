@@ -54,11 +54,11 @@ const DatePicker = ({ date, onChange, className}) => {
   }
 
   useEffect(() => {
-    console.log(date)
     if (date && date.getHours) {
       setInternalDate(date)
     }
   }, [date])
+
   return (
     <ReactDatePicker
       customInput={<DatePickerInput />}

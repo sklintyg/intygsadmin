@@ -70,9 +70,13 @@ subprojects {
 
     implementation("org.apache.commons:commons-lang3:${Dependencies.commonsLang3Version}")
 
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+      exclude(module = "junit")
+    }
     testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("org.junit.platform:junit-platform-runner")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.platform:junit-platform-runner") {
+      exclude(module = "junit")
+    }
     testImplementation("io.github.benas:random-beans:${TestDependencies.randomBeansVersion}")
     testImplementation("org.mockito:mockito-core:${TestDependencies.mockitoCoreVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${TestDependencies.mockitoCoreVersion}")

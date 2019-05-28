@@ -9,6 +9,10 @@ export const REMOVE_BANNER_REQUEST = 'REMOVE_BANNER_REQUEST'
 export const REMOVE_BANNER_SUCCESS = 'REMOVE_BANNER_SUCCESS'
 export const REMOVE_BANNER_FAILURE = 'REMOVE_BANNER_FAILURE'
 
+export const UPDATE_BANNER_REQUEST = 'UPDATE_BANNER_REQUEST'
+export const UPDATE_BANNER_SUCCESS = 'UPDATE_BANNER_SUCCESS'
+export const UPDATE_BANNER_FAILURE = 'UPDATE_BANNER_FAILURE'
+
 export const createBanner = (banner) => (dispatch, getState) => {
   if (getIsFetching(getState())) {
     return Promise.resolve()
@@ -57,6 +61,32 @@ export const removeBanner = (id) => (dispatch, getState) => {
       })
 
       throw errorResponse
+    }
+  )
+}
+
+
+export const updateBanner = (banner, id) => (dispatch, getState) => {
+  if (getIsFetching(getState())) {
+    return Promise.resolve()
+  }
+
+  dispatch({
+    type: 'UPDATE_BANNER_REQUEST',
+  })
+
+  return api.updateBanner(banner, id).then(
+    (response) => {
+      dispatch({
+        type: 'UPDATE_BANNER_SUCCESS',
+        response: response,
+      })
+    },
+    (errorResponse) => {
+      dispatch({
+        type: 'UPDATE_BANNER_FAILURE',
+        payload: errorResponse,
+      })
     }
   )
 }

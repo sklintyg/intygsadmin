@@ -26,7 +26,7 @@ const ErrorPage = ({match}) => {
   switch (match.params.errorCode) {
   case 'LOGIN_FEL002':
     activeError.title = 'Behörighet saknas';
-    activeError.message = 'Du saknar behörighet för att ta del av den aktuella förfrågan eller beställningen. För att ta del av en förfrågan eller beställning krävs ett medarbetaruppdrag med ändamål vård och behandling på den vårdenhet dit beställningen inkommit.';
+    activeError.message = '	Du saknar behörighet för att logga in.';
     break;
   case 'LOGIN_FEL004':
     activeError.title = 'Tekniskt fel';
@@ -34,12 +34,12 @@ const ErrorPage = ({match}) => {
     break;
   case 'LOGIN_FEL001':
     activeError.title = 'Ett fel uppstod vid inloggningen';
-    activeError.message = '';
+    activeError.message = 'Autentiseringen misslyckades.';
     break;
   case 'UNAUTHORIZED':
     activeError.title = 'Behörighet saknas';
     activeError.message =
-      'Du saknar behörighet för att ta del av den aktuella beställningen. För att ta del av en beställning krävs ett medarbetaruppdrag för vård och behandling på den vårdenhet dit beställningen inkommit. Om du anser dig ha behörighet att se beställningen, kontrollera att du har valt rätt vårdenhet och försök sedan att öppna beställningen igen.';
+      'Autentiseringen misslyckades.';
 
     break;
   case 'NOT_FOUND':

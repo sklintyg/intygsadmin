@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import ibValues from '../components/styles/iaValues'
 import PaginatedListContainer from '../components/bannerList/PaginatedListContainer'
 import BannerPageHeader from '../components/bannerList/BannerPageHeader'
+import MenuBar from '../components/iaMenu/MenuBar';
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
   max-width: none;
@@ -25,6 +26,7 @@ const PageContainer = styled(WorkareaContainer)`
 const BannerPage = () => {
   return (
     <FlexColumnContainer>
+    <MenuBar/>
       <CustomScrollingContainer>
         <BannerPageHeader />
         <PageContainer>

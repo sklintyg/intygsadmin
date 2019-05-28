@@ -1,10 +1,8 @@
 import React from 'react'
-import landing from './landningssida-min.png'
 import styled from 'styled-components'
-import { IaTypo02, IaTypo07 } from '../components/styles/iaTypography'
+import { IaTypo01, IaTypo05 } from '../components/styles/iaTypography'
 import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/iaLayout'
 import ibValues from '../components/styles/iaValues'
-import { Col, Container, Row } from 'reactstrap'
 import IaAlert, { alertType } from '../components/alert/Alert'
 import LoginOptions from '../components/loginOptions'
 
@@ -25,48 +23,35 @@ const PageContainer = styled(WorkareaContainer)`
     padding-bottom: 20px;
   }
 `
+const Wrapper = styled.div`
+  max-width: 650px;
+  padding-left: 40px;
+`
+
 const HomePage = ({ match }) => {
   let method = match.params.method
   return (
     <FlexColumnContainer>
       <CustomScrollingContainer>
         <PageContainer>
-          <Container>
-            <Row>
-              <Col xs="12" md="7">
-                <img src={landing} alt="Landningssida med illustration av stetoskop" />
-              </Col>
-              <Col xs="12" md="5">
-                <IaTypo02 as="h1">Välkommen till Intygsadmin!</IaTypo02>
-                <IaTypo07 as="p">
-                  Intygsadmin är en tjänst för att hantera förfrågningar och beställningar av medicinska utlåtanden och intyg till
-                  vården.
-                </IaTypo07>
-                {method === 't' && (
-                  <Section>
-                    <IaAlert type={alertType.OBSERVANDUM}>
-                      Du har blivit utloggad från Intygsadmin på grund av inaktivitet. Om du vill fortsätta använda Intygsadmin
-                      behöver du logga in igen.
-                    </IaAlert>
-                  </Section>
-                )}
+          <Wrapper>
+            <IaTypo01 as="h1">Välkommen till Intygsadmin!</IaTypo01>
+            <IaTypo05 as="p">
+              I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster skapa och hantera driftbanners som informerar
+              Intygstjänsters användare om kommande eller pågående händelser.
+            </IaTypo05>
+            {method === 't' && (
+              <Section>
+                <IaTypo05 as="h2">Du är utloggad</IaTypo05>
+                <IaAlert type={alertType.OBSERVANDUM}>
+                  Du har blivit utloggad på grund av inaktivitet. Om du vill fortsätta använda Intygsadmin behöver du logga in igen.
+                </IaAlert>
+              </Section>
+            )}
 
-                <Section>
-                  <IaTypo07 as="p">
-                    För att logga in behöver du ett giltigt e-tjänstekort (exempelvis SITHS-kort) samt behörighet att ta del av
-                    förfrågningar och beställningar för din vårdenhet.
-                  </IaTypo07>
-                  <IaAlert type={alertType.INFO}>
-                    De förfrågningar och beställningar som hanteras i Intygsadmin är journalhandlingar och all aktivitet i tjänsten
-                    loggas i enlighet med Patientdatalagen.
-                  </IaAlert>
-                </Section>
-                <Section/>
-                <LoginOptions />
-
-              </Col>
-            </Row>
-          </Container>
+            <Section />
+            <LoginOptions />
+          </Wrapper>
         </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>

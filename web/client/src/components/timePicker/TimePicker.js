@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { TimeIcon, CollapseIcon, ExpandIcon } from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
+import useOnClickOutside from '../hooks/UseOnClickOutside'
 
 const StyledButton = styled(Button)`
   margin-left: 0px !important
@@ -62,43 +63,23 @@ const ArrowDiv = styled.div`
   text-align: center;
 `
 
-const useOnClickOutside = (ref, handler) => {
-  useEffect(
-    () => {
-      const listener = (event) => {
-        // Do nothing if clicking ref's element or descendent elements
-        if (!ref.current || ref.current.contains(event.target)) {
-          return
-        }
-        handler(event)
-      }
-      document.addEventListener('mousedown', listener)
-
-      return () => {
-        document.removeEventListener('mousedown', listener)
-      }
-    },
-    // Add ref and handler to effect dependencies
-    // It's worth noting that because passed in handler is a new ...
-    // ... function on every render that will cause this effect ...
-    // ... callback/cleanup to run every render. It's not a big deal ...
-    // ... but to optimize you can wrap handler in useCallback before ...
-    // ... passing it into this hook.
-    [ref, handler]
-  )
-}
-
-const TimePicker = ({ date, onChange, className }) => {
-  const [value, setValue] = useState('')
+const TimePicker = ({ value, onChange, className }) => {
+  const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
   const [popupOpen, setPopupOpen] = useState(false)
 
+  useEffect(() => {
+    if (value) {
+      setInternalValue(value)
+    }
+  }, [value])
+
   const parseTimeFromValue = () => {
-    if (value.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
-      setHours(value.split(':')[0])
-      setMinutes(value.split(':')[1])
+    if (internalValue.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
+      setHours(internalValue.split(':')[0])
+      setMinutes(internalValue.split(':')[1])
     } else {
       setHours('00')
       setMinutes('00')
@@ -107,13 +88,13 @@ const TimePicker = ({ date, onChange, className }) => {
 
   useEffect(() => {
     if (hours && minutes) {
-      setValue(hours + ':' + minutes)
+      setInternalValue(hours + ':' + minutes)
     }
   }, [hours, minutes])
 
   const inputOnChange = (event) => {
     let inputValue = event.target.value
-    setValue(inputValue)
+    setInternalValue(inputValue)
     onChange(inputValue)
   }
 
@@ -132,7 +113,7 @@ const TimePicker = ({ date, onChange, className }) => {
 
   const closeTimePopup = () => {
     setPopupOpen(false)
-    onChange(value)
+    onChange(internalValue)
   }
 
   useOnClickOutside(popup, closeTimePopup)
@@ -163,7 +144,7 @@ const TimePicker = ({ date, onChange, className }) => {
 
   return (
     <Container className={className}>
-      <StyledInput type="text" value={value} onChange={inputOnChange} placeholder={'hh:mm'} />
+      <StyledInput type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} />
       <StyledButton onClick={toggleTimePopup} color={'default'}>
         <TimeIcon />
       </StyledButton>

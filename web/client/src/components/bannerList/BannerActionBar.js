@@ -6,7 +6,7 @@ import { AddIcon } from '../styles/iaSvgIcons'
 import IaColors from '../styles/iaColors'
 import { Button } from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
-import CreateBanner, { CreateBannerId } from '../bannerDialogs/CreateBanner'
+import { CreateBannerId } from '../bannerDialogs/CreateBanner.dialog'
 
 const StyledButton = styled(Button)`
   margin-right: 16px;
@@ -21,7 +21,6 @@ const BannerActionBar = ({ openModal }) => {
       <StyledButton onClick={addBanner} color={'primary'}>
         <AddIcon color={IaColors.IA_COLOR_00} /> Ny driftbanner
       </StyledButton>
-      <CreateBanner/>
     </>
   )
 }

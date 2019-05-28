@@ -1,3 +1,4 @@
+
 import com.moowork.gradle.node.npm.NpmTask
 import org.gradle.internal.os.OperatingSystem
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
@@ -7,8 +8,8 @@ import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 val buildClient = project.hasProperty("client") || project.hasProperty("useMinifiedJavaScript")
 
 plugins {
-    id("org.springframework.boot")
-    id("com.moowork.node")
+  id("org.springframework.boot")
+  id("com.moowork.node")
 }
 
 dependencies {
@@ -35,9 +36,11 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:${Dependencies.mapstructVersion}")
     annotationProcessor("org.projectlombok:lombok")
 
-    testImplementation("commons-io:commons-io:${Dependencies.commonsIOVersion}")
-    testImplementation("io.rest-assured:rest-assured:${TestDependencies.restAssuredVersion}")
-    testImplementation("io.rest-assured:json-schema-validator:${TestDependencies.restAssuredVersion}")
+  testImplementation("commons-io:commons-io:${Dependencies.commonsIOVersion}")
+  testImplementation("io.rest-assured:rest-assured:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:json-schema-validator:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:json-path:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:xml-path:${TestDependencies.restAssuredVersion}")
 }
 
 node {

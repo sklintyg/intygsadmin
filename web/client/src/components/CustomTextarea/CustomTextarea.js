@@ -2,6 +2,9 @@ import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import colors from '../styles/iaColors'
+import { InsertLinkIcon, RemoveLinkIcon } from '../styles/iaSvgIcons'
+import useOnClickOutside from '../hooks/UseOnClickOutside'
+import { IaTypo06 } from '../styles/iaTypography'
 
 const CustomDiv = styled.div`
   margin: 8px 0;
@@ -18,12 +21,65 @@ const CustomDiv = styled.div`
   }
 `
 
-const CustomTextarea = ({ children, onChange }) => {
+const Popup = styled.div`
+  position: absolute;
+  width: 240px;
+  top: 45px;
+  left: 30px;
+  z-index: 1;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  padding: 8px;
+  &.open {
+    display: flex;
+  }
+  &.closed {
+    display: none;
+  }
+  > div {
+    flex: 0 0 180px;
+    span {
+      display: inline-block;
+      width: 40px;
+    }
+  }
+  button {
+    flex: 0 0 42px;
+    height: 35px;
+  }
+`
+
+const Container = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  &.error {
+    > input,
+    > input:focus,
+    > button,
+    > button:focus {
+      border-color: ${colors.IA_COLOR_16};
+    }
+  }
+`
+const TextLimit = styled(IaTypo06)`
+  text-align: right;
+  color: ${colors.IA_COLOR_12};
+`
+
+const CustomTextarea = ({ onChange, value, limit }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
   const [linkText, setLinkText] = useState('')
   const [linkHref, setLinkHref] = useState('')
-  const textArea = useRef(null)
+  const textArea = useRef()
+  const popup = useRef()
+  const [popupOpen, setPopupOpen] = useState(false)
+
+  const onBlur = () => {
+    onChange(textArea.current.innerHTML)
+  }
 
   const replaceSelectedText = () => {
     if (currentLinkElement) {
@@ -47,7 +103,7 @@ const CustomTextarea = ({ children, onChange }) => {
     return sel
   }
 
-  const handleSelect = (evt) => {
+  const handleSelect = () => {
     const sel = extractSelection()
     if (sel && sel.rangeCount) {
       if (sel.focusNode.parentNode.nodeName === 'A') {
@@ -63,10 +119,6 @@ const CustomTextarea = ({ children, onChange }) => {
     }
   }
 
-  const handleBlur = (evt) => {
-    onChange(textArea.current.innerHTML)
-  }
-
   const handlePaste = (evt) => {
     evt.preventDefault()
     let text = evt.clipboardData.getData('Text')
@@ -75,9 +127,31 @@ const CustomTextarea = ({ children, onChange }) => {
     range.deleteContents()
     let textElement = document.createTextNode(text)
     range.insertNode(textElement)
+
+    // Klipp bort allt efter limit om man klistrar in för mycket text.
+    if (textArea.current.innerText.length > limit) {
+      textArea.current.innerText = textArea.current.innerText.substring(0, limit)
+    }
   }
 
   const handleKeyPress = (evt) => {
+    if (textArea.current.innerText.length >= limit) {
+      switch (evt.keyCode) {
+        case 8:
+        case 16:
+        case 17:
+        case 18:
+        case 46:
+        case 37:
+        case 38:
+        case 39:
+        case 40:
+          break
+        default:
+          evt.preventDefault()
+      }
+    }
+
     if (evt.key === 'Enter') {
       evt.preventDefault()
       const sel = extractSelection()
@@ -97,23 +171,45 @@ const CustomTextarea = ({ children, onChange }) => {
     setLinkHref(evt.target.value)
   }
 
+  const openLinkPopup = (event) => {
+    setPopupOpen(true)
+  }
+
+  useOnClickOutside(popup, () => {
+    if (popupOpen) {
+      replaceSelectedText()
+    }
+    setPopupOpen(false)
+  })
 
   return (
-    <>
-      <input type="text" placeholder="Länktext" value={linkText} onChange={handleTextChange}/>
-      <input type="text" placeholder="Länk" value={linkHref} onChange={handleHrefChange}/>
-      <Button onClick={replaceSelectedText}>Infoga länk</Button>
+    <Container>
+      <Button color={'default'} onClick={openLinkPopup}>
+        <InsertLinkIcon />
+      </Button>
       <CustomDiv
         ref={textArea}
         contentEditable="true"
         suppressContentEditableWarning="true"
         onSelect={handleSelect}
-        onBlur={handleBlur}
         onPaste={handlePaste}
-        onKeyPress={handleKeyPress}>
-        {children}
-      </CustomDiv>
-    </>
+        onKeyPress={handleKeyPress}
+        onBlur={onBlur}
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+      {textArea.current && limit ? <TextLimit>Tecken kvar: {limit - textArea.current.innerText.length}</TextLimit> : null}
+      <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
+        <div>
+          <span>Länk</span>
+          <input type="text" placeholder="Länk" value={linkHref} onChange={handleHrefChange} />
+          <span>Visa</span>
+          <input type="text" placeholder="Länktext" value={linkText} onChange={handleTextChange} />
+        </div>
+        <Button color={'default'} onClick={replaceSelectedText}>
+          <RemoveLinkIcon />
+        </Button>
+      </Popup>
+    </Container>
   )
 }
 
