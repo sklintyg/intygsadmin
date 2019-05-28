@@ -61,15 +61,18 @@ const DatePickerContainer = styled.div`
   display: inline-block;
 `
 
-const DatePicker = ({ date, onChange, className, onBlur }) => {
+const DatePicker = ({ date, onChange, className }) => {
   const [datePickerPopupOpen, setDatePickerPopupOpen] = useState(false)
   const [internalValue, setInternalValue] = useState('')
   const popupRef = useRef(null)
   const buttonHolderRef = useRef(null)
+  const [hasLostFocus, setHasLostFocus] = useState(false)
 
   const change = (event) => {
     setInternalValue(event.target.value)
-    onChange(event.target.value)
+    if (hasLostFocus){
+      onChange(event.target.value)
+    }
   }
 
   const onClick = () => {
@@ -77,14 +80,19 @@ const DatePicker = ({ date, onChange, className, onBlur }) => {
   }
 
   useEffect(() => {
-    if (date) {
+    if (date !== undefined) {
       setInternalValue(date)
     }
   }, [date])
 
   useEffect(() => {
     const listener = (event) => {
-      if (!popupRef.current || popupRef.current.contains(event.target) || !buttonHolderRef.current || buttonHolderRef.current.contains(event.target)) {
+      if (
+        !popupRef.current ||
+        popupRef.current.contains(event.target) ||
+        !buttonHolderRef.current ||
+        buttonHolderRef.current.contains(event.target)
+      ) {
         return
       }
       setDatePickerPopupOpen(false)
@@ -98,10 +106,15 @@ const DatePicker = ({ date, onChange, className, onBlur }) => {
     }
   }, [datePickerPopupOpen])
 
+  const handleBlur = (event) => {
+    setHasLostFocus(true)
+    onChange(event.target.value)
+  }
+
   return (
     <DatePickerContainer>
       <Container className={className}>
-        <StyledInput type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={onBlur} />
+        <StyledInput type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={handleBlur} />
         <span ref={buttonHolderRef}>
           <StyledButton onClick={onClick} color={'default'}>
             <Calendar />

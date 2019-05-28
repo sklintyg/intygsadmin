@@ -63,12 +63,13 @@ const ArrowDiv = styled.div`
   text-align: center;
 `
 
-const TimePicker = ({ value, onChange, className }) => {
+const TimePicker = ({ value, onChange, className, onBlur }) => {
   const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
   const [popupOpen, setPopupOpen] = useState(false)
+  const [hasLostFocus, setHasLostFocus] = useState(false)
 
   useEffect(() => {
     if (value) {
@@ -95,7 +96,9 @@ const TimePicker = ({ value, onChange, className }) => {
   const inputOnChange = (event) => {
     let inputValue = event.target.value
     setInternalValue(inputValue)
-    onChange(inputValue)
+    if (hasLostFocus) {
+      onChange(inputValue)
+    }
   }
 
   const toggleTimePopup = () => {
@@ -142,9 +145,14 @@ const TimePicker = ({ value, onChange, className }) => {
     setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
   }
 
+  const handleBlur = (event) => {
+    setHasLostFocus(true)
+    onChange(event.target.value)
+  }
+
   return (
     <Container className={className}>
-      <StyledInput type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} />
+      <StyledInput type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} onBlur={handleBlur} />
       <StyledButton onClick={toggleTimePopup} color={'default'}>
         <TimeIcon />
       </StyledButton>
