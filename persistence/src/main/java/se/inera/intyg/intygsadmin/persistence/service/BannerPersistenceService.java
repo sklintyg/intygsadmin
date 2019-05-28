@@ -72,6 +72,15 @@ public class BannerPersistenceService {
         return bannerRepository.save(bannerEntity);
     }
 
+    public long countByApplicationAndTime(Application application, LocalDateTime from, LocalDateTime to, UUID id) {
+
+        if (id == null) {
+            return bannerRepository.countByApplicationEquals(application, from, to);
+        }
+
+        return bannerRepository.countByApplicationEqualsAndIdNot(application, id, from, to);
+    }
+
     public void delete(UUID id) {
         bannerRepository.deleteById(id);
     }
