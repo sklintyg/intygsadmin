@@ -39,7 +39,7 @@ export const validateBanner = (banner) => {
 }
 
 const validateDate = (value) => {
-  if (typeof value === 'string' && !(value.match(/(\d{4}-(\d{2})-(\d{2}))/) && value.length === 10)) {
+  if (typeof value === 'string' && !(value.match('(\\d{4}-(\\d{2})-(\\d{2}))') && value.length === 10)) {
     return 'Ange datum i formatet åååå-mm-dd.'
   } else {
     let date = new Date(value)
@@ -59,7 +59,9 @@ const validateTime = (value) => {
   return 'Ange tid i formatet hh:mm'
 }
 
-const validateFromDateBeforeToDate = (from, to, fromTime, toTime) => {
+const validateFromDateBeforeToDate = (fromDate, toDate, fromTime, toTime) => {
+  let from = new Date(fromDate)
+  let to = new Date(toDate)
   if (from.getHours && !isNaN(from.getHours()) && to.getHours && !isNaN(to.getHours())) {
     if (from > to) {
       return 'toDateBeforeFrom'

@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import IaAlert, { alertType } from './Alert';
-import { InfoIcon, Security, ErrorOutline, Check, Warning } from '../styles/iaSvgIcons';
+import { InfoOutline, Security, ErrorOutline, Check, Warning } from '../styles/iaSvgIcons';
 
 describe('<IaAlert />', () => {
   it('Render alert and children', () => {
@@ -12,7 +12,7 @@ describe('<IaAlert />', () => {
   describe('icons', () => {
     it('Info icon', () => {
       const wrapper = shallow(<IaAlert type={alertType.INFO}>Alert</IaAlert>);
-      expect(wrapper.find(InfoIcon)).toHaveLength(1);
+      expect(wrapper.find(InfoOutline)).toHaveLength(1);
     });
 
     it('Sekretess icon', () => {

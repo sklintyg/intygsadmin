@@ -1,17 +1,16 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import colors from '../styles/iaColors'
 import { InsertLinkIcon, RemoveLinkIcon } from '../styles/iaSvgIcons'
-import useOnClickOutside from '../hooks/UseOnClickOutside'
 import { IaTypo06 } from '../styles/iaTypography'
 
 const CustomDiv = styled.div`
-  margin: 8px 0;
+  margin: 0 0 8px;
   padding: 8px;
   min-height: 100px;
   border: 1px solid ${colors.IA_COLOR_08};
-  border-radius: 4px;
+  border-radius: 0 0 4px 4px;
   transition: border-color 0.36s ease-in-out, box-shadow 0.36s ease-in-out;
 
   &:focus {
@@ -27,26 +26,37 @@ const Popup = styled.div`
   top: 45px;
   left: 30px;
   z-index: 1;
-  border: 1px solid #ccc;
+  border: 1px solid ${colors.IA_COLOR_08};
   border-radius: 4px;
   background-color: #fff;
+  box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, 0.12);
   padding: 8px;
+  display: flex;
   &.open {
-    display: flex;
+    visibility: visible;
   }
   &.closed {
-    display: none;
+    visibility: hidden;
   }
   > div {
     flex: 0 0 180px;
+    &.button_container {
+      flex: 0 0 45px;
+    }
     span {
       display: inline-block;
       width: 40px;
+    }
+    input:first-of-type {
+      margin-bottom: 5px;
     }
   }
   button {
     flex: 0 0 42px;
     height: 35px;
+    &:first-of-type {
+      margin-bottom: 5px;
+    }
   }
 `
 
@@ -66,6 +76,22 @@ const Container = styled.div`
 const TextLimit = styled(IaTypo06)`
   text-align: right;
   color: ${colors.IA_COLOR_12};
+`
+
+const ActionBar = styled.div`
+  width: 100%;
+  height: 38px;
+  border: 1px solid ${colors.IA_COLOR_08};
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+  button {
+    padding: 9px;
+    &:hover {
+      svg {
+        fill: ${colors.IA_COLOR_05};
+      }
+    }
+  }
 `
 
 const CustomTextarea = ({ onChange, value, limit }) => {
@@ -88,11 +114,22 @@ const CustomTextarea = ({ onChange, value, limit }) => {
     } else if (currentRange) {
       currentRange.deleteContents()
       let link = document.createElement('a')
-      link.setAttribute('href', linkHref)
+      link.setAttribute('href', !(linkHref.startsWith('http://') || linkHref.startsWith('https://')) ? 'http://' + linkHref : linkHref)
+      link.setAttribute('target', '_blank')
+      link.setAttribute('rel', 'noopener noreferrer')
       link.innerText = linkText
       currentRange.insertNode(link)
     }
     onChange(textArea.current.innerHTML)
+    setPopupOpen(false)
+  }
+
+  const replaceCurrentLink = () => {
+    if (currentLinkElement && currentLinkElement.parentNode) {
+      let textNode = document.createTextNode(linkText)
+      currentLinkElement.parentNode.replaceChild(textNode, currentLinkElement)
+    }
+    setPopupOpen(false)
   }
 
   const extractSelection = () => {
@@ -171,22 +208,34 @@ const CustomTextarea = ({ onChange, value, limit }) => {
     setLinkHref(evt.target.value)
   }
 
-  const openLinkPopup = (event) => {
+  const openLinkPopup = () => {
+    if (!currentRange) {
+      textArea.current.focus()
+    }
     setPopupOpen(true)
   }
 
-  useOnClickOutside(popup, () => {
-    if (popupOpen) {
-      replaceSelectedText()
+  useEffect(() => {
+    const listener = (event) => {
+      if (!popup.current || popup.current.contains(event.target)) {
+        return
+      }
+      setPopupOpen(false)
     }
-    setPopupOpen(false)
-  })
+    document.addEventListener('mousedown', listener)
+
+    return () => {
+      document.removeEventListener('mousedown', listener)
+    }
+  }, [])
 
   return (
     <Container>
-      <Button color={'default'} onClick={openLinkPopup}>
-        <InsertLinkIcon />
-      </Button>
+      <ActionBar>
+        <Button color={'link'} onClick={openLinkPopup}>
+          <InsertLinkIcon />
+        </Button>
+      </ActionBar>
       <CustomDiv
         ref={textArea}
         contentEditable="true"
@@ -205,9 +254,14 @@ const CustomTextarea = ({ onChange, value, limit }) => {
           <span>Visa</span>
           <input type="text" placeholder="Länktext" value={linkText} onChange={handleTextChange} />
         </div>
-        <Button color={'default'} onClick={replaceSelectedText}>
-          <RemoveLinkIcon />
-        </Button>
+        <div className="button_container">
+          <Button color={'default'} onClick={replaceCurrentLink} title={'Ta bort aktuell länk'}>
+            <RemoveLinkIcon />
+          </Button>
+          <Button color={'default'} onClick={replaceSelectedText} title={'Infoga länk'}>
+            <InsertLinkIcon />
+          </Button>
+        </div>
       </Popup>
     </Container>
   )

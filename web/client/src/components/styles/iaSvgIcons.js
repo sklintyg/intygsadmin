@@ -8,10 +8,11 @@ export const UserIcon = () => (
   </svg>
 )
 
-// ia-ikon-02 info (not info alert)
+// ia-ikon-02 driftbanner icon (not info alert)
 export const InfoIcon = ({ color }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill={color} width="35px" height="35px" viewBox="0 0 24 24">
-    <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
+  <svg xmlns="http://www.w3.org/2000/svg" fill={color} width="35" height="35" viewBox="0 0 24 24">
+    <path d="M0 0h24v24H0z" fill="none" />
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
   </svg>
 )
 
