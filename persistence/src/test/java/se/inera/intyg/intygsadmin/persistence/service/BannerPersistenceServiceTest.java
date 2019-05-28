@@ -22,7 +22,6 @@ package se.inera.intyg.intygsadmin.persistence.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -147,15 +146,6 @@ public class BannerPersistenceServiceTest extends TestSupport {
 
         LocalDateTime now = LocalDateTime.now();
         long count = bannerPersistenceService.countByApplicationAndTime(Application.WEBCERT, now, now.plusDays(1), null);
-
-        assertEquals(0, count);
-    }
-
-    @Test
-    public void countByApplicationAndTime_nonExisting() {
-        UUID id = UUID.randomUUID();
-        LocalDateTime now = LocalDateTime.now();
-        long count = bannerPersistenceService.countByApplicationAndTime(Application.WEBCERT, now.plusDays(200), now.plusDays(201), id);
 
         assertEquals(0, count);
     }
