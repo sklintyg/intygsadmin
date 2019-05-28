@@ -147,11 +147,12 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
   }
 
   const handleChange = (value) => {
-    onChange(value.toLocaleDateString('sv-SE'))
+    // .replace(/[^ -~]/g, '') är en fix för att IE 11 lägger till extra tecken (LTR, RTL)
+    onChange(value.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''))
   }
 
   const handleOk = () => {
-    onChange(internalDate.toLocaleDateString('sv-SE'))
+    onChange(internalDate.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''))
     onSelect()
   }
 
