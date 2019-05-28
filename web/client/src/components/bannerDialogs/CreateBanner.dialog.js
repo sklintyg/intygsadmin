@@ -102,8 +102,8 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
     return {
       application: banner.application,
       message: banner.message,
-      displayFrom: banner.displayFrom.toLocaleDateString('sv-SE') + 'T' + banner.displayFromTime,
-      displayTo: banner.displayTo.toLocaleDateString('sv-SE') + 'T' + banner.displayToTime,
+      displayFrom: banner.displayFrom + 'T' + banner.displayFromTime,
+      displayTo: banner.displayTo + 'T' + banner.displayToTime,
       priority: banner.priority,
     }
   }
