@@ -64,7 +64,8 @@ const DatePickerContainer = styled.div`
 const DatePicker = ({ date, onChange, className, onBlur }) => {
   const [datePickerPopupOpen, setDatePickerPopupOpen] = useState(false)
   const [internalValue, setInternalValue] = useState('')
-  const popupRef = useRef()
+  const popupRef = useRef(null)
+  const buttonHolderRef = useRef(null)
 
   const change = (event) => {
     setInternalValue(event.target.value)
@@ -83,7 +84,7 @@ const DatePicker = ({ date, onChange, className, onBlur }) => {
 
   useEffect(() => {
     const listener = (event) => {
-      if (!popupRef.current || popupRef.current.contains(event.target)) {
+      if (!popupRef.current || popupRef.current.contains(event.target) || !buttonHolderRef.current || buttonHolderRef.current.contains(event.target)) {
         return
       }
       setDatePickerPopupOpen(false)
@@ -101,9 +102,11 @@ const DatePicker = ({ date, onChange, className, onBlur }) => {
     <DatePickerContainer>
       <Container className={className}>
         <StyledInput type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={onBlur} />
-        <StyledButton onClick={onClick} color={'default'}>
-          <Calendar />
-        </StyledButton>
+        <span ref={buttonHolderRef}>
+          <StyledButton onClick={onClick} color={'default'}>
+            <Calendar />
+          </StyledButton>
+        </span>
       </Container>
       <PopUp ref={popupRef} className={datePickerPopupOpen ? 'open' : 'closed'}>
         <DatePickerPopup onChange={onChange} date={internalValue} open={datePickerPopupOpen} onSelect={onClick} />
