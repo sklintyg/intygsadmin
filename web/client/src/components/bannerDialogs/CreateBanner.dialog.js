@@ -16,6 +16,7 @@ import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
 import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
 import IaAlert, { alertType } from '../alert/Alert'
+import { getFutureBanners } from '../../store/reducers/banner'
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -59,10 +60,10 @@ const tjanstButtons = [
 
 const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
 
-const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data }) => {
+const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data, fetchFutureBanners, futureBanners }) => {
   const [validationMessages, setValidationMessages] = useState({})
   const [update, setUpdate] = useState(false)
-  const [banner, setBanner] = useState(initialBanner)
+  const [newBanner, setNewBanner] = useState(initialBanner)
   const [errorActive, setErrorActive] = useState(false)
   const [initialMessageValue, setInitialMessageValue] = useState('')
 
@@ -72,7 +73,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
       setInitialMessageValue(data.banner.message)
       let displayFrom = new Date(data.banner.displayFrom)
       let displayTo = new Date(data.banner.displayTo)
-      setBanner({
+      setNewBanner({
         ...data.banner,
         displayFrom: displayFrom.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''),
         displayTo: displayTo.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''),
@@ -83,29 +84,35 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }, [data])
 
   useEffect(() => {
-    if (isEqual(previousBanner.current, banner)) {
+    if (isEqual(previousBanner.current, newBanner)) {
       return
     }
-    setValidationMessages(validateBanner(banner))
-  }, [banner])
+    setValidationMessages(validateBanner(newBanner, futureBanners))
+  }, [newBanner, futureBanners])
 
   const previousBanner = useRef()
   useEffect(() => {
-    previousBanner.current = banner
+    previousBanner.current = newBanner
   })
 
   const onChange = (value, prop) => {
-    setBanner({ ...banner, [prop]: value })
+    setNewBanner({ ...newBanner, [prop]: value })
   }
 
   const createSendObject = () => {
     return {
-      application: banner.application,
-      message: banner.message,
-      displayFrom: banner.displayFrom + 'T' + banner.displayFromTime,
-      displayTo: banner.displayTo + 'T' + banner.displayToTime,
-      priority: banner.priority,
+      application: newBanner.application,
+      message: newBanner.message,
+      displayFrom: newBanner.displayFrom + 'T' + newBanner.displayFromTime,
+      displayTo: newBanner.displayTo + 'T' + newBanner.displayToTime,
+      priority: newBanner.priority,
     }
+  }
+
+  const setApplicationAndCheckFuture = (application) => {
+    fetchFutureBanners(application).then(() => {
+      setNewBanner({ ...newBanner, application })
+    })
   }
 
   const send = () => {
@@ -132,7 +139,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
 
   const cancel = () => {
     setErrorActive(false)
-    setBanner(initialBanner)
+    setNewBanner(initialBanner)
     setInitialMessageValue('')
     handleClose()
   }
@@ -145,8 +152,8 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
           <h5>Välj tjänst</h5>
           <RadioWrapper
             radioButtons={tjanstButtons}
-            onChange={(event) => onChange(event.target.value, 'application')}
-            selected={banner.application}
+            onChange={(event) => setApplicationAndCheckFuture(event.target.value)}
+            selected={newBanner.application}
           />
           <h5>Skriv meddelandetext</h5>
           <CustomTextarea onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
@@ -155,14 +162,14 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             <span>Från</span>
             <span>
               <DatePicker
-                date={banner.displayFrom}
+                date={newBanner.displayFrom}
                 onChange={(value) => onChange(value, 'displayFrom')}
                 className={validationMessages.displayFrom !== undefined ? 'error' : ''}
               />
             </span>
             <span>
               <TimePicker
-                value={banner.displayFromTime}
+                value={newBanner.displayFromTime}
                 onChange={(value) => onChange(value, 'displayFromTime')}
                 className={validationMessages.displayFromTime !== undefined ? 'error' : ''}
               />
@@ -174,14 +181,14 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             <span>till</span>
             <span>
               <DatePicker
-                date={banner.displayTo}
+                date={newBanner.displayTo}
                 onChange={(value) => onChange(value, 'displayTo')}
                 className={validationMessages.displayTo !== undefined ? 'error' : ''}
               />
             </span>
             <span>
               <TimePicker
-                value={banner.displayToTime}
+                value={newBanner.displayToTime}
                 onChange={(value) => onChange(value, 'displayToTime')}
                 className={validationMessages.displayToTime !== undefined ? 'error' : ''}
               />
@@ -206,7 +213,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
           <RadioWrapper
             radioButtons={prioButtons}
             onChange={(event) => onChange(event.target.value, 'priority')}
-            selected={banner.priority}
+            selected={newBanner.priority}
           />
         </StyledBody>
         <ErrorSection>
@@ -222,11 +229,11 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
           <Button
             disabled={
               !(
-                banner.application &&
-                banner.message &&
-                banner.displayFrom &&
-                banner.displayTo &&
-                banner.priority &&
+                newBanner.application &&
+                newBanner.message &&
+                newBanner.displayFrom &&
+                newBanner.displayTo &&
+                newBanner.priority &&
                 isEmpty(validationMessages)
               )
             }
@@ -251,9 +258,15 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
 
 export const CreateBannerId = 'createBanner'
 
+const mapStateToProps = (state) => {
+  return {
+    futureBanners: getFutureBanners(state),
+  }
+}
+
 export default compose(
   connect(
-    null,
+    mapStateToProps,
     { ...actions }
   ),
   modalContainer(CreateBannerId)

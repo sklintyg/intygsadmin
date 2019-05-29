@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { TimeIcon, CollapseIcon, ExpandIcon } from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
-import useOnClickOutside from '../hooks/UseOnClickOutside'
 
 const StyledButton = styled(Button)`
   margin-left: 0px !important
@@ -23,8 +22,8 @@ const Container = styled.div`
   &.error {
     > input,
     > input:focus,
-    > button,
-    > button:focus {
+    > span button,
+    > span button:focus {
       border-color: ${colors.IA_COLOR_16};
     }
   }
@@ -66,6 +65,7 @@ const ArrowDiv = styled.div`
 const TimePicker = ({ value, onChange, className, onBlur }) => {
   const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
+  const buttonHolderRef = useRef()
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
   const [popupOpen, setPopupOpen] = useState(false)
@@ -119,7 +119,27 @@ const TimePicker = ({ value, onChange, className, onBlur }) => {
     onChange(internalValue)
   }
 
-  useOnClickOutside(popup, closeTimePopup)
+  useEffect(() => {
+    const listener = (event) => {
+      if (
+        !popup.current ||
+        popup.current.contains(event.target) ||
+        !buttonHolderRef.current ||
+        buttonHolderRef.current.contains(event.target)
+      ) {
+        return
+      }
+      setPopupOpen(false)
+      onChange(internalValue)
+    }
+    if (popupOpen) {
+      document.addEventListener('mousedown', listener)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', listener)
+    }
+  }, [popupOpen, onChange, internalValue])
 
   const hoursUp = () => {
     let newHours = parseInt(hours) + 1
@@ -153,9 +173,11 @@ const TimePicker = ({ value, onChange, className, onBlur }) => {
   return (
     <Container className={className}>
       <StyledInput type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} onBlur={handleBlur} />
-      <StyledButton onClick={toggleTimePopup} color={'default'}>
-        <TimeIcon />
-      </StyledButton>
+      <span ref={buttonHolderRef}>
+        <StyledButton onClick={toggleTimePopup} color={'default'}>
+          <TimeIcon />
+        </StyledButton>
+      </span>
       <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
         <ArrowDiv>
           <Button color={'Link'} onClick={hoursUp}>

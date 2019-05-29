@@ -22,8 +22,8 @@ const Container = styled.div`
   &.error {
     > input,
     > input:focus,
-    > button,
-    > button:focus {
+    > span button,
+    > span button:focus {
       border-color: ${colors.IA_COLOR_16};
     }
   }
