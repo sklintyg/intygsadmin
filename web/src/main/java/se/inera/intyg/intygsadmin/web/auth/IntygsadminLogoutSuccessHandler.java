@@ -32,6 +32,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.SUCCESSFUL_LOGOUT_REDIRECT_URL;
+
 public class IntygsadminLogoutSuccessHandler extends
         SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
@@ -82,13 +85,13 @@ public class IntygsadminLogoutSuccessHandler extends
                     // FAKE login and the user will end up back at the welcome.html page
 
                     isRedirected = true;
-                    getRedirectStrategy().sendRedirect(request, response, "/welcome.html");
+                    getRedirectStrategy().sendRedirect(request, response, FAKE_LOGIN_URL);
                 }
             }
         }
         if (!isRedirected) {
             // Just send the user to the loggedOut url
-            getRedirectStrategy().sendRedirect(request, response, "/#/loggedout/m");
+            getRedirectStrategy().sendRedirect(request, response, SUCCESSFUL_LOGOUT_REDIRECT_URL);
         }
     }
 }

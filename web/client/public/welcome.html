@@ -1,48 +1,45 @@
 <!DOCTYPE html>
 <html lang="sv">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="ROBOTS" content="nofollow, noindex" />
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="ROBOTS" content="nofollow, noindex" />
 
-    <link rel="stylesheet" type="text/css" href="/welcome-assets/style.css" />
+<link rel="stylesheet" type="text/css" href="/welcome-assets/style.css" />
 
-    <title>IB test inloggning</title>
-  </head>
-  <body>
-    <div class="content row">
-      <h1>Testinloggningar Intygsadmin</h1>
+<title>Intygsadmin test inloggning</title>
+</head>
+<body>
+  <div class="content row">
+    <h1>Testinloggningar Intygsadmin</h1>
 
-      <p class="well">
-        Templatelista till vänster - Manuella ändringar kan göras i jsonstrukturen - detta omvandlas till inloggad userContext
-      </p>
+    <p class="well">
+      Templatelista till vänster - Manuella ändringar kan göras i jsonstrukturen - detta omvandlas till inloggad
+      userContext </p>
 
-      <form id="loginForm" action="/fake" method="POST" accept-charset="UTF-8">
-        <div class="fake-users-container">
-          <h4>Templatelista</h4>
+    <form id="loginForm" action="/fake" method="POST" accept-charset="UTF-8">
+      <div class="fake-users-container">
+        <h4>Templatelista</h4>
 
-          <select name="jsonSelect" id="jsonSelect" size="15" class="fake-user-list" autofocus></select>
-          <button id="loginBtn" class="login-btn">Logga in</button>
-        </div>
-
-        <div class="login-textarea-container">
-          <h4>Inloggningsprofil</h4>
-
-          <textarea id="userJsonDisplay" name="userJsonDisplay" class="login-textarea"></textarea>
-        </div>
-      </form>
-
-      <div class="helplinks row">
-        <h4>Hjälplänkar</h4>
-        <p class="well">Nedan finns ett antal snabblänkar till hjälpfunktioner för utvecklings- och teständamål.</p>
-        <a href="/version.html" target="_blank">Versions- och bygginformation</a><br />
+        <select name="jsonSelect" id="jsonSelect" size="15" class="fake-user-list" autofocus></select>
+        <button id="loginBtn" class="login-btn">Logga in</button>
       </div>
 
+      <div class="login-textarea-container">
+        <h4>Inloggningsprofil</h4>
+
+        <textarea id="userJsonDisplay" name="userJsonDisplay" class="login-textarea"></textarea>
+      </div>
+    </form>
+
+    <div class="helplinks row">
+      <h4>Hjälplänkar</h4>
+      <p class="well">Nedan finns ett antal snabblänkar till hjälpfunktioner för utvecklings- och teständamål.</p>
+      <a href="/version.html" target="_blank">Versions- och bygginformation</a><br />
     </div>
-    <script src="/welcome-assets/jquery-3.3.1.min.js"></script>
-    <script src="/welcome-assets/script.js"></script>
-  </body>
+
+  </div>
+  <script src="/welcome-assets/jquery-3.3.1.min.js"></script>
+  <script src="/welcome-assets/script.js"></script>
+</body>
 </html>

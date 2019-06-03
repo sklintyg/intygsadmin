@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -46,8 +48,14 @@ import se.inera.intyg.intygsadmin.web.auth.IndividualClaimsOuth2ContextFilter;
 import se.inera.intyg.intygsadmin.web.auth.IneraOidcFilter;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminLogoutSuccessHandler;
 import se.inera.intyg.intygsadmin.web.auth.LoggingSessionRegistryImpl;
+import se.inera.intyg.intygsadmin.web.auth.fake.FakeAuthenticationFilter;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
 
@@ -61,13 +69,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserPersistenceService userPersistenceService;
     private IdpProperties idpProperties;
 
+    private List<String> profiles;
+
     @Autowired
     public SecurityConfig(OIDCProviderMetadata ineraOIDCProviderMetadata, OAuth2RestTemplate restTemplate,
-            UserPersistenceService userPersistenceService, IdpProperties idpProperties) {
+            UserPersistenceService userPersistenceService, IdpProperties idpProperties, Environment environment) {
         this.ineraOIDCProviderMetadata = ineraOIDCProviderMetadata;
         this.restTemplate = restTemplate;
         this.userPersistenceService = userPersistenceService;
         this.idpProperties = idpProperties;
+        this.profiles = Arrays.asList(environment.getActiveProfiles());
     }
 
     @Bean
@@ -113,12 +124,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new IntygsadminLogoutSuccessHandler(ineraOIDCProviderMetadata, idpProperties);
     }
 
+    @Bean
+    @Profile({ FAKE_PROFILE })
+    public FakeAuthenticationFilter fakeAuthenticationFilter() {
+        FakeAuthenticationFilter fakeAuthenticationFilter = new FakeAuthenticationFilter();
+        fakeAuthenticationFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
+        fakeAuthenticationFilter.setAuthenticationSuccessHandler(successRedirectHandler());
+        return fakeAuthenticationFilter;
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // All static client resources could be completely ignored by Spring Security.
         // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
         // will stop IE from loading fonts properly.
-        // web.ignoring().antMatchers("/**"); // Used to disable all checks
         web.ignoring().antMatchers("/static/**");
     }
 
@@ -130,7 +149,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/welcome-assets/**").permitAll()
-                .antMatchers("/welcome.html").permitAll()
                 .antMatchers("/version.html").permitAll()
                 .antMatchers("/public-api/version").permitAll()
                 .antMatchers("/version-assets/**").permitAll()
@@ -144,6 +162,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
         // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll();
 
+        if (profiles.contains(FAKE_PROFILE)) {
+            addFakeLogin(http);
+        }
+
+        configureOidc(http);
+
+        http.csrf().disable();
+    }
+
+    private void configureOidc(HttpSecurity http) throws Exception {
+
         // @formatter:off
         http
                 .authorizeRequests()
@@ -156,18 +185,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                     new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL))
                     .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
                 .and()
-                .addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-                .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
+                    .addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+                    .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
                 .logout()
                     .invalidateHttpSession(true)
                     .logoutUrl(AuthenticationConstansts.LOGOUT_URL)
                     .logoutSuccessHandler(logoutSuccessHandler())
                     .clearAuthentication(true)
                 .and()
-                .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
+                    .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
 
-        http.csrf().disable();
         // @formatter:on
+
     }
 
+    private void addFakeLogin(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .antMatchers(FAKE_LOGIN_URL).permitAll()
+                .antMatchers("/h2-console/**").permitAll();
+
+        http
+                .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+
+    }
 }

@@ -19,22 +19,21 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.io.Serializable;
 
 @Getter
-public class IntygsadminUser implements UserDetails {
+public class IntygsadminUser implements Serializable {
 
     private String userId;
     private String name;
+    @JsonIgnore
+    @Getter(onMethod = @__(@JsonIgnore))
     private OAuth2AccessToken token;
     private IntygsadminRole intygsadminRole;
     private AuthenticationMethod authenticationMethod;
@@ -47,38 +46,4 @@ public class IntygsadminUser implements UserDetails {
         this.name = name;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(intygsadminRole.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.userId;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

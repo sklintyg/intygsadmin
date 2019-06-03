@@ -13,7 +13,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: default, dev
+    active: dev, fake
   h2:
     console:
       enabled: true

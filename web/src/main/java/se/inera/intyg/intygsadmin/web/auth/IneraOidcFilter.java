@@ -40,6 +40,7 @@ import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 
 public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -82,7 +83,8 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
             final String employeeHsaId = idTokenClaimsSet.getStringClaim("employeeHsaId");
             UserEntity userEntity = userPersistenceService
                     .findByEmployeeHsaId(employeeHsaId).orElseThrow(
-                            () -> new BadCredentialsException("Failed authentication. No authority for employeeHsaId " + employeeHsaId));
+                            () -> new BadCredentialsException(
+                                    "Failed authentication. No IntygsadminUser for employeeHsaId " + employeeHsaId));
             // CHECKSTYLE:ON Indentation
 
             // Concatenate the user's name
@@ -92,7 +94,7 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
             final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken, name);
 
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
 
         } catch (final Exception e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
