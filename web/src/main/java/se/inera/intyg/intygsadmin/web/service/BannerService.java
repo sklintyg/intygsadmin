@@ -41,12 +41,15 @@ import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 @Service
 public class BannerService {
 
+    private BannerValidationService bannerValidationService;
     private BannerPersistenceService bannerPersistenceService;
     private BannerMapper bannerMapper;
 
-    public BannerService(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper) {
+    public BannerService(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper,
+                         BannerValidationService bannerValidationService) {
         this.bannerPersistenceService = bannerPersistenceService;
         this.bannerMapper = bannerMapper;
+        this.bannerValidationService = bannerValidationService;
     }
 
     public Page<BannerDTO> getBanners(Pageable pageable) {
@@ -66,6 +69,8 @@ public class BannerService {
     }
 
     public BannerDTO createBanner(BannerDTO bannerDTO) {
+        bannerValidationService.validateBanner(bannerDTO);
+
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity createdEntity = bannerPersistenceService.create(map);
@@ -73,6 +78,8 @@ public class BannerService {
     }
 
     public BannerDTO save(BannerDTO bannerDTO) {
+        bannerValidationService.validateBanner(bannerDTO);
+
         Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(bannerDTO.getId());
 
         if (optionalBanner.isEmpty()) {

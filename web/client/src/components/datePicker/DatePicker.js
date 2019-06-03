@@ -22,8 +22,8 @@ const Container = styled.div`
   &.error {
     > input,
     > input:focus,
-    > button,
-    > button:focus {
+    > span button,
+    > span button:focus {
       border-color: ${colors.IA_COLOR_16};
     }
   }
@@ -146,9 +146,10 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
     setInternalDate(undefined)
   }
 
-  const handleChange = (value) => {
+  const handleSelect = (value) => {
     // .replace(/[^ -~]/g, '') är en fix för att IE 11 lägger till extra tecken (LTR, RTL)
     onChange(value.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''))
+    onSelect()
   }
 
   const handleOk = () => {
@@ -161,11 +162,10 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
       <ReactDatePicker
         selected={internalDate}
         dateFormat={'yyyy-MM-dd'}
-        onChange={handleChange}
         locale={sv}
         showWeekNumbers
         inline
-        onSelect={onSelect}
+        onSelect={handleSelect}
       />
       <ButtonContainer>
         <Button color={'default'} onClick={clear}>

@@ -140,4 +140,67 @@ public class BannerPersistenceServiceTest extends TestSupport {
         assertFalse(afterDeleteEntity.isPresent());
     }
 
+    @Test
+    public void countByApplicationAndTime_emptyRepo() {
+        bannerRepository.deleteAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        long count = bannerPersistenceService.countByApplicationAndTime(Application.WEBCERT, now, now.plusDays(1), null);
+
+        assertEquals(0, count);
+    }
+
+    @Test
+    public void countByApplicationAndTime() {
+        bannerRepository.deleteAll();
+
+        Application application = Application.WEBCERT;
+
+        LocalDateTime now = LocalDateTime.now();
+
+
+        BannerEntity banner = randomize(BannerEntity.class);
+        banner.setApplication(application);
+        banner.setDisplayFrom(now);
+        banner.setDisplayTo(now.plusDays(3));
+
+        banner = bannerRepository.save(banner);
+
+        // Create future banner
+        long futureCount = bannerPersistenceService.countByApplicationAndTime(application, now.plusDays(10), now.plusDays(11), null);
+        assertEquals(0, futureCount);
+
+        // Create past banner
+        long pastCount = bannerPersistenceService.countByApplicationAndTime(application, now.minusDays(3), now.minusDays(1), null);
+        assertEquals(0, pastCount);
+
+        // Update banner
+        long updateCount = bannerPersistenceService.countByApplicationAndTime(application, banner.getDisplayFrom(), banner.getDisplayTo(), banner.getId());
+        assertEquals(0, updateCount);
+
+        // Another application banner
+        long otherAppCount = bannerPersistenceService.countByApplicationAndTime(Application.REHABSTOD, banner.getDisplayFrom(), banner.getDisplayTo(), null);
+        assertEquals(0, otherAppCount);
+
+        // Same dates
+        long sameDatesCount = bannerPersistenceService.countByApplicationAndTime(application, banner.getDisplayFrom(), banner.getDisplayTo(), null);
+        assertEquals(1, sameDatesCount);
+
+        // To in interval
+        long toInIntervalCount = bannerPersistenceService.countByApplicationAndTime(application, now.minusDays(3), now.plusDays(1), null);
+        assertEquals(1, toInIntervalCount);
+
+        // From in interval
+        long fromInIntervalCount = bannerPersistenceService.countByApplicationAndTime(application, now.plusDays(1), now.plusDays(10), null);
+        assertEquals(1, fromInIntervalCount);
+
+        // Existing banner in interval
+        long existingInIntervalCount = bannerPersistenceService.countByApplicationAndTime(application, now.minusDays(1), now.plusDays(5), null);
+        assertEquals(1, existingInIntervalCount);
+
+        // From and To in interval
+        long fromAndToInIntervalCount = bannerPersistenceService.countByApplicationAndTime(application, now.plusDays(1), now.plusDays(2), null);
+        assertEquals(1, fromAndToInIntervalCount);
+    }
+
 }

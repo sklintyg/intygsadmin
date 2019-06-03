@@ -67,6 +67,9 @@ public class BannerServiceTest {
     @Mock
     private BannerPersistenceService bannerPersistenceService;
 
+    @Mock
+    private BannerValidationService bannerValidationService;
+
     @InjectMocks
     private BannerService bannerService;
 
@@ -170,6 +173,7 @@ public class BannerServiceTest {
         assertNotNull(saved);
         assertEquals("new message", saved.getMessage());
         verify(bannerPersistenceService, times(1)).update(any());
+        verify(bannerValidationService, times(1)).validateBanner(any());
     }
 
     @Test
@@ -185,6 +189,7 @@ public class BannerServiceTest {
         assertThrows(IaServiceException.class, () -> bannerService.save(bannerDTO));
 
         verify(bannerPersistenceService, times(0)).update(any());
+        verify(bannerValidationService, times(1)).validateBanner(any());
     }
 
     @Test
@@ -204,6 +209,7 @@ public class BannerServiceTest {
         assertThrows(IaServiceException.class, () -> bannerService.save(bannerDTO));
 
         verify(bannerPersistenceService, times(0)).update(any());
+        verify(bannerValidationService, times(1)).validateBanner(any());
     }
 
     @Test
@@ -221,6 +227,7 @@ public class BannerServiceTest {
         assertNotNull(created);
         assertEquals("new message", created.getMessage());
         verify(bannerPersistenceService, times(1)).create(any());
+        verify(bannerValidationService, times(1)).validateBanner(any());
     }
 
     @Test

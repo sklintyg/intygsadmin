@@ -118,8 +118,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // All static client resources could be completely ignored by Spring Security.
         // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
         // will stop IE from loading fonts properly.
-        web.ignoring().antMatchers("/**"); // Used to disable all checks
-        // web.ignoring().antMatchers("/static/**");
+        // web.ignoring().antMatchers("/**"); // Used to disable all checks
+        web.ignoring().antMatchers("/static/**");
     }
 
     @Override
@@ -130,6 +130,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/welcome-assets/**").permitAll()
+                .antMatchers("/welcome.html").permitAll()
                 .antMatchers("/version.html").permitAll()
                 .antMatchers("/public-api/version").permitAll()
                 .antMatchers("/version-assets/**").permitAll()
