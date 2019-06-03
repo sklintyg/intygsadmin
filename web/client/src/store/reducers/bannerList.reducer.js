@@ -69,6 +69,8 @@ export default bannerListReducer
 
 export const getBannerList = (state) => state.bannerList.bannerList
 
+export const getSortOrder = (state) => {return {sortColumn: state.bannerList.bannerList.sortColumn, sortDirection: state.bannerList.bannerList.sortDirection}}
+
 export const getIsFetching = (state) => state.bannerList.isFetching
 
 export const getErrorMessage = (state) => state.bannerList.errorMessage

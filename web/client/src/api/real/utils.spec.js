@@ -1,7 +1,7 @@
 import *  as utils from "./utils";
 import fetchMock from 'fetch-mock'
 
-describe('utils test', () => {
+describe('api utils test', () => {
 
   afterEach(() => {
     fetchMock.restore()
@@ -79,9 +79,11 @@ describe('utils test', () => {
     utils.makeServerRequestTest = (path, body, config) => utils.makeServerRequest(path, config)
 
     methods.map(method => {
+      const path = 'path:/api/test'
+
       describe(method.method, () => {
         it('success', (done) => {
-          fetchMock[method.fetch]('/api/test', {
+          fetchMock[method.fetch](path, {
             body: {
               name: 'test'
             },
@@ -96,7 +98,7 @@ describe('utils test', () => {
         });
 
         it('success noBody', (done) => {
-          fetchMock[method.fetch]('/api/test', {
+          fetchMock[method.fetch](path, {
             headers: { 'content-type': 'application/json' }
           })
 
@@ -108,7 +110,7 @@ describe('utils test', () => {
         });
 
         it('error - network problems', (done) => {
-          fetchMock[method.fetch]('/api/test', {
+          fetchMock[method.fetch](path, {
             throws: {message: 'failed'}
           })
 
@@ -129,7 +131,7 @@ describe('utils test', () => {
         });
 
         it('error - from server', (done) => {
-          fetchMock[method.fetch]('/api/test', {
+          fetchMock[method.fetch](path, {
             body: {
               name: 'failed'
             },
@@ -145,7 +147,7 @@ describe('utils test', () => {
         });
 
         it('error - from server noBody', (done) => {
-          fetchMock[method.fetch]('/api/test', {
+          fetchMock[method.fetch](path, {
             status: 500,
             headers: { 'content-type': 'application/json' }
           })
@@ -162,7 +164,7 @@ describe('utils test', () => {
         });
 
         it('error - not found', (done) => {
-          fetchMock[method.fetch]('/api/test', {
+          fetchMock[method.fetch](path, {
             status: 404,
             headers: { 'content-type': 'application/json' }
           })
