@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
-    private String clientId;
     private IDTokenValidator idTokenValidator;
 
     private OAuth2RestTemplate restTemplate;
@@ -54,7 +53,6 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
             String clientId, OAuth2RestTemplate restTemplate, UserPersistenceService userPersistenceService) {
         super(defaultFilterProcessesUrl);
         this.restTemplate = restTemplate;
-        this.clientId = clientId;
         this.userPersistenceService = userPersistenceService;
         setAuthenticationManager(new NoopAuthenticationManager());
         try {
@@ -80,18 +78,22 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
             JWT jwtIdToken = JWTParser.parse(idTokenString);
             IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.validate(jwtIdToken, null);
 
+            // CHECKSTYLE:OFF Indentation
             final String employeeHsaId = idTokenClaimsSet.getStringClaim("employeeHsaId");
             UserEntity userEntity = userPersistenceService
                     .findByEmployeeHsaId(employeeHsaId).orElseThrow(
                             () -> new BadCredentialsException("Failed authentication. No authority for employeeHsaId " + employeeHsaId));
+            // CHECKSTYLE:ON Indentation
 
             // Concatenate the user's name
-            final StringBuilder name = new StringBuilder(idTokenClaimsSet.getStringClaim("given_name"));
-            name.append(" ");
-            name.append(idTokenClaimsSet.getStringClaim("family_name"));
+            String name = idTokenClaimsSet.getStringClaim("given_name")
+                    + " "
+                    + idTokenClaimsSet.getStringClaim("family_name");
 
-            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken, name.toString());
+            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken, name);
+
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
         } catch (final Exception e) {
             throw new BadCredentialsException("Could not obtain user details from token", e);
         }

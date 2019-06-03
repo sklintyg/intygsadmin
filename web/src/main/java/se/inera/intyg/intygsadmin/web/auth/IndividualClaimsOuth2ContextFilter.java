@@ -31,7 +31,6 @@ import java.util.Map;
 
 /**
  * This filter extends the OAuth2ClientContextFilter.
- *
  * It adds functionality of specifying individual claims in the authentications request
  * according to the specification https://openid.net/specs/openid-connect-core-1_0.html
  */
