@@ -19,14 +19,17 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+
+@Getter
+@RequiredArgsConstructor
 public class UserResponseDTO {
 
-    private String logoutUrl;
+    private String logoutUrl = LOGOUT_URL;
+    private final String employeeHsaId;
+    private final String intygsadminRole;
+    private final String name;
 }

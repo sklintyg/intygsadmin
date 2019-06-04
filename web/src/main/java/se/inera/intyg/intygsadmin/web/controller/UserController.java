@@ -19,11 +19,14 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.UserResponseDTO;
+import se.inera.intyg.intygsadmin.web.service.UserService;
 
 @RestController
 @RequestMapping(UserController.API_ANVANDARE)
@@ -31,8 +34,21 @@ public class UserController {
 
     public static final String API_ANVANDARE = "/api/anvandare";
 
+    private UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping
     public ResponseEntity<UserResponseDTO> getUser() {
-        return null;
+        IntygsadminUser user = userService.getActiveUser();
+
+        if (user == null) {
+            return null; // TODO ApiError?
+        } else {
+            return ResponseEntity.ok(new UserResponseDTO(user.getEmployeeHsaId(), user.getIntygsadminRole().name(), user.getName()));
+        }
     }
 }

@@ -17,27 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.service;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-import javax.transaction.Transactional;
-import java.util.Optional;
+@Getter
+@RequiredArgsConstructor
+public class SessionStateResponse {
 
-@Service
-@Transactional
-public class UserPersistenceService {
-
-    private UserRepository userRepository;
-
-    public UserPersistenceService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
-        return userRepository.findByEmployeeHsaId(employeeHsaId);
-    }
-
+    private final SessionState sessionState;
 }

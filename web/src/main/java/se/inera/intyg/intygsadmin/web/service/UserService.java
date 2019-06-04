@@ -17,27 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.service;
+package se.inera.intyg.intygsadmin.web.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
-
-import javax.transaction.Transactional;
-import java.util.Optional;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 
 @Service
-@Transactional
-public class UserPersistenceService {
+public class UserService {
 
-    private UserRepository userRepository;
-
-    public UserPersistenceService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService() {
     }
 
-    public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
-        return userRepository.findByEmployeeHsaId(employeeHsaId);
+    public IntygsadminUser getActiveUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof IntygsadminUser)) {
+            return null;
+        }
+
+        return (IntygsadminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }

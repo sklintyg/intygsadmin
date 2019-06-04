@@ -19,13 +19,14 @@
 
 package se.inera.intyg.intygsadmin.persistence.testdata;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -70,13 +71,18 @@ public class TestDataBootstrapper {
     private void bootstrapUsers() {
 
         try {
-            InputStream jsonUsersStream = new ClassPathResource(
-                    "bootstrap/users.json").getInputStream();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<UserEntity> userEntities = objectMapper.readValue(jsonUsersStream,
-                    new TypeReference<List<UserEntity>>() {
-                    });
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
+
+            List<UserEntity> userEntities = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            for (Resource resource : resources) {
+                try (InputStream jsonUserStream = resource.getInputStream()) {
+                    userEntities.add(objectMapper.readValue(jsonUserStream, UserEntity.class));
+                }
+            }
+
             userRepository.saveAll(userEntities);
 
             LOG.info("Finished: Bootstrap USER data");

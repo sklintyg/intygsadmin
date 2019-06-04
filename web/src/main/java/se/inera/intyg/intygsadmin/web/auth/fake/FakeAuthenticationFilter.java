@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.auth.fake;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,23 +67,22 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
     private Authentication performFakeAuthentication(String json) {
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmployeeHsaId("HSA-FAKE-132456789");
-        userEntity.setIntygsadminRole(IntygsadminRole.ADMIN);
+        try {
+            FakeUser fakeUser = new ObjectMapper().readValue(json, FakeUser.class);
+            LOG.info("Detected fake user {}", fakeUser);
 
-        final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null, "Fake Fakesson");
+            UserEntity userEntity = new UserEntity();
+            userEntity.setEmployeeHsaId(fakeUser.getEmployeeHsaId());
+            userEntity.setIntygsadminRole(IntygsadminRole.valueOf(fakeUser.getIntygsadminRole()));
 
-        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null, fakeUser.getName());
 
-        // try {
-        // FakeCredentials fakeCredentials = new ObjectMapper().readValue(json, FakeCredentials.class);
-        // LOG.info("Detected fake credentials " + fakeCredentials);
-        // return getAuthenticationManager().authenticate(new FakeAuthenticationToken(fakeCredentials));
-        // } catch (IOException e) {
-        // String message = "Failed to parse JSON for fake SITHS: " + json;
-        // LOG.error(message, e);
-        // throw new RuntimeException(message, e);
-        // }
+            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        } catch (IOException e) {
+            String message = "Failed to parse JSON for fake user: " + json;
+            LOG.error(message, e);
+            throw new RuntimeException(message, e);
+        }
     }
 
     private static class NoopAuthenticationManager implements AuthenticationManager {

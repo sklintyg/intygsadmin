@@ -38,7 +38,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
     public void registerNewSession(String sessionId, Object principal) {
         if (principal instanceof IntygsadminUser) {
             IntygsadminUser user = (IntygsadminUser) principal;
-            monitoringService.logUserLogin(user.getUserId(), user.getAuthenticationMethod());
+            monitoringService.logUserLogin(user.getEmployeeHsaId(), user.getAuthenticationMethod());
         }
         super.registerNewSession(sessionId, principal);
     }
@@ -52,9 +52,9 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
             if (principal instanceof IntygsadminUser) {
                 IntygsadminUser user = (IntygsadminUser) principal;
                 if (sessionInformation.isExpired()) {
-                    monitoringService.logUserSessionExpired(user.getUserId(), user.getAuthenticationMethod());
+                    monitoringService.logUserSessionExpired(user.getEmployeeHsaId(), user.getAuthenticationMethod());
                 } else {
-                    monitoringService.logUserLogout(user.getUserId(), user.getAuthenticationMethod());
+                    monitoringService.logUserLogout(user.getEmployeeHsaId(), user.getAuthenticationMethod());
                 }
             }
         }

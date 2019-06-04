@@ -19,17 +19,14 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserDTO {
+@Getter
+@RequiredArgsConstructor
+public class SessionState {
 
-    private String employeeHsaId;
-    private IntygsadminRole intygsadminRole;
-    private String name;
+    private final boolean hasSession;
+    private final boolean authenticated;
+    private final long secondsUntilExpire;
 }

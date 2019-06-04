@@ -17,24 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.mapper;
+package se.inera.intyg.intygsadmin.web.auth.fake;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
-import org.mapstruct.factory.Mappers;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
+import lombok.Data;
 
-import java.util.List;
+@Data
+public class FakeUser {
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
-    UserDTO toDTO(UserEntity userEntity);
-
-    List<UserDTO> toListDTO(List<UserEntity> userEntities);
-
-    UserEntity toEntity(UserDTO userDTO);
+    private String employeeHsaId;
+    private String intygsadminRole;
+    private String name;
 
 }

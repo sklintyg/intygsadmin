@@ -30,7 +30,7 @@ import java.io.Serializable;
 @Getter
 public class IntygsadminUser implements Serializable {
 
-    private String userId;
+    private String employeeHsaId;
     private String name;
     @JsonIgnore
     @Getter(onMethod = @__(@JsonIgnore))
@@ -39,7 +39,7 @@ public class IntygsadminUser implements Serializable {
     private AuthenticationMethod authenticationMethod;
 
     public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OAuth2AccessToken token, String name) {
-        this.userId = userEntity.getEmployeeHsaId();
+        this.employeeHsaId = userEntity.getEmployeeHsaId();
         this.intygsadminRole = userEntity.getIntygsadminRole();
         this.authenticationMethod = authenticationMethod;
         this.token = token;

@@ -25,13 +25,20 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts;
+import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
 import se.inera.intyg.intygsadmin.web.controller.dto.AppConfigDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.SessionState;
+import se.inera.intyg.intygsadmin.web.controller.dto.SessionStateResponse;
 import se.inera.intyg.intygsadmin.web.controller.dto.VersionInfoDTO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -41,6 +48,8 @@ import java.util.Optional;
 public class PublicApiController {
 
     public static final String PUBLIC_API_REQUEST_MAPPING = "/public-api";
+    public static final String SESSION_STATUS_PING = "/session-stat/ping";
+    public static final String SESSION_STAT_REQUEST_MAPPING = PUBLIC_API_REQUEST_MAPPING + SESSION_STATUS_PING;
 
     private BuildProperties buildProperties;
     private Environment environment;
@@ -49,6 +58,11 @@ public class PublicApiController {
     public PublicApiController(Optional<BuildProperties> buildProperties, Environment environment) {
         this.buildProperties = buildProperties.orElse(null);
         this.environment = environment;
+    }
+
+    @GetMapping(value = PublicApiController.SESSION_STATUS_PING)
+    public SessionStateResponse getSessionStatus(HttpServletRequest request) {
+        return createStatusResponse(request);
     }
 
     @GetMapping(path = "/version", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -76,6 +90,27 @@ public class PublicApiController {
         var activeProfiles = StringUtils.join(environment.getActiveProfiles(), ", ");
 
         return new VersionInfoDTO(applicationName, buildVersion, buildTimestamp, activeProfiles);
+    }
+
+    private SessionStateResponse createStatusResponse(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        // The sessionTimeoutFilter should have put a secondsLeft attribute in the request for us to use.
+        Long secondsLeft = (Long) request.getAttribute(SessionTimeoutFilter.SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY);
+        final boolean isAuthenticated = hasAuthenticatedPrincipalSession(session);
+        return new SessionStateResponse(new SessionState(session != null, isAuthenticated,
+                secondsLeft == null ? 0 : secondsLeft));
+    }
+
+    private boolean hasAuthenticatedPrincipalSession(HttpSession session) {
+        if (session != null) {
+            final Object context = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+            if (context != null && context instanceof SecurityContext) {
+                SecurityContext securityContext = (SecurityContext) context;
+                return securityContext.getAuthentication() != null && securityContext.getAuthentication().getPrincipal() != null;
+            }
+
+        }
+        return false;
     }
 
 }

@@ -22,6 +22,7 @@ package se.inera.intyg.intygsadmin.web.config;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -49,6 +50,7 @@ import se.inera.intyg.intygsadmin.web.auth.IneraOidcFilter;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminLogoutSuccessHandler;
 import se.inera.intyg.intygsadmin.web.auth.LoggingSessionRegistryImpl;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeAuthenticationFilter;
+import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
 
 import java.util.Arrays;
@@ -57,6 +59,7 @@ import java.util.List;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
+import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
 
 @Configuration
@@ -133,6 +136,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return fakeAuthenticationFilter;
     }
 
+    @Bean
+    public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter() {
+        final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter();
+        sessionTimeoutFilter.setGetSessionStatusUri(SESSION_STAT_REQUEST_MAPPING);
+
+        FilterRegistrationBean<SessionTimeoutFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(sessionTimeoutFilter);
+        registrationBean.addUrlPatterns("/*");
+
+        return registrationBean;
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // All static client resources could be completely ignored by Spring Security.
@@ -203,7 +218,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(FAKE_LOGIN_URL).permitAll()
-                .antMatchers("/h2-console/**").permitAll();
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/fake-api/**").permitAll();
 
         http
                 .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
