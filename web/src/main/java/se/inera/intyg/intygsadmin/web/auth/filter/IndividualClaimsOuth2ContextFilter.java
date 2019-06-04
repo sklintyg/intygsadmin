@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.auth;
+package se.inera.intyg.intygsadmin.web.auth.filter;
 
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;

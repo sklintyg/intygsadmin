@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.auth;
+package se.inera.intyg.intygsadmin.web.auth.filter;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.JWT;
@@ -37,6 +37,8 @@ import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
+import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,7 +89,6 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
                                     "Failed authentication. No IntygsadminUser for employeeHsaId " + employeeHsaId));
             // CHECKSTYLE:ON Indentation
 
-            // Concatenate the user's name
             String name = idTokenClaimsSet.getStringClaim("given_name")
                     + " "
                     + idTokenClaimsSet.getStringClaim("family_name");

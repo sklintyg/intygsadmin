@@ -45,11 +45,11 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
-import se.inera.intyg.intygsadmin.web.auth.IndividualClaimsOuth2ContextFilter;
-import se.inera.intyg.intygsadmin.web.auth.IneraOidcFilter;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminLogoutSuccessHandler;
 import se.inera.intyg.intygsadmin.web.auth.LoggingSessionRegistryImpl;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeAuthenticationFilter;
+import se.inera.intyg.intygsadmin.web.auth.filter.IndividualClaimsOuth2ContextFilter;
+import se.inera.intyg.intygsadmin.web.auth.filter.IneraOidcFilter;
 import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
 
@@ -58,6 +58,7 @@ import java.util.List;
 
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
+import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
@@ -219,7 +220,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(FAKE_LOGIN_URL).permitAll()
                 .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/fake-api/**").permitAll();
+                .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll();
 
         http
                 .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
