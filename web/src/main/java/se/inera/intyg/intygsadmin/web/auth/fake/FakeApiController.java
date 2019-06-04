@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.auth.fake;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -46,6 +47,8 @@ public class FakeApiController {
 
     private List<FakeUser> fakeUsers;
 
+    // Needed to due bug in Spotbugs. https://github.com/spotbugs/spotbugs/issues/756
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
     @PostConstruct
     public void init() throws IOException {
 

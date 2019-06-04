@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.persistence.testdata;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,8 @@ public class TestDataBootstrapper {
         bootstrapUsers();
     }
 
+    // Needed to due bug in Spotbugs. https://github.com/spotbugs/spotbugs/issues/756
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
     private void bootstrapUsers() {
 
         try {

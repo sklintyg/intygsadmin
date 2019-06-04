@@ -68,6 +68,9 @@ subprojects {
   dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+    compileOnly("net.jcip:jcip-annotations:${Dependencies.jcipAnnotationsVersion}")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:${Dependencies.spotbugsAnnotationsVersion}")
+
     implementation("org.apache.commons:commons-lang3:${Dependencies.commonsLang3Version}")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
