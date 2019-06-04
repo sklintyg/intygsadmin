@@ -1,0 +1,23 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "employeeHsaId",
+      "intygsadminRole"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "employeeHsaId": {
+        "type": "string"
+      },
+      "intygsadminRole": {
+        "type": "string"
+      }
+    }
+  }
+}
