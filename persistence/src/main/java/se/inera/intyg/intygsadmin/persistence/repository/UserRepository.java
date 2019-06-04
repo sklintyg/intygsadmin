@@ -17,19 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.persistence.repository;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+import java.util.Optional;
+import java.util.UUID;
 
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
-    private String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
+    Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
 }

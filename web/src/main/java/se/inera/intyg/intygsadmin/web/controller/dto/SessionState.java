@@ -22,14 +22,11 @@ package se.inera.intyg.intygsadmin.web.controller.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
-
 @Getter
 @RequiredArgsConstructor
-public class UserResponseDTO {
+public class SessionState {
 
-    private String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
+    private final boolean hasSession;
+    private final boolean authenticated;
+    private final long secondsUntilExpire;
 }

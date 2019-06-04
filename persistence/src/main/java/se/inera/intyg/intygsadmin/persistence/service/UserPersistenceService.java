@@ -17,19 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.persistence.service;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+import javax.transaction.Transactional;
+import java.util.Optional;
 
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
+@Service
+@Transactional
+public class UserPersistenceService {
 
-    private String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
+    private UserRepository userRepository;
+
+    public UserPersistenceService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
+        return userRepository.findByEmployeeHsaId(employeeHsaId);
+    }
+
 }

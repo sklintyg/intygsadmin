@@ -17,19 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.service;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+@Service
+public class UserService {
 
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
+    public UserService() {
+    }
 
-    private String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
+    public IntygsadminUser getActiveUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof IntygsadminUser)) {
+            return null;
+        }
+
+        return (IntygsadminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
 }

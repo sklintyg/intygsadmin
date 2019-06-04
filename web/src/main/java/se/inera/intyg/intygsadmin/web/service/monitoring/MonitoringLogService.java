@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.service.monitoring;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+/**
+ * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform and easy to parse.
+ */
+public interface MonitoringLogService {
 
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
+    void logUserLogin(String userId, AuthenticationMethod authMethod);
 
-    private String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
+    void logUserLogout(String userId, AuthenticationMethod authMethod);
+
+    void logUserSessionExpired(String userId, AuthenticationMethod authMethod);
 }

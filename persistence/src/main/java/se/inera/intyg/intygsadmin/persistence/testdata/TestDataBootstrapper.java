@@ -19,40 +19,77 @@
 
 package se.inera.intyg.intygsadmin.persistence.testdata;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Component;
+import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
+import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
+import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
+
+import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
-import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
-import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 
 @Component
-@Profile({"dev", "init-bootstrap-data"})
+@Profile({ "dev", "init-bootstrap-data" })
 @Transactional
 public class TestDataBootstrapper {
 
+    public static final int DAY_SPAN = 30;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private BannerRepository bannerRepository;
+    private UserRepository userRepository;
 
-    public TestDataBootstrapper(BannerRepository bannerRepository) {
+    @Autowired
+    public TestDataBootstrapper(BannerRepository bannerRepository, UserRepository userRepository) {
         this.bannerRepository = bannerRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
     void init() {
         bootstrapBanners();
+        bootstrapUsers();
+    }
+
+    private void bootstrapUsers() {
+
+        try {
+
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
+
+            List<UserEntity> userEntities = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            for (Resource resource : resources) {
+                try (InputStream jsonUserStream = resource.getInputStream()) {
+                    userEntities.add(objectMapper.readValue(jsonUserStream, UserEntity.class));
+                }
+            }
+
+            userRepository.saveAll(userEntities);
+
+            LOG.info("Finished: Bootstrap USER data");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed bootstrapping users");
+        }
+
     }
 
     private void bootstrapBanners() {
@@ -62,10 +99,9 @@ public class TestDataBootstrapper {
         generateBanners(Application.STATISTIK, bannerEntities);
         generateBanners(Application.REHABSTOD, bannerEntities);
 
-
         bannerRepository.saveAll(bannerEntities);
 
-        LOG.info("Finished: Bootstrap data");
+        LOG.info("Finished: Bootstrap BANNER data");
     }
 
     private void generateBanners(Application application, List<BannerEntity> bannerEntities) {
@@ -100,8 +136,7 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizePastDate(LocalDateTime fromDate) {
-        var daySpan = 30;
-        return fromDate.minusDays(new Random().nextInt(daySpan + 1));
+        return fromDate.minusDays(new Random().nextInt(DAY_SPAN + 1));
     }
 
     private LocalDateTime randomizeFutureDate() {
@@ -109,7 +144,6 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizeFutureDate(LocalDateTime fromDate) {
-        var daySpan = 30;
-        return fromDate.plusDays(new Random().nextInt(daySpan + 1));
+        return fromDate.plusDays(new Random().nextInt(DAY_SPAN + 1));
     }
 }

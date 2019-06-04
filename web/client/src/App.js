@@ -1,20 +1,21 @@
-import React, { Fragment } from 'react'
-import { HashRouter, Switch } from 'react-router-dom'
+import React, {Fragment} from 'react'
+import {HashRouter, Switch} from 'react-router-dom'
 import HomePage from './pages/IndexPage'
 import BannerPage from './pages/BannerPage'
 import Header from './components/header'
-import { getUser } from './store/actions/user'
-import { connect } from 'react-redux'
-import { compose, lifecycle } from 'recompose'
+import {getUser} from './store/actions/user'
+import {connect} from 'react-redux'
+import {compose, lifecycle} from 'recompose'
+import SecuredRoute from './components/auth/SecuredRoute'
 import UnsecuredRoute from './components/auth/UnsecuredRoute'
-import { history } from './store/configureStore'
-import { ConnectedRouter } from 'connected-react-router'
-import { closeAllModals } from './store/actions/modal'
+import {history} from './store/configureStore'
+import {ConnectedRouter} from 'connected-react-router'
+import {closeAllModals} from './store/actions/modal'
 import ErrorPage from './pages/ErrorPage'
 import ErrorModal from './components/errorModal'
 import TestLinks from './components/TestLinks/TestLinks'
 import SessionPoller from './components/sessionPoller'
-import { fetchAppConfig } from './store/actions/appConfig'
+import {fetchAppConfig} from './store/actions/appConfig'
 
 const App = () => {
   return (
@@ -28,7 +29,7 @@ const App = () => {
           <Switch>
             <UnsecuredRoute exact path="/" component={HomePage} />
             <UnsecuredRoute path="/loggedout/:method" component={HomePage} />
-            <UnsecuredRoute path="/banner" component={BannerPage} />
+            <SecuredRoute path="/banner" component={BannerPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>

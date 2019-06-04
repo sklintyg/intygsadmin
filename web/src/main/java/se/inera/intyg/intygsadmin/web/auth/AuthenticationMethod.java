@@ -17,19 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.auth;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+public enum AuthenticationMethod {
+    FAKE,
+    OIDC
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
-
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
-
-    private String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
 }

@@ -9,13 +9,14 @@ dependencies {
     implementation("org.liquibase:liquibase-core")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    implementation("com.querydsl:querydsl-core:${Dependencies.querydslVersion}")
-    implementation("com.querydsl:querydsl-jpa:${Dependencies.querydslVersion}")
+    implementation("com.querydsl:querydsl-core")
+    implementation("com.querydsl:querydsl-jpa")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
 
     compileOnly("org.projectlombok:lombok")
-    annotationProcessor("com.querydsl:querydsl-apt:${Dependencies.querydslVersion}:jpa")
+    annotationProcessor("com.querydsl:querydsl-apt::jpa")
     annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${Dependencies.hibernateJpsVersion}")
-    annotationProcessor("javax.annotation:javax.annotation-api:${Dependencies.javaxAnnotationVersion}")
+    annotationProcessor("javax.annotation:javax.annotation-api")
     annotationProcessor("org.projectlombok:lombok")
 
     runtime("mysql:mysql-connector-java")
