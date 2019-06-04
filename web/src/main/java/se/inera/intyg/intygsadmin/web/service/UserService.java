@@ -19,14 +19,27 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
+import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
+import se.inera.intyg.intygsadmin.web.mapper.UserMapper;
+
+import java.util.List;
 
 @Service
 public class UserService {
 
-    public UserService() {
+    private UserPersistenceService userPersistenceService;
+    private UserMapper userMapper;
+
+    @Autowired
+    public UserService(UserPersistenceService userPersistenceService, UserMapper userMapper) {
+        this.userPersistenceService = userPersistenceService;
+        this.userMapper = userMapper;
     }
 
     public IntygsadminUser getActiveUser() {
@@ -36,6 +49,24 @@ public class UserService {
         }
 
         return (IntygsadminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public List<UserEntityDTO> getUsers() {
+        return userMapper.toListDTO(userPersistenceService.findAll());
+    }
+
+    public UserEntityDTO getUser(String employeeHsaId) {
+        UserEntity userEntity = userPersistenceService.findByEmployeeHsaId(employeeHsaId).orElse(new UserEntity());
+        return userMapper.toDTO(userEntity);
+    }
+
+    public void deleteUser(String employeeHsaId) {
+        userPersistenceService.delete(employeeHsaId);
+    }
+
+    public UserEntityDTO upsertUser(UserEntityDTO userEntityDTO) {
+        UserEntity upsertedUser = userPersistenceService.upsert(userMapper.toEntity(userEntityDTO));
+        return userMapper.toDTO(upsertedUser);
     }
 
 }

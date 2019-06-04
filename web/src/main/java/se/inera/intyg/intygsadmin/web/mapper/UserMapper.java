@@ -17,19 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.repository;
+package se.inera.intyg.intygsadmin.web.mapper;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
-@Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface UserMapper {
+    UserEntityDTO toDTO(UserEntity s);
 
-    Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
+    List<UserEntityDTO> toListDTO(List<UserEntity> s);
 
-    void deleteByEmployeeHsaId(String employeeHsaId);
+    UserEntity toEntity(UserEntityDTO newSourceAccount);
+
+    default String mapId(UUID id) {
+        return id != null ? id.toString() : null;
+    }
+
+    default UUID mapId(String id) {
+        return id != null ? UUID.fromString(id) : null;
+    }
 }

@@ -24,6 +24,7 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,6 +39,24 @@ public class UserPersistenceService {
 
     public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
         return userRepository.findByEmployeeHsaId(employeeHsaId);
+    }
+
+    public void delete(String employeeHsaId) {
+        userRepository.deleteByEmployeeHsaId(employeeHsaId);
+    }
+
+    public UserEntity upsert(UserEntity newUserEntity) {
+        UserEntity userEntity = userRepository.findByEmployeeHsaId(newUserEntity.getEmployeeHsaId())
+                .orElse(new UserEntity());
+
+        userEntity.setEmployeeHsaId(newUserEntity.getEmployeeHsaId());
+        userEntity.setIntygsadminRole(newUserEntity.getIntygsadminRole());
+
+        return userRepository.save(userEntity);
+    }
+
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
     }
 
 }

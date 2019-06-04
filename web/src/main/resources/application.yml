@@ -7,7 +7,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: 'health, banner, info'
+        include: 'health, banner, info, user'
 
 spring:
   liquibase:
@@ -25,7 +25,3 @@ inera:
     redirect-uri: http://localhost:8680/login/inera
     logout-redirect-uri: http://localhost:8680/#/loggedout/m
     issuer-uri: https://idp.ineradev.org:443/oidc
-
-logging:
-  level:
-    org.springframework: INFO

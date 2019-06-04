@@ -19,7 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -32,8 +31,6 @@ public class IntygsadminUser implements Serializable {
 
     private String employeeHsaId;
     private String name;
-    @JsonIgnore
-    @Getter(onMethod = @__(@JsonIgnore))
     private OAuth2AccessToken token;
     private IntygsadminRole intygsadminRole;
     private AuthenticationMethod authenticationMethod;

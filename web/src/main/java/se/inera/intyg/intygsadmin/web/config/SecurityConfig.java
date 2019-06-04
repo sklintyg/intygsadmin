@@ -174,6 +174,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/app/**").permitAll()
                 .antMatchers("/assets/**").permitAll()
                 .antMatchers("/components/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers(API_ANVANDARE).permitAll()
                 .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
         // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll();

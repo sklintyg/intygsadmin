@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.repository;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Optional;
-import java.util.UUID;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserEntityDTO {
 
-@Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID> {
-
-    Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
-
-    void deleteByEmployeeHsaId(String employeeHsaId);
+    private String id;
+    private String employeeHsaId;
+    private String intygsadminRole;
 }
