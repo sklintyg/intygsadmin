@@ -8,9 +8,13 @@ describe('bannerList actions', () => {
   beforeEach(() => {
     store = mockStore({
       bannerList: {
-        content: {},
-        errorMessage: null,
-        isFetching: false,
+        bannerList: {
+          content: {},
+          errorMessage: null,
+          isFetching: false,
+          sortColumn: 'createdAtNow',
+          sortDirection: 'ASC'
+        }
       },
     })
   })
@@ -35,6 +39,25 @@ describe('bannerList actions', () => {
       )
     })
 
+    test('load sort from store', () => {
+      const response = [{}]
+
+      api.fetchBannerList = () => {
+        return Promise.resolve(response)
+      }
+
+      const expectedActions = [
+        { type: actions.FETCH_BANNERLIST_REQUEST },
+        { type: actions.FETCH_BANNERLIST_SUCCESS, response, sortColumn: 'createdAtNow', sortDirection: 'ASC' },
+      ]
+
+      return functionToTest(
+        store,
+        () => actions.fetchBannerList(),
+        expectedActions
+      )
+    })
+
     test('failure', () => {
       const response = [{}]
 
@@ -49,7 +72,7 @@ describe('bannerList actions', () => {
 
       return functionToTest(
         store,
-        () => actions.fetchBannerList({ sortColumn: '', sortDirection: '' }),
+        () => actions.fetchBannerList({ sortColumn: 'createdAt', sortDirection: 'DESC' }),
         expectedActions
       )
     })

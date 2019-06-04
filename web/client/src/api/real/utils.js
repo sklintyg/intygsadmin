@@ -79,7 +79,14 @@ export const buildUrlFromParams = (path, parameters) => {
 }
 
 const internalRequest = (path, fetchConfig, config = {}) => {
-  const url = config.pathComplete ? `${path}` : `${ROOT_URL}${path}`
+  let url = config.pathComplete ? `${path}` : `${ROOT_URL}${path}`
+
+  const d = new Date()
+  const param = url.indexOf('?') === -1 ? '?' : '&'
+
+  url += param + '_v=' + d.getTime()
+
+  fetchConfig.cache = 'no-store'
 
   return fetch(url, fetchConfig)
     .catch(networkError)
