@@ -1,11 +1,20 @@
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 
-export const functionToTest = (store, actionHelper, expectedActions) =>
-  store.dispatch(actionHelper()).then(() => {
+export const functionToTest = (store, actionHelper, expectedActions) => {
+
+  const expectFunc = () => {
     // return of async actions
     expect(store.getActions()).toEqual(expectedActions)
-  });
+
+    return Promise.resolve();
+  };
+
+  return store.dispatch(actionHelper())
+    .then(expectFunc)
+    .catch(expectFunc);
+}
+
 
 export const syncronousActionTester = (store, actionHelper, expectedActions) => {
   store.dispatch(actionHelper())
