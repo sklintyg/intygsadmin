@@ -26,21 +26,7 @@
 
 Cypress.Commands.add("login", loginId => {
   cy.visit("/welcome.html");
-  cy.get("#jsonSelect").select(loginId);
+  cy.wait(200);
+  cy.get(`#${loginId}`);
   cy.get("#loginBtn").click();
-});
-
-Cypress.Commands.add("addBestallning", () => {
-  cy.fixture("bestallning.json").then(bestallning => {
-    bestallning.ankomstDatum = new Date().toISOString();
-    cy.request("POST", "/api/test/bestallningar", bestallning);
-  });
-});
-
-Cypress.Commands.add("removeBestallning", id => {
-  cy.request({
-    method: "DELETE",
-    url: "/api/test/bestallningar/" + id,
-    failOnStatusCode: false
-  });
 });

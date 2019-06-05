@@ -53,12 +53,16 @@ const initialBanner = {
 }
 
 const tjanstButtons = [
-  { label: 'Intygsstatistik', value: 'STATISTIK' },
-  { label: 'Rehabstöd', value: 'REHABSTOD' },
-  { label: 'Webcert', value: 'WEBCERT' },
+  { id: 'tjanstIntygsstatistik', label: 'Intygsstatistik', value: 'STATISTIK' },
+  { id: 'tjanstRehabstod', label: 'Rehabstöd', value: 'REHABSTOD' },
+  { id: 'tjanstWebcert', label: 'Webcert', value: 'WEBCERT' },
 ]
 
-const prioButtons = [{ label: 'Låg', value: 'LOW' }, { label: 'Medel', value: 'MEDIUM' }, { label: 'Hög', value: 'HIGH' }]
+const prioButtons = [
+  { id: 'prioLOW', label: 'Låg', value: 'LOW' },
+  { id: 'prioMEDIUM', label: 'Medel', value: 'MEDIUM' },
+  { id: 'prioHIGH', label: 'Hög', value: 'HIGH' }
+]
 
 const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data, fetchFutureBanners, futureBanners }) => {
   const [validationMessages, setValidationMessages] = useState({})
@@ -156,12 +160,13 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             selected={newBanner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
+          <CustomTextarea inputId='bannerMessage' onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
             <span>
               <DatePicker
+                inputId='displayFromDate'
                 date={newBanner.displayFrom}
                 onChange={(value) => onChange(value, 'displayFrom')}
                 className={validationMessages.displayFrom !== undefined ? 'error' : ''}
@@ -169,6 +174,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             </span>
             <span>
               <TimePicker
+                inputId='displayFromTime'
                 value={newBanner.displayFromTime}
                 onChange={(value) => onChange(value, 'displayFromTime')}
                 className={validationMessages.displayFromTime !== undefined ? 'error' : ''}
@@ -181,6 +187,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             <span>till</span>
             <span>
               <DatePicker
+                inputId='displayToDate'
                 date={newBanner.displayTo}
                 onChange={(value) => onChange(value, 'displayTo')}
                 className={validationMessages.displayTo !== undefined ? 'error' : ''}
@@ -188,6 +195,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             </span>
             <span>
               <TimePicker
+                inputId='displayToTime'
                 value={newBanner.displayToTime}
                 onChange={(value) => onChange(value, 'displayToTime')}
                 className={validationMessages.displayToTime !== undefined ? 'error' : ''}
@@ -227,6 +235,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
         </ErrorSection>
         <ModalFooter className="no-border">
           <Button
+            id="saveBanner"
             disabled={
               !(
                 newBanner.application &&

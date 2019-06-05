@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
@@ -61,7 +61,7 @@ const DatePickerContainer = styled.div`
   display: inline-block;
 `
 
-const DatePicker = ({ date, onChange, className }) => {
+const DatePicker = ({ date, onChange, className, inputId }) => {
   const [datePickerPopupOpen, setDatePickerPopupOpen] = useState(false)
   const [internalValue, setInternalValue] = useState('')
   const popupRef = useRef(null)
@@ -114,7 +114,7 @@ const DatePicker = ({ date, onChange, className }) => {
   return (
     <DatePickerContainer>
       <Container className={className}>
-        <StyledInput type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={handleBlur} />
+        <StyledInput id={inputId} type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={handleBlur} />
         <span ref={buttonHolderRef}>
           <StyledButton onClick={onClick} color={'default'}>
             <Calendar />
@@ -158,7 +158,7 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
   }
 
   return (
-    <>
+    <Fragment>
       <ReactDatePicker
         selected={internalDate}
         dateFormat={'yyyy-MM-dd'}
@@ -175,7 +175,7 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
           OK
         </Button>
       </ButtonContainer>
-    </>
+    </Fragment>
   )
 }
 

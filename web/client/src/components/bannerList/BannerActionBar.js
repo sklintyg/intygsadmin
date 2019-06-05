@@ -13,18 +13,15 @@ const BannerActionBar = ({ openModal }) => {
   }
 
   return (
-    <>
-      <Button onClick={addBanner} color={'success'}>
-        <AddIcon color={IaColors.IA_COLOR_00} /> Skapa driftbanner
-      </Button>
-    </>
+    <Button id="addBannerBtn" onClick={addBanner} color={'success'}>
+      <AddIcon color={IaColors.IA_COLOR_00} /> Skapa driftbanner
+    </Button>
   )
 }
 
-const actions = null // temp
 export default compose(
   connect(
     null,
-    { ...actions, ...modalActions }
+    { ...modalActions }
   )
 )(BannerActionBar)

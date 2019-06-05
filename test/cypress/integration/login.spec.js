@@ -1,11 +1,13 @@
 /// <reference types="Cypress" />
 
 context('Login', () => {
-  beforeEach(() => {
-    cy.login('1');
-  });
+  it('login and verify name', () => {
+    cy.login('TSTNMT2321000156-10KK');
 
-  it('verify current user shown', () => {
-    cy.get('#currentUserTitle').should('be.visible');
+    cy.get('#currentUserTitle').should('contain.text', 'Karl Nilsson');
+
+    cy.get('#logoutBtn').click();
+
+    cy.url().should('include', 'welcome.html')
   });
 });

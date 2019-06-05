@@ -62,7 +62,7 @@ const ArrowDiv = styled.div`
   text-align: center;
 `
 
-const TimePicker = ({ value, onChange, className, onBlur }) => {
+const TimePicker = ({ value, onChange, className, inputId }) => {
   const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
   const buttonHolderRef = useRef()
@@ -172,7 +172,7 @@ const TimePicker = ({ value, onChange, className, onBlur }) => {
 
   return (
     <Container className={className}>
-      <StyledInput type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} onBlur={handleBlur} />
+      <StyledInput id={inputId} type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} onBlur={handleBlur} />
       <span ref={buttonHolderRef}>
         <StyledButton onClick={toggleTimePopup} color={'default'}>
           <TimeIcon />
