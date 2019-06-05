@@ -163,10 +163,11 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                   {new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
                 </td>
                 <td>{prioText[banner.priority]}</td>
-                <td dangerouslySetInnerHTML={{ __html: banner.message }} />
+                <td className='banner-message' dangerouslySetInnerHTML={{ __html: banner.message }} />
                 <td>{statusText[banner.status]}</td>
                 <td>
                   <Button
+                    className='change-btn'
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
                       openChangeBanner(banner)
@@ -177,6 +178,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                 </td>
                 <td>
                   <Button
+                    className='end-btn'
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
                       openRemoveModal(banner.id, banner.status)

@@ -24,18 +24,17 @@ const StyledHeader = styled.div`
 `
 
 const HeaderActionsWrapper = styled.div`
- display: flex;
+  display: flex;
   flex: 0 1 auto;
   justify-content: flex-end;
-
 `
 
-const Header = ({isAuthenticated, namn, userRole, logoutUrl}) => {
+const Header = ({isAuthenticated, name, userRole, logoutUrl}) => {
   return (
     <ComponentWrapper>
       <StyledHeader>
         <Logo className={(isAuthenticated ? 'd-none d-md-flex' : '')} />
-        {isAuthenticated && <User id="currentUser" userName={namn} userRole={userRole} />}
+        {isAuthenticated && <User id="currentUser" userName={name} userRole={userRole} />}
         <HeaderActionsWrapper>
           {isAuthenticated &&
             <Fragment>

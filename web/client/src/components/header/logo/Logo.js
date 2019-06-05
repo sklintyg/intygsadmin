@@ -36,8 +36,9 @@ const LogoText = styled(IaTypo09)`
 
 const Logo = ({ className }) => {
   return (
-    <ComponentWrapper className={className}>
-        <SvgLogo><LogoIconWrapper><LogoIcon/></LogoIconWrapper></SvgLogo><LogoText>Administrationsgränssnitt</LogoText>
+    <ComponentWrapper>
+      <SvgLogo><LogoIconWrapper><LogoIcon/></LogoIconWrapper></SvgLogo>
+      <LogoText className={className}>Administrationsgränssnitt</LogoText>
     </ComponentWrapper>
   )
 }

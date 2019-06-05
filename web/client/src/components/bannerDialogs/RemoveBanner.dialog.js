@@ -46,6 +46,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
         </ErrorSection>
         <ModalFooter className="no-border">
           <Button
+            id='confirmBtn'
             color={'primary'}
             onClick={() => {
               remove()

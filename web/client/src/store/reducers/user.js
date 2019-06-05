@@ -21,8 +21,8 @@ export default (state = INITIAL_STATE, action) => {
       isLoading: false,
       isAuthenticated: true,
       activeError: null,
-      namn: action.payload.namn,
-      userRole: action.payload.currentRole ? action.payload.currentRole.desc : '',
+      name: action.payload.name,
+      userRole: action.payload.intygsadminRole ? action.payload.intygsadminRole : '',
       authoritiesTree: action.payload.authoritiesTree,
       logoutUrl: action.payload.logoutUrl
     }

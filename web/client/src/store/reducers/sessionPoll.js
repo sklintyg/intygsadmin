@@ -43,31 +43,9 @@ const sessionState = (state = INITIAL_STATE, action) => {
       return state
   }
 }
-const STAT_INITIAL_STATE = {}
-const statResponse = (state = STAT_INITIAL_STATE, action) => {
-  switch (action.type) {
-    case GET_POLL_SUCCESS:
-      return {
-        ...state,
-        ...action.payload.statResponse,
-      }
-    case GET_POLL_FAIL:
-      return STAT_INITIAL_STATE
-    default:
-      return state
-  }
-}
 
 export default combineReducers({
   pending,
   handle,
   sessionState,
-  statResponse,
 })
-
-//Selectors
-export const isPending = (state) => Object.keys(state.sessionPoll.statResponse).length === 0
-
-export const getStat = (state) => {
-  return state.sessionPoll.statResponse
-}
