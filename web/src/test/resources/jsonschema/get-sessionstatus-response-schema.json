@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "required": [
+    "sessionState"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "sessionState": {
+      "type": "object",
+      "required": [
+        "hasSession",
+        "authenticated",
+        "secondsUntilExpire"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "hasSession": {
+          "type": "boolean"
+        },
+        "authenticated": {
+          "type": "boolean"
+        },
+        "secondsUntilExpire": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
