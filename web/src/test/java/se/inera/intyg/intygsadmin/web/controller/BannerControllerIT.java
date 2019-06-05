@@ -19,15 +19,15 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
-import java.time.LocalDateTime;
-
-import org.junit.jupiter.api.Test;
-
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Test;
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+
+import java.time.LocalDateTime;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -40,6 +40,8 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetBanners() {
+        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+
         given().expect().statusCode(OK)
                 .when()
                 .get(BANNER_API_ENDPOINT)
@@ -49,6 +51,8 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetActiveAnfFutureBanners() {
+        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+
         given().expect().statusCode(OK)
                 .when()
                 .get(BANNER_API_ENDPOINT + "/activeAndFuture?application=" + Application.WEBCERT)
@@ -58,13 +62,15 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testCreateUpdateDeleteBanner() {
+        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+
         LocalDateTime today = LocalDateTime.now();
-        Integer totalElementsBefore  = given().expect().statusCode(OK)
+        Integer totalElementsBefore = given().expect().statusCode(OK)
                 .when()
                 .get(BANNER_API_ENDPOINT)
                 .then()
                 .extract()
-                    .path("totalElements");
+                .path("totalElements");
 
         BannerDTO bannerDTO = new BannerDTO();
 
@@ -83,8 +89,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
                 .then()
                 .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"))
                 .extract()
-                    .path("id");
-
+                .path("id");
 
         given().expect().statusCode(OK)
                 .when()
