@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
 import { compose } from 'recompose'
@@ -71,6 +71,12 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   const [errorActive, setErrorActive] = useState(false)
   const [initialMessageValue, setInitialMessageValue] = useState('')
 
+  const setApplicationAndCheckFuture = (application) => {
+    fetchFutureBanners(application).finally(() => {
+      setNewBanner({ ...newBanner, application })
+    })
+  }
+
   useEffect(() => {
     if (data && data.banner) {
       setUpdate(true)
@@ -113,32 +119,17 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
     }
   }
 
-  const setApplicationAndCheckFuture = (application) => {
-    fetchFutureBanners(application).then(() => {
-      setNewBanner({ ...newBanner, application })
-    })
-  }
-
   const send = () => {
-    if (update) {
-      updateBanner(createSendObject(), data.banner.id)
-        .then(() => {
-          cancel()
-          onComplete()
-        })
-        .catch((data) => {
-          setErrorActive(true)
-        })
-    } else {
-      createBanner(createSendObject())
-        .then(() => {
-          cancel()
-          onComplete()
-        })
-        .catch((data) => {
-          setErrorActive(true)
-        })
-    }
+    const func = update ? updateBanner(createSendObject(), data.banner.id) : createBanner(createSendObject());
+
+    func
+      .then(() => {
+        cancel()
+        onComplete()
+      })
+      .catch((data) => {
+        setErrorActive(true)
+      })
   }
 
   const cancel = () => {
@@ -149,7 +140,6 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }
 
   return (
-    <Fragment>
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
         <ModalHeader toggle={cancel}>{data ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
         <StyledBody>
@@ -261,7 +251,6 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
           </Button>
         </ModalFooter>
       </Modal>
-    </Fragment>
   )
 }
 

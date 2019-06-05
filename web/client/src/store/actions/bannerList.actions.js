@@ -39,6 +39,8 @@ export const fetchBannerList = (bannerRequest) => (dispatch, getState) => {
         type: 'FETCH_BANNERLIST_FAILURE',
         payload: errorResponse,
       })
+
+      return Promise.reject();
     }
   )
 }

@@ -21,6 +21,12 @@ const Wrapper = styled.div`
 `
 
 const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner }) => {
+  if (errorMessage) {
+    return (
+      <FetchError message={errorMessage} />
+    )
+  }
+
   if (bannerList.content && bannerList.content.length === 0) {
     if (bannerList.totalElements === 0) {
       return (
@@ -143,15 +149,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner 
           </tr>
         </thead>
         <tbody id={'BannerListTable'}>
-          {errorMessage && (
-            <tr>
-              <td colSpan={8}>
-                <FetchError message={errorMessage} />
-              </td>
-            </tr>
-          )}
-          {!errorMessage &&
-            bannerList.content &&
+          { bannerList.content &&
             bannerList.content.map((banner) => (
               <tr key={banner.id}>
                 <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
