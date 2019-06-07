@@ -21,11 +21,11 @@ package se.inera.intyg.intygsadmin.web.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class IaAuthenticationException extends BadCredentialsException {
+public class IaAuthenticationException extends AuthenticationException {
 
     private IaErrorCode errorCode;
     private String logId;
