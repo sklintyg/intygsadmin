@@ -21,6 +21,8 @@ package se.inera.intyg.intygsadmin.web.auth.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -41,6 +43,12 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
     private static final long MILLISECONDS_PER_SECONDS = 1000;
 
     private String getSessionStatusUri;
+
+    private SessionRegistry sessionRegistry;
+
+    public SessionTimeoutFilter(SessionRegistry sessionRegistry) {
+        this.sessionRegistry = sessionRegistry;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -65,6 +73,10 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
 
             if (msUntilExpire <= 0) {
                 LOG.info("Session expired " + msUntilExpire + " ms ago. Invalidating it now!");
+                SessionInformation sessionInformation = sessionRegistry.getSessionInformation(session.getId());
+                if (sessionInformation != null) {
+                    sessionInformation.expireNow();
+                }
                 session.invalidate();
             } else if (!isSessionStatusRequest || lastAccess == null) {
                 // Update lastaccessed for ALL requests except status requests

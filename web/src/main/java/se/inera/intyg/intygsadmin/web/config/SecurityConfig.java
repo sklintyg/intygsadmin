@@ -139,7 +139,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter() {
-        final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter();
+        final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter(loggingSessionRegistry());
         sessionTimeoutFilter.setGetSessionStatusUri(SESSION_STAT_REQUEST_MAPPING);
 
         FilterRegistrationBean<SessionTimeoutFilter> registrationBean = new FilterRegistrationBean<>();
