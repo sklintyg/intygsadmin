@@ -78,7 +78,7 @@ public class UserEndpointIT extends BaseRestIntegrationTest {
                 .when()
                 .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
                 .then()
-                .body("employeeHsaId", equalTo(null));
+                .body(equalTo(""));
     }
 
     @Test

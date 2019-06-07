@@ -1,0 +1,24 @@
+{
+  "type": "object",
+  "required": [
+    "logoutUrl",
+    "employeeHsaId",
+    "intygsadminRole",
+    "name"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "logoutUrl": {
+      "type": "string"
+    },
+    "employeeHsaId": {
+      "type": "string"
+    },
+    "intygsadminRole": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  }
+}

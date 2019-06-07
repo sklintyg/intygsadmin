@@ -56,7 +56,7 @@ public class UserService {
     }
 
     public UserEntityDTO getUser(String employeeHsaId) {
-        UserEntity userEntity = userPersistenceService.findByEmployeeHsaId(employeeHsaId).orElse(new UserEntity());
+        UserEntity userEntity = userPersistenceService.findByEmployeeHsaId(employeeHsaId).orElse(null);
         return userMapper.toDTO(userEntity);
     }
 

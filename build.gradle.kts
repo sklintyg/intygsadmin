@@ -1,4 +1,3 @@
-
 import io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 import se.inera.intyg.IntygPluginCheckstyleExtension
 import se.inera.intyg.JavaVersion
@@ -83,7 +82,8 @@ subprojects {
     testImplementation("io.github.benas:random-beans:${TestDependencies.randomBeansVersion}")
     testImplementation("org.mockito:mockito-core:${TestDependencies.mockitoCoreVersion}")
     testImplementation("org.mockito:mockito-junit-jupiter:${TestDependencies.mockitoCoreVersion}")
-    
+    testImplementation("org.springframework.security:spring-security-test")
+
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
   }
 

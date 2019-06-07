@@ -27,7 +27,6 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class IntygsadminLogoutSuccessHandler extends
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+            throws IOException {
 
         boolean isRedirected = false;
         if (authentication != null) {
