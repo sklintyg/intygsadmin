@@ -5,10 +5,24 @@ const addYears = require('date-fns/addYears')
 context("Banners", () => {
 
   beforeEach(() => {
+    cy.server()
+    cy.route({
+      method: 'GET',
+      url: '**/api/banner**'
+    }).as('apiCheck');
+
+
+
     cy.login('TSTNMT2321000156-10KK');
   });
 
   it("Create banner", () => {
+    cy.visit('/', {
+      onBeforeLoad: win => {
+        win.fetch = null;
+      }
+    });
+    cy.wait('@apiCheck');
 
     const date = addYears(new Date(), 3)
 
@@ -27,17 +41,19 @@ context("Banners", () => {
 
     cy.get('#saveBanner').click();
 
-    cy.wait(500)
+    cy.wait('@apiCheck');
+    cy.wait(500);
 
     cy.get('#BannerListTable tr:first').within(() => {
       cy.get('.banner-message').should('have.text', 'test message')
 
       cy.get('button.end-btn').click() // Remove banner
-    })
+    });
 
     cy.get('#confirmBtn').click();
 
-    cy.wait(500)
+    cy.wait('@apiCheck');
+    cy.wait(500);
 
     cy.get('#BannerListTable tr:first').within(() => {
       cy.get('.banner-message').should('not.have.text', 'test message')
