@@ -39,7 +39,7 @@ Applikationen kan köras med profil **fake** för att ge åtkomst till allt via 
 
 
 ### H2
-Du hittar databasen lokalt på `http://localhost:8680/h2-console
+Du hittar databasen lokalt på `http://localhost:8680/h2-console`
 
 ### Frontend
 För att köra med live-reload.
