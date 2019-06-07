@@ -1,5 +1,9 @@
 server:
   port: 8680
+  use-forward-headers: true
+  servlet:
+    session:
+      timeout: 30m
 
 management:
   server:
@@ -20,7 +24,7 @@ spring:
 
 inera:
   idp:
-    client-id: http://localhost:8680
+    client-id: intygsadmindev
     client-secret: f2e71e76-4afa-455e-9b01-9dedead4590b
     redirect-uri: http://localhost:8680/login/inera
     logout-redirect-uri: http://localhost:8680/#/loggedout/m

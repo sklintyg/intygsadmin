@@ -4,8 +4,6 @@ data:
   MANAGEMENT_SERVER_PORT: "8081"
   SPRING_PROFILES_ACTIVE: "dev, fake"
   REDIS_PORT: "6379"
-  CONFIG_FOLDER: "/opt/intygsadmin-test/config"
-  CERTIFICATE_FOLDER: "/opt/intygsadmin-test/env"
 kind: ConfigMap
 metadata:
   name: intygsadmin-test-configmap-envvar

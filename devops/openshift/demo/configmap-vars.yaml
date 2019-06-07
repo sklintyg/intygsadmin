@@ -6,10 +6,10 @@ data:
   SPRING_DATASOURCE_URL: "jdbc:mysql://${mysql.service.host}:${mysql.service.port}/${database.name}?useSSL=false"
   REDIS_PORT: "${redis.service.port}"
   REDIS_HOST: "${redis.service.host}"
-  IB_HOST_URL: "https://intygsadmin-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net"
-  CONFIG_FOLDER: "/opt/intygsadmin-demo/config"
-  CERTIFICATE_FOLDER: "/opt/intygsadmin-demo/env"
-  MAIL_HOST: "${ib.host.url}"
+  INERA_IDP_CLIENTID: "intygsadmindev"
+  INERA_IDP_REDIRECTURI: "https://intygsadmin-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net:443/login/inera"
+  INERA_IDP_LOGOUTREDIRECTURI: "https://intygsadmin-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net:443/#/loggedout/m"
+  INERA_IDP_ISSUERURI: "https://idp.ineradev.org:443/oidc"
 kind: ConfigMap
 metadata:
   name: intygsadmin-demo-configmap-envvar
