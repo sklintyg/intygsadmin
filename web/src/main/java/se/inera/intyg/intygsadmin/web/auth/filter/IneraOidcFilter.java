@@ -26,6 +26,8 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,12 +41,17 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
+import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
+import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(IneraOidcFilter.class);
 
     private IDTokenValidator idTokenValidator;
 
@@ -97,8 +104,12 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
             return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
 
-        } catch (final Exception e) {
-            throw new BadCredentialsException("Could not obtain user details from token", e);
+        } catch (final BadCredentialsException exception) {
+            LOG.warn(exception.getMessage());
+            throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL002, exception.getMessage(), UUID.randomUUID().toString());
+        } catch (final Exception exception) {
+            LOG.error("Could not obtain user details from token", exception);
+            throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL001, exception.getMessage(), UUID.randomUUID().toString());
         }
 
     }

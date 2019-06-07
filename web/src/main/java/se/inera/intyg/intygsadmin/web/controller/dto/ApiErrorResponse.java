@@ -17,15 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.exception;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-public enum IaErrorCode {
-    BAD_REQUEST,
-    BAD_STATE,
-    ALREADY_EXISTS,
-    EXTERNAL_ERROR,
-    INTERNAL_ERROR,
-    NOT_FOUND,
-    LOGIN_FEL001,
-    LOGIN_FEL002
+import lombok.Value;
+
+@Value
+public class ApiErrorResponse {
+
+    private String errorCode;
+    private String message;
+    private String logId;
 }

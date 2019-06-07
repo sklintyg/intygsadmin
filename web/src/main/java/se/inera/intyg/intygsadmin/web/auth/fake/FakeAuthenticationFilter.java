@@ -31,12 +31,15 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
+import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
+import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_ENDPOINT;
 
@@ -80,7 +83,7 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
         } catch (IOException e) {
             String message = "Failed to parse JSON for fake user: " + json;
             LOG.error(message, e);
-            throw new RuntimeException(message, e);
+            throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL001, message, UUID.randomUUID().toString());
         }
     }
 

@@ -19,13 +19,26 @@
 
 package se.inera.intyg.intygsadmin.web.exception;
 
-public enum IaErrorCode {
-    BAD_REQUEST,
-    BAD_STATE,
-    ALREADY_EXISTS,
-    EXTERNAL_ERROR,
-    INTERNAL_ERROR,
-    NOT_FOUND,
-    LOGIN_FEL001,
-    LOGIN_FEL002
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.security.authentication.BadCredentialsException;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class IaAuthenticationException extends BadCredentialsException {
+
+    private IaErrorCode errorCode;
+    private String logId;
+
+    public IaAuthenticationException(IaErrorCode errorCode, String message, String logId) {
+        super(message);
+        this.errorCode = errorCode;
+        this.logId = logId;
+    }
+
+    public IaAuthenticationException(IaErrorCode errorCode, String message, String logId, Throwable t) {
+        super(message, t);
+        this.errorCode = errorCode;
+        this.logId = logId;
+    }
 }

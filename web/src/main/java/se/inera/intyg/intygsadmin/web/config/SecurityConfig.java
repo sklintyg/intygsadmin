@@ -33,6 +33,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -61,6 +63,7 @@ import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_
 import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
+import static se.inera.intyg.intygsadmin.web.controller.RequestErrorController.IA_SPRING_SEC_ERROR_CONTROLLER_PATH;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
 
 @Configuration
@@ -109,6 +112,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public AuthenticationFailureHandler failureHandler() {
+        return new ForwardAuthenticationFailureHandler(IA_SPRING_SEC_ERROR_CONTROLLER_PATH);
+    }
+
+    @Bean
     public IndividualClaimsOuth2ContextFilter outh2ContextFilter() {
         return new IndividualClaimsOuth2ContextFilter(idpProperties.getRequestedClaims());
     }
@@ -119,6 +127,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 idpProperties.getClientId(),
                 restTemplate, userPersistenceService);
         ineraOidcFilter.setAuthenticationSuccessHandler(successRedirectHandler());
+        ineraOidcFilter.setAuthenticationFailureHandler(failureHandler());
         ineraOidcFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
         return ineraOidcFilter;
     }
@@ -134,6 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         FakeAuthenticationFilter fakeAuthenticationFilter = new FakeAuthenticationFilter();
         fakeAuthenticationFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
         fakeAuthenticationFilter.setAuthenticationSuccessHandler(successRedirectHandler());
+        fakeAuthenticationFilter.setAuthenticationFailureHandler(failureHandler());
         return fakeAuthenticationFilter;
     }
 
