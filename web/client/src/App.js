@@ -44,8 +44,7 @@ const lifeCycleValues = {
     this.props.getUser()
   },
   componentDidMount() {
-    this.unlisten = history.listen((location) => {
-      console.log('Route path changed to: ' + location.pathname)
+    this.unlisten = history.listen(() => {
       this.props.closeAllModals()
     })
   },

@@ -28,7 +28,7 @@ export const createBanner = (banner) => (dispatch, getState) => {
 
   return api.createBanner(banner).then(
     (response) => {
-      dispatch({
+      return dispatch({
         type: CREATE_BANNER_SUCCESS,
         response: response,
       })
@@ -38,6 +38,7 @@ export const createBanner = (banner) => (dispatch, getState) => {
         type: CREATE_BANNER_FAILURE,
         payload: errorResponse,
       })
+      return Promise.reject();
     }
   )
 }
@@ -53,7 +54,7 @@ export const removeBanner = (id) => (dispatch, getState) => {
 
   return api.removeBanner(id).then(
     (response) => {
-      dispatch({
+      return dispatch({
         type: REMOVE_BANNER_SUCCESS,
         response: response,
       })
@@ -81,7 +82,7 @@ export const updateBanner = (banner, id) => (dispatch, getState) => {
 
   return api.updateBanner(banner, id).then(
     (response) => {
-      dispatch({
+      return dispatch({
         type: UPDATE_BANNER_SUCCESS,
         response: response,
       })
@@ -91,6 +92,8 @@ export const updateBanner = (banner, id) => (dispatch, getState) => {
         type: UPDATE_BANNER_FAILURE,
         payload: errorResponse,
       })
+
+      return Promise.reject();
     }
   )
 }
@@ -106,7 +109,7 @@ export const fetchFutureBanners = (application) => (dispatch, getState) => {
 
   return api.fetchFutureBanners(application).then(
     (response) => {
-      dispatch({
+      return dispatch({
         type: FETCH_FUTURE_SUCCESS,
         response: response,
       })
@@ -116,6 +119,8 @@ export const fetchFutureBanners = (application) => (dispatch, getState) => {
         type: FETCH_FUTURE_FAILURE,
         payload: errorResponse,
       })
+
+      return Promise.reject();
     }
   )
 }

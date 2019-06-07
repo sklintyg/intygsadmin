@@ -1,20 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { ErrorPageIcon } from '../styles/iaSvgIcons';
-import styled from 'styled-components'
+import IaAlert, { alertType } from '../alert/Alert'
 
-const Wrapper = styled.div`text-align: center`
-
-const FetchError = () => (
-  <Wrapper>
-    <ErrorPageIcon/>
-    <p>Kunde inte hämta beställningar.</p>
-  </Wrapper>
+const FetchError = ({message}) => (
+    <IaAlert type={alertType.ERROR}>{message}</IaAlert>
 );
 
 FetchError.propTypes = {
-  message: PropTypes.string,
-  onRetry: PropTypes.func.isRequired,
+  message: PropTypes.string
 };
 
 export default FetchError;

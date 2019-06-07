@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import styled from 'styled-components'
 import TableSortHead from './TableSortHead'
-//import { Error } from '../styles/iaSvgIcons'
 import { Table, Button } from 'reactstrap'
 import FetchError from './FetchError'
 import { RemoveBannerId, CreateBannerId } from '../bannerDialogs'
@@ -21,7 +20,13 @@ const Wrapper = styled.div`
   }
 `
 
-const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner, onActionComplete }) => {
+const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner }) => {
+  if (errorMessage) {
+    return (
+      <FetchError message={errorMessage} />
+    )
+  }
+
   if (bannerList.content && bannerList.content.length === 0) {
     if (bannerList.totalElements === 0) {
       return (
@@ -44,11 +49,11 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
     switch (bannerStatus) {
       case 'FUTURE':
         text =
-          'Att avsluta en kommande driftbanner innebär att den inte kommer att visas i Webcert. Den kommer också att tas bort från tabellen.'
+          'Att avsluta en kommande driftbanner innebär att den inte kommer att visas i den aktuella applikationen. Den kommer också att tas bort från tabellen.'
         break
       case 'ACTIVE':
         text =
-          'Att avsluta en pågående driftbanner innebär att den omedelbart tas bort från Webcert.<br><br>Datum och tid för driftbannerns avslut sätts till nuvarande tidpunkt.'
+          'Att avsluta en pågående driftbanner innebär att den omedelbart tas bort från den aktuella applikationen.<br><br>Datum och tid för driftbannerns avslut sätts till nuvarande tidpunkt.'
         break
       case 'FINISHED':
         break
@@ -144,15 +149,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
           </tr>
         </thead>
         <tbody id={'BannerListTable'}>
-          {errorMessage && (
-            <tr>
-              <td colSpan={8}>
-                <FetchError message={errorMessage} />
-              </td>
-            </tr>
-          )}
-          {!errorMessage &&
-            bannerList.content &&
+          { bannerList.content &&
             bannerList.content.map((banner) => (
               <tr key={banner.id}>
                 <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
@@ -163,10 +160,11 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                   {new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
                 </td>
                 <td>{prioText[banner.priority]}</td>
-                <td dangerouslySetInnerHTML={{ __html: banner.message }} />
+                <td className='banner-message' dangerouslySetInnerHTML={{ __html: banner.message }} />
                 <td>{statusText[banner.status]}</td>
                 <td>
                   <Button
+                    className='change-btn'
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
                       openChangeBanner(banner)
@@ -177,6 +175,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                 </td>
                 <td>
                   <Button
+                    className='end-btn'
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
                       openRemoveModal(banner.id, banner.status)

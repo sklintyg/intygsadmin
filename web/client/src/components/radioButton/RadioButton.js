@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import IaColors from '../styles/iaColors'
 import { IaTypo05 } from '../styles/iaTypography'
@@ -97,20 +97,19 @@ const Input = styled.input`
 const RadioContainer = styled.div`
   position: relative;
 `
-const RadioButton = ({ selected, onChange, label, value }) => {
+
+const RadioButton = ({ selected, onChange, inputId, label, value }) => {
   return (
-    <Fragment>
-      <RadioWrapper>
-        <RadioContainer>
-          <Input type="radio" name={label} id={label} value={value} checked={selected === value} onChange={onChange} />
-          <Label as="label" htmlFor={label}>
-            <div className="circle" />
-            {label}
-            <div className="dot" />
-          </Label>
-        </RadioContainer>
-      </RadioWrapper>
-    </Fragment>
+    <RadioWrapper>
+      <RadioContainer>
+        <Input type="radio" name={label} id={inputId} value={value} checked={selected === value} onChange={onChange} />
+        <Label as="label" htmlFor={label}>
+          <div className="circle" />
+          {label}
+          <div className="dot" />
+        </Label>
+      </RadioContainer>
+    </RadioWrapper>
   )
 }
 

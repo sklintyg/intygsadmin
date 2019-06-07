@@ -81,13 +81,6 @@ export const buildUrlFromParams = (path, parameters) => {
 const internalRequest = (path, fetchConfig, config = {}) => {
   let url = config.pathComplete ? `${path}` : `${ROOT_URL}${path}`
 
-  const d = new Date()
-  const param = url.indexOf('?') === -1 ? '?' : '&'
-
-  url += param + '_v=' + d.getTime()
-
-  fetchConfig.cache = 'no-store'
-
   return fetch(url, fetchConfig)
     .catch(networkError)
     .then(handleResponse(config))
@@ -98,11 +91,12 @@ const getJsonConfig = (method, body) => ({
   headers: {
     'Content-Type': 'application/json',
   },
+  credentials: "same-origin",
   body: JSON.stringify(body),
 })
 
 export const makeServerRequest = (path, config) => {
-  return internalRequest(path, {}, config)
+  return internalRequest(path, {credentials: "same-origin"}, config)
 }
 
 export const makeServerPost = (path, body, config = {}) => {

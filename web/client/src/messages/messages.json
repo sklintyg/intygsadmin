@@ -21,16 +21,18 @@
       "external_error": {
         "title": "Ett tekniskt fel uppstod",
         "message": "Ett tekniskt fel uppstod i kontakten med avsändaren av förfrågan eller beställningen."
-      },
-      "pu_error": {
-        "title": "Ett fel uppstod när personuppgifter skulle hämtas",
-        "message": "Åtgärden kan inte genomföras eftersom den kräver att personuppgifter kan hämtas från personuppgiftsregistret. Prova igen om en stund."
       }
     },
     "user": {
       "unauthorized": {
         "title": "Behörighet saknas",
         "message": "Du verkar sakna behörighet"
+      }
+    },
+    "bannerlist": {
+      "unknown": {
+        "title": "Tekniskt fel",
+        "message": "Översikten över driftbannerna kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
       }
     },
     "appconfig": {

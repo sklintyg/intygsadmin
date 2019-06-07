@@ -17,11 +17,15 @@ export const buildClientError = (errorResponse, prefix) => {
     messageKey = `${prefix}.${errorKey}.message`
 
     if (!haveMessage(messageKey)) {
-      titleKey = `error.common.${errorKey}.title`;
-      messageKey = `error.common.${errorKey}.message`;
+      titleKey = `${prefix}.unknown.title`
+      messageKey = `${prefix}.unknown.message`
       if (!haveMessage(messageKey)) {
-        titleKey = `error.common.unknown.title`;
-        messageKey = `error.common.unknown.message`;
+        titleKey = `error.common.${errorKey}.title`;
+        messageKey = `error.common.${errorKey}.message`;
+        if (!haveMessage(messageKey)) {
+          titleKey = `error.common.unknown.title`;
+          messageKey = `error.common.unknown.message`;
+        }
       }
     }
   }
