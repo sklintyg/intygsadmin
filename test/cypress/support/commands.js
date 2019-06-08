@@ -30,3 +30,11 @@ Cypress.Commands.add("login", loginId => {
   cy.get(`#${loginId}`);
   cy.get("#loginBtn").click();
 });
+
+Cypress.Commands.add("loginJson", json => {
+  cy.visit("/welcome.html");
+  cy.wait(200);
+  cy.get("#userJsonDisplay").clear().type(json);
+
+  cy.get("#loginBtn").click();
+});

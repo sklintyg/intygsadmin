@@ -19,27 +19,30 @@
 
 package se.inera.intyg.intygsadmin.web.auth.fake;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.UUID;
 
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_ENDPOINT;
 
@@ -73,6 +76,10 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
             FakeUser fakeUser = new ObjectMapper().readValue(json, FakeUser.class);
             LOG.info("Detected fake user {}", fakeUser);
 
+            if (StringUtils.isEmpty(fakeUser.getEmployeeHsaId())) {
+                throw new BadCredentialsException("Failed authentication. No IntygsadminUser for employeeHsaId ");
+            }
+
             UserEntity userEntity = new UserEntity();
             userEntity.setEmployeeHsaId(fakeUser.getEmployeeHsaId());
             userEntity.setIntygsadminRole(IntygsadminRole.valueOf(fakeUser.getIntygsadminRole()));
@@ -80,6 +87,9 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
             final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null, fakeUser.getName());
 
             return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        } catch (final BadCredentialsException exception) {
+            LOG.warn(exception.getMessage());
+            throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL002, exception.getMessage(), UUID.randomUUID().toString());
         } catch (IOException e) {
             String message = "Failed to parse JSON for fake user: " + json;
             LOG.error(message, e);

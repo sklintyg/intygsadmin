@@ -46,7 +46,7 @@ const Alert = styled.div`
   padding: 4px 8px;
 `
 
-const IaAlert = ({type, children, className}) => {
+const IaAlert = ({id, type, children, className}) => {
   function getIcon(type) {
     switch (type) {
     case alertType.INFO:
@@ -67,7 +67,7 @@ const IaAlert = ({type, children, className}) => {
   return (
     <Alert type={type} className={className}>
       {getIcon(type)}
-      <div>{children}</div>
+      <div id={id}>{children}</div>
     </Alert>
   );
 }
