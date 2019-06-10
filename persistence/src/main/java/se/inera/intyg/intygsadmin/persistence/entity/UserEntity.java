@@ -34,7 +34,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

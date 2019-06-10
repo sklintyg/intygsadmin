@@ -34,8 +34,8 @@
 
   <changeSet id="2" author="daniel petersson">
 
-    <createTable tableName="USER">
-      <column name="ID" type="varchar(40)">
+    <createTable tableName="user">
+      <column name="id" type="varchar(40)">
         <constraints primaryKey="true" nullable="false"/>
       </column>
       <column name="employee_hsa_id" type="varchar(32)">
