@@ -47,7 +47,7 @@ public class BannerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type="uuid-char")
+    @Type(type = "uuid-char")
     private UUID id;
 
     @CreationTimestamp

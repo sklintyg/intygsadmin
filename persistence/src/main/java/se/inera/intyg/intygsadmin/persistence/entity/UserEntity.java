@@ -44,7 +44,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type="uuid-char")
+    @Type(type = "uuid-char")
     private UUID id;
     private String employeeHsaId;
     @Enumerated(EnumType.STRING)
