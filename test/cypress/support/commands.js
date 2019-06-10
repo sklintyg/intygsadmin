@@ -24,17 +24,38 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("login", loginId => {
+Cypress.Commands.add("loadWelcome", () => {
+  cy.server()
+  cy.route({
+    method: 'GET',
+    url: '**/fake-api/users**'
+  }).as('fake-users');
+
+  cy.removeFetch();
+
   cy.visit("/welcome.html");
+  cy.wait('@fake-users');
   cy.wait(200);
+});
+
+Cypress.Commands.add("login", loginId => {
+
+  cy.loadWelcome();
   cy.get(`#${loginId}`);
   cy.get("#loginBtn").click();
 });
 
 Cypress.Commands.add("loginJson", json => {
-  cy.visit("/welcome.html");
-  cy.wait(200);
+  cy.loadWelcome();
   cy.get("#userJsonDisplay").clear().type(json);
 
   cy.get("#loginBtn").click();
+});
+
+Cypress.Commands.add('removeFetch', () => {
+  cy.visit('/', {
+    onBeforeLoad: win => {
+      win.fetch = null;
+    }
+  });
 });

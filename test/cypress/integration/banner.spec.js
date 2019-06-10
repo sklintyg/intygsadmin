@@ -12,16 +12,11 @@ context("Banners", () => {
     }).as('apiCheck');
 
 
-
     cy.login('TSTNMT2321000156-10KK');
   });
 
   it("Create banner", () => {
-    cy.visit('/', {
-      onBeforeLoad: win => {
-        win.fetch = null;
-      }
-    });
+    cy.removeFetch();
     cy.wait('@apiCheck');
 
     const date = addYears(new Date(), 3)
