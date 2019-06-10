@@ -102,8 +102,8 @@ const RadioButton = ({ selected, onChange, inputId, label, value }) => {
   return (
     <RadioWrapper>
       <RadioContainer>
-        <Input type="radio" name={label} id={inputId} value={value} checked={selected === value} onChange={onChange} />
-        <Label as="label" htmlFor={label}>
+        <Input type="radio" name={label} id={inputId ? inputId : label} value={value} checked={selected === value} onChange={onChange} />
+        <Label as="label" htmlFor={inputId ? inputId : label}>
           <div className="circle" />
           {label}
           <div className="dot" />
