@@ -4,8 +4,7 @@ import org.gradle.internal.os.OperatingSystem
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
 import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 
-// FIXME: Openshift build pipeline passes useMinifiedJavaScript to build (not client)
-val buildClient = project.hasProperty("client") || project.hasProperty("useMinifiedJavaScript")
+val buildClient = project.hasProperty("client")
 
 plugins {
   id("org.springframework.boot")

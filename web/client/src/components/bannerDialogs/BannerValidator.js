@@ -94,7 +94,7 @@ const validateRangeForBanner = (fromDate, toDate, fromTime, toTime, futureBanner
   let from = new Date(fromDate + 'T' + fromTime)
   let to = new Date(toDate + 'T' + toTime)
   let today = new Date()
-  if (from < today) {
+  if (to < today) {
     return 'Ändra visningsperioden. Den angivna perioden har redan infallit.'
   }
 
