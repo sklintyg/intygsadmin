@@ -86,8 +86,8 @@ och då skall följande uppgifter anges:
 - Autentiseringstyp: Secret post
 - Scopes/Claims: employeeHsaID, given_name, family_name
 - Inloggningsmetod: NetID Enterprise
-- Redirect URI: <IAhost>/login/inera
-- Logout Redirect URI: <IAhost>/#/loggedout/m
+- Redirect URI: \<IAhost\>/login/inera
+- Logout Redirect URI: \<IAhost\>/#/loggedout/m
 - Kontakt: Kontaktperson/funktionsbrevlåda
 
 
@@ -95,8 +95,8 @@ och då skall följande uppgifter anges:
 När klienten är upplagd hos Inera IDP, så skall följande uppgifter konfigureras i Intygsadmin:
 - inera.idp.client-id: Det som angavs/erhölls till/från IdPn. 
 - inera.idp.client-secret: Det som erhölls från IdPn.
-- inera.idp.redirect-uri: <IAhost>/login/inera.
-- inera.idp.logout-redirect-uri: <IAhost>/#/loggedout/m 
+- inera.idp.redirect-uri: \<IAhost\>/login/inera.
+- inera.idp.logout-redirect-uri: \<IAhost\>/#/loggedout/m 
 - inera.idp.issuer-uri: Issuer ID för IdP. Vanligtvis dess hostname följt av /oidc 
 
 
