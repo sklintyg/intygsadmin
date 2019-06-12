@@ -1,5 +1,5 @@
 server:
-  port: 8680
+  port: 8080
   use-forward-headers: true
   servlet:
     session:
@@ -7,7 +7,7 @@ server:
 
 management:
   server:
-    port: 8681
+    port: 8081
   endpoints:
     web:
       exposure:
