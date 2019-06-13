@@ -115,7 +115,7 @@ public class BannerService {
                 bannerPersistenceService.delete(id);
                 return true;
             case ACTIVE:
-                banner.setDisplayTo(LocalDateTime.now());
+                banner.setDisplayTo(LocalDateTime.now().minusMinutes(1));
                 bannerPersistenceService.update(banner);
                 return true;
             default:
