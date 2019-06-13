@@ -9,6 +9,7 @@ import { RemoveBannerId, CreateBannerId } from '../bannerDialogs'
 import * as modalActions from '../../store/actions/modal'
 import * as actions from '../../store/actions/banner'
 import IaAlert, { alertType } from '../alert/Alert'
+import StatusText from "./StatusText";
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -87,12 +88,6 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner 
     REHABSTOD: 'Rehabstöd',
   }
 
-  const statusText = {
-    FUTURE: 'Kommande',
-    ACTIVE: 'Pågående',
-    FINISHED: 'Avslutad',
-  }
-
   const dateShowPeriodOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
 
   return (
@@ -161,7 +156,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner 
                 </td>
                 <td>{prioText[banner.priority]}</td>
                 <td className='banner-message' dangerouslySetInnerHTML={{ __html: banner.message }} />
-                <td>{statusText[banner.status]}</td>
+                <td><StatusText status={banner.status} /></td>
                 <td>
                   <Button
                     className='change-btn'
