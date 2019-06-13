@@ -231,7 +231,9 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
                 newBanner.application &&
                 newBanner.message &&
                 newBanner.displayFrom &&
+                newBanner.displayFromTime &&
                 newBanner.displayTo &&
+                newBanner.displayToTime &&
                 newBanner.priority &&
                 isEmpty(validationMessages)
               )
