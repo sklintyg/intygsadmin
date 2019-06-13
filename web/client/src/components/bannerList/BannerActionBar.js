@@ -9,7 +9,7 @@ import { CreateBannerId } from '../bannerDialogs/CreateBanner.dialog'
 
 const BannerActionBar = ({ openModal }) => {
   const addBanner = () => {
-    openModal(CreateBannerId)
+    openModal(CreateBannerId, {banner: undefined})
   }
 
   return (
