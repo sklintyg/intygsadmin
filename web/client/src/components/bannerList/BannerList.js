@@ -175,7 +175,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner 
                     onClick={() => {
                       openRemoveModal(banner.id, banner.status)
                     }}
-                    color="primary">
+                    color="default">
                     Avsluta
                   </Button>
                 </td>
