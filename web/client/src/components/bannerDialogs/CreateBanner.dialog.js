@@ -240,7 +240,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             onClick={() => {
               send()
             }}>
-            {data ? 'Ändra' : 'Skapa'}
+            {data && data.banner ? 'Ändra' : 'Skapa'}
           </Button>
           <Button
             color={'default'}
