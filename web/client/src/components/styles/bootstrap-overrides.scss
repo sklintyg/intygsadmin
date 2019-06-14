@@ -14,6 +14,7 @@ $primary: $ia-color-21;
 
 //We use icon to the left of actual alert-text, do decrease horizontal padding.
 $alert-padding-x: 0.5rem;
+$tooltip-bg: $ia-color-02;
 
 // Import only what we use from Bootstrap scss components
 @import '~bootstrap/scss/_functions';
@@ -47,7 +48,7 @@ $alert-padding-x: 0.5rem;
 @import '~bootstrap/scss/_close';
 //@import '~bootstrap/scss/_toasts';
 @import '~bootstrap/scss/_modal';
-//@import '~bootstrap/scss/_tooltip';
+@import '~bootstrap/scss/_tooltip';
 //@import '~bootstrap/scss/_popover';
 //@import '~bootstrap/scss/_carousel';
 @import '~bootstrap/scss/_spinners';
@@ -356,5 +357,18 @@ a {
   color: $ia-color-17;
   &:hover {
     color: $ia-color-21;
+  }
+}
+
+
+// Tooltip
+.tooltip {
+  .tooltip-inner {
+    @extend %ia-typo-06;
+    color: $ia-color-00;
+    max-width: 190px;
+    padding: 7px 10px 9px;
+    border-radius: 3px;
+    text-align: left;
   }
 }
