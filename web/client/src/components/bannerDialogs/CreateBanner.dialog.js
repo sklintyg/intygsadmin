@@ -90,6 +90,8 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
         displayFromTime: displayFrom.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }).replace(/[^ -~]/g, ''),
         displayToTime: displayTo.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' }).replace(/[^ -~]/g, ''),
       })
+    } else {
+      setUpdate(false)
     }
   }, [data])
 
@@ -141,7 +143,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
 
   return (
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-        <ModalHeader toggle={cancel}>{data ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
+        <ModalHeader toggle={cancel}>{update ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
         <StyledBody>
           <h5>Välj tjänst</h5>
           <RadioWrapper
@@ -242,7 +244,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             onClick={() => {
               send()
             }}>
-            {data && data.banner ? 'Ändra' : 'Skapa'}
+            {update ? 'Ändra' : 'Skapa'}
           </Button>
           <Button
             color={'default'}
