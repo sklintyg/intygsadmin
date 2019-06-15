@@ -13,18 +13,18 @@ context("Banners", () => {
 
 
     cy.login('TSTNMT2321000156-10KK');
-  });
-
-  it("Create banner", () => {
     cy.removeFetch();
     cy.wait('@apiCheck');
+  });
 
+  it("Create/Update/delete banner", () => {
     const date = addYears(new Date(), 3)
 
     const fromDate = format(date, 'yyyy-MM-dd')
     const toDate = format(date, 'yyyy-MM-dd')
 
     cy.get("#addBannerBtn").click();
+    cy.get('#saveBanner').should('be.disabled')
 
     cy.get('#tjanstRehabstod').click();
     cy.get('#bannerMessage').type('test message');
@@ -41,7 +41,23 @@ context("Banners", () => {
 
     cy.get('#BannerListTable tr:first').within(() => {
       cy.get('.banner-message').should('have.text', 'test message')
+    });
 
+
+    // Change banner
+    cy.get('#BannerListTable tr:first').within(() => {
+      cy.get('button.change-btn').click() // Change banner
+    });
+
+    cy.get('#saveBanner').should('be.disabled')
+
+    cy.get('#prioLOW').click();
+
+    cy.get('#saveBanner').click();
+
+
+    // Remove banner
+    cy.get('#BannerListTable tr:first').within(() => {
       cy.get('button.end-btn').click() // Remove banner
     });
 

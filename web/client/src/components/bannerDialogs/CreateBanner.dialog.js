@@ -266,6 +266,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             {update ? 'Ändra' : 'Skapa'}
           </Button>
           <Button
+            id="closeBanner"
             color={'default'}
             onClick={() => {
               cancel()
