@@ -220,7 +220,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
           {errorActive && (
             <ErrorWrapper>
               <IaAlert type={alertType.ERROR}>
-                Driftbannern kunde inte {data ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
+                Driftbannern kunde inte {update ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
               </IaAlert>
             </ErrorWrapper>
           )}
