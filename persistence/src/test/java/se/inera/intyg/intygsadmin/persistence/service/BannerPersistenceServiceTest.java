@@ -178,6 +178,9 @@ public class BannerPersistenceServiceTest extends TestSupport {
         long updateCount = bannerPersistenceService.countByApplicationAndTime(application, banner.getDisplayFrom(), banner.getDisplayTo(), banner.getId());
         assertEquals(0, updateCount);
 
+        long updateCount2 = bannerPersistenceService.countByApplicationAndTime(application, banner.getDisplayFrom().minusDays(1), banner.getDisplayTo(), banner.getId());
+        assertEquals(0, updateCount2);
+
         // Another application banner
         long otherAppCount = bannerPersistenceService.countByApplicationAndTime(Application.REHABSTOD, banner.getDisplayFrom(), banner.getDisplayTo(), null);
         assertEquals(0, otherAppCount);
