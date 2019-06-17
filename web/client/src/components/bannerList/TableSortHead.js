@@ -1,8 +1,8 @@
 import React from 'react'
 import { DownIcon, UpDownIcon, UpIcon } from '../styles/iaSvgIcons'
-import { Button } from 'reactstrap'
+import {Button, UncontrolledTooltip} from 'reactstrap'
 
-const TableSortHead = ({ currentSortColumn, currentSortDirection, text, sortId, onSort }) => {
+const TableSortHead = ({ id, currentSortColumn, currentSortDirection, text, sortId, onSort, tooltip }) => {
   const handleSort = (sortColumn) => {
     onSort(sortColumn)
   }
@@ -15,10 +15,24 @@ const TableSortHead = ({ currentSortColumn, currentSortDirection, text, sortId, 
     }
   }
 
+  const elmId = id ? id : sortId;
+  let textElm = text;
+
+  if (tooltip) {
+    textElm = (
+      <>
+        <span id={elmId}>{text}</span>
+        <UncontrolledTooltip placement="top" target={elmId}>
+          {tooltip}
+        </UncontrolledTooltip>
+      </>
+    )
+  }
+
   if (!sortId) {
     return (
       <>
-        <th>{text}</th>
+        <th>{textElm}</th>
       </>
     )
   }
@@ -31,7 +45,7 @@ const TableSortHead = ({ currentSortColumn, currentSortDirection, text, sortId, 
           onClick={() => {
             handleSort(sortId)
           }}>
-          {text}
+          {textElm}
         </Button>{' '}
         {renderSortIcon(sortId)}
       </th>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import styled from 'styled-components'
 import TableSortHead from './TableSortHead'
-import { Table, Button } from 'reactstrap'
+import { Table, Button, UncontrolledTooltip } from 'reactstrap'
 import FetchError from './FetchError'
 import { RemoveBannerId, CreateBannerId } from '../bannerDialogs'
 import * as modalActions from '../../store/actions/modal'
@@ -105,6 +105,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
               currentSortDirection={bannerList.sortDirection}
               text="Skapat"
               sortId="createdAt"
+              tooltip="Visar vilket datum driftbannern skapades."
               onSort={handleSort}
             />
             <TableSortHead
@@ -112,6 +113,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
               currentSortDirection={bannerList.sortDirection}
               text="Tjänst"
               sortId="application"
+              tooltip="Visar vilken tjänst driftbannern visas i."
               onSort={handleSort}
             />
             <TableSortHead
@@ -119,6 +121,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
               currentSortDirection={bannerList.sortDirection}
               text="Visningsperiod"
               sortId="displayFrom"
+              tooltip="Visar under vilken period driftbannern visas eller har visats."
               onSort={handleSort}
             />
             <TableSortHead
@@ -126,6 +129,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
               currentSortDirection={bannerList.sortDirection}
               text="Prioritet"
               sortId="priority"
+              tooltip="Visar vilken prioritet en driftbanner har."
               onSort={handleSort}
             />
             <TableSortHead
@@ -133,12 +137,15 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
               currentSortDirection={bannerList.sortDirection}
               text="Meddelandetext"
               sortId="message"
+              tooltip="Visar driftbannerns innehåll."
               onSort={handleSort}
             />
             <TableSortHead
+              id="visningsstatus"
               currentSortColumn={bannerList.sortColumn}
               currentSortDirection={bannerList.sortDirection}
               text="Visningsstatus"
+              tooltip="Visar driftbannerns aktuella status."
               onSort={handleSort}
             />
             <th />
@@ -162,6 +169,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                 <td>
                   <Button
                     className='change-btn'
+                    id={`changeBtn${banner.id}`}
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
                       openChangeBanner(banner)
@@ -169,10 +177,14 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                     color="primary">
                     Ändra
                   </Button>
+                  <UncontrolledTooltip placement="top" target={`changeBtn${banner.id}`}>
+                    Öppnar ett dialogfönster där du kan ändra driftbannerns innehåll.
+                  </UncontrolledTooltip>
                 </td>
                 <td>
                   <Button
                     className='end-btn'
+                    id={`endBtn${banner.id}`}
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
                       openRemoveModal(banner.id, banner.status)
@@ -180,6 +192,9 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                     color="default">
                     Avsluta
                   </Button>
+                  <UncontrolledTooltip placement="top" target={`endBtn${banner.id}`}>
+                    Öppnar ett dialogfönster där du kan avsluta driftbannern.
+                  </UncontrolledTooltip>
                 </td>
               </tr>
             ))}
