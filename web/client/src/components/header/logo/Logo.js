@@ -38,7 +38,7 @@ const Logo = ({ className }) => {
   return (
     <ComponentWrapper>
       <SvgLogo><LogoIconWrapper><LogoIcon/></LogoIconWrapper></SvgLogo>
-      <LogoText className={className}>Administrationsgränssnitt</LogoText>
+      <LogoText className={className}>Intygsadmin</LogoText>
     </ComponentWrapper>
   )
 }
