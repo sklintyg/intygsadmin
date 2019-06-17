@@ -141,6 +141,36 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
     handleClose()
   }
 
+  const enableSaveBtn = () => {
+
+    const fields = ['application', 'message', 'displayFrom', 'displayTo', 'priority']
+    const fieldsEdit = fields.concat(['displayFromTime','displayToTime'])
+
+    let enable = fieldsEdit.reduce((accumulator, currentValue) => {
+      return accumulator && newBanner[currentValue]
+    }, true)
+
+    enable = enable &&
+      isEmpty(validationMessages)
+
+    if (update) {
+      let changed = fields.reduce((accumulator, currentValue) => {
+        let compareValue = newBanner[currentValue]
+        if (currentValue === 'displayFrom') {
+          compareValue = newBanner[currentValue] + 'T' + newBanner['displayFromTime'] + ':00'
+        } else if (currentValue === 'displayTo') {
+          compareValue = newBanner[currentValue] + 'T' + newBanner['displayToTime'] + ':00'
+        }
+
+        return accumulator || (data.banner && data.banner[currentValue] !== compareValue)
+      }, false)
+
+      enable = enable && changed
+    }
+
+    return enable
+  }
+
   return (
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
         <ModalHeader toggle={cancel}>{update ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
@@ -228,18 +258,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
         <ModalFooter className="no-border">
           <Button
             id="saveBanner"
-            disabled={
-              !(
-                newBanner.application &&
-                newBanner.message &&
-                newBanner.displayFrom &&
-                newBanner.displayFromTime &&
-                newBanner.displayTo &&
-                newBanner.displayToTime &&
-                newBanner.priority &&
-                isEmpty(validationMessages)
-              )
-            }
+            disabled={!enableSaveBtn()}
             color={'primary'}
             onClick={() => {
               send()
@@ -247,6 +266,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             {update ? 'Ändra' : 'Skapa'}
           </Button>
           <Button
+            id="closeBanner"
             color={'default'}
             onClick={() => {
               cancel()
