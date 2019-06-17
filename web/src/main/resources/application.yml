@@ -20,7 +20,7 @@ spring:
     active: dev, fake
   h2:
     console:
-      enabled: true
+      enabled: false
 
 inera:
   idp:
