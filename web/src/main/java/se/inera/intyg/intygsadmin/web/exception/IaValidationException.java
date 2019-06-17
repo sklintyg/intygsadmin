@@ -21,15 +21,19 @@ package se.inera.intyg.intygsadmin.web.exception;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;
 
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class IaValidationException extends RuntimeException {
+public class IaValidationException extends IaServiceException {
 
     private List<ValidationDTO> validationErrors;
+
+    public IaValidationException(List<ValidationDTO> validationErrors) {
+        super(IaErrorCode.VALIDATION_ERROR);
+
+        this.validationErrors = validationErrors;
+    }
 }

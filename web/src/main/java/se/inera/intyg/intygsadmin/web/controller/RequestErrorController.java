@@ -19,6 +19,12 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.UUID;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -26,22 +32,19 @@ import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+
 import se.inera.intyg.intygsadmin.web.controller.dto.ApiErrorResponse;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Custom ErrorController that overrides Spring boots default "whitepage" error handling.
@@ -106,6 +109,29 @@ public class RequestErrorController implements ErrorController {
 
         LOG.error(String.format("(Page) Request error intercepted: %s - responding with: %s", errorContext, redirectView));
         return new ModelAndView(redirectView);
+    }
+
+    /**
+     * For xhr-requests, we handle all errors by responding with a specific error code json struct that client can act on.
+     *
+     * @param request - request
+     * @return responsEntity
+     */
+    @RequestMapping(path = IA_ERROR_CONTROLLER_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity handleErrorAsJsonResponse(WebRequest webRequest, HttpServletRequest request) {
+        final HttpStatus httpStatus = getDispatcherErrorStatusCode(request);
+        final String errorContext = getErrorContext(webRequest);
+        final Throwable error = this.errorAttributes.getError(webRequest);
+        ApiErrorResponse apiErrorResponse;
+        if (error != null) {
+            apiErrorResponse = fromException(error);
+        } else {
+            apiErrorResponse = fromHttpStatus(httpStatus);
+        }
+        LOG.error(String.format(
+                "(REST) Request error intercepted: %s - responding with: %s", errorContext, apiErrorResponse.toString()), error);
+        return new ResponseEntity<>(apiErrorResponse, httpStatus);
     }
 
     @Override

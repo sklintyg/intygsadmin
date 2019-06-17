@@ -19,25 +19,6 @@
 
 package se.inera.intyg.intygsadmin.persistence.testdata;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.stereotype.Component;
-import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
-import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
-import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
-
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
@@ -45,6 +26,26 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
+import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
+import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 
 @Component
 @Profile({ "dev", "init-bootstrap-data" })
@@ -102,6 +103,14 @@ public class TestDataBootstrapper {
         generateBanners(Application.STATISTIK, bannerEntities);
         generateBanners(Application.REHABSTOD, bannerEntities);
 
+        bannerEntities.sort((b1, b2) -> {
+            if (b1.getDisplayTo().isEqual(b2.getDisplayTo())) {
+                return 0;
+            }
+
+            return b1.getDisplayTo().isBefore(b2.getDisplayTo()) ? -1 : 1;
+        });
+
         bannerRepository.saveAll(bannerEntities);
 
         LOG.info("Finished: Bootstrap BANNER data");
@@ -119,19 +128,19 @@ public class TestDataBootstrapper {
         futureEntity.setMessage("Future test message " + application);
         futureEntity.setApplication(application);
         futureEntity.setPriority(BannerPriority.MEDIUM);
-        futureEntity.setDisplayFrom(randomizeFutureDate());
+        futureEntity.setDisplayFrom(randomizeFutureDate(currentEntity.getDisplayTo()));
         futureEntity.setDisplayTo(randomizeFutureDate(futureEntity.getDisplayFrom()));
 
         BannerEntity prevEntity = new BannerEntity();
         prevEntity.setMessage("Past test message " + application);
         prevEntity.setApplication(application);
         prevEntity.setPriority(BannerPriority.LOW);
-        prevEntity.setDisplayTo(randomizePastDate());
+        prevEntity.setDisplayTo(randomizePastDate(currentEntity.getDisplayFrom()));
         prevEntity.setDisplayFrom(randomizePastDate(prevEntity.getDisplayTo()));
 
+        bannerEntities.add(prevEntity);
         bannerEntities.add(currentEntity);
         bannerEntities.add(futureEntity);
-        bannerEntities.add(prevEntity);
     }
 
     private LocalDateTime randomizePastDate() {

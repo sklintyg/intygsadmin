@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   }
 `
 
-const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner }) => {
+const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner, fetchFutureBanners }) => {
   if (errorMessage) {
     return (
       <FetchError message={errorMessage} />
@@ -71,8 +71,10 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner 
   }
 
   const openChangeBanner = (banner) => {
-    openModal(CreateBannerId, {
-      banner,
+    fetchFutureBanners(banner.application).finally(() => {
+      openModal(CreateBannerId, {
+        banner,
+      })
     })
   }
 
