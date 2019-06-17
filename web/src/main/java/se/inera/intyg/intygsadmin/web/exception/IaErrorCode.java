@@ -24,6 +24,7 @@ public enum IaErrorCode {
     BAD_STATE,
     ALREADY_EXISTS,
     EXTERNAL_ERROR,
+    VALIDATION_ERROR,
     INTERNAL_ERROR,
     NOT_FOUND,
     LOGIN_FEL001,
