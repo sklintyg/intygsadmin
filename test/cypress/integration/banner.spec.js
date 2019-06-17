@@ -55,6 +55,8 @@ context("Banners", () => {
 
     cy.get('#saveBanner').click();
 
+    cy.wait('@apiCheck');
+    cy.wait(500);
 
     // Remove banner
     cy.get('#BannerListTable tr:first').within(() => {
