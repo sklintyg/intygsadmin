@@ -100,7 +100,7 @@ public class TestDataBootstrapper {
         List<BannerEntity> bannerEntities = new ArrayList<>();
 
         generateBanners(Application.WEBCERT, bannerEntities);
-        generateBanners(Application.STATISTIK, bannerEntities);
+        generateBanners(Application.INTYGSSTATISTIK, bannerEntities);
         generateBanners(Application.REHABSTOD, bannerEntities);
 
         bannerEntities.sort((b1, b2) -> {

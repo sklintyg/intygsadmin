@@ -76,6 +76,7 @@ public class BannerService {
 
         bannerValidationService.validateBanner(bannerDTO);
 
+        bannerDTO.setMessage(bannerDTO.getMessage().trim());
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity createdEntity = bannerPersistenceService.create(map);
@@ -99,6 +100,7 @@ public class BannerService {
             throw new IaServiceException(IaErrorCode.BAD_STATE);
         }
 
+        bannerDTO.setMessage(bannerDTO.getMessage().trim());
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
         BannerEntity updatedEntity = bannerPersistenceService.update(map);

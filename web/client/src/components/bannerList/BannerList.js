@@ -89,7 +89,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
   }
 
   const serviceText = {
-    STATISTIK: 'Intygsstatistik',
+    INTYGSSTATISTIK: 'Intygsstatistik',
     WEBCERT: 'Webcert',
     REHABSTOD: 'Rehabstöd',
   }
