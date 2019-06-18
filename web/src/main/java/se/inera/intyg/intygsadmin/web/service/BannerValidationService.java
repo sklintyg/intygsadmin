@@ -120,11 +120,6 @@ public class BannerValidationService {
 
             LocalDateTime from = bannerDTO.getDisplayFrom();
 
-            // Struntar om banners krockar historiskt
-            if (LocalDateTime.now().isAfter(from)) {
-                from = LocalDateTime.now();
-            }
-
             long count = bannerPersistenceService.countByApplicationAndTime(
                     bannerDTO.getApplication(), from, bannerDTO.getDisplayTo(),
                     bannerDTO.getId());
