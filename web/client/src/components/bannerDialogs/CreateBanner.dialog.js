@@ -53,7 +53,7 @@ const initialBanner = {
 }
 
 const tjanstButtons = [
-  { id: 'tjanstIntygsstatistik', label: 'Intygsstatistik', value: 'STATISTIK' },
+  { id: 'tjanstIntygsstatistik', label: 'Intygsstatistik', value: 'INTYGSSTATISTIK' },
   { id: 'tjanstRehabstod', label: 'Rehabstöd', value: 'REHABSTOD' },
   { id: 'tjanstWebcert', label: 'Webcert', value: 'WEBCERT' },
 ]
