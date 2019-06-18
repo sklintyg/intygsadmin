@@ -57,6 +57,5 @@ public class BannerEntity {
     private String message;
     private LocalDateTime displayFrom;
     private LocalDateTime displayTo;
-    @Enumerated(EnumType.STRING)
     private BannerPriority priority;
 }

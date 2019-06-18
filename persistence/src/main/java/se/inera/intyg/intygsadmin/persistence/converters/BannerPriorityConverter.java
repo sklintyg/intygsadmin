@@ -17,28 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.enums;
+package se.inera.intyg.intygsadmin.persistence.converters;
 
-public enum BannerPriority {
-    LOW("1"), MEDIUM("2"), HIGH("3");
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-    private String dbValue;
+import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 
-    BannerPriority(String dbValue) {
-        this.dbValue = dbValue;
+@Converter(autoApply = true)
+public class BannerPriorityConverter implements AttributeConverter<BannerPriority, String> {
+
+    @Override
+    public String convertToDatabaseColumn(BannerPriority priority) {
+        return priority.getDbValue();
     }
 
-    public String getDbValue() {
-        return dbValue;
-    }
-
-    public static BannerPriority fromDbValue(String dbValue) {
-        for (BannerPriority bannerPriority : values()) {
-            if (bannerPriority.getDbValue().equalsIgnoreCase(dbValue)) {
-                return bannerPriority;
-            }
-        }
-
-        return null;
+    @Override
+    public BannerPriority convertToEntityAttribute(String dbData) {
+        return BannerPriority.fromDbValue(dbData);
     }
 }

@@ -20,5 +20,5 @@
 package se.inera.intyg.intygsadmin.persistence.enums;
 
 public enum Application {
-    WEBCERT, REHABSTOD, STATISTIK
+    WEBCERT, REHABSTOD, INTYGSSTATISTIK
 }

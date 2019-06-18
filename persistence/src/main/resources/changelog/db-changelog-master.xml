@@ -48,4 +48,40 @@
 
   </changeSet>
 
+  <changeSet id="3" author="martin hesslund">
+
+    <update tableName="banner">
+      <column name="priority" value='1'/>
+      <where>priority='LOW'</where>
+    </update>
+    <update tableName="banner">
+      <column name="priority" value='2'/>
+      <where>priority='MEDIUM'</where>
+    </update>
+    <update tableName="banner">
+      <column name="priority" value='3'/>
+      <where>priority='HIGH'</where>
+    </update>
+
+    <update tableName="banner">
+      <column name="application" value='INTYGSSTATISTIK'/>
+      <where>application='STATISTIK'</where>
+    </update>
+
+    <createIndex
+        indexName="banner_application"
+        tableName="banner"
+        unique="false">
+      <column name="application" />
+    </createIndex>
+
+    <createIndex
+        indexName="banner_created_at"
+        tableName="banner"
+        unique="false">
+      <column name="created_at" />
+    </createIndex>
+
+  </changeSet>
+
 </databaseChangeLog>
