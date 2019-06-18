@@ -52,7 +52,7 @@ import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 @Transactional
 public class TestDataBootstrapper {
 
-    public static final int DAY_SPAN = 30;
+    public static final int DAY_SPAN = 10;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private BannerRepository bannerRepository;
@@ -148,7 +148,7 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizePastDate(LocalDateTime fromDate) {
-        return fromDate.minusDays(new Random().nextInt(DAY_SPAN + 1));
+        return fromDate.minusDays(new Random().nextInt(DAY_SPAN + 1) + 1);
     }
 
     private LocalDateTime randomizeFutureDate() {
@@ -156,6 +156,6 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizeFutureDate(LocalDateTime fromDate) {
-        return fromDate.plusDays(new Random().nextInt(DAY_SPAN + 1));
+        return fromDate.plusDays(new Random().nextInt(DAY_SPAN + 1) + 1);
     }
 }

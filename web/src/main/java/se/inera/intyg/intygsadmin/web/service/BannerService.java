@@ -69,6 +69,11 @@ public class BannerService {
     }
 
     public BannerDTO createBanner(BannerDTO bannerDTO) {
+        // A new banner can't be active before now
+        if (bannerDTO.getDisplayFrom() != null && LocalDateTime.now().isAfter(bannerDTO.getDisplayFrom())) {
+            bannerDTO.setDisplayFrom(LocalDateTime.now());
+        }
+
         bannerValidationService.validateBanner(bannerDTO);
 
         BannerEntity map = bannerMapper.toEntity(bannerDTO);
