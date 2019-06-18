@@ -47,6 +47,7 @@ import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -214,18 +215,46 @@ public class BannerServiceTest {
 
     @Test
     public void testCreateBanner() {
+        String message = "new message";
+        LocalDateTime from = LocalDateTime.now().plusDays(2);
+        LocalDateTime to = LocalDateTime.now().plusDays(10);
+
         BannerDTO bannerDTO = new BannerDTO();
-        bannerDTO.setId(UUID.randomUUID());
-        bannerDTO.setMessage("new message");
-        bannerDTO.setDisplayFrom(LocalDateTime.now().minusDays(10));
-        bannerDTO.setDisplayTo(LocalDateTime.now().plusDays(10));
+        bannerDTO.setMessage(message);
+        bannerDTO.setDisplayFrom(from);
+        bannerDTO.setDisplayTo(to);
 
         when(bannerPersistenceService.create(any())).then(returnsFirstArg());
 
         BannerDTO created = bannerService.createBanner(bannerDTO);
 
         assertNotNull(created);
-        assertEquals("new message", created.getMessage());
+        assertEquals(message, created.getMessage());
+        assertEquals(from, created.getDisplayFrom());
+        assertEquals(to, created.getDisplayTo());
+        verify(bannerPersistenceService, times(1)).create(any());
+        verify(bannerValidationService, times(1)).validateBanner(any());
+    }
+
+    @Test
+    public void testCreateBanner_updateDateFrom() {
+        String message = "new message";
+        LocalDateTime from = LocalDateTime.now().minusDays(10);
+        LocalDateTime to = LocalDateTime.now().plusDays(10);
+
+        BannerDTO bannerDTO = new BannerDTO();
+        bannerDTO.setMessage(message);
+        bannerDTO.setDisplayFrom(from);
+        bannerDTO.setDisplayTo(to);
+
+        when(bannerPersistenceService.create(any())).then(returnsFirstArg());
+
+        BannerDTO created = bannerService.createBanner(bannerDTO);
+
+        assertNotNull(created);
+        assertEquals(message, created.getMessage());
+        assertNotEquals(from, created.getDisplayFrom());
+        assertEquals(to, created.getDisplayTo());
         verify(bannerPersistenceService, times(1)).create(any());
         verify(bannerValidationService, times(1)).validateBanner(any());
     }
