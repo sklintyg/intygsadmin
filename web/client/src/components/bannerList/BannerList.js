@@ -21,6 +21,10 @@ const Wrapper = styled.div`
   }
 `
 
+const MessageColumn = styled.td`
+  word-break: break-all;
+`
+
 const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner, fetchFutureBanners }) => {
   if (errorMessage) {
     return (
@@ -164,7 +168,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                   {new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
                 </td>
                 <td>{prioText[banner.priority]}</td>
-                <td className='banner-message' dangerouslySetInnerHTML={{ __html: banner.message }} />
+                <MessageColumn className='banner-message show-external-link' dangerouslySetInnerHTML={{ __html: banner.message }} />
                 <td><StatusText status={banner.status} /></td>
                 <td>
                   <Button

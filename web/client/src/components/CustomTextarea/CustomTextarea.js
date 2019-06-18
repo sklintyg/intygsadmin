@@ -94,7 +94,7 @@ const ActionBar = styled.div`
   }
 `
 
-const CustomTextarea = ({ onChange, value, limit, inputId }) => {
+const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
   const [linkText, setLinkText] = useState('')
@@ -237,6 +237,7 @@ const CustomTextarea = ({ onChange, value, limit, inputId }) => {
         </Button>
       </ActionBar>
       <CustomDiv
+        className={className}
         ref={textArea}
         id={inputId}
         contentEditable="true"

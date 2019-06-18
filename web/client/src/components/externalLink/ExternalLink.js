@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import colors from '../styles/iaColors'
 import styled from 'styled-components'
 import { ExternalIcon } from '../styles/iaSvgIcons'
@@ -18,11 +18,11 @@ const Link = styled.a`
   }
 `
 
-export default ({ href, children }) => (
-  <Fragment>
-    <Link href={href} rel="noopener noreferrer" target="_blank">
-      {children}
-      <ExternalIcon color={colors.IA_COLOR_02} />
-    </Link>
-  </Fragment>
+const ExternalLink = ({ href, children }) => (
+  <Link href={href} rel="noopener noreferrer" target="_blank">
+    {children}
+    <ExternalIcon color={colors.IA_COLOR_02} />
+  </Link>
 )
+
+export default ExternalLink
