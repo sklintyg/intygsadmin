@@ -4,3 +4,8 @@ server:
 management:
   server:
     port: 8681
+
+spring:
+  h2:
+    console:
+      enabled: true

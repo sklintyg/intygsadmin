@@ -182,7 +182,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
             selected={newBanner.application}
           />
           <h5>Skriv meddelandetext</h5>
-          <CustomTextarea inputId='bannerMessage' onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
+          <CustomTextarea inputId='bannerMessage' className='show-external-link' onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
           <h5>Ange visningsperiod</h5>
           <FlexDiv>
             <span>Från</span>
