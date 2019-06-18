@@ -68,6 +68,20 @@
       <where>application='STATISTIK'</where>
     </update>
 
+    <createIndex
+        indexName="banner_application"
+        tableName="banner"
+        unique="false">
+      <column name="application" />
+    </createIndex>
+
+    <createIndex
+        indexName="banner_created_at"
+        tableName="banner"
+        unique="false">
+      <column name="created_at" />
+    </createIndex>
+
   </changeSet>
 
 </databaseChangeLog>
