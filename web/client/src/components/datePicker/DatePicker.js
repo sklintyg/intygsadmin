@@ -1,10 +1,9 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react'
-import ReactDatePicker from 'react-datepicker'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { Calendar } from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
-import sv from 'date-fns/locale/sv'
+import DatePickerPopup from "./DatePickerPopup";
 
 const StyledButton = styled(Button)`
   margin-left: 0px !important
@@ -26,16 +25,6 @@ const Container = styled.div`
     > span button:focus {
       border-color: ${colors.IA_COLOR_16};
     }
-  }
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  button {
-    flex: 0 0 70px;
-    margin-right: 12px;
-    margin-bottom: 12px;
   }
 `
 
@@ -69,10 +58,21 @@ const DatePicker = ({ date, onChange, className, inputId }) => {
   const [hasLostFocus, setHasLostFocus] = useState(false)
 
   const change = (event) => {
-    setInternalValue(event.target.value)
-    if (hasLostFocus){
-      onChange(event.target.value)
+    const value = event.target.value
+
+    if (!value) {
+      setHasLostFocus(false);
     }
+
+    setInternalValue(value)
+    if (hasLostFocus){
+      onChange(value)
+    }
+  }
+
+  const onChangeDatePicker = (value) => {
+    setHasLostFocus(true)
+    onChange(value)
   }
 
   const onClick = () => {
@@ -107,7 +107,9 @@ const DatePicker = ({ date, onChange, className, inputId }) => {
   }, [datePickerPopupOpen])
 
   const handleBlur = (event) => {
-    setHasLostFocus(true)
+    if (event.target.value) {
+      setHasLostFocus(true)
+    }
     onChange(event.target.value)
   }
 
@@ -122,60 +124,9 @@ const DatePicker = ({ date, onChange, className, inputId }) => {
         </span>
       </Container>
       <PopUp ref={popupRef} className={datePickerPopupOpen ? 'open' : 'closed'}>
-        <DatePickerPopup onChange={onChange} date={internalValue} open={datePickerPopupOpen} onSelect={onClick} />
+        <DatePickerPopup onChange={onChangeDatePicker} date={internalValue} open={datePickerPopupOpen} onSelect={onClick} />
       </PopUp>
     </DatePickerContainer>
-  )
-}
-
-const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
-  const [internalDate, setInternalDate] = useState(undefined)
-
-  useEffect(() => {
-    if (date && open && (date.match(/(\d{4}-(\d{2})-(\d{2}))/) && date.length === 10)) {
-      let newDate = new Date(date)
-      setInternalDate(newDate)
-    } else {
-      setInternalDate(new Date())
-    }
-  }, [date, open])
-
-  const clear = () => {
-    onSelect()
-    onChange('')
-    setInternalDate(undefined)
-  }
-
-  const handleSelect = (value) => {
-    // .replace(/[^ -~]/g, '') är en fix för att IE 11 lägger till extra tecken (LTR, RTL)
-    onChange(value.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''))
-    onSelect()
-  }
-
-  const handleOk = () => {
-    onChange(internalDate.toLocaleDateString('sv-SE').replace(/[^ -~]/g, ''))
-    onSelect()
-  }
-
-  return (
-    <Fragment>
-      <ReactDatePicker
-        selected={internalDate}
-        dateFormat={'yyyy-MM-dd'}
-        locale={sv}
-        showWeekNumbers
-        inline
-        onSelect={handleSelect}
-      />
-      <ButtonContainer>
-        <Button color={'default'} onClick={clear}>
-          Rensa
-        </Button>
-        <Button color={'success'} onClick={handleOk}>
-          OK
-        </Button>
-      </ButtonContainer>
-    </Fragment>
   )
 }
 
