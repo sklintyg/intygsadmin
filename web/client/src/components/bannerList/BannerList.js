@@ -10,6 +10,7 @@ import * as modalActions from '../../store/actions/modal'
 import * as actions from '../../store/actions/banner'
 import IaAlert, { alertType } from '../alert/Alert'
 import StatusText from "./StatusText";
+import AppConstants from "../../AppConstants";
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -82,18 +83,6 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
     })
   }
 
-  const prioText = {
-    LOW: 'Låg',
-    MEDIUM: 'Medel',
-    HIGH: 'Hög',
-  }
-
-  const serviceText = {
-    INTYGSSTATISTIK: 'Intygsstatistik',
-    WEBCERT: 'Webcert',
-    REHABSTOD: 'Rehabstöd',
-  }
-
   const dateShowPeriodOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
 
   return (
@@ -161,13 +150,13 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
             bannerList.content.map((banner) => (
               <tr key={banner.id}>
                 <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
-                <td>{serviceText[banner.application]}</td>
+                <td>{AppConstants.service[banner.application]}</td>
                 <td>
                   {new Date(banner.displayFrom).toLocaleString('sv-SE', dateShowPeriodOptions)}
                   <br />
                   {new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
                 </td>
-                <td>{prioText[banner.priority]}</td>
+                <td>{AppConstants.prio[banner.priority]}</td>
                 <MessageColumn className='banner-message show-external-link' dangerouslySetInnerHTML={{ __html: banner.message }} />
                 <td><StatusText status={banner.status} /></td>
                 <td>

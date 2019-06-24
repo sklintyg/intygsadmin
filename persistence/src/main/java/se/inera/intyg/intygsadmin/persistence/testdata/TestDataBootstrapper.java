@@ -120,21 +120,21 @@ public class TestDataBootstrapper {
         BannerEntity currentEntity = new BannerEntity();
         currentEntity.setMessage("Current test message " + application);
         currentEntity.setApplication(application);
-        currentEntity.setPriority(BannerPriority.HIGH);
+        currentEntity.setPriority(BannerPriority.HOG);
         currentEntity.setDisplayFrom(randomizePastDate());
         currentEntity.setDisplayTo(randomizeFutureDate());
 
         BannerEntity futureEntity = new BannerEntity();
         futureEntity.setMessage("Future test message " + application);
         futureEntity.setApplication(application);
-        futureEntity.setPriority(BannerPriority.MEDIUM);
+        futureEntity.setPriority(BannerPriority.MEDEL);
         futureEntity.setDisplayFrom(randomizeFutureDate(currentEntity.getDisplayTo()));
         futureEntity.setDisplayTo(randomizeFutureDate(futureEntity.getDisplayFrom()));
 
         BannerEntity prevEntity = new BannerEntity();
         prevEntity.setMessage("Past test message " + application);
         prevEntity.setApplication(application);
-        prevEntity.setPriority(BannerPriority.LOW);
+        prevEntity.setPriority(BannerPriority.LAG);
         prevEntity.setDisplayTo(randomizePastDate(currentEntity.getDisplayFrom()));
         prevEntity.setDisplayFrom(randomizePastDate(prevEntity.getDisplayTo()));
 

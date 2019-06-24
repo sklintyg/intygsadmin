@@ -199,7 +199,7 @@ public class BannerValidationServiceTest {
         BannerDTO bannerDTO = new BannerDTO();
         bannerDTO.setMessage("Hej");
         bannerDTO.setApplication(Application.WEBCERT);
-        bannerDTO.setPriority(BannerPriority.HIGH);
+        bannerDTO.setPriority(BannerPriority.HOG);
         bannerDTO.setDisplayFrom(LocalDateTime.now().plusMinutes(1));
         bannerDTO.setDisplayTo(LocalDateTime.now().plusDays(1));
 

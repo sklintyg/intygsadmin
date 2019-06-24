@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
 @ContextConfiguration
 class LoggingSessionRegistryImplTest {
 
-    private static final IntygsadminUser IAU = new IntygsadminUser(new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.ADMIN),
+    private static final IntygsadminUser IAU = new IntygsadminUser(new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.FULL),
             AuthenticationMethod.FAKE, null, "karl Nilsson");
 
     @Mock

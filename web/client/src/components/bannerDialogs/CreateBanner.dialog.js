@@ -17,6 +17,7 @@ import colors from '../styles/iaColors'
 import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
 import IaAlert, { alertType } from '../alert/Alert'
 import { getFutureBanners } from '../../store/reducers/banner'
+import AppConstants from "../../AppConstants";
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -52,17 +53,21 @@ const initialBanner = {
   priority: undefined,
 }
 
-const tjanstButtons = [
-  { id: 'tjanstIntygsstatistik', label: 'Intygsstatistik', value: 'INTYGSSTATISTIK' },
-  { id: 'tjanstRehabstod', label: 'Rehabstöd', value: 'REHABSTOD' },
-  { id: 'tjanstWebcert', label: 'Webcert', value: 'WEBCERT' },
-]
+const tjanstButtons = Object.entries(AppConstants.service).map(([key, value]) => {
+  return {
+    id: `tjanst${key}`,
+    label: value,
+    value: key
+  }
+})
 
-const prioButtons = [
-  { id: 'prioLOW', label: 'Låg', value: 'LOW' },
-  { id: 'prioMEDIUM', label: 'Medel', value: 'MEDIUM' },
-  { id: 'prioHIGH', label: 'Hög', value: 'HIGH' }
-]
+const prioButtons = Object.entries(AppConstants.prio).map(([key, value]) => {
+  return {
+    id: `prio${key}`,
+    label: value,
+    value: key
+  }
+})
 
 const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data, fetchFutureBanners, futureBanners }) => {
   const [validationMessages, setValidationMessages] = useState({})

@@ -26,13 +26,13 @@ context("Banners", () => {
     cy.get("#addBannerBtn").click();
     cy.get('#saveBanner').should('be.disabled')
 
-    cy.get('#tjanstRehabstod').click();
+    cy.get('#tjanstREHABSTOD').click();
     cy.get('#bannerMessage').type('test message');
     cy.get('#displayFromDate').type(fromDate);
     cy.get('#displayFromTime').type('10:00');
     cy.get('#displayToDate').type(toDate);
     cy.get('#displayToTime').type('23:00');
-    cy.get('#prioHIGH').click();
+    cy.get('#prioHOG').click();
 
     cy.get('#saveBanner').click();
 
@@ -51,7 +51,7 @@ context("Banners", () => {
 
     cy.get('#saveBanner').should('be.disabled')
 
-    cy.get('#prioLOW').click();
+    cy.get('#prioLAG').click();
 
     cy.get('#saveBanner').click();
 

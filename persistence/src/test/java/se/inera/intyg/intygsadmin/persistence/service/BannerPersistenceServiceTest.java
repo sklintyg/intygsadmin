@@ -86,7 +86,7 @@ public class BannerPersistenceServiceTest extends TestSupport {
         BannerEntity entity = new BannerEntity();
         entity.setMessage("Test message");
         entity.setApplication(Application.WEBCERT);
-        entity.setPriority(BannerPriority.HIGH);
+        entity.setPriority(BannerPriority.HOG);
         entity.setDisplayFrom(localDateTime.minusDays(30));
         entity.setDisplayTo(localDateTime.minusDays(10));
 
@@ -95,7 +95,7 @@ public class BannerPersistenceServiceTest extends TestSupport {
         BannerEntity currentEntity = new BannerEntity();
         currentEntity.setMessage("Test message");
         currentEntity.setApplication(Application.WEBCERT);
-        currentEntity.setPriority(BannerPriority.HIGH);
+        currentEntity.setPriority(BannerPriority.HOG);
         currentEntity.setDisplayFrom(localDateTime);
         currentEntity.setDisplayTo(localDateTime.plusDays(30));
 
@@ -111,7 +111,7 @@ public class BannerPersistenceServiceTest extends TestSupport {
         BannerEntity entity = new BannerEntity();
         entity.setMessage("Test message");
         entity.setApplication(Application.WEBCERT);
-        entity.setPriority(BannerPriority.HIGH);
+        entity.setPriority(BannerPriority.HOG);
         entity.setDisplayFrom(LocalDateTime.MIN);
         entity.setDisplayTo(LocalDateTime.MAX);
 

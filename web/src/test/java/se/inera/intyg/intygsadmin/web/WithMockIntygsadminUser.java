@@ -30,7 +30,7 @@ public @interface WithMockIntygsadminUser {
 
     String employeeHsaId() default "HSA1";
 
-    String intygsadminRole() default "ADMIN";
+    String intygsadminRole() default "FULL";
 
     String name() default "Karl Nilsson";
 

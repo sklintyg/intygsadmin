@@ -80,8 +80,8 @@ public class UserServiceTest {
     @Test
     public void testGetUsers() {
 
-        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BASIC);
-        UserEntity ue2 = new UserEntity(UUID.randomUUID(), "HSA2", IntygsadminRole.ADMIN);
+        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BAS);
+        UserEntity ue2 = new UserEntity(UUID.randomUUID(), "HSA2", IntygsadminRole.FULL);
         List<UserEntity> userEntities = List.of(ue1, ue2);
 
         when(userPersistenceService.findAll()).thenReturn(userEntities);
@@ -96,7 +96,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUser_found() {
-        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BASIC);
+        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BAS);
 
         when(userPersistenceService.findByEmployeeHsaId(any(String.class))).thenReturn(Optional.of(ue1));
 
@@ -112,7 +112,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUser_notFound() {
-        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BASIC);
+        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BAS);
 
         when(userPersistenceService.findByEmployeeHsaId(any(String.class))).thenReturn(Optional.empty());
 
@@ -132,7 +132,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpsertUser() {
-        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BASIC);
+        UserEntity ue1 = new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.BAS);
 
         when(userPersistenceService.upsert(any(UserEntity.class))).thenReturn(ue1);
 
