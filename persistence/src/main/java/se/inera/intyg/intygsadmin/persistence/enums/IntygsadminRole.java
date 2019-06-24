@@ -19,7 +19,8 @@
 
 package se.inera.intyg.intygsadmin.persistence.enums;
 
+// KV Behörighetsnivå
 public enum IntygsadminRole {
-    BASIC,
-    ADMIN
+    BAS,
+    FULL
 }

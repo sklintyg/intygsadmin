@@ -90,7 +90,7 @@ public class UserPersistenceServiceTest extends TestSupport {
         List<UserEntity> list = userPersistenceService.findAll();
         assertEquals(0, list.size());
 
-        UserEntity newUser = new UserEntity(null, "TEST-HSA-1", IntygsadminRole.ADMIN);
+        UserEntity newUser = new UserEntity(null, "TEST-HSA-1", IntygsadminRole.FULL);
         userPersistenceService.upsert(newUser);
 
         list = userPersistenceService.findAll();
@@ -101,7 +101,7 @@ public class UserPersistenceServiceTest extends TestSupport {
         assertEquals(newUser.getIntygsadminRole(), newUserEntity.getIntygsadminRole());
         assertNotNull(newUserEntity.getId());
 
-        newUserEntity.setIntygsadminRole(IntygsadminRole.BASIC);
+        newUserEntity.setIntygsadminRole(IntygsadminRole.BAS);
         userPersistenceService.upsert(newUserEntity);
 
         list = userPersistenceService.findAll();

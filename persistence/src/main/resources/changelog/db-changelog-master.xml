@@ -84,4 +84,17 @@
 
   </changeSet>
 
+  <changeSet id="4" author="martin hesslund">
+
+    <update tableName="user">
+      <column name="intygsadmin_role" value='BAS'/>
+      <where>intygsadmin_role='BASIC'</where>
+    </update>
+    <update tableName="user">
+      <column name="intygsadmin_role" value='FULL'/>
+      <where>intygsadmin_role='ADMIN'</where>
+    </update>
+
+  </changeSet>
+
 </databaseChangeLog>

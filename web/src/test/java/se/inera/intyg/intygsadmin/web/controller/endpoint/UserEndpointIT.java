@@ -19,8 +19,9 @@
 
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
+
+import io.restassured.http.ContentType;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
 
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class UserEndpointIT extends BaseRestIntegrationTest {
 
     private static final String USER_ACTUATOR_ENDPOINT = "/actuator/user";
-    private final UserEntityDTO user = new UserEntityDTO(null, "TEST-HSA-1", "ADMIN");
+    private final UserEntityDTO user = new UserEntityDTO(null, "TEST-HSA-1", "FULL");
 
     public UserEndpointIT() {
         baseUrl = System.getProperty("integration.tests.actuatorUrl", "http://localhost:8681");
@@ -91,7 +92,7 @@ public class UserEndpointIT extends BaseRestIntegrationTest {
                 .then()
                 .body("intygsadminRole", equalTo(user.getIntygsadminRole()));
 
-        user.setIntygsadminRole("BASIC");
+        user.setIntygsadminRole("BAS");
         with().body(user).contentType(ContentType.JSON).post(USER_ACTUATOR_ENDPOINT);
 
         given().expect().statusCode(OK)
