@@ -8,7 +8,7 @@ const bannerDb = [
     displayFrom: '2019-04-01',
     displayTo: '2019-04-02',
     message: 'Yoohoo',
-    priority: 'LOW',
+    priority: 'LAG',
     status: 'ACTIVE',  // FUTURE, ACTIVE, FINISHED
   },
 ]

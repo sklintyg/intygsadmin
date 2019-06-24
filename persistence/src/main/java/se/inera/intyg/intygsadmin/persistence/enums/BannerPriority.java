@@ -20,7 +20,7 @@
 package se.inera.intyg.intygsadmin.persistence.enums;
 
 public enum BannerPriority {
-    LOW("1"), MEDIUM("2"), HIGH("3");
+    LAG("1"), MEDEL("2"), HOG("3");
 
     private String dbValue;
 
