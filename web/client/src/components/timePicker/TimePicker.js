@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
-import { TimeIcon, CollapseIcon, ExpandIcon } from '../styles/iaSvgIcons'
+import { TimeIcon } from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
+import TimePickerPopup from "./TimePickerPopup";
 
 const StyledButton = styled(Button)`
   margin-left: 0px !important
@@ -46,22 +47,6 @@ const Popup = styled.div`
   }
 `
 
-const TimeDiv = styled.div`
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  span {
-    flex: 0 1 20px;
-    &.col {
-      flex: 0 1 10px;
-    }
-  }
-`
-
-const ArrowDiv = styled.div`
-  text-align: center;
-`
-
 const TimePicker = ({ value, onChange, className, inputId }) => {
   const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
@@ -95,6 +80,11 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
 
   const inputOnChange = (event) => {
     let inputValue = event.target.value
+
+    if (!inputValue) {
+      setHasLostFocus(false);
+    }
+
     setInternalValue(inputValue)
     if (hasLostFocus) {
       onChange(inputValue)
@@ -141,32 +131,10 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
     }
   }, [popupOpen, onChange, internalValue])
 
-  const hoursUp = () => {
-    let newHours = parseInt(hours) + 1
-    if (newHours === 24) newHours = 0
-    setHours(newHours < 10 ? '0' + newHours : newHours)
-  }
-
-  const minutesUp = () => {
-    let newMinutes = parseInt(minutes) + 10
-    if (newMinutes > 59) newMinutes -= 60
-    setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
-  }
-
-  const hoursDown = () => {
-    let newHours = parseInt(hours) - 1
-    if (newHours === -1) newHours = 23
-    setHours(newHours < 10 ? '0' + newHours : newHours)
-  }
-
-  const minutesDown = () => {
-    let newMinutes = parseInt(minutes) - 10
-    if (newMinutes < 0) newMinutes += 60
-    setMinutes(newMinutes < 10 ? '0' + newMinutes : newMinutes)
-  }
-
   const handleBlur = (event) => {
-    setHasLostFocus(true)
+    if (event.target.value) {
+      setHasLostFocus(true)
+    }
     onChange(event.target.value)
   }
 
@@ -179,27 +147,7 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
         </StyledButton>
       </span>
       <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
-        <ArrowDiv>
-          <Button color={'Link'} onClick={hoursUp}>
-            <ExpandIcon />
-          </Button>{' '}
-          <Button color={'Link'} onClick={minutesUp}>
-            <ExpandIcon />
-          </Button>
-        </ArrowDiv>
-        <TimeDiv>
-          <span>{hours}</span>
-          <span className={'col'}>:</span>
-          <span>{minutes}</span>
-        </TimeDiv>
-        <ArrowDiv>
-          <Button color={'Link'} onClick={hoursDown}>
-            <CollapseIcon />
-          </Button>{' '}
-          <Button color={'Link'} onClick={minutesDown}>
-            <CollapseIcon />
-          </Button>
-        </ArrowDiv>
+        <TimePickerPopup />
       </Popup>
     </Container>
   )
