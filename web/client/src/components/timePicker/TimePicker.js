@@ -51,8 +51,6 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
   const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
   const buttonHolderRef = useRef()
-  const [hours, setHours] = useState(undefined)
-  const [minutes, setMinutes] = useState(undefined)
   const [popupOpen, setPopupOpen] = useState(false)
   const [hasLostFocus, setHasLostFocus] = useState(false)
 
@@ -61,22 +59,6 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
       setInternalValue(value)
     }
   }, [value])
-
-  const parseTimeFromValue = () => {
-    if (internalValue.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
-      setHours(internalValue.split(':')[0])
-      setMinutes(internalValue.split(':')[1])
-    } else {
-      setHours('00')
-      setMinutes('00')
-    }
-  }
-
-  useEffect(() => {
-    if (hours && minutes) {
-      setInternalValue(hours + ':' + minutes)
-    }
-  }, [hours, minutes])
 
   const inputOnChange = (event) => {
     let inputValue = event.target.value
@@ -101,7 +83,6 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
 
   const openTimePopup = () => {
     setPopupOpen(true)
-    parseTimeFromValue()
   }
 
   const closeTimePopup = () => {
@@ -147,7 +128,7 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
         </StyledButton>
       </span>
       <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
-        <TimePickerPopup />
+        <TimePickerPopup open={popupOpen} value={internalValue} onChange={setInternalValue} />
       </Popup>
     </Container>
   )
