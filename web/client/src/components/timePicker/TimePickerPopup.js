@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { CollapseIcon, ExpandIcon } from '../styles/iaSvgIcons'
@@ -19,48 +19,27 @@ const ArrowDiv = styled.div`
   text-align: center;
 `
 
-const TimePickerPopup = ({ value, onChange }) => {
-  const [internalValue, setInternalValue] = useState('')
-  const popup = useRef()
-  const buttonHolderRef = useRef()
+const TimePickerPopup = ({ value, open, onChange }) => {
   const [hours, setHours] = useState(undefined)
   const [minutes, setMinutes] = useState(undefined)
-  const [popupOpen, setPopupOpen] = useState(false)
-
-  useEffect(() => {
-    if (value) {
-      setInternalValue(value)
-    }
-  }, [value])
 
   useEffect(() => {
     if (hours && minutes) {
-      setInternalValue(hours + ':' + minutes)
+      onChange(hours + ':' + minutes)
     }
-  }, [hours, minutes])
-
+  }, [hours, minutes, onChange])
 
   useEffect(() => {
-    const listener = (event) => {
-      if (
-        !popup.current ||
-        popup.current.contains(event.target) ||
-        !buttonHolderRef.current ||
-        buttonHolderRef.current.contains(event.target)
-      ) {
-        return
+    if (open) {
+      if (value.match('^([0-1][0-9]|2[0-3]):([0-5][0-9])$')) {
+        setHours(value.split(':')[0])
+        setMinutes(value.split(':')[1])
+      } else {
+        setHours('00')
+        setMinutes('00')
       }
-      setPopupOpen(false)
-      onChange(internalValue)
     }
-    if (popupOpen) {
-      document.addEventListener('mousedown', listener)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', listener)
-    }
-  }, [popupOpen, onChange, internalValue])
+  }, [value, open])
 
   const hoursUp = () => {
     let newHours = parseInt(hours) + 1
