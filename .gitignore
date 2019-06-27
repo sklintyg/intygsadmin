@@ -2,6 +2,7 @@ HELP.md
 .gradle
 /build/
 */build/
+tools/*/build/
 /buildSrc/build/
 !gradle/wrapper/gradle-wrapper.jar
 */out/
