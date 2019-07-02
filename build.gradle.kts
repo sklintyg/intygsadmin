@@ -19,6 +19,7 @@ allprojects {
   group = "se.inera.intyg.intygsadmin"
   version = System.getProperty("buildVersion", "0-SNAPSHOT")
 
+  apply(plugin = "maven-publish")
   extra.apply {
     set("errorproneExclude", "true") //FIXME: Errorprone does not support Kotlin and KAPT. Until it does this will exclude the errorprone task for this project
   }
@@ -39,6 +40,18 @@ allprojects {
     }
 
     mavenCentral()
+  }
+
+  publishing {
+    repositories {
+      maven {
+        url = uri("https://build-inera.nordicmedtest.se/nexus/repository/releases/")
+        credentials {
+          username = System.getProperty("nexusUsername")
+          password = System.getProperty("nexusPassword")
+        }
+      }
+    }
   }
 }
 
@@ -103,18 +116,6 @@ subprojects {
 
 tasks {
   register<TagReleaseTask>("tagRelease")
-}
-
-publishing {
-  repositories {
-    maven {
-      url = uri("https://build-inera.nordicmedtest.se/nexus/repository/releases/")
-      credentials {
-        username = System.getProperty("nexusUsername")
-        password = System.getProperty("nexusPassword")
-      }
-    }
-  }
 }
 
 dependencies {
