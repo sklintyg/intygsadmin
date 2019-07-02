@@ -19,3 +19,18 @@ dependencies {
     runtime("mysql:mysql-connector-java")
     runtime("org.liquibase:liquibase-core")
 }
+
+
+val liquibaseRunnerFileZip = file("$buildDir/distributions/${rootProject.name}-liquibase-runner-${rootProject.version}.zip")
+val liquibaseRunnerZip = artifacts.add("archives", liquibaseRunnerFileZip) {
+    type = "zip"
+    builtBy("distZip")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("myLibrary") {
+            artifact(liquibaseRunnerZip)
+        }
+    }
+}
