@@ -3,10 +3,7 @@
 node {
     def buildVersion = "1.1.0.${BUILD_NUMBER}"
 
-    def java11tool = tool name: 'jdk11', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
-    def javaHome= "${java11tool}/jdk-11.0.2+9"
-
-    def versionFlags = "-Dorg.gradle.java.home=${javaHome} -DbuildVersion=${buildVersion}"
+    def versionFlags = "-DbuildVersion=${buildVersion}"
 
     stage('checkout') {
         git url: "https://github.com/sklintyg/intygsadmin.git", branch: GIT_BRANCH
@@ -15,7 +12,7 @@ node {
 
     stage('build') {
         try {
-            shgradle "--refresh-dependencies clean build -P client -P codeQuality testReport jacocoTestReport ${versionFlags}"
+            shgradle11 "--refresh-dependencies clean build -P client -P codeQuality testReport jacocoTestReport ${versionFlags}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
                     reportFiles: 'index.html', reportName: 'JUnit results'
@@ -23,7 +20,7 @@ node {
     }
 
     stage('tag and upload') {
-        shgradle "publish tagRelease ${versionFlags}"
+        shgradle11 "publish tagRelease ${versionFlags}"
     }
 
     stage('propagate') {
