@@ -38,8 +38,7 @@ allprojects {
         snapshotsOnly()
       }
     }
-
-    mavenCentral()
+    jcenter()
   }
 
   publishing {
