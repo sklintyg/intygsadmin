@@ -1,5 +1,5 @@
-import { connect } from 'react-redux'
-import { compose, lifecycle } from 'recompose'
+import {connect} from 'react-redux'
+import {compose, lifecycle} from 'recompose'
 import {requestPollUpdate, startPoll, stopPoll} from '../../store/actions/sessionPoll'
 
 const SessionPollerContainer = () => {
@@ -27,7 +27,7 @@ const lifeCycleValues = {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  requestPollUpdateNow: ()  => dispatch(requestPollUpdate()),
+  requestPollUpdateNow: () => dispatch(requestPollUpdate()),
   startPolling: () => dispatch(startPoll()),
   stopPolling: () => dispatch(stopPoll()),
 })

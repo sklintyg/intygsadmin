@@ -25,7 +25,7 @@ describe('util test', () => {
 
     it('missing errorCode', () => {
       const errorResponse = {
-        error: { }
+        error: {}
       };
 
       const result = util.buildClientError(errorResponse, 'error.user');

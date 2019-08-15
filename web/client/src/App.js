@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import {Fragment} from 'react'
 import {HashRouter, Switch} from 'react-router-dom'
 import HomePage from './pages/IndexPage'
 import BannerPage from './pages/BannerPage'
@@ -19,23 +19,38 @@ import {fetchAppConfig} from './store/actions/appConfig'
 
 const App = () => {
   return (
-    <ConnectedRouter history={history}>
-      <HashRouter>
-        <Fragment>
-          <SessionPoller />
-          {process.env.NODE_ENV !== 'production' && <TestLinks />}
-          <Header />
-          <ErrorModal />
-          <Switch>
-            <UnsecuredRoute exact path="/" component={HomePage} />
-            <UnsecuredRoute path="/loggedout/:code" component={HomePage} />
-            <SecuredRoute path="/banner" component={BannerPage} />
-            <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
-          </Switch>
-        </Fragment>
-      </HashRouter>
-    </ConnectedRouter>
-  )
+    < ConnectedRouter
+  history = {history} >
+    < HashRouter >
+    < Fragment >
+    < SessionPoller / >
+    {process.env.NODE_ENV !== 'production' && < TestLinks / >}
+    < Header / >
+    < ErrorModal / >
+    < Switch >
+    < UnsecuredRoute
+  exact
+  path = "/"
+  component = {HomePage}
+  />
+  < UnsecuredRoute
+  path = "/loggedout/:code"
+  component = {HomePage}
+  />
+  < SecuredRoute
+  path = "/banner"
+  component = {BannerPage}
+  />
+  < UnsecuredRoute
+  path = "/exit/:errorCode/:logId?"
+  isErrorPage = {true}
+  component = {ErrorPage}
+  />
+  < /Switch>
+  < /Fragment>
+  < /HashRouter>
+  < /ConnectedRouter>
+)
 }
 
 const lifeCycleValues = {

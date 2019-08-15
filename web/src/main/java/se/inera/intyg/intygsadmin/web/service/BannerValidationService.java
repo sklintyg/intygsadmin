@@ -22,10 +22,8 @@ package se.inera.intyg.intygsadmin.web.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;
@@ -60,6 +58,7 @@ public class BannerValidationService {
     }
 
     private class ValidationInstance {
+
         private List<ValidationDTO> validations = new ArrayList<>();
         private BannerDTO bannerDTO;
 
@@ -69,7 +68,6 @@ public class BannerValidationService {
             checkForEmptyFields();
             validateDates();
             checkForExistingBanner();
-
 
             return validations;
         }
@@ -121,8 +119,8 @@ public class BannerValidationService {
             LocalDateTime from = bannerDTO.getDisplayFrom();
 
             long count = bannerPersistenceService.countByApplicationAndTime(
-                    bannerDTO.getApplication(), from, bannerDTO.getDisplayTo(),
-                    bannerDTO.getId());
+                bannerDTO.getApplication(), from, bannerDTO.getDisplayTo(),
+                bannerDTO.getId());
 
             if (count > 0) {
                 addValidation(FIELD_DISPLAY_TO, "Already exists");

@@ -4,7 +4,7 @@ import Header from "./Header";
 
 const mapStateToProps = (state, ownProps) => {
   return {
-   ...state.user
+    ...state.user
   }
 };
 export default compose(

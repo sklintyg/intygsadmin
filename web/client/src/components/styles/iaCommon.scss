@@ -19,9 +19,9 @@ textarea, input[type=text] {
   transition: border-color .36s ease-in-out, box-shadow .36s ease-in-out;
 
   &:focus {
-  outline: none !important;
-  border: 1px solid $ia-color-21;
-  box-shadow: 2px 2px 4px 0 $black_12;
+    outline: none !important;
+    border: 1px solid $ia-color-21;
+    box-shadow: 2px 2px 4px 0 $black_12;
   }
 
   &:disabled, fieldset[disabled] & {

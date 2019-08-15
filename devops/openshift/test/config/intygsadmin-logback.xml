@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="30 seconds">
-  <jmxConfigurator />
+  <jmxConfigurator/>
   <logger name="se.inera.intyg.intygsadmin" level="info"/>
   <root>
-    <level value="info" />
-    <appender-ref ref="STDOUT" />
-    <appender-ref ref="MONITORING" />
+    <level value="info"/>
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="MONITORING"/>
   </root>
 </configuration>

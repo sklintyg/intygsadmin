@@ -14,38 +14,38 @@ const networkError = (err) => {
 export const handleResponse = (config) => (response) => {
   if (!response.ok) {
     return response
-      .json()
-      .catch(() => {
-        if (response.status === 404) {
-          const error = {
-            statusCode: response.status,
-            error: {
-              errorCode: 'NOT_FOUND',
-              message: 'Resource not found',
-              logId: null,
-            },
-          }
-
-          throw error
-        }
-
-        // We should never get these unless response is mangled
-        // Or API is not properly implemented
+    .json()
+    .catch(() => {
+      if (response.status === 404) {
         const error = {
           statusCode: response.status,
           error: {
-            errorCode: 'UNKNOWN_INTERNAL_PROBLEM',
-            message: 'Invalid or missing JSON',
+            errorCode: 'NOT_FOUND',
+            message: 'Resource not found',
             logId: null,
           },
         }
 
         throw error
-      })
-      .then((errorJson) => {
-        const error = { statusCode: response.status, error: errorJson }
-        throw error
-      })
+      }
+
+      // We should never get these unless response is mangled
+      // Or API is not properly implemented
+      const error = {
+        statusCode: response.status,
+        error: {
+          errorCode: 'UNKNOWN_INTERNAL_PROBLEM',
+          message: 'Invalid or missing JSON',
+          logId: null,
+        },
+      }
+
+      throw error
+    })
+    .then((errorJson) => {
+      const error = {statusCode: response.status, error: errorJson}
+      throw error
+    })
   }
 
   if (config) {
@@ -82,8 +82,8 @@ const internalRequest = (path, fetchConfig, config = {}) => {
   let url = config.pathComplete ? `${path}` : `${ROOT_URL}${path}`
 
   return fetch(url, fetchConfig)
-    .catch(networkError)
-    .then(handleResponse(config))
+  .catch(networkError)
+  .then(handleResponse(config))
 }
 
 const getJsonConfig = (method, body) => ({

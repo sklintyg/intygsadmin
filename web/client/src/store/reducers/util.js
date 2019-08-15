@@ -30,10 +30,9 @@ export const buildClientError = (errorResponse, prefix) => {
     }
   }
 
-
   return {
     title: getMessage(titleKey),
     message: getMessage(messageKey),
-    logId : logId
+    logId: logId
   }
 }

@@ -1,7 +1,6 @@
-import React from 'react'
 import styled from 'styled-components'
 import IaColors from '../styles/iaColors'
-import { IaTypo05 } from '../styles/iaTypography'
+import {IaTypo05} from '../styles/iaTypography'
 
 const RadioWrapper = styled.div`
   display: inline-block;
@@ -98,19 +97,30 @@ const RadioContainer = styled.div`
   position: relative;
 `
 
-const RadioButton = ({ selected, onChange, inputId, label, value }) => {
+const RadioButton = ({selected, onChange, inputId, label, value}) => {
   return (
-    <RadioWrapper>
-      <RadioContainer>
-        <Input type="radio" name={label} id={inputId ? inputId : label} value={value} checked={selected === value} onChange={onChange} />
-        <Label as="label" htmlFor={inputId ? inputId : label}>
-          <div className="circle" />
-          {label}
-          <div className="dot" />
-        </Label>
-      </RadioContainer>
-    </RadioWrapper>
-  )
+    < RadioWrapper >
+    < RadioContainer >
+    < Input
+  type = "radio"
+  name = {label}
+  id = {inputId ? inputId : label}
+  value = {value}
+  checked = {selected === value
+}
+  onChange = {onChange}
+  />
+  < Label as = "label"
+  htmlFor = {inputId ? inputId : label} >
+    < div
+  className = "circle" / >
+    {label}
+    < div
+  className = "dot" / >
+    < /Label>
+    < /RadioContainer>
+    < /RadioWrapper>
+)
 }
 
 export default RadioButton

@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.UUID;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -40,7 +39,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-
 import se.inera.intyg.intygsadmin.web.controller.dto.ApiErrorResponse;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
@@ -62,8 +60,7 @@ public class RequestErrorController implements ErrorController {
     /**
      * Intercept errors forwarded by a spring security AuthenticationFailureHandler.
      *
-     * @param request
-     *            - request
+     * @param request - request
      * @return modelAndView - modelAndView
      */
     @RequestMapping(path = IA_SPRING_SEC_ERROR_CONTROLLER_PATH, produces = MediaType.TEXT_HTML_VALUE)
@@ -80,16 +77,15 @@ public class RequestErrorController implements ErrorController {
         String redirectView = "redirect:" + IA_CLIENT_EXIT_BOOT_PATH + apiErrorResponse.getErrorCode() + "/" + apiErrorResponse.getLogId();
 
         LOG.error(String.format("(Page) Spring Security error intercepted: %s, %s - responding with: %s",
-                errorContext, apiErrorResponse.toString(), redirectView), error);
+            errorContext, apiErrorResponse.toString(), redirectView), error);
         return new ModelAndView(redirectView);
     }
 
     /**
-     * For normal "browser navigation" initiated requests, we handle all error with a redirect to a specific
-     * startup view to present an error.
+     * For normal "browser navigation" initiated requests, we handle all error with a redirect to a specific startup view to present an
+     * error.
      *
-     * @param request
-     *            - request
+     * @param request - request
      * @return modelAndView - modelAndView
      */
     @RequestMapping(path = IA_ERROR_CONTROLLER_PATH, produces = MediaType.TEXT_HTML_VALUE)
@@ -130,7 +126,7 @@ public class RequestErrorController implements ErrorController {
             apiErrorResponse = fromHttpStatus(httpStatus);
         }
         LOG.error(String.format(
-                "(REST) Request error intercepted: %s - responding with: %s", errorContext, apiErrorResponse.toString()), error);
+            "(REST) Request error intercepted: %s - responding with: %s", errorContext, apiErrorResponse.toString()), error);
         return new ResponseEntity<>(apiErrorResponse, httpStatus);
     }
 
@@ -161,16 +157,16 @@ public class RequestErrorController implements ErrorController {
 
             if (error instanceof IaAuthenticationException) {
                 return new ApiErrorResponse(
-                        ((IaAuthenticationException) error).getErrorCode().name(),
-                        error.getMessage(),
-                        ((IaAuthenticationException) error).getLogId());
+                    ((IaAuthenticationException) error).getErrorCode().name(),
+                    error.getMessage(),
+                    ((IaAuthenticationException) error).getLogId());
             } else {
                 return new ApiErrorResponse(
-                        IaErrorCode.LOGIN_FEL001.name(), error.getMessage(), UUID.randomUUID().toString());
+                    IaErrorCode.LOGIN_FEL001.name(), error.getMessage(), UUID.randomUUID().toString());
             }
         } else {
             return new ApiErrorResponse(
-                    IaErrorCode.INTERNAL_ERROR.name(), error.getMessage(), UUID.randomUUID().toString());
+                IaErrorCode.INTERNAL_ERROR.name(), error.getMessage(), UUID.randomUUID().toString());
         }
     }
 

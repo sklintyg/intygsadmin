@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import ReactDatePicker from 'react-datepicker'
 import styled from 'styled-components'
-import { Button } from 'reactstrap'
+import {Button} from 'reactstrap'
 import sv from 'date-fns/locale/sv'
 
 const ButtonContainer = styled.div`
@@ -14,7 +14,7 @@ const ButtonContainer = styled.div`
   }
 `
 
-const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
+const DatePickerPopup = ({onChange, date, open, onSelect}) => {
   const [internalDate, setInternalDate] = useState(undefined)
 
   useEffect(() => {
@@ -44,25 +44,29 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
   }
 
   return (
-    <>
-      <ReactDatePicker
-        selected={internalDate}
-        dateFormat={'yyyy-MM-dd'}
-        locale={sv}
-        showWeekNumbers
-        inline
-        onSelect={handleSelect}
-      />
-      <ButtonContainer>
-        <Button color={'default'} onClick={clear}>
-          Rensa
-        </Button>
-        <Button color={'success'} onClick={handleOk}>
-          OK
-        </Button>
-      </ButtonContainer>
-    </>
-  )
+    < >
+    < ReactDatePicker
+  selected = {internalDate}
+  dateFormat = {'yyyy-MM-dd'}
+  locale = {sv}
+  showWeekNumbers
+  inline
+  onSelect = {handleSelect}
+  />
+  < ButtonContainer >
+  < Button
+  color = {'default'}
+  onClick = {clear} >
+    Rensa
+    < /Button>
+    < Button
+  color = {'success'}
+  onClick = {handleOk} >
+    OK
+    < /Button>
+    < /ButtonContainer>
+    < />
+)
 }
 
 export default DatePickerPopup

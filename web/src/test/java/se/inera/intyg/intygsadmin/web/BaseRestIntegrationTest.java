@@ -19,21 +19,20 @@
 
 package se.inera.intyg.intygsadmin.web;
 
+import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_ENDPOINT;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import javax.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.http.HttpStatus;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;
-
-import javax.servlet.http.HttpServletResponse;
-
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_ENDPOINT;
 
 public abstract class BaseRestIntegrationTest {
 
@@ -48,13 +47,13 @@ public abstract class BaseRestIntegrationTest {
     protected String baseUrl = System.getProperty("integration.tests.baseUrl", "http://localhost:8680");
 
     protected static final FakeUser ADMIN_USER = new FakeUser(
-            "TSTNMT2321000156-10KK",
-            "FULL",
-            "Karl Nilsson");
+        "TSTNMT2321000156-10KK",
+        "FULL",
+        "Karl Nilsson");
     protected static final FakeUser BASIC_USER = new FakeUser(
-            "TSTNMT2321000156-10KL",
-            "BASIC",
-            "Lena Svensson");
+        "TSTNMT2321000156-10KL",
+        "BASIC",
+        "Lena Svensson");
 
     /**
      * Common setup for all tests.
@@ -78,9 +77,9 @@ public abstract class BaseRestIntegrationTest {
 
     private String getAuthSession(String credentialsJson) {
         Response response = given().contentType(ContentType.URLENC).and().redirects().follow(false).and()
-                .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
-                .statusCode(HttpServletResponse.SC_FOUND).when()
-                .post(FAKE_LOGIN_ENDPOINT).then().extract().response();
+            .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
+            .statusCode(HttpServletResponse.SC_FOUND).when()
+            .post(FAKE_LOGIN_ENDPOINT).then().extract().response();
         assertNotNull(response.sessionId());
         return response.sessionId();
     }

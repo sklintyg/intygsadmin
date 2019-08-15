@@ -1,13 +1,13 @@
-import React, { Fragment } from "react";
+import {Fragment} from "react";
 import * as actions from "../../store/actions/bannerList.actions";
 import BannerListContainer from "./BannerListContainer";
-import { compose } from "recompose";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import {compose} from "recompose";
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
 import BannerListPagination from "./BannerListPagination";
-import { getBannerList } from "../../store/reducers/bannerList.reducer";
+import {getBannerList} from "../../store/reducers/bannerList.reducer";
 
-const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
+const PaginatedListContainer = ({bannerList, fetchBannerList}) => {
 
   const handlePageChange = (pageNumber) => {
     fetchList(pageNumber)
@@ -19,11 +19,15 @@ const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
   }
 
   return (
-    <Fragment>
-      <BannerListContainer />
-      <BannerListPagination bannerList={bannerList} handlePageChange={handlePageChange}/>
-    </Fragment>
-  );
+    < Fragment >
+    < BannerListContainer / >
+    < BannerListPagination
+  bannerList = {bannerList}
+  handlePageChange = {handlePageChange}
+  />
+  < /Fragment>
+)
+  ;
 };
 
 const mapStateToProps = (state) => {

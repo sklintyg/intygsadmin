@@ -1,17 +1,22 @@
-import React from 'react'
-import { DownIcon, UpDownIcon, UpIcon } from '../styles/iaSvgIcons'
+import {DownIcon, UpDownIcon, UpIcon} from '../styles/iaSvgIcons'
 import {Button, UncontrolledTooltip} from 'reactstrap'
 
-const TableSortHead = ({ id, currentSortColumn, currentSortDirection, text, sortId, onSort, tooltip }) => {
+const TableSortHead = ({id, currentSortColumn, currentSortDirection, text, sortId, onSort, tooltip}) => {
   const handleSort = (sortColumn) => {
     onSort(sortColumn)
   }
 
   const renderSortIcon = (sortColumn) => {
     if (currentSortColumn === sortColumn) {
-      return currentSortDirection === 'DESC' ? <DownIcon /> : <UpIcon />
+      return currentSortDirection === 'DESC' ?
+    <
+      DownIcon / >
+    : <
+      UpIcon / >
     } else {
-      return <UpDownIcon />
+      return
+    <
+      UpDownIcon / >
     }
   }
 
@@ -20,37 +25,49 @@ const TableSortHead = ({ id, currentSortColumn, currentSortDirection, text, sort
 
   if (tooltip) {
     textElm = (
-      <>
-        <span id={elmId}>{text}</span>
-        <UncontrolledTooltip placement="top" target={elmId}>
-          {tooltip}
-        </UncontrolledTooltip>
-      </>
-    )
+      < >
+      < span
+    id = {elmId} > {text} < /span>
+      < UncontrolledTooltip
+    placement = "top"
+    target = {elmId} >
+      {tooltip}
+      < /UncontrolledTooltip>
+      < />
+  )
   }
 
   if (!sortId) {
     return (
-      <>
-        <th>{textElm}</th>
-      </>
-    )
+      < >
+      < th > {textElm} < /th>
+      < />
+  )
   }
 
   return (
-    <>
-      <th>
-        <Button
-          color="link"
-          onClick={() => {
-            handleSort(sortId)
-          }}>
-          {textElm}
-        </Button>{' '}
-        {renderSortIcon(sortId)}
-      </th>
-    </>
-  )
+    < >
+    < th >
+    < Button
+  color = "link"
+  onClick = {()
+=>
+  {
+    handleSort(sortId)
+  }
+}>
+  {
+    textElm
+  }
+<
+  /Button>{' '}
+  {
+    renderSortIcon(sortId)
+  }
+<
+  /th>
+  < />
+)
 }
 
 export default TableSortHead

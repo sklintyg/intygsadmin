@@ -1,4 +1,4 @@
-import { pollSession } from '../../api/userApi'
+import {pollSession} from '../../api/userApi'
 import AppConstants from '../../AppConstants'
 
 export const GET_POLL_REQUEST = 'GET_POLL_REQUEST'
@@ -19,23 +19,23 @@ const executePollRequest = (dispatch) => {
   }
 
   return pollSession()
-    .then((json) => {
-      dispatch({
-        type: GET_POLL_SUCCESS,
-        payload: json,
-      })
+  .then((json) => {
+    dispatch({
+      type: GET_POLL_SUCCESS,
+      payload: json,
+    })
 
-      if (!json.sessionState.authenticated) {
-        timeoutRedirect()
-      }
-    })
-    .catch((errorResponse) => {
+    if (!json.sessionState.authenticated) {
       timeoutRedirect()
-      return dispatch({
-        type: GET_POLL_FAIL,
-        payload: errorResponse,
-      })
+    }
+  })
+  .catch((errorResponse) => {
+    timeoutRedirect()
+    return dispatch({
+      type: GET_POLL_FAIL,
+      payload: errorResponse,
     })
+  })
 }
 
 export const startPoll = () => {
@@ -50,7 +50,7 @@ export const startPoll = () => {
 
     dispatch({
       type: SET_POLL_HANDLE,
-      payload: { handle: pollHandle },
+      payload: {handle: pollHandle},
     })
   }
 }
@@ -67,7 +67,7 @@ export const stopPoll = () => {
 
     dispatch({
       type: SET_POLL_HANDLE,
-      payload: { handle: null },
+      payload: {handle: null},
     })
   }
 }

@@ -48,7 +48,7 @@ import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 
 @Component
-@Profile({ "dev", "init-bootstrap-data" })
+@Profile({"dev", "init-bootstrap-data"})
 @Transactional
 public class TestDataBootstrapper {
 

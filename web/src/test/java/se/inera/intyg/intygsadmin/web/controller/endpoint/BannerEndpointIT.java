@@ -19,13 +19,12 @@
 
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
-import org.junit.jupiter.api.Test;
-
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
-
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
+import org.junit.jupiter.api.Test;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class BannerEndpointIT extends BaseRestIntegrationTest {
 
@@ -38,10 +37,10 @@ public class BannerEndpointIT extends BaseRestIntegrationTest {
     @Test
     public void testGetBannersForWebcert() {
         given().expect().statusCode(OK)
-                .when()
-                .get(BANNER_ACTUATOR_ENDPOINT + "/" + Application.WEBCERT)
-                .then()
-                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
+            .when()
+            .get(BANNER_ACTUATOR_ENDPOINT + "/" + Application.WEBCERT)
+            .then()
+            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
     }
 
 }

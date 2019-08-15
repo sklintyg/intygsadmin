@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import {useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
-import { Button } from 'reactstrap'
-import { Calendar } from '../styles/iaSvgIcons'
+import {Button} from 'reactstrap'
+import {Calendar} from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
 import DatePickerPopup from "./DatePickerPopup";
 
@@ -50,7 +50,7 @@ const DatePickerContainer = styled.div`
   display: inline-block;
 `
 
-const DatePicker = ({ date, onChange, className, inputId }) => {
+const DatePicker = ({date, onChange, className, inputId}) => {
   const [datePickerPopupOpen, setDatePickerPopupOpen] = useState(false)
   const [internalValue, setInternalValue] = useState('')
   const popupRef = useRef(null)
@@ -65,7 +65,7 @@ const DatePicker = ({ date, onChange, className, inputId }) => {
     }
 
     setInternalValue(value)
-    if (hasLostFocus){
+    if (hasLostFocus) {
       onChange(value)
     }
   }
@@ -114,20 +114,38 @@ const DatePicker = ({ date, onChange, className, inputId }) => {
   }
 
   return (
-    <DatePickerContainer>
-      <Container className={className}>
-        <StyledInput id={inputId} type="text" value={internalValue} onChange={change} placeholder={'åååå-mm-dd'} onBlur={handleBlur} />
-        <span ref={buttonHolderRef}>
-          <StyledButton onClick={onClick} color={'default'}>
-            <Calendar />
-          </StyledButton>
-        </span>
-      </Container>
-      <PopUp ref={popupRef} className={datePickerPopupOpen ? 'open' : 'closed'}>
-        <DatePickerPopup onChange={onChangeDatePicker} date={internalValue} open={datePickerPopupOpen} onSelect={onClick} />
-      </PopUp>
-    </DatePickerContainer>
-  )
+    < DatePickerContainer >
+    < Container
+  className = {className} >
+    < StyledInput
+  id = {inputId}
+  type = "text"
+  value = {internalValue}
+  onChange = {change}
+  placeholder = {'åååå-mm-dd'}
+  onBlur = {handleBlur}
+  />
+  < span
+  ref = {buttonHolderRef} >
+    < StyledButton
+  onClick = {onClick}
+  color = {'default'} >
+    < Calendar / >
+    < /StyledButton>
+    < /span>
+    < /Container>
+    < PopUp
+  ref = {popupRef}
+  className = {datePickerPopupOpen ? 'open' : 'closed'} >
+    < DatePickerPopup
+  onChange = {onChangeDatePicker}
+  date = {internalValue}
+  open = {datePickerPopupOpen}
+  onSelect = {onClick}
+  />
+  < /PopUp>
+  < /DatePickerContainer>
+)
 }
 
 export default DatePicker

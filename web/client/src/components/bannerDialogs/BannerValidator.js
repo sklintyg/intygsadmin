@@ -3,25 +3,25 @@ export const validateBanner = (banner, futureBanners) => {
   if (banner.displayTo) {
     let displayToValid = validateDateFormat(banner.displayTo)
     if (displayToValid !== 'ok') {
-      validations = { ...validations, displayTo: displayToValid }
+      validations = {...validations, displayTo: displayToValid}
     }
   }
   if (banner.displayFrom) {
     let displayFromValid = validateDateFormat(banner.displayFrom)
     if (displayFromValid !== 'ok') {
-      validations = { ...validations, displayFrom: displayFromValid }
+      validations = {...validations, displayFrom: displayFromValid}
     }
   }
   if (banner.displayFromTime) {
     let valid = validateTimeFormat(banner.displayFromTime)
     if (valid !== 'ok') {
-      validations = { ...validations, displayFromTime: valid }
+      validations = {...validations, displayFromTime: valid}
     }
   }
   if (banner.displayToTime) {
     let valid = validateTimeFormat(banner.displayToTime)
     if (valid !== 'ok') {
-      validations = { ...validations, displayToTime: valid }
+      validations = {...validations, displayToTime: valid}
     }
   }
   if (banner.displayFrom && banner.displayTo) {
@@ -36,14 +36,14 @@ export const validateBanner = (banner, futureBanners) => {
         banner.id
       )
       if (validRange !== 'ok') {
-        validations = { ...validations, displayTo: validRange, displayFrom: '', displayToTime: '', displayFromTime: '' }
+        validations = {...validations, displayTo: validRange, displayFrom: '', displayToTime: '', displayFromTime: ''}
       }
     }
     if (validFromBeforeTo === 'toDateBeforeFrom') {
-      validations = { ...validations, displayFrom: '', displayTo: 'Ändra visningsperioden. Startdatumet ska ligga före slutdatumet.' }
+      validations = {...validations, displayFrom: '', displayTo: 'Ändra visningsperioden. Startdatumet ska ligga före slutdatumet.'}
     }
     if (validFromBeforeTo === 'toTimeBeforeFrom') {
-      validations = { ...validations, displayFromTime: '', displayToTime: 'Ändra visningsperioden. Starttiden ska ligga före sluttiden.' }
+      validations = {...validations, displayFromTime: '', displayToTime: 'Ändra visningsperioden. Starttiden ska ligga före sluttiden.'}
     }
   }
   return validations

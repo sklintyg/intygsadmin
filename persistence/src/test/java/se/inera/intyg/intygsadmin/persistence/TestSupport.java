@@ -33,12 +33,12 @@ public abstract class TestSupport {
     private DateTimeFormatter idFormatter = DateTimeFormatter.ofPattern("yyyyMMddmmss");
 
     private EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
-            .randomizationDepth(10)
-            .collectionSizeRange(1, 20)
-            .charset(Charsets.UTF_8)
-            .excludeField(named("id").and(ofType(UUID.class)))
-            .scanClasspathForConcreteTypes(true)
-            .build();
+        .randomizationDepth(10)
+        .collectionSizeRange(1, 20)
+        .charset(Charsets.UTF_8)
+        .excludeField(named("id").and(ofType(UUID.class)))
+        .scanClasspathForConcreteTypes(true)
+        .build();
 
     protected EnhancedRandom randomizer() {
         return enhancedRandom;

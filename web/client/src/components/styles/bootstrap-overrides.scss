@@ -4,7 +4,7 @@
 
 // Override default variables before the import
 $font-family-sans-serif: Roboto, 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, 'Noto Sans', sans-serif,
-  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 $font-size-base: 0.875rem; //This will set base font-size to equivalent of 14px ( default in browsers is 1rem = 16 px, so 16/14 = 0.875rem)
 
 //Set base default font color for body, so we only need to override where its different
@@ -155,7 +155,7 @@ $tooltip-bg: $ia-color-02;
   // For some unknown reason, using the value "transparent" doesn't work.
   // Something in the scss processing replaces it with "initial" which in turn causes btn-link to have a gray background in IE11
   // As a workaround, setting an corresponding tranaparant rgb value works..
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 th .btn-link {
@@ -196,6 +196,7 @@ th .btn-link {
       padding-left: 21px;
     }
   }
+
   // Table body ---------------
   > tbody > tr {
     height: 50px;
@@ -355,6 +356,7 @@ th .btn-link {
 a {
   text-decoration: underline;
   color: $ia-color-02;
+
   &:hover {
     color: $ia-color-18;
   }

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import {useEffect, useRef, useState} from 'react'
 import styled from 'styled-components'
-import { Button } from 'reactstrap'
-import { TimeIcon } from '../styles/iaSvgIcons'
+import {Button} from 'reactstrap'
+import {TimeIcon} from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
 import TimePickerPopup from "./TimePickerPopup";
 
@@ -47,7 +47,7 @@ const Popup = styled.div`
   }
 `
 
-const TimePicker = ({ value, onChange, className, inputId }) => {
+const TimePicker = ({value, onChange, className, inputId}) => {
   const [internalValue, setInternalValue] = useState('')
   const popup = useRef()
   const buttonHolderRef = useRef()
@@ -120,18 +120,35 @@ const TimePicker = ({ value, onChange, className, inputId }) => {
   }
 
   return (
-    <Container className={className}>
-      <StyledInput id={inputId} type="text" value={internalValue} onChange={inputOnChange} placeholder={'hh:mm'} onBlur={handleBlur} />
-      <span ref={buttonHolderRef}>
-        <StyledButton onClick={toggleTimePopup} color={'default'}>
-          <TimeIcon />
-        </StyledButton>
-      </span>
-      <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
-        <TimePickerPopup open={popupOpen} value={internalValue} onChange={setInternalValue} />
-      </Popup>
-    </Container>
-  )
+    < Container
+  className = {className} >
+    < StyledInput
+  id = {inputId}
+  type = "text"
+  value = {internalValue}
+  onChange = {inputOnChange}
+  placeholder = {'hh:mm'}
+  onBlur = {handleBlur}
+  />
+  < span
+  ref = {buttonHolderRef} >
+    < StyledButton
+  onClick = {toggleTimePopup}
+  color = {'default'} >
+    < TimeIcon / >
+    < /StyledButton>
+    < /span>
+    < Popup
+  ref = {popup}
+  className = {popupOpen ? 'open' : 'closed'} >
+    < TimePickerPopup
+  open = {popupOpen}
+  value = {internalValue}
+  onChange = {setInternalValue}
+  />
+  < /Popup>
+  < /Container>
+)
 }
 
 export default TimePicker

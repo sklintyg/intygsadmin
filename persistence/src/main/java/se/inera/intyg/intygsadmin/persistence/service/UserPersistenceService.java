@@ -47,7 +47,7 @@ public class UserPersistenceService {
 
     public UserEntity upsert(UserEntity newUserEntity) {
         UserEntity userEntity = userRepository.findByEmployeeHsaId(newUserEntity.getEmployeeHsaId())
-                .orElse(new UserEntity());
+            .orElse(new UserEntity());
 
         userEntity.setEmployeeHsaId(newUserEntity.getEmployeeHsaId());
         userEntity.setIntygsadminRole(newUserEntity.getIntygsadminRole());

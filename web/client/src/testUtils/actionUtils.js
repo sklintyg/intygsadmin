@@ -11,10 +11,9 @@ export const functionToTest = (store, actionHelper, expectedActions) => {
   };
 
   return store.dispatch(actionHelper())
-    .then(expectFunc)
-    .catch(expectFunc);
+  .then(expectFunc)
+  .catch(expectFunc);
 }
-
 
 export const syncronousActionTester = (store, actionHelper, expectedActions) => {
   store.dispatch(actionHelper())
@@ -27,9 +26,10 @@ export const syncronousActionTester = (store, actionHelper, expectedActions) => 
 
 export const routerAction = (url) => (
   {
-  "payload": {"args": [url], "method": "push"},
-  "type": "@@router/CALL_HISTORY_METHOD"}
-  );
+    "payload": {"args": [url], "method": "push"},
+    "type": "@@router/CALL_HISTORY_METHOD"
+  }
+);
 
 const middlewares = [thunk]
 export const mockStore = configureMockStore(middlewares)

@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web;
 
+import java.util.ArrayList;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +28,6 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
-
-import java.util.ArrayList;
 
 public class WithMockIntygsadminUserSecurityContextFactory implements WithSecurityContextFactory<WithMockIntygsadminUser> {
 

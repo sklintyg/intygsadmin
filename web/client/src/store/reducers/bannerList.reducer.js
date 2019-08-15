@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux'
-import { buildClientError } from './util'
+import {combineReducers} from 'redux'
+import {buildClientError} from './util'
 import * as ActionConstants from '../actions/bannerList.actions'
 
 export const BannerListDefaultState = {
@@ -13,47 +13,48 @@ export const BannerListDefaultState = {
   sortDirection: 'DESC',
 }
 
-const bannerList = (state = { ...BannerListDefaultState }, action) => {
+const bannerList = (state = {...BannerListDefaultState}, action) => {
   switch (action.type) {
-    case ActionConstants.FETCH_BANNERLIST_SUCCESS:
-      return { ...state,
-        content: action.response.content,
-        numberOfElements: action.response.numberOfElements,
-        pageIndex: action.response.number,
-        start: action.response.number * action.response.size + 1,
-        end: action.response.number * action.response.size + action.response.numberOfElements,
-        totalElements: action.response.totalElements,
-        sortColumn: action.sortColumn,
-        sortDirection: action.sortDirection,
-      }
-    default:
-      return state
+  case ActionConstants.FETCH_BANNERLIST_SUCCESS:
+    return {
+      ...state,
+      content: action.response.content,
+      numberOfElements: action.response.numberOfElements,
+      pageIndex: action.response.number,
+      start: action.response.number * action.response.size + 1,
+      end: action.response.number * action.response.size + action.response.numberOfElements,
+      totalElements: action.response.totalElements,
+      sortColumn: action.sortColumn,
+      sortDirection: action.sortDirection,
+    }
+  default:
+    return state
   }
 }
 
 const isFetching = (state = false, action) => {
 
   switch (action.type) {
-    case ActionConstants.FETCH_BANNERLIST_REQUEST:
-      return true
-    case ActionConstants.FETCH_BANNERLIST_SUCCESS:
-    case ActionConstants.FETCH_BANNERLIST_FAILURE:
-      return false
-    default:
-      return state
+  case ActionConstants.FETCH_BANNERLIST_REQUEST:
+    return true
+  case ActionConstants.FETCH_BANNERLIST_SUCCESS:
+  case ActionConstants.FETCH_BANNERLIST_FAILURE:
+    return false
+  default:
+    return state
   }
 }
 
 const errorMessage = (state = null, action) => {
 
   switch (action.type) {
-    case ActionConstants.FETCH_BANNERLIST_FAILURE:
-      return buildClientError(action.payload, 'error.bannerlist').message
-    case ActionConstants.FETCH_BANNERLIST_REQUEST:
-    case ActionConstants.FETCH_BANNERLIST_SUCCESS:
-      return null
-    default:
-      return state
+  case ActionConstants.FETCH_BANNERLIST_FAILURE:
+    return buildClientError(action.payload, 'error.bannerlist').message
+  case ActionConstants.FETCH_BANNERLIST_REQUEST:
+  case ActionConstants.FETCH_BANNERLIST_SUCCESS:
+    return null
+  default:
+    return state
   }
 }
 
@@ -69,7 +70,9 @@ export default bannerListReducer
 
 export const getBannerList = (state) => state.bannerList.bannerList
 
-export const getSortOrder = (state) => {return {sortColumn: state.bannerList.bannerList.sortColumn, sortDirection: state.bannerList.bannerList.sortDirection}}
+export const getSortOrder = (state) => {
+  return {sortColumn: state.bannerList.bannerList.sortColumn, sortDirection: state.bannerList.bannerList.sortDirection}
+}
 
 export const getIsFetching = (state) => state.bannerList.isFetching
 

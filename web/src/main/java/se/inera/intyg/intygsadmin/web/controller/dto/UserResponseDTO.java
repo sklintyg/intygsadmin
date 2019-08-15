@@ -19,10 +19,10 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
 
 @Getter
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import {Fragment} from 'react';
 import Logo from "./logo/Logo";
 import User from "./user/User";
 import styled from "styled-components";
@@ -31,21 +31,32 @@ const HeaderActionsWrapper = styled.div`
 
 const Header = ({isAuthenticated, name, userRole, logoutUrl}) => {
   return (
-    <ComponentWrapper>
-      <StyledHeader>
-        <Logo className={(isAuthenticated ? 'd-none d-md-flex' : '')} />
-        {isAuthenticated && <User id="currentUser" userName={name} userRole={userRole} />}
-        <HeaderActionsWrapper>
-          {isAuthenticated &&
-            <Fragment>
-              <HeaderSectionContainerHoverable>
-                <Logout logoutUrl={logoutUrl}/>
-              </HeaderSectionContainerHoverable>
-            </Fragment>
-          }
-        </HeaderActionsWrapper>
-      </StyledHeader>
-    </ComponentWrapper>
+    < ComponentWrapper >
+    < StyledHeader >
+    < Logo
+  className = {(isAuthenticated ? 'd-none d-md-flex' : '')
+}
+  />
+  {
+    isAuthenticated && < User
+    id = "currentUser"
+    userName = {name}
+    userRole = {userRole}
+    />}
+    < HeaderActionsWrapper >
+    {isAuthenticated &&
+    < Fragment >
+    < HeaderSectionContainerHoverable >
+    < Logout
+    logoutUrl = {logoutUrl}
+    />
+    < /HeaderSectionContainerHoverable>
+    < /Fragment>
+  }
+  <
+    /HeaderActionsWrapper>
+    < /StyledHeader>
+    < /ComponentWrapper>
   )
 };
 

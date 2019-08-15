@@ -1,6 +1,5 @@
-import React from 'react'
 import styled from 'styled-components'
-import { HeaderSectionContainer } from '../styles'
+import {HeaderSectionContainer} from '../styles'
 import IaColors from '../../styles/iaColors'
 import {LogoIcon} from '../../styles/iaSvgIcons'
 import {IaTypo09} from '../../styles/iaTypography'
@@ -34,13 +33,15 @@ const LogoText = styled(IaTypo09)`
   color: ${IaColors.IA_COLOR_03};
 `
 
-const Logo = ({ className }) => {
+const Logo = ({className}) => {
   return (
-    <ComponentWrapper>
-      <SvgLogo><LogoIconWrapper><LogoIcon/></LogoIconWrapper></SvgLogo>
-      <LogoText className={className}>Intygsadmin</LogoText>
-    </ComponentWrapper>
-  )
+    < ComponentWrapper >
+    < SvgLogo > < LogoIconWrapper > < LogoIcon / > < /LogoIconWrapper></
+  SvgLogo >
+  < LogoText
+  className = {className} > Intygsadmin < /LogoText>
+    < /ComponentWrapper>
+)
 }
 
 export default Logo

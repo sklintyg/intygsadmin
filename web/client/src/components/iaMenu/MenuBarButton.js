@@ -1,8 +1,7 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import styled from 'styled-components/macro'
 import iaColors from '../styles/iaColors'
-import { NavItem } from 'reactstrap'
+import {NavItem} from 'reactstrap'
 
 const Wrapper = styled.span`
   & a {
@@ -36,21 +35,24 @@ const Wrapper = styled.span`
   }
 `
 
-const MenuBarButton = ({ menuItem }) => {
+const MenuBarButton = ({menuItem}) => {
 
-  if(!menuItem.enabled){
+  if (!menuItem.enabled) {
     return null
   }
 
   return (
-    <Wrapper>
-      <NavItem key={menuItem.text}>
-        <NavLink to={menuItem.to} id={'MenuBar-' + menuItem.text}>
-          {menuItem.text}
-        </NavLink>
-      </NavItem>
-    </Wrapper>
-  )
+    < Wrapper >
+    < NavItem
+  key = {menuItem.text} >
+    < NavLink
+  to = {menuItem.to}
+  id = {'MenuBar-' +menuItem.text} >
+    {menuItem.text}
+    < /NavLink>
+    < /NavItem>
+    < /Wrapper>
+)
 }
 
 export default MenuBarButton

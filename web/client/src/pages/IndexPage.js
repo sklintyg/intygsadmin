@@ -1,9 +1,8 @@
-import React from 'react'
 import styled from 'styled-components'
-import { IaTypo01, IaTypo05 } from '../components/styles/iaTypography'
-import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/iaLayout'
+import {IaTypo01, IaTypo05} from '../components/styles/iaTypography'
+import {FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer} from '../components/styles/iaLayout'
 import ibValues from '../components/styles/iaValues'
-import IaAlert, { alertType } from '../components/alert/Alert'
+import IaAlert from '../components/alert/Alert'
 import LoginOptions from '../components/loginOptions'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
@@ -30,7 +29,7 @@ const Wrapper = styled.div`
   padding-left: 40px;
 `
 
-const HomePage = ({ match }) => {
+const HomePage = ({match}) => {
   let title = 'Välkommen till Intygsadmin'
   let message = null
 
@@ -52,31 +51,58 @@ const HomePage = ({ match }) => {
   }
 
   return (
-    <FlexColumnContainer>
-      <CustomScrollingContainer>
-        <PageContainer>
-          <Wrapper>
-            <IaTypo01 as="h1" id="indexTitle">{title}</IaTypo01>
-            {message && (
-              <Section>
-                <IaAlert type={alertType.INFO} id="indexAlertMessage">
-                  {message}
-                </IaAlert>
-              </Section>
-            )}
-
-            <IaTypo05 as="p">
-              I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster skapa och hantera driftbanners som informerar
-              Intygstjänsters användare om kommande eller pågående händelser.
-            </IaTypo05>
-
-            <Section />
-            <LoginOptions />
-          </Wrapper>
-        </PageContainer>
-      </CustomScrollingContainer>
-    </FlexColumnContainer>
+  < FlexColumnContainer >
+  < CustomScrollingContainer >
+  < PageContainer >
+  < Wrapper >
+  < IaTypo01 as = "h1"
+  id = "indexTitle" > {title} < /IaTypo01>
+  {
+    message && (
+    < Section >
+    < IaAlert
+    type = {alertType.INFO}
+    id = "indexAlertMessage" >
+      {message}
+      < /IaAlert>
+      < /Section>
   )
+  }
+
+<
+  IaTypo05 as = "p" >
+    I
+  Intygsadmin
+  kan
+  du
+  som
+  jobbar
+  med
+  förvaltning
+  av
+  Intygstjänster
+  skapa
+  och
+  hantera
+  driftbanners
+  som
+  informerar
+  Intygstjänsters
+  användare
+  om
+  kommande
+  eller
+  pågående
+  händelser.
+  < /IaTypo05>
+
+  < Section / >
+  < LoginOptions / >
+  < /Wrapper>
+  < /PageContainer>
+  < /CustomScrollingContainer>
+  < /FlexColumnContainer>
+)
 }
 
 export default HomePage

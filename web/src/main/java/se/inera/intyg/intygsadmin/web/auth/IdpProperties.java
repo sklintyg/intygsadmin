@@ -19,12 +19,11 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
+import java.net.URL;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.net.URL;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -42,20 +41,19 @@ public class IdpProperties {
     private String clientSecret;
 
     /**
-     * The URL at the client (this application) where the OP should redirect the user when authentication is completed.
-     * This URL must be registered at the OP.
+     * The URL at the client (this application) where the OP should redirect the user when authentication is completed. This URL must be
+     * registered at the OP.
      */
     private URL redirectUri;
 
     /**
-     * The URL at the client (this application) where the OP should redirect the user when logout is completed.
-     * This URL must be registered at the OP.
+     * The URL at the client (this application) where the OP should redirect the user when logout is completed. This URL must be registered
+     * at the OP.
      */
     private URL logoutRedirectUri;
 
     /**
-     * The ID of the OP/issuer.
-     * This is normally a URL with /oidc at the end. The application will use this to access the OP's configuration
+     * The ID of the OP/issuer. This is normally a URL with /oidc at the end. The application will use this to access the OP's configuration
      * via the default path for .well-known-location
      */
     private URL issuerUri;

@@ -62,7 +62,7 @@ describe('api utils test', () => {
       })
     });
 
-    const methods = [ {
+    const methods = [{
       method: 'makeServerRequestTest',
       fetch: 'getOnce'
     }, {
@@ -87,7 +87,7 @@ describe('api utils test', () => {
             body: {
               name: 'test'
             },
-            headers: { 'content-type': 'application/json' }
+            headers: {'content-type': 'application/json'}
           })
 
           utils[method.method]('test', {}).then((response) => {
@@ -99,7 +99,7 @@ describe('api utils test', () => {
 
         it('success noBody', (done) => {
           fetchMock[method.fetch](path, {
-            headers: { 'content-type': 'application/json' }
+            headers: {'content-type': 'application/json'}
           })
 
           utils[method.method]('test', {}, {emptyBody: true}).then((response) => {
@@ -136,7 +136,7 @@ describe('api utils test', () => {
               name: 'failed'
             },
             status: 500,
-            headers: { 'content-type': 'application/json' }
+            headers: {'content-type': 'application/json'}
           })
 
           utils[method.method]('test', {}).then().catch((response) => {
@@ -149,7 +149,7 @@ describe('api utils test', () => {
         it('error - from server noBody', (done) => {
           fetchMock[method.fetch](path, {
             status: 500,
-            headers: { 'content-type': 'application/json' }
+            headers: {'content-type': 'application/json'}
           })
 
           utils[method.method]('test', {}).then().catch((response) => {
@@ -166,7 +166,7 @@ describe('api utils test', () => {
         it('error - not found', (done) => {
           fetchMock[method.fetch](path, {
             status: 404,
-            headers: { 'content-type': 'application/json' }
+            headers: {'content-type': 'application/json'}
           })
 
           utils[method.method]('test', {}).then().catch((response) => {

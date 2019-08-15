@@ -1,5 +1,4 @@
-import React from 'react'
-import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/iaLayout'
+import {FlexColumnContainer, ScrollingContainer, WorkareaContainer} from '../components/styles/iaLayout'
 import styled from 'styled-components'
 import ibValues from '../components/styles/iaValues'
 import PaginatedListContainer from '../components/bannerList/PaginatedListContainer'
@@ -25,16 +24,16 @@ const PageContainer = styled(WorkareaContainer)`
 `
 const BannerPage = () => {
   return (
-    <FlexColumnContainer>
-    <MenuBar/>
-      <CustomScrollingContainer>
-        <BannerPageHeader />
-        <PageContainer>
-          <PaginatedListContainer />
-        </PageContainer>
-      </CustomScrollingContainer>
-    </FlexColumnContainer>
-  )
+    < FlexColumnContainer >
+    < MenuBar / >
+    < CustomScrollingContainer >
+    < BannerPageHeader / >
+    < PageContainer >
+    < PaginatedListContainer / >
+    < /PageContainer>
+    < /CustomScrollingContainer>
+    < /FlexColumnContainer>
+)
 }
 
 export default BannerPage

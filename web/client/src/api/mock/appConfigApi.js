@@ -1,4 +1,4 @@
-import { delay } from './util'
+import {delay} from './util'
 
 export const fetchAppConfig = () =>
   delay(500).then(() => {
@@ -10,7 +10,7 @@ export const fetchAppConfig = () =>
     };
     throw error*/
     return {
-      versionInfo: { applicationName: 'ia', buildVersion: '0', buildTimestamp: 'now', activeProfiles: 'some,profiles' },
+      versionInfo: {applicationName: 'ia', buildVersion: '0', buildTimestamp: 'now', activeProfiles: 'some,profiles'},
       loginUrl: 'LoginUrlFromServerConfig',
     }
   })

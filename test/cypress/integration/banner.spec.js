@@ -11,7 +11,6 @@ context("Banners", () => {
       url: '**/api/banner**'
     }).as('apiCheck');
 
-
     cy.login('TSTNMT2321000156-10KK');
     cy.removeFetch();
     cy.wait('@apiCheck');
@@ -43,7 +42,6 @@ context("Banners", () => {
       cy.get('.banner-message').should('have.text', 'test message')
     });
 
-
     // Change banner
     cy.get('#BannerListTable tr:first').within(() => {
       cy.get('button.change-btn').click() // Change banner
@@ -72,6 +70,5 @@ context("Banners", () => {
       cy.get('.banner-message').should('not.have.text', 'test message')
     })
   })
-
 
 });

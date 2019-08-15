@@ -1,10 +1,10 @@
-import reducer, { BannerListDefaultState } from './bannerList.reducer'
+import reducer, {BannerListDefaultState} from './bannerList.reducer'
 import * as actions from '../actions/bannerList.actions'
-import { createStore } from 'redux'
+import {createStore} from 'redux'
 
 describe('bannerlist reducer', () => {
   let stateBefore = {
-    bannerList: { ...BannerListDefaultState },
+    bannerList: {...BannerListDefaultState},
     errorMessage: null,
     isFetching: false,
   }
@@ -46,7 +46,7 @@ describe('bannerlist reducer', () => {
         totalElements: 1,
         size: 10,
         pageable: {
-          sort: { sorted: true, unsorted: false, empty: false },
+          sort: {sorted: true, unsorted: false, empty: false},
           offset: 0,
           pageSize: 10,
           pageNumber: 0,

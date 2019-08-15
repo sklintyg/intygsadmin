@@ -19,15 +19,15 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.Test;
-import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
-import se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts;
-
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.is;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
+
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.Test;
+import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
+import se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts;
 
 class UserControllerIT extends BaseRestIntegrationTest {
 
@@ -36,13 +36,13 @@ class UserControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         given().expect().statusCode(OK)
-                .when()
-                .get(API_ANVANDARE)
-                .then()
-                .body(matchesJsonSchemaInClasspath("jsonschema/get-user-response-schema.json"))
-                .body("logoutUrl", is(AuthenticationConstansts.LOGOUT_URL))
-                .body("employeeHsaId", is(ADMIN_USER.getEmployeeHsaId()))
-                .body("intygsadminRole", is(ADMIN_USER.getIntygsadminRole()))
-                .body("name", is(ADMIN_USER.getName()));
+            .when()
+            .get(API_ANVANDARE)
+            .then()
+            .body(matchesJsonSchemaInClasspath("jsonschema/get-user-response-schema.json"))
+            .body("logoutUrl", is(AuthenticationConstansts.LOGOUT_URL))
+            .body("employeeHsaId", is(ADMIN_USER.getEmployeeHsaId()))
+            .body("intygsadminRole", is(ADMIN_USER.getIntygsadminRole()))
+            .body("name", is(ADMIN_USER.getName()));
     }
 }

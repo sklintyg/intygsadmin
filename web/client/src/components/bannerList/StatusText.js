@@ -1,7 +1,5 @@
-import React from 'react'
 import styled from 'styled-components'
 import IAColors from '../styles/iaColors'
-
 
 const ActiveFutureStatus = styled.span`
   color: ${IAColors.IA_COLOR_05}
@@ -11,7 +9,7 @@ const FinishedStatus = styled.span`
   color: ${IAColors.IA_COLOR_12}
 `
 
-const StatusText = ({ status }) => {
+const StatusText = ({status}) => {
 
   const statusText = {
     FUTURE: 'Kommande',
@@ -19,23 +17,22 @@ const StatusText = ({ status }) => {
     FINISHED: 'Avslutad',
   }
 
-
   const text = statusText[status]
 
   switch (status) {
 
   case 'FINISHED':
     return (
-      <FinishedStatus>
-        {text}
-      </FinishedStatus>
-    )
+      < FinishedStatus >
+      {text}
+      < /FinishedStatus>
+  )
   default:
     return (
-      <ActiveFutureStatus>
-        {text}
-      </ActiveFutureStatus>
-    )
+      < ActiveFutureStatus >
+      {text}
+      < /ActiveFutureStatus>
+  )
   }
 }
 

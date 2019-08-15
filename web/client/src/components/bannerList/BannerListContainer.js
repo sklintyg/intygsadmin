@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
+import {Fragment} from 'react'
 import PropTypes from 'prop-types'
-import { compose, lifecycle } from 'recompose'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import {compose, lifecycle} from 'recompose'
+import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 import * as actions from '../../store/actions/bannerList.actions'
-import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList.reducer'
+import {getBannerList, getErrorMessage, getIsFetching} from '../../store/reducers/bannerList.reducer'
 import CreateBanner from '../bannerDialogs/CreateBanner.dialog'
 import RemoveBanner from '../bannerDialogs/RemoveBanner.dialog'
 import BannerList from './BannerList'
@@ -16,17 +16,17 @@ const ListWrapper = styled.div`
 `
 
 const BannerListContainer = (props) => {
-  const { isFetching, errorMessage, bannerList } = props
+  const {isFetching, errorMessage, bannerList} = props
 
   const handleSort = (newSortColumn) => {
-    let { sortColumn, sortDirection } = bannerList
+    let {sortColumn, sortDirection} = bannerList
     if (sortColumn === newSortColumn) {
       sortDirection = bannerList.sortDirection === 'DESC' ? 'ASC' : 'DESC'
     } else {
       sortColumn = newSortColumn
     }
 
-    fetchData({ ...props, sortColumn, sortDirection })
+    fetchData({...props, sortColumn, sortDirection})
   }
 
   const onActionComplete = () => {
@@ -34,14 +34,27 @@ const BannerListContainer = (props) => {
   }
 
   return (
-    <Fragment>
-      <ListWrapper>
-        <RemoveBanner onComplete={onActionComplete}/>
-        <CreateBanner onComplete={onActionComplete}/>
-        <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} onActionComplete={onActionComplete} />
-        {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar driftbannerlista'} />}
-      </ListWrapper>
-    </Fragment>
+    < Fragment >
+    < ListWrapper >
+    < RemoveBanner
+  onComplete = {onActionComplete}
+  />
+  < CreateBanner
+  onComplete = {onActionComplete}
+  />
+  < BannerList
+  bannerList = {bannerList}
+  errorMessage = {errorMessage}
+  onSort = {handleSort}
+  onActionComplete = {onActionComplete}
+  />
+  {
+    isFetching && !bannerList.length && < LoadingSpinner
+    loading = {isFetching}
+    message = {'Laddar driftbannerlista'}
+    />}
+    < /ListWrapper>
+    < /Fragment>
   )
 }
 
@@ -51,8 +64,8 @@ BannerListContainer.propTypes = {
   isFetching: PropTypes.bool,
 }
 
-const fetchData = ({ fetchBannerList, sortColumn, sortDirection }) => {
-  fetchBannerList({ sortColumn, sortDirection })
+const fetchData = ({fetchBannerList, sortColumn, sortDirection}) => {
+  fetchBannerList({sortColumn, sortDirection})
 }
 
 const lifeCycleValues = {
