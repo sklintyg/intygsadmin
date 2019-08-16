@@ -23,10 +23,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
@@ -44,7 +46,7 @@ public class BannerService {
     private BannerMapper bannerMapper;
 
     public BannerService(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper,
-        BannerValidationService bannerValidationService) {
+                         BannerValidationService bannerValidationService) {
         this.bannerPersistenceService = bannerPersistenceService;
         this.bannerMapper = bannerMapper;
         this.bannerValidationService = bannerValidationService;

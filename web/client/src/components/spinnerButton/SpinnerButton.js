@@ -1,6 +1,6 @@
-import {useState} from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import {Button, Spinner} from 'reactstrap'
+import { Button, Spinner } from 'reactstrap'
 import PropTypes from 'prop-types'
 
 const StyledButton = styled(Button)`
@@ -18,7 +18,7 @@ const StyledSpinner = styled(Spinner)`
   visibility: ${(props) => props.show};
 `
 
-const SpinnerButton = ({accept, color, children, disabled}) => {
+const SpinnerButton = ({ accept, color, children, disabled }) => {
   const [showSpinner, setShowSpinner] = useState(false)
 
   const onClickHandler = () => {
@@ -29,25 +29,16 @@ const SpinnerButton = ({accept, color, children, disabled}) => {
   }
 
   return (
-    < StyledButton
-  color = {color}
-  disabled = {disabled || showSpinner
-}
-  onClick = {()
-=>
-  {
-    onClickHandler()
-  }
-}>
-<
-  StyledSpinner
-  size = "sm"
-  show = {showSpinner ? 'visible' : 'hidden'}
-  />
-  < StyledSpan
-  hide = {showSpinner ? 'hidden' : 'visible'} > {children} < /StyledSpan>
-    < /StyledButton>
-)
+    <StyledButton
+      color={color}
+      disabled={disabled || showSpinner}
+      onClick={() => {
+        onClickHandler()
+      }}>
+      <StyledSpinner size="sm" show={showSpinner ? 'visible' : 'hidden'} />
+      <StyledSpan hide={showSpinner ? 'hidden' : 'visible'}>{children}</StyledSpan>
+    </StyledButton>
+  )
 }
 
 SpinnerButton.propTypes = {

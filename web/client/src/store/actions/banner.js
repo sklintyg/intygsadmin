@@ -1,5 +1,5 @@
 import * as api from '../../api/banner.api'
-import {getIsFetching} from '../reducers/banner'
+import { getIsFetching } from '../reducers/banner'
 
 export const CREATE_BANNER_REQUEST = 'CREATE_BANNER_REQUEST'
 export const CREATE_BANNER_SUCCESS = 'CREATE_BANNER_SUCCESS'
@@ -69,6 +69,7 @@ export const removeBanner = (id) => (dispatch, getState) => {
     }
   )
 }
+
 
 export const updateBanner = (banner, id) => (dispatch, getState) => {
   if (getIsFetching(getState())) {

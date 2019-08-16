@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import {Spinner} from 'reactstrap'
+import { Spinner } from 'reactstrap'
 
 const SpinnerBox = styled.div`
   width: 100%;
@@ -17,7 +17,7 @@ const SpinnerWrapper = styled.div`
   display: flex;
 `
 
-const LoadingSpinner = ({loading, message}) => {
+const LoadingSpinner = ({ loading, message }) => {
   const [showSpinner, setShowSpinner] = useState(false)
 
   useEffect(() => {
@@ -30,14 +30,13 @@ const LoadingSpinner = ({loading, message}) => {
 
   if (loading && showSpinner) {
     return (
-      < SpinnerWrapper >
-      < SpinnerBox >
-      < Spinner
-    color = "secondary" / >
-      < div > {message} < /div>
-      < /SpinnerBox>
-      < /SpinnerWrapper>
-  )
+      <SpinnerWrapper>
+        <SpinnerBox>
+          <Spinner color="secondary" />
+          <div>{message}</div>
+        </SpinnerBox>
+      </SpinnerWrapper>
+    )
   } else {
     return null
   }

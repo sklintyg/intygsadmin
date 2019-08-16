@@ -34,19 +34,19 @@ import se.inera.intyg.intygsadmin.persistence.enums.Application;
 
 @Repository
 public interface BannerRepository extends JpaRepository<BannerEntity, UUID>,
-    QuerydslPredicateExecutor<BannerEntity> {
+        QuerydslPredicateExecutor<BannerEntity> {
 
     List<BannerEntity> findAllByApplicationEqualsAndDisplayToAfter(Application application, LocalDateTime displayTo);
 
     @Query(value = "SELECT count(t.id) FROM BannerEntity t WHERE t.application = :application AND t.id <> :id AND "
-        + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
-        + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
+            + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
+            + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
     long countByApplicationEqualsAndIdNot(@Param("application") Application application, @Param("id") UUID id,
-        @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
+                                          @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
 
     @Query(value = "SELECT count(t.id) FROM BannerEntity t WHERE t.application = :application AND "
-        + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
-        + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
+            + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
+            + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
     long countByApplicationEquals(@Param("application") Application application,
-        @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
+                                  @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
 }

@@ -1,3 +1,4 @@
+
 const prio = {
   LAG: 'Låg',
   MEDEL: 'Medel',

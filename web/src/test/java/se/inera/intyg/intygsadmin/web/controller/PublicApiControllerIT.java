@@ -19,6 +19,10 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.Test;
+import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
+
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.greaterThan;
@@ -26,52 +30,48 @@ import static org.hamcrest.Matchers.is;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.Test;
-import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
-
 public class PublicApiControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetAppConfig() {
         given().expect().statusCode(OK)
-            .when()
-            .get(PUBLIC_API_REQUEST_MAPPING + "/appconfig")
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-appconfig-response-schema.json"));
+                .when()
+                .get(PUBLIC_API_REQUEST_MAPPING + "/appconfig")
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-appconfig-response-schema.json"));
     }
 
     @Test
     public void testGetVersionInfo() {
         given().expect().statusCode(OK)
-            .when()
-            .get(PUBLIC_API_REQUEST_MAPPING + "/version")
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-version-response-schema.json"));
+                .when()
+                .get(PUBLIC_API_REQUEST_MAPPING + "/version")
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-version-response-schema.json"));
     }
 
     @Test
     public void testGetSessionStatus() {
 
         given().expect().statusCode(OK)
-            .when()
-            .get(SESSION_STAT_REQUEST_MAPPING)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
-            .body("sessionState.hasSession", is(false))
-            .body("sessionState.authenticated", is(false))
-            .body("sessionState.secondsUntilExpire", is(0));
+                .when()
+                .get(SESSION_STAT_REQUEST_MAPPING)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
+                .body("sessionState.hasSession", is(false))
+                .body("sessionState.authenticated", is(false))
+                .body("sessionState.secondsUntilExpire", is(0));
 
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         given().expect().statusCode(OK)
-            .when()
-            .get(SESSION_STAT_REQUEST_MAPPING)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
-            .body("sessionState.hasSession", is(true))
-            .body("sessionState.authenticated", is(true))
-            .body("sessionState.secondsUntilExpire", greaterThan(0));
+                .when()
+                .get(SESSION_STAT_REQUEST_MAPPING)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
+                .body("sessionState.hasSession", is(true))
+                .body("sessionState.authenticated", is(true))
+                .body("sessionState.secondsUntilExpire", greaterThan(0));
     }
 
 }

@@ -19,17 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.config;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
-import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
-import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
-import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
-import static se.inera.intyg.intygsadmin.web.controller.RequestErrorController.IA_SPRING_SEC_ERROR_CONTROLLER_PATH;
-import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
-
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -65,9 +55,20 @@ import se.inera.intyg.intygsadmin.web.auth.filter.IneraOidcFilter;
 import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
+import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
+import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
+import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
+import static se.inera.intyg.intygsadmin.web.controller.RequestErrorController.IA_SPRING_SEC_ERROR_CONTROLLER_PATH;
+import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
+
 @Configuration
 @EnableWebSecurity
-@EnableConfigurationProperties(value = {IdpProperties.class})
+@EnableConfigurationProperties(value = { IdpProperties.class })
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private OIDCProviderMetadata ineraOIDCProviderMetadata;
@@ -79,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public SecurityConfig(OIDCProviderMetadata ineraOIDCProviderMetadata, OAuth2RestTemplate restTemplate,
-        UserPersistenceService userPersistenceService, IdpProperties idpProperties, Environment environment) {
+            UserPersistenceService userPersistenceService, IdpProperties idpProperties, Environment environment) {
         this.ineraOIDCProviderMetadata = ineraOIDCProviderMetadata;
         this.restTemplate = restTemplate;
         this.userPersistenceService = userPersistenceService;
@@ -123,8 +124,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public IneraOidcFilter ineraOidcFilter() {
         IneraOidcFilter ineraOidcFilter = new IneraOidcFilter(idpProperties.getRedirectUri().getPath(), ineraOIDCProviderMetadata,
-            idpProperties.getClientId(),
-            restTemplate, userPersistenceService);
+                idpProperties.getClientId(),
+                restTemplate, userPersistenceService);
         ineraOidcFilter.setAuthenticationSuccessHandler(successRedirectHandler());
         ineraOidcFilter.setAuthenticationFailureHandler(failureHandler());
         ineraOidcFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
@@ -137,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Profile({FAKE_PROFILE})
+    @Profile({ FAKE_PROFILE })
     public FakeAuthenticationFilter fakeAuthenticationFilter() {
         FakeAuthenticationFilter fakeAuthenticationFilter = new FakeAuthenticationFilter();
         fakeAuthenticationFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
@@ -171,21 +172,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // These should always be permitted
         http
-            .authorizeRequests()
-            .antMatchers("/").permitAll()
-            .antMatchers("/welcome-assets/**").permitAll()
-            .antMatchers("/version.html").permitAll()
-            .antMatchers("/public-api/version").permitAll()
-            .antMatchers("/version-assets/**").permitAll()
-            .antMatchers("/favicon*").permitAll()
-            .antMatchers("/index.html").permitAll()
-            .antMatchers("/images/**").permitAll()
-            .antMatchers("/app/**").permitAll()
-            .antMatchers("/assets/**").permitAll()
-            .antMatchers("/components/**").permitAll()
-            .antMatchers("/actuator/**").permitAll()
-            .antMatchers(API_ANVANDARE).permitAll()
-            .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/welcome-assets/**").permitAll()
+                .antMatchers("/version.html").permitAll()
+                .antMatchers("/public-api/version").permitAll()
+                .antMatchers("/version-assets/**").permitAll()
+                .antMatchers("/favicon*").permitAll()
+                .antMatchers("/index.html").permitAll()
+                .antMatchers("/images/**").permitAll()
+                .antMatchers("/app/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/components/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers(API_ANVANDARE).permitAll()
+                .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
         // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll();
 
         if (profiles.contains(FAKE_PROFILE)) {
@@ -201,25 +202,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // @formatter:off
         http
-            .authorizeRequests()
-            .antMatchers("/**")
-            .fullyAuthenticated()
-            .and()
-            .exceptionHandling()
-            .defaultAuthenticationEntryPointFor(
-                new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()),
-                new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL))
-            .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
-            .and()
-            .addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-            .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
-            .logout()
-            .invalidateHttpSession(true)
-            .logoutUrl(AuthenticationConstansts.LOGOUT_URL)
-            .logoutSuccessHandler(logoutSuccessHandler())
-            .clearAuthentication(true)
-            .and()
-            .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
+                .authorizeRequests()
+                    .antMatchers("/**")
+                    .fullyAuthenticated()
+                .and()
+                    .exceptionHandling()
+                    .defaultAuthenticationEntryPointFor(
+                                new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()),
+                                    new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL))
+                    .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
+                .and()
+                    .addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+                    .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
+                .logout()
+                    .invalidateHttpSession(true)
+                    .logoutUrl(AuthenticationConstansts.LOGOUT_URL)
+                    .logoutSuccessHandler(logoutSuccessHandler())
+                    .clearAuthentication(true)
+                .and()
+                    .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
 
         // @formatter:on
 
@@ -227,13 +228,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private void addFakeLogin(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-            .antMatchers(FAKE_LOGIN_URL).permitAll()
-            .antMatchers("/h2-console/**").permitAll()
-            .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll();
+                .authorizeRequests()
+                .antMatchers(FAKE_LOGIN_URL).permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll();
 
         http
-            .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+                .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
 
     }
 }

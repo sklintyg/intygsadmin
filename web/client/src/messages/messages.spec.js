@@ -6,7 +6,7 @@ jest.mock('./messages.json', () => ({
       "unknown": "Unknown error"
     }
   }
-}), {virtual: true})
+}), { virtual: true })
 
 describe('messages test', () => {
 

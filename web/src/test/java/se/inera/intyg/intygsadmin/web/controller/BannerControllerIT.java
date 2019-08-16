@@ -19,19 +19,20 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+
+import java.time.LocalDateTime;
+
+import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 public class BannerControllerIT extends BaseRestIntegrationTest {
 
@@ -42,10 +43,10 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"));
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"));
     }
 
     @Test
@@ -53,10 +54,10 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_API_ENDPOINT + "/activeAndFuture?application=" + Application.WEBCERT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
+                .when()
+                .get(BANNER_API_ENDPOINT + "/activeAndFuture?application=" + Application.WEBCERT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
     }
 
     @Test
@@ -65,11 +66,11 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
 
         LocalDateTime today = LocalDateTime.now();
         Integer totalElementsBefore = given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_API_ENDPOINT)
-            .then()
-            .extract()
-            .path("totalElements");
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .extract()
+                .path("totalElements");
 
         BannerDTO bannerDTO = new BannerDTO();
 
@@ -80,59 +81,59 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
         bannerDTO.setDisplayTo(today.plusDays(210));
 
         String bannerId = given()
-            .contentType(ContentType.JSON)
-            .body(bannerDTO)
-            .expect().statusCode(OK)
-            .when()
-            .put(BANNER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"))
-            .extract()
-            .path("id");
+                .contentType(ContentType.JSON)
+                .body(bannerDTO)
+                .expect().statusCode(OK)
+                .when()
+                .put(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"))
+                .extract()
+                .path("id");
 
         given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore + 1))
-            .body("content.find { it.id == '" + bannerId + "' }.message",
-                equalTo("hej"));
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
+                .body("totalElements", is(totalElementsBefore + 1))
+                .body("content.find { it.id == '" + bannerId + "' }.message",
+                        equalTo("hej"));
 
         // Update
         bannerDTO.setMessage("New message");
 
         given()
-            .contentType(ContentType.JSON)
-            .body(bannerDTO)
-            .expect().statusCode(OK)
-            .when()
-            .post(BANNER_API_ENDPOINT + "/" + bannerId)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"));
+                .contentType(ContentType.JSON)
+                .body(bannerDTO)
+                .expect().statusCode(OK)
+                .when()
+                .post(BANNER_API_ENDPOINT + "/" + bannerId)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/put-banner-response-schema.json"));
 
         given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore + 1))
-            .body("content.find { it.id == '" + bannerId + "' }.message",
-                equalTo("New message"));
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
+                .body("totalElements", is(totalElementsBefore + 1))
+                .body("content.find { it.id == '" + bannerId + "' }.message",
+                        equalTo("New message"));
 
         // Delete
         given()
-            .contentType(ContentType.JSON)
-            .expect().statusCode(OK)
-            .when()
-            .delete(BANNER_API_ENDPOINT + "/" + bannerId);
+                .contentType(ContentType.JSON)
+                .expect().statusCode(OK)
+                .when()
+                .delete(BANNER_API_ENDPOINT + "/" + bannerId);
 
         given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore));
+                .when()
+                .get(BANNER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
+                .body("totalElements", is(totalElementsBefore));
     }
 
 }

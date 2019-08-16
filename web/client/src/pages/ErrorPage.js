@@ -1,3 +1,4 @@
+import React from 'react';
 import {FlexColumnContainer, ScrollingContainer, WorkareaContainer} from "../components/styles/iaLayout";
 import styled from "styled-components";
 import {ErrorPageIcon} from "../components/styles/iaSvgIcons";
@@ -25,17 +26,11 @@ const ErrorPage = ({match}) => {
 
   switch (match.params.errorCode) {
   case 'LOGIN_FEL001':
-    return ( < Redirect
-    to = "/loggedout/LOGIN_FEL001" / >
-  )
+    return (<Redirect to="/loggedout/LOGIN_FEL001" />)
   case 'LOGIN_FEL002':
-    return ( < Redirect
-    to = "/loggedout/LOGIN_FEL002" / >
-  )
+    return (<Redirect to="/loggedout/LOGIN_FEL002" />)
   case 'LOGIN_FEL003':
-    return ( < Redirect
-    to = "/loggedout/LOGIN_FEL003" / >
-  )
+    return (<Redirect to="/loggedout/LOGIN_FEL003" />)
   case 'NOT_FOUND':
     activeError.title = 'Sidan du söker finns inte';
     activeError.message = 'Kontrollera att den länk du använder är korrekt.';
@@ -44,18 +39,16 @@ const ErrorPage = ({match}) => {
     break;
   }
   return (
-    < FlexColumnContainer >
-    < CustomScrollingContainer >
-    < PageContainer >
-    < ErrorPageIcon / >
-    < br / >
-    < ErrorMessageFormatter
-  error = {activeError}
-  />
-  < /PageContainer>
-  < /CustomScrollingContainer>
-  < /FlexColumnContainer>
-)
+    <FlexColumnContainer>
+      <CustomScrollingContainer>
+        <PageContainer>
+          <ErrorPageIcon />
+          <br />
+          <ErrorMessageFormatter error={activeError} />
+        </PageContainer>
+      </CustomScrollingContainer>
+    </FlexColumnContainer>
+  )
 };
 
 export default ErrorPage;

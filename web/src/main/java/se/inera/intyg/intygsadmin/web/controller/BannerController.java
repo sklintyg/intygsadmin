@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.controller;
 
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.service.BannerService;
@@ -50,7 +52,7 @@ public class BannerController {
 
     @GetMapping
     public ResponseEntity<Page<BannerDTO>> listBanners(
-        @PageableDefault(size = 20, sort = "createdAt")
+            @PageableDefault(size = 20, sort = "createdAt")
             Pageable pageable) {
         Page<BannerDTO> bannerDTOS = bannerService.getBanners(pageable);
 
@@ -59,7 +61,7 @@ public class BannerController {
 
     @GetMapping("/activeAndFuture")
     public ResponseEntity<List<BannerDTO>> listBannersActiveAndFutureBanners(
-        @RequestParam Application application) {
+            @RequestParam Application application) {
         List<BannerDTO> bannerDTOS = bannerService.getActiveAndFutureBanners(application);
 
         return ResponseEntity.ok(bannerDTOS);

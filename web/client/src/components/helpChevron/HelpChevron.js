@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import React, { useState } from 'react'
 import colors from '../styles/iaColors'
 import Toggler from '../toggler/Toggler'
 import styled from 'styled-components'
@@ -44,29 +44,23 @@ const HelpRoof = styled.div`
   border-right: 10px solid #fff;
 `
 
-const HelpChevron = ({label, children}) => {
+const HelpChevron = ({ label, children }) => {
   const [prioHelpExpanded, setPrioHelpExpanded] = useState(false)
   const prioHelpToggler = () => {
     setPrioHelpExpanded(!prioHelpExpanded)
   }
   return (
-    < >
-    < h5 >
-    {label}
-    < Toggler
-  expanded = {prioHelpExpanded}
-  handleToggle = {prioHelpToggler}
-  />
-  < /h5>
-  < HelpRoof
-  className = {prioHelpExpanded ? 'visible' : 'hidden'}
-  />
-  < HelpDiv
-  className = {prioHelpExpanded ? 'visible' : 'hidden'} >
-    {children}
-    < /HelpDiv>
-    < />
-)
+    <>
+      <h5>
+        {label}
+        <Toggler expanded={prioHelpExpanded} handleToggle={prioHelpToggler} />
+      </h5>
+      <HelpRoof className={prioHelpExpanded ? 'visible' : 'hidden'} />
+      <HelpDiv className={prioHelpExpanded ? 'visible' : 'hidden'}>
+        {children}
+      </HelpDiv>
+    </>
+  )
 }
 
 export default HelpChevron

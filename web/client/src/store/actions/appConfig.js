@@ -1,5 +1,5 @@
 import * as api from '../../api/appConfigApi'
-import {getIsFetching} from '../reducers/appConfig'
+import { getIsFetching } from '../reducers/appConfig'
 
 export const FETCH_APPCONFIG_REQUEST = 'FETCH_APPCONFIG_REQUEST'
 export const FETCH_APPCONFIG_SUCCESS = 'FETCH_APPCONFIG_SUCCESS'

@@ -1,5 +1,5 @@
-import {combineReducers} from 'redux'
-import {buildClientError} from './util'
+import { combineReducers } from 'redux'
+import { buildClientError } from './util'
 import * as ActionConstants from '../actions/appConfig'
 
 export const CONFIG_DEFAULT_STATE = {
@@ -10,34 +10,34 @@ export const CONFIG_DEFAULT_STATE = {
 
 const settings = (state = CONFIG_DEFAULT_STATE, action) => {
   switch (action.type) {
-  case ActionConstants.FETCH_APPCONFIG_SUCCESS:
-    return action.response
-  default:
-    return state
+    case ActionConstants.FETCH_APPCONFIG_SUCCESS:
+      return action.response
+    default:
+      return state
   }
 }
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
-  case ActionConstants.FETCH_APPCONFIG_REQUEST:
-    return true
-  case ActionConstants.FETCH_APPCONFIG_SUCCESS:
-  case ActionConstants.FETCH_APPCONFIG_FAILURE:
-    return false
-  default:
-    return state
+    case ActionConstants.FETCH_APPCONFIG_REQUEST:
+      return true
+    case ActionConstants.FETCH_APPCONFIG_SUCCESS:
+    case ActionConstants.FETCH_APPCONFIG_FAILURE:
+      return false
+    default:
+      return state
   }
 }
 
 const errorMessage = (state = null, action) => {
   switch (action.type) {
-  case ActionConstants.FETCH_APPCONFIG_FAILURE:
-    return buildClientError(action.payload, 'error.appconfig')
-  case ActionConstants.FETCH_APPCONFIG_REQUEST:
-  case ActionConstants.FETCH_APPCONFIG_SUCCESS:
-    return null
-  default:
-    return state
+    case ActionConstants.FETCH_APPCONFIG_FAILURE:
+      return buildClientError(action.payload, 'error.appconfig')
+    case ActionConstants.FETCH_APPCONFIG_REQUEST:
+    case ActionConstants.FETCH_APPCONFIG_SUCCESS:
+      return null
+    default:
+      return state
   }
 }
 

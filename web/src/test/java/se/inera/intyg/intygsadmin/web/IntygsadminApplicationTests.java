@@ -28,8 +28,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @SpringBootTest
 public class IntygsadminApplicationTests {
 
-    @Test
-    public void contextLoads() {
-    }
+	@Test
+	public void contextLoads() {
+	}
 
 }

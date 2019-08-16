@@ -1,5 +1,5 @@
 import reducer from './modal'
-import {CLOSE_ALL_MODALS, CLOSE_MODAL, OPEN_MODAL} from '../actions/modal';
+import { OPEN_MODAL, CLOSE_MODAL, CLOSE_ALL_MODALS } from '../actions/modal';
 
 describe('modal reducer', () => {
   it('should return the initial state', () => {

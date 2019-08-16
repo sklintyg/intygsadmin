@@ -50,8 +50,8 @@ public class UserPersistenceServiceTest extends TestSupport {
     public void before() {
         userRepository.deleteAll();
         randomizer()
-            .objects(UserEntity.class, total)
-            .forEach(userPersistenceService::upsert);
+                .objects(UserEntity.class, total)
+                .forEach(userPersistenceService::upsert);
     }
 
     @Test

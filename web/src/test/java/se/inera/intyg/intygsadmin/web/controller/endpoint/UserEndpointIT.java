@@ -19,15 +19,16 @@
 
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
+import org.junit.jupiter.api.Test;
+
+import io.restassured.http.ContentType;
+import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
+import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
+
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.with;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
-
-import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Test;
-import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
 
 public class UserEndpointIT extends BaseRestIntegrationTest {
 
@@ -43,10 +44,10 @@ public class UserEndpointIT extends BaseRestIntegrationTest {
         addUser();
 
         given().expect().statusCode(OK)
-            .when()
-            .get(USER_ACTUATOR_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-users-actuator-response-schema.json"));
+                .when()
+                .get(USER_ACTUATOR_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/get-users-actuator-response-schema.json"));
     }
 
     @Test
@@ -54,10 +55,10 @@ public class UserEndpointIT extends BaseRestIntegrationTest {
         addUser();
 
         given().expect().statusCode(OK)
-            .when()
-            .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
-            .then()
-            .body("employeeHsaId", equalTo(user.getEmployeeHsaId()));
+                .when()
+                .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
+                .then()
+                .body("employeeHsaId", equalTo(user.getEmployeeHsaId()));
     }
 
     @Test
@@ -65,20 +66,20 @@ public class UserEndpointIT extends BaseRestIntegrationTest {
         addUser();
 
         given().expect().statusCode(OK)
-            .when()
-            .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
-            .then()
-            .body("employeeHsaId", equalTo(user.getEmployeeHsaId()));
+                .when()
+                .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
+                .then()
+                .body("employeeHsaId", equalTo(user.getEmployeeHsaId()));
 
         given().expect().statusCode(OK)
-            .when()
-            .delete(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId());
+                .when()
+                .delete(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId());
 
         given().expect().statusCode(OK)
-            .when()
-            .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
-            .then()
-            .body(equalTo(""));
+                .when()
+                .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
+                .then()
+                .body(equalTo(""));
     }
 
     @Test
@@ -86,19 +87,19 @@ public class UserEndpointIT extends BaseRestIntegrationTest {
         addUser();
 
         given().expect().statusCode(OK)
-            .when()
-            .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
-            .then()
-            .body("intygsadminRole", equalTo(user.getIntygsadminRole()));
+                .when()
+                .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
+                .then()
+                .body("intygsadminRole", equalTo(user.getIntygsadminRole()));
 
         user.setIntygsadminRole("BAS");
         with().body(user).contentType(ContentType.JSON).post(USER_ACTUATOR_ENDPOINT);
 
         given().expect().statusCode(OK)
-            .when()
-            .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
-            .then()
-            .body("intygsadminRole", equalTo(user.getIntygsadminRole()));
+                .when()
+                .get(USER_ACTUATOR_ENDPOINT + "/" + user.getEmployeeHsaId())
+                .then()
+                .body("intygsadminRole", equalTo(user.getIntygsadminRole()));
     }
 
     private void addUser() {

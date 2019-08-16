@@ -1,19 +1,20 @@
 const cypress = require('cypress');
 const marge = require('mochawesome-report-generator');
-const {merge} = require('mochawesome-merge');
+const { merge } = require('mochawesome-merge');
 const fs = require('fs');
+
 
 const dir = 'build/test-results';
 
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir, {recursive: true});
+if (!fs.existsSync(dir)){
+  fs.mkdirSync(dir, { recursive: true });
 }
 
 // https://github.com/cypress-io/cypress/issues/1946
 
 const config = {};
 
-process.argv.forEach(function(val) {
+process.argv.forEach(function (val) {
   if (val.indexOf('=') > -1) {
     const parts = val.split('=');
 

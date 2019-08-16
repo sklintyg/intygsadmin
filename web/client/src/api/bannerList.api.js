@@ -10,15 +10,15 @@ export const fetchBannerList = (bannerListRequest) => {
 
   let {pageIndex, sortColumn, sortDirection} = bannerListRequest
 
-  if (!pageIndex) {
+  if(!pageIndex) {
     pageIndex = 0
   }
 
-  if (!sortColumn) {
+  if(!sortColumn) {
     sortColumn = 'createdAt'
   }
 
-  if (!sortDirection) {
+  if(!sortDirection) {
     sortDirection = 'DESC'
   }
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import * as PropTypes from "prop-types";
 import styled from "styled-components";
 import {ActionButton} from "../styles";
@@ -9,17 +10,14 @@ const ALogoutUrl = styled.a`
 
 const Logout = ({logoutUrl}) =>
   (
-  < ALogoutUrl
-href = {logoutUrl} >
-  < ActionButton
-id = "logoutBtn" >
-  < LogoutIcon / >
-  < br / >
-  Logga
-ut
-< /ActionButton>
-< /ALogoutUrl>
-)
+    <ALogoutUrl href={logoutUrl}>
+      <ActionButton id="logoutBtn">
+        <LogoutIcon />
+        <br />
+        Logga ut
+      </ActionButton>
+    </ALogoutUrl>
+  )
 
 Logout.propTypes = {
   logoutUrl: PropTypes.string

@@ -20,11 +20,13 @@
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
 import java.util.List;
+
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.service.BannerService;
@@ -43,6 +45,6 @@ public class BannerEndpoint {
     public ResponseEntity<List<BannerDTO>> getActiveAndFutureBanners(@PathVariable Application application) {
         List<BannerDTO> banners = bannerService.getActiveAndFutureBanners(application);
 
-        return ResponseEntity.ok(banners);
+        return  ResponseEntity.ok(banners);
     }
 }

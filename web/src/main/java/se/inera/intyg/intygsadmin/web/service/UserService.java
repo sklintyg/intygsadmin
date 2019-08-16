@@ -19,7 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,8 @@ import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
 import se.inera.intyg.intygsadmin.web.mapper.UserMapper;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -43,7 +44,7 @@ public class UserService {
 
     public IntygsadminUser getActiveUser() {
         if (SecurityContextHolder.getContext().getAuthentication() == null
-            || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof IntygsadminUser)) {
+                || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof IntygsadminUser)) {
             return null;
         }
 

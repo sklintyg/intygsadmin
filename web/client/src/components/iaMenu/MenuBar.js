@@ -1,10 +1,11 @@
+import React from 'react'
 import styled from 'styled-components/macro'
-import {PageHeaderContainer} from '../styles/iaLayout'
+import { PageHeaderContainer } from '../styles/iaLayout'
 import iaColors from '../styles/iaColors'
-import {Nav, Navbar} from 'reactstrap'
+import { Navbar, Nav } from 'reactstrap'
 import MenuBarButton from './MenuBarButton'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
+import { compose } from 'recompose'
+import { connect } from 'react-redux'
 
 const Wrapper = styled.div`
   background-color: ${iaColors.IA_COLOR_04};
@@ -22,7 +23,7 @@ const Wrapper = styled.div`
   }
 `
 
-const MenuBar = ({stat}) => {
+const MenuBar = ({ stat }) => {
   const menu = [
     {
       to: '/intygsinformation',
@@ -42,24 +43,18 @@ const MenuBar = ({stat}) => {
   ]
 
   return (
-    < Wrapper >
-    < PageHeaderContainer >
-    < Navbar
-  className = "navbar-ib" >
-    < Nav
-  navbar >
-  {
-    menu.map((menuItem) => (
-      < MenuBarButton key = {menuItem.text} menuItem = {menuItem}
-  />
-))
-}
-<
-  /Nav>
-  < /Navbar>
-  < /PageHeaderContainer>
-  < /Wrapper>
-)
+    <Wrapper>
+      <PageHeaderContainer>
+        <Navbar className="navbar-ib">
+          <Nav navbar>
+            {menu.map((menuItem) => (
+              <MenuBarButton key={menuItem.text} menuItem={menuItem} />
+            ))}
+          </Nav>
+        </Navbar>
+      </PageHeaderContainer>
+    </Wrapper>
+  )
 }
 
 export default compose(

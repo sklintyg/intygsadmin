@@ -6,6 +6,7 @@
       "AVVISADE": "avvisade"
     }
   },
+
   "error": {
     "logid_footer": "Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand {inerakundtjanst} och uppge då följande logg id: {logId}",
     "common": {

@@ -1,7 +1,8 @@
+import React from 'react'
 import styled from 'styled-components'
-import {HeaderSectionContainer, SingleTextRowContainer, VerticalContainer} from '../styles'
+import { HeaderSectionContainer, SingleTextRowContainer, VerticalContainer } from '../styles'
 import IaColors from '../../styles/iaColors'
-import {UserIcon} from '../../styles/iaSvgIcons'
+import { UserIcon } from '../../styles/iaSvgIcons'
 
 const UserComponentWrapper = styled(HeaderSectionContainer)`
   flex: 1 1 auto;
@@ -16,18 +17,17 @@ const UserTitle = styled.div`
   padding-left: 4px;
 `
 
-const User = ({userName}) => {
+const User = ({ userName }) => {
   return (
-    < UserComponentWrapper >
-    < UserIcon / >
-    < VerticalContainer >
-    < SingleTextRowContainer >
-    < UserTitle
-  id = "currentUserTitle" > {userName} < /UserTitle>
-    < /SingleTextRowContainer>
-    < /VerticalContainer>
-    < /UserComponentWrapper>
-)
+    <UserComponentWrapper>
+      <UserIcon />
+      <VerticalContainer>
+        <SingleTextRowContainer>
+          <UserTitle id="currentUserTitle">{userName}</UserTitle>
+        </SingleTextRowContainer>
+      </VerticalContainer>
+    </UserComponentWrapper>
+  )
 }
 
 export default User

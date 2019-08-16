@@ -21,17 +21,18 @@ package se.inera.intyg.intygsadmin.web.mapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
+
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BannerMapper {
-
     BannerDTO toDTO(BannerEntity s);
 
     List<BannerDTO> toListDTO(List<BannerEntity> s);

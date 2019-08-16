@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@SpringJUnitConfig(value = {PersistenceConfig.class})
+@SpringJUnitConfig(value = { PersistenceConfig.class })
 @ActiveProfiles("test")
 @EnableAutoConfiguration
 @TestPropertySource("classpath:test.properties")
@@ -38,5 +38,4 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface TestContext {
-
 }

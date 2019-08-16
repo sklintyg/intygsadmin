@@ -1,5 +1,9 @@
-import {GET_USER, GET_USER_FAILURE, GET_USER_SUCCESS,} from "../actions/user";
-import {buildClientError} from "./util";
+import {
+  GET_USER,
+  GET_USER_FAILURE,
+  GET_USER_SUCCESS,
+} from "../actions/user";
+import { buildClientError } from "./util";
 
 const INITIAL_STATE = {
   isLoading: true,

@@ -1,4 +1,4 @@
-import {functionToTest, mockStore} from '../../testUtils/actionUtils'
+import { functionToTest, mockStore } from '../../testUtils/actionUtils'
 import * as actions from './bannerList.actions'
 import * as api from '../../api/bannerList.api'
 
@@ -28,13 +28,13 @@ describe('bannerList actions', () => {
       }
 
       const expectedActions = [
-        {type: actions.FETCH_BANNERLIST_REQUEST},
-        {type: actions.FETCH_BANNERLIST_SUCCESS, response, sortColumn: 'createdAt', sortDirection: 'DESC'},
+        { type: actions.FETCH_BANNERLIST_REQUEST },
+        { type: actions.FETCH_BANNERLIST_SUCCESS, response, sortColumn: 'createdAt', sortDirection: 'DESC' },
       ]
 
       return functionToTest(
         store,
-        () => actions.fetchBannerList({sortColumn: 'createdAt', sortDirection: 'DESC'}),
+        () => actions.fetchBannerList({ sortColumn: 'createdAt', sortDirection: 'DESC' }),
         expectedActions
       )
     })
@@ -47,8 +47,8 @@ describe('bannerList actions', () => {
       }
 
       const expectedActions = [
-        {type: actions.FETCH_BANNERLIST_REQUEST},
-        {type: actions.FETCH_BANNERLIST_SUCCESS, response, sortColumn: 'createdAtNow', sortDirection: 'ASC'},
+        { type: actions.FETCH_BANNERLIST_REQUEST },
+        { type: actions.FETCH_BANNERLIST_SUCCESS, response, sortColumn: 'createdAtNow', sortDirection: 'ASC' },
       ]
 
       return functionToTest(
@@ -66,13 +66,13 @@ describe('bannerList actions', () => {
       }
 
       const expectedActions = [
-        {type: actions.FETCH_BANNERLIST_REQUEST},
-        {type: actions.FETCH_BANNERLIST_FAILURE, payload: response},
+        { type: actions.FETCH_BANNERLIST_REQUEST },
+        { type: actions.FETCH_BANNERLIST_FAILURE, payload: response },
       ]
 
       return functionToTest(
         store,
-        () => actions.fetchBannerList({sortColumn: 'createdAt', sortDirection: 'DESC'}),
+        () => actions.fetchBannerList({ sortColumn: 'createdAt', sortDirection: 'DESC' }),
         expectedActions
       )
     })

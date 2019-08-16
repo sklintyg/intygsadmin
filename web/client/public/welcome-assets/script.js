@@ -24,15 +24,15 @@ $(document).ready(function() {
 
 function fetchFakeUsers() {
   $.getJSON('/fake-api/users')
-  .then(
-    function(response) {
-      fakeUsers = response;
-      updateUserList();
-    },
-    function(data, status) {
-      console.log('error ' + status);
-    }
-  );
+    .then(
+      function(response) {
+        fakeUsers = response;
+        updateUserList();
+      },
+      function(data, status) {
+        console.log('error ' + status);
+      }
+    );
 }
 
 function updateUserList() {

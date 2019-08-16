@@ -1,24 +1,24 @@
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
 
 plugins {
-  id("io.spring.dependency-management")
+    id("io.spring.dependency-management")
 }
 
 dependencies {
 
-  implementation("org.liquibase:liquibase-core")
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.liquibase:liquibase-core")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-  implementation("com.querydsl:querydsl-core")
-  implementation("com.querydsl:querydsl-jpa")
-  implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.querydsl:querydsl-core")
+    implementation("com.querydsl:querydsl-jpa")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
 
-  compileOnly("org.projectlombok:lombok")
-  annotationProcessor("com.querydsl:querydsl-apt::jpa")
-  annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${Dependencies.hibernateJpsVersion}")
-  annotationProcessor("javax.annotation:javax.annotation-api")
-  annotationProcessor("org.projectlombok:lombok")
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("com.querydsl:querydsl-apt::jpa")
+    annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${Dependencies.hibernateJpsVersion}")
+    annotationProcessor("javax.annotation:javax.annotation-api")
+    annotationProcessor("org.projectlombok:lombok")
 
-  runtime("mysql:mysql-connector-java")
-  runtime("com.h2database:h2")
+    runtime("mysql:mysql-connector-java")
+    runtime("com.h2database:h2")
 }

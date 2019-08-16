@@ -19,13 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.SUCCESSFUL_LOGOUT_REDIRECT_URL;
-
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -33,8 +27,15 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.SUCCESSFUL_LOGOUT_REDIRECT_URL;
+
 public class IntygsadminLogoutSuccessHandler extends
-    SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
+        SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private OIDCProviderMetadata ineraOIDCProviderMetadata;
     private IdpProperties idpProperties;
@@ -46,7 +47,7 @@ public class IntygsadminLogoutSuccessHandler extends
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-        throws IOException {
+            throws IOException {
 
         boolean isRedirected = false;
         if (authentication != null) {
@@ -70,9 +71,9 @@ public class IntygsadminLogoutSuccessHandler extends
                              */
 
                             UriComponentsBuilder uriBuilder = UriComponentsBuilder
-                                .fromUri(ineraOIDCProviderMetadata.getEndSessionEndpointURI())
-                                .queryParam("id_token_hint", idTokenString)
-                                .queryParam("post_logout_redirect_uri", idpProperties.getLogoutRedirectUri().toString());
+                                    .fromUri(ineraOIDCProviderMetadata.getEndSessionEndpointURI())
+                                    .queryParam("id_token_hint", idTokenString)
+                                    .queryParam("post_logout_redirect_uri", idpProperties.getLogoutRedirectUri().toString());
 
                             isRedirected = true;
                             getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());

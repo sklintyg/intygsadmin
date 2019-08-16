@@ -1,8 +1,10 @@
+import React from 'react'
 import BannerActionBar from './BannerActionBar'
 import iaValues from '../styles/iaValues'
 import styled from 'styled-components'
-import {IaTypo01, IaTypo05} from '../styles/iaTypography'
-import {InfoIcon} from '../styles/iaSvgIcons'
+import IaColors from '../styles/iaColors'
+import { IaTypo01, IaTypo05 } from '../styles/iaTypography'
+import { InfoIcon } from '../styles/iaSvgIcons'
 
 const CenterContainer = styled.div`
   margin: auto;
@@ -43,39 +45,25 @@ const IconWrapper = styled.div`
   padding-right: 10px;
 `
 
-const BannerPageHeader = ({props}) => {
+const BannerPageHeader = ({ props }) => {
   return (
-    < HeaderContainer >
-    < CenterContainer >
-    < ButtonRow >
-    < PageHeaderRow >
-    < PageHeaderRow >
-    < IconWrapper > < InfoIcon
-  color = {IaColors.IA_COLOR_02}
-  /></
-  IconWrapper >
-  < /PageHeaderRow>
-  < PageHeaderCol >
-  < IaTypo01 > Driftbanner < /IaTypo01>
-  < IaTypo05 > Skapa
-  och
-  redigera
-  driftbanners
-  som
-  informerar
-  användaren
-  om
-  kommande
-  eller
-  pågående
-  händelser. < /IaTypo05>
-  < /PageHeaderCol>
-  < /PageHeaderRow>
-  < BannerActionBar / >
-  < /ButtonRow>
-  < /CenterContainer>
-  < /HeaderContainer>
-)
+    <HeaderContainer>
+      <CenterContainer>
+        <ButtonRow>
+          <PageHeaderRow>
+            <PageHeaderRow>
+              <IconWrapper><InfoIcon color={IaColors.IA_COLOR_02} /></IconWrapper>
+            </PageHeaderRow>
+            <PageHeaderCol>
+              <IaTypo01>Driftbanner</IaTypo01>
+              <IaTypo05>Skapa och redigera driftbanners som informerar användaren om kommande eller pågående händelser.</IaTypo05>
+            </PageHeaderCol>
+          </PageHeaderRow>
+          <BannerActionBar />
+        </ButtonRow>
+      </CenterContainer>
+    </HeaderContainer>
+  )
 }
 
 export default BannerPageHeader

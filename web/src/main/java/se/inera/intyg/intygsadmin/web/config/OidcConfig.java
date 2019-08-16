@@ -21,7 +21,6 @@ package se.inera.intyg.intygsadmin.web.config;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
-import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +34,11 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableOAuth2Client
-@EnableConfigurationProperties(value = {IdpProperties.class})
+@EnableConfigurationProperties(value = { IdpProperties.class })
 public class OidcConfig {
 
     private IdpProperties idpProperties;
@@ -82,7 +83,7 @@ public class OidcConfig {
             return rest.getForObject(issuer + "/.well-known/openid-configuration", String.class);
         } catch (RuntimeException e) {
             throw new IllegalArgumentException("Unable to resolve the OpenID Configuration with the provided Issuer of \"" + issuer + "\"",
-                e);
+                    e);
         }
     }
 }

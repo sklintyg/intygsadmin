@@ -19,7 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.http.HttpStatus;
@@ -33,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
 import se.inera.intyg.intygsadmin.web.service.UserService;
+
+import java.util.List;
 
 @Component
 @RestControllerEndpoint(id = "user")

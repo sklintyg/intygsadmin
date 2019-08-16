@@ -19,6 +19,22 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
+import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
+import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;
+import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -27,20 +43,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
-import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
-import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;
-import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
 
 @ExtendWith(MockitoExtension.class)
 public class BannerValidationServiceTest {
@@ -131,6 +133,7 @@ public class BannerValidationServiceTest {
     public void testValidation_dates() {
         BannerDTO bannerDTO = getBannerDTO();
 
+
         // To before from
         try {
             bannerDTO.setDisplayTo(bannerDTO.getDisplayFrom().minusDays(1));
@@ -164,8 +167,8 @@ public class BannerValidationServiceTest {
         BannerDTO bannerDTO = getBannerDTO();
 
         when(bannerPersistenceService.countByApplicationAndTime(
-            eq(bannerDTO.getApplication()), eq(bannerDTO.getDisplayFrom()), eq(bannerDTO.getDisplayTo()), any()))
-            .thenReturn(1L);
+                eq(bannerDTO.getApplication()), eq(bannerDTO.getDisplayFrom()), eq(bannerDTO.getDisplayTo()), any()))
+                .thenReturn(1L);
 
         try {
             bannerValidationService.validateBanner(bannerDTO);
@@ -184,8 +187,8 @@ public class BannerValidationServiceTest {
         BannerDTO bannerDTO = getBannerDTO();
 
         when(bannerPersistenceService.countByApplicationAndTime(
-            eq(bannerDTO.getApplication()), eq(bannerDTO.getDisplayFrom()), eq(bannerDTO.getDisplayTo()), any()))
-            .thenReturn(0L);
+                eq(bannerDTO.getApplication()), eq(bannerDTO.getDisplayFrom()), eq(bannerDTO.getDisplayTo()), any()))
+                .thenReturn(0L);
 
         bannerValidationService.validateBanner(bannerDTO);
 

@@ -1,9 +1,9 @@
-import {useEffect, useRef, useState} from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import {Button} from 'reactstrap'
+import { Button } from 'reactstrap'
 import colors from '../styles/iaColors'
-import {InsertLinkIcon, RemoveLinkIcon} from '../styles/iaSvgIcons'
-import {IaTypo06} from '../styles/iaTypography'
+import { InsertLinkIcon, RemoveLinkIcon } from '../styles/iaSvgIcons'
+import { IaTypo06 } from '../styles/iaTypography'
 
 const CustomDiv = styled.div`
   margin: 0 0 8px;
@@ -94,7 +94,7 @@ const ActionBar = styled.div`
   }
 `
 
-const CustomTextarea = ({onChange, className, value, limit, inputId}) => {
+const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
   const [currentRange, setCurrentRange] = useState()
   const [currentLinkElement, setCurrentLinkElement] = useState()
   const [linkText, setLinkText] = useState('')
@@ -174,18 +174,18 @@ const CustomTextarea = ({onChange, className, value, limit, inputId}) => {
   const handleKeyPress = (evt) => {
     if (textArea.current.innerText.length >= limit) {
       switch (evt.keyCode) {
-      case 8:
-      case 16:
-      case 17:
-      case 18:
-      case 46:
-      case 37:
-      case 38:
-      case 39:
-      case 40:
-        break
-      default:
-        evt.preventDefault()
+        case 8:
+        case 16:
+        case 17:
+        case 18:
+        case 46:
+        case 37:
+        case 38:
+        case 39:
+        case 40:
+          break
+        default:
+          evt.preventDefault()
       }
     }
 
@@ -230,75 +230,42 @@ const CustomTextarea = ({onChange, className, value, limit, inputId}) => {
   }, [])
 
   return (
-    < Container >
-    < ActionBar >
-    < Button
-  color = {'link'}
-  onClick = {openLinkPopup} >
-    < InsertLinkIcon / >
-    < /Button>
-    < /ActionBar>
-    < CustomDiv
-  className = {className}
-  ref = {textArea}
-  id = {inputId}
-  contentEditable = "true"
-  suppressContentEditableWarning = "true"
-  onSelect = {handleSelect}
-  onPaste = {handlePaste}
-  onKeyPress = {handleKeyPress}
-  onBlur = {onBlur}
-  dangerouslySetInnerHTML = {
-  {
-    __html: value
-  }
-}
-  />
-  {
-    textArea.current && limit ?
-  <
-    TextLimit > Tecken
-    kvar: {
-      limit - textArea.current.innerText.length
-    }
-  <
-    /TextLimit> : null}
-    < Popup
-    ref = {popup}
-    className = {popupOpen ? 'open' : 'closed'} >
-      < div >
-      < span > Länk < /span>
-      < input
-    type = "text"
-    placeholder = "Länk"
-    value = {linkHref}
-    onChange = {handleHrefChange}
-    />
-    < span > Visa < /span>
-    < input
-    type = "text"
-    placeholder = "Länktext"
-    value = {linkText}
-    onChange = {handleTextChange}
-    />
-    < /div>
-    < div
-    className = "button_container" >
-      < Button
-    color = {'default'}
-    onClick = {replaceCurrentLink}
-    title = {'Ta bort aktuell länk'} >
-      < RemoveLinkIcon / >
-      < /Button>
-      < Button
-    color = {'default'}
-    onClick = {replaceSelectedText}
-    title = {'Infoga länk'} >
-      < InsertLinkIcon / >
-      < /Button>
-      < /div>
-      < /Popup>
-      < /Container>
+    <Container>
+      <ActionBar>
+        <Button color={'link'} onClick={openLinkPopup}>
+          <InsertLinkIcon />
+        </Button>
+      </ActionBar>
+      <CustomDiv
+        className={className}
+        ref={textArea}
+        id={inputId}
+        contentEditable="true"
+        suppressContentEditableWarning="true"
+        onSelect={handleSelect}
+        onPaste={handlePaste}
+        onKeyPress={handleKeyPress}
+        onBlur={onBlur}
+        dangerouslySetInnerHTML={{ __html: value }}
+      />
+      {textArea.current && limit ? <TextLimit>Tecken kvar: {limit - textArea.current.innerText.length}</TextLimit> : null}
+      <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>
+        <div>
+          <span>Länk</span>
+          <input type="text" placeholder="Länk" value={linkHref} onChange={handleHrefChange} />
+          <span>Visa</span>
+          <input type="text" placeholder="Länktext" value={linkText} onChange={handleTextChange} />
+        </div>
+        <div className="button_container">
+          <Button color={'default'} onClick={replaceCurrentLink} title={'Ta bort aktuell länk'}>
+            <RemoveLinkIcon />
+          </Button>
+          <Button color={'default'} onClick={replaceSelectedText} title={'Infoga länk'}>
+            <InsertLinkIcon />
+          </Button>
+        </div>
+      </Popup>
+    </Container>
   )
 }
 
