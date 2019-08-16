@@ -19,6 +19,12 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +33,6 @@ import se.inera.intyg.intygsadmin.persistence.TestSupport;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestContext
 public class UserPersistenceServiceTest extends TestSupport {
@@ -50,8 +49,8 @@ public class UserPersistenceServiceTest extends TestSupport {
     public void before() {
         userRepository.deleteAll();
         randomizer()
-                .objects(UserEntity.class, total)
-                .forEach(userPersistenceService::upsert);
+            .objects(UserEntity.class, total)
+            .forEach(userPersistenceService::upsert);
     }
 
     @Test

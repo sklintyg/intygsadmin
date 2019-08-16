@@ -26,6 +26,7 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 
 @Service("webMonitoringLogService")
 public class MonitoringLogServiceImpl implements MonitoringLogService {
+
     private static final Object SPACE = " ";
     private static final Logger LOG = LoggerFactory.getLogger(MonitoringLogService.class);
 

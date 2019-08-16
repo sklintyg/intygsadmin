@@ -20,7 +20,6 @@
 package se.inera.intyg.intygsadmin.web.exception;
 
 import java.util.List;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;

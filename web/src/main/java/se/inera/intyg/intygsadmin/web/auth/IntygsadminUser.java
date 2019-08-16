@@ -19,12 +19,11 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
+import java.io.Serializable;
 import lombok.Getter;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
-
-import java.io.Serializable;
 
 @Getter
 public class IntygsadminUser implements Serializable {

@@ -18,27 +18,26 @@
  */
 package se.inera.intyg.intygsadmin.persistence;
 
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
+import static io.github.benas.randombeans.FieldPredicates.named;
+import static io.github.benas.randombeans.FieldPredicates.ofType;
 
 import com.google.common.base.Charsets;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
-
-import static io.github.benas.randombeans.FieldPredicates.named;
-import static io.github.benas.randombeans.FieldPredicates.ofType;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public abstract class TestSupport {
 
     private DateTimeFormatter idFormatter = DateTimeFormatter.ofPattern("yyyyMMddmmss");
 
     private EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
-            .randomizationDepth(10)
-            .collectionSizeRange(1, 20)
-            .charset(Charsets.UTF_8)
-            .excludeField(named("id").and(ofType(UUID.class)))
-            .scanClasspathForConcreteTypes(true)
-            .build();
+        .randomizationDepth(10)
+        .collectionSizeRange(1, 20)
+        .charset(Charsets.UTF_8)
+        .excludeField(named("id").and(ofType(UUID.class)))
+        .scanClasspathForConcreteTypes(true)
+        .build();
 
     protected EnhancedRandom randomizer() {
         return enhancedRandom;

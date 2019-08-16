@@ -19,6 +19,11 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
@@ -36,12 +41,6 @@ import se.inera.intyg.intygsadmin.web.controller.dto.AppConfigDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SessionState;
 import se.inera.intyg.intygsadmin.web.controller.dto.SessionStateResponse;
 import se.inera.intyg.intygsadmin.web.controller.dto.VersionInfoDTO;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(PublicApiController.PUBLIC_API_REQUEST_MAPPING)
@@ -86,7 +85,7 @@ public class PublicApiController {
         var applicationName = buildProperties != null ? buildProperties.getArtifact() : "N/A";
         var buildVersion = buildProperties != null ? buildProperties.getVersion() : "N/A";
         var buildTimestamp = buildProperties != null ? LocalDateTime.ofInstant(buildProperties.getTime(), ZoneId.systemDefault())
-                : LocalDateTime.now();
+            : LocalDateTime.now();
         var activeProfiles = StringUtils.join(environment.getActiveProfiles(), ", ");
 
         return new VersionInfoDTO(applicationName, buildVersion, buildTimestamp, activeProfiles);
@@ -98,7 +97,7 @@ public class PublicApiController {
         Long secondsLeft = (Long) request.getAttribute(SessionTimeoutFilter.SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY);
         final boolean isAuthenticated = hasAuthenticatedPrincipalSession(session);
         return new SessionStateResponse(new SessionState(session != null, isAuthenticated,
-                secondsLeft == null ? 0 : secondsLeft));
+            secondsLeft == null ? 0 : secondsLeft));
     }
 
     private boolean hasAuthenticatedPrincipalSession(HttpSession session) {

@@ -19,12 +19,11 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
+import java.net.URL;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.net.URL;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

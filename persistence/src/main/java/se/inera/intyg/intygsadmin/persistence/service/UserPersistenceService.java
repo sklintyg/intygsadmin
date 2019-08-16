@@ -19,13 +19,12 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -47,7 +46,7 @@ public class UserPersistenceService {
 
     public UserEntity upsert(UserEntity newUserEntity) {
         UserEntity userEntity = userRepository.findByEmployeeHsaId(newUserEntity.getEmployeeHsaId())
-                .orElse(new UserEntity());
+            .orElse(new UserEntity());
 
         userEntity.setEmployeeHsaId(newUserEntity.getEmployeeHsaId());
         userEntity.setIntygsadminRole(newUserEntity.getIntygsadminRole());

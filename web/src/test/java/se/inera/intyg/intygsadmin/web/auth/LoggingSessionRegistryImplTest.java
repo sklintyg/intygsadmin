@@ -19,6 +19,11 @@
 
 package se.inera.intyg.intygsadmin.web.auth;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,18 +35,12 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-@ExtendWith({ MockitoExtension.class, SpringExtension.class })
+@ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration
 class LoggingSessionRegistryImplTest {
 
     private static final IntygsadminUser IAU = new IntygsadminUser(new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.FULL),
-            AuthenticationMethod.FAKE, null, "karl Nilsson");
+        AuthenticationMethod.FAKE, null, "karl Nilsson");
 
     @Mock
     private MonitoringLogService monitoringLogService;
