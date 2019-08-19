@@ -19,6 +19,9 @@
 
 package se.inera.intyg.intygsadmin.persistence.testdata;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
@@ -28,7 +31,6 @@ import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +38,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.Application;
@@ -48,7 +46,7 @@ import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 
 @Component
-@Profile({ "dev", "init-bootstrap-data" })
+@Profile({"dev", "init-bootstrap-data"})
 @Transactional
 public class TestDataBootstrapper {
 

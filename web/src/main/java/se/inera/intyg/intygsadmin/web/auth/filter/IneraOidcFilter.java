@@ -26,6 +26,10 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
+import java.util.ArrayList;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,11 +48,6 @@ import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.UUID;
-
 public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(IneraOidcFilter.class);
@@ -60,14 +59,14 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
     private UserPersistenceService userPersistenceService;
 
     public IneraOidcFilter(String defaultFilterProcessesUrl, OIDCProviderMetadata oidcProviderMetadata,
-            String clientId, OAuth2RestTemplate restTemplate, UserPersistenceService userPersistenceService) {
+        String clientId, OAuth2RestTemplate restTemplate, UserPersistenceService userPersistenceService) {
         super(defaultFilterProcessesUrl);
         this.restTemplate = restTemplate;
         this.userPersistenceService = userPersistenceService;
         setAuthenticationManager(new NoopAuthenticationManager());
         try {
             idTokenValidator = new IDTokenValidator(oidcProviderMetadata.getIssuer(), new ClientID(clientId), JWSAlgorithm.RS256,
-                    oidcProviderMetadata.getJWKSetURI().toURL());
+                oidcProviderMetadata.getJWKSetURI().toURL());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -75,7 +74,7 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+        throws AuthenticationException {
 
         OAuth2AccessToken accessToken;
         try {
@@ -91,14 +90,14 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
             // CHECKSTYLE:OFF Indentation
             final String employeeHsaId = idTokenClaimsSet.getStringClaim("employeeHsaId");
             UserEntity userEntity = userPersistenceService
-                    .findByEmployeeHsaId(employeeHsaId).orElseThrow(
-                            () -> new BadCredentialsException(
-                                    "Failed authentication. No IntygsadminUser for employeeHsaId " + employeeHsaId));
+                .findByEmployeeHsaId(employeeHsaId).orElseThrow(
+                    () -> new BadCredentialsException(
+                        "Failed authentication. No IntygsadminUser for employeeHsaId " + employeeHsaId));
             // CHECKSTYLE:ON Indentation
 
             String name = idTokenClaimsSet.getStringClaim("given_name")
-                    + " "
-                    + idTokenClaimsSet.getStringClaim("family_name");
+                + " "
+                + idTokenClaimsSet.getStringClaim("family_name");
 
             final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken, name);
 

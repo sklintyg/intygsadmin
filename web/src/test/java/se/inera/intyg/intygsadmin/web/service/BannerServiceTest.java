@@ -19,32 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.factory.Mappers;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
-import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
-import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
-import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
-import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -57,6 +31,30 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
+import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
+import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
+import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -144,7 +142,6 @@ public class BannerServiceTest {
         bannerEntities.add(bannerEntity3);
 
         when(bannerPersistenceService.findActiveAndFuture(any(), eq(Application.WEBCERT))).thenReturn(bannerEntities);
-
 
         List<BannerDTO> banners = bannerService.getActiveAndFutureBanners(Application.WEBCERT);
 

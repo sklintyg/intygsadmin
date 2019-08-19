@@ -20,14 +20,13 @@
 package se.inera.intyg.intygsadmin.web.auth.filter;
 
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.client.resource.UserRedirectRequiredException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.resource.UserRedirectRequiredException;
 
 /**
  * This filter extends the OAuth2ClientContextFilter.
@@ -45,8 +44,8 @@ public class IndividualClaimsOuth2ContextFilter extends OAuth2ClientContextFilte
 
     @Override
     protected void redirectUser(UserRedirectRequiredException e,
-            HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+        HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
 
         if (specificClaims != null && !specificClaims.isEmpty()) {
             ClaimsRequest claimsRequest = new ClaimsRequest();

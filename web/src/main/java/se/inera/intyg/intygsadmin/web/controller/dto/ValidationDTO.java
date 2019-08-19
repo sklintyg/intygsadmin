@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ValidationDTO {
+
     private String field;
     private String message;
 }

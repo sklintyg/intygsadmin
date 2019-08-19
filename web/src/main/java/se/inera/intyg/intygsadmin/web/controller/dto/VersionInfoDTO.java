@@ -20,7 +20,6 @@
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VersionInfoDTO {
+
     private String applicationName;
     private String buildVersion;
     private LocalDateTime buildTimestamp;
