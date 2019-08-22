@@ -39,7 +39,7 @@ const BannerListContainer = (props) => {
         <RemoveBanner onComplete={onActionComplete}/>
         <CreateBanner onComplete={onActionComplete}/>
         <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} onActionComplete={onActionComplete} />
-        {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar driftbannerlista'} />}
+        {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar sidan'} />}
       </ListWrapper>
     </Fragment>
   )
