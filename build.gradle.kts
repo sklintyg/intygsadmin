@@ -26,19 +26,13 @@ allprojects {
 
   repositories {
     mavenLocal()
-    maven {
-      url = uri("https://build-inera.nordicmedtest.se/nexus/repository/releases/")
-      mavenContent {
-        releasesOnly()
+    maven ("https://build-inera.nordicmedtest.se/nexus/repository/public/")
+    jcenter {
+      content {
+        // this repository contains everything BUT artifacts with group starting with "se.inera"
+        excludeGroupByRegex("se\\.inera.*")
       }
     }
-    maven {
-      url = uri("https://build-inera.nordicmedtest.se/nexus/repository/snapshots/")
-      mavenContent {
-        snapshotsOnly()
-      }
-    }
-    jcenter()
   }
 
   publishing {
