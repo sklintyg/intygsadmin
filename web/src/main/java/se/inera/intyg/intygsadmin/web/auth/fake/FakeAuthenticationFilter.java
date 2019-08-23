@@ -50,7 +50,7 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
     public FakeAuthenticationFilter() {
         super(FAKE_LOGIN_ENDPOINT);
-        LOG.error("FakeAuthentication enabled. DO NOT USE IN PRODUCTION");
+        LOG.error("---- FakeAuthentication enabled. DO NOT USE IN PRODUCTION!!! ----");
         setAuthenticationManager(new NoopAuthenticationManager());
     }
 
