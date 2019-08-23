@@ -173,7 +173,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
             .antMatchers("/").permitAll()
-            .antMatchers("/welcome-assets/**").permitAll()
             .antMatchers("/version.html").permitAll()
             .antMatchers("/public-api/version").permitAll()
             .antMatchers("/version-assets/**").permitAll()
@@ -190,6 +189,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         if (profiles.contains(FAKE_PROFILE)) {
             addFakeLogin(http);
+        } else {
+            denyFakeLogin(http);
         }
 
         configureOidc(http);
@@ -225,10 +226,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
+    private void denyFakeLogin(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+            .antMatchers(FAKE_LOGIN_URL).denyAll()
+            .antMatchers("/welcome-assets/**").denyAll()
+            .antMatchers("/h2-console/**").denyAll()
+            .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").denyAll();
+    }
+
     private void addFakeLogin(HttpSecurity http) throws Exception {
+        http.headers().frameOptions().sameOrigin();
+
         http
             .authorizeRequests()
             .antMatchers(FAKE_LOGIN_URL).permitAll()
+            .antMatchers("/welcome-assets/**").permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll();
 
