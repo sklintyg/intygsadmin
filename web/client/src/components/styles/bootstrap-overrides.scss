@@ -86,7 +86,7 @@ $tooltip-bg: $ia-color-02;
 }
 
 // Button override för ib-tema
-@mixin btn-common-mixin($color, $background, $border) {
+@mixin btn-common-mixin($color, $background, $border, $icon) {
   font-weight: normal;
   cursor: pointer;
   white-space: nowrap;
@@ -94,6 +94,7 @@ $tooltip-bg: $ia-color-02;
   border-color: $border;
   background-color: $background;
   color: $color;
+  fill: $icon;
 
   &:focus,
   &:active,
@@ -101,6 +102,7 @@ $tooltip-bg: $ia-color-02;
     border-color: $border;
     background-color: $background;
     color: $color;
+    fill: $icon;
     box-shadow: 2px 2px 4px 0 $black_12;
   }
 
@@ -112,6 +114,7 @@ $tooltip-bg: $ia-color-02;
     background-color: $ia-color-05;
     border-color: $ia-color-05;
     color: $ia-color-00;
+    fill: $ia-color-00;
     box-shadow: 2px 2px 4px 0 $black_12;
   }
 
@@ -126,6 +129,7 @@ $tooltip-bg: $ia-color-02;
       background-color: $ia-color-14;
       border-color: $ia-color-14;
       color: $ia-color-10;
+      fill: $ia-color-10;
       opacity: 1;
       cursor: not-allowed;
     }
@@ -133,19 +137,19 @@ $tooltip-bg: $ia-color-02;
 }
 
 .btn-primary {
-  @include btn-common-mixin($ia-color-00, $ia-color-09, $ia-color-09);
+  @include btn-common-mixin($ia-color-00, $ia-color-09, $ia-color-09, $ia-color-00);
 }
 
 .btn-success {
-  @include btn-common-mixin($ia-color-00, $ia-color-17, $ia-color-17);
+  @include btn-common-mixin($ia-color-00, $ia-color-17, $ia-color-17, $ia-color-00);
 }
 
 .btn-default {
-  @include btn-common-mixin($ia-color-02, $ia-color-00, $ia-color-02);
+  @include btn-common-mixin($ia-color-02, $ia-color-00, $ia-color-02, $ia-color-02);
 }
 
 .btn-secondary {
-  @include btn-common-mixin($ia-color-08, $ia-color-15, $ia-color-15);
+  @include btn-common-mixin($ia-color-08, $ia-color-15, $ia-color-15, $ia-color-08);
 }
 
 .btn-link {
