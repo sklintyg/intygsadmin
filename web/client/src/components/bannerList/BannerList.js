@@ -11,6 +11,8 @@ import * as actions from '../../store/actions/banner'
 import IaAlert, { alertType } from '../alert/Alert'
 import StatusText from "./StatusText";
 import AppConstants from "../../AppConstants";
+import { Create, ClearIcon } from '../styles/iaSvgIcons'
+//import IaColors from '../styles/iaColors'
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -168,7 +170,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                       openChangeBanner(banner)
                     }}
                     color="primary">
-                    Ändra
+                    <Create /> Ändra
                   </Button>
                   <UncontrolledTooltip placement="top" target={`changeBtn${banner.id}`}>
                     Öppnar ett dialogfönster där du kan ändra driftbannerns innehåll.
@@ -183,7 +185,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                       openRemoveModal(banner.id, banner.status)
                     }}
                     color="default">
-                    Avsluta
+                    <ClearIcon /> Avsluta
                   </Button>
                   <UncontrolledTooltip placement="top" target={`endBtn${banner.id}`}>
                     Öppnar ett dialogfönster där du kan avsluta driftbannern.
