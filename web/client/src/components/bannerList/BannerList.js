@@ -12,7 +12,6 @@ import IaAlert, { alertType } from '../alert/Alert'
 import StatusText from "./StatusText";
 import AppConstants from "../../AppConstants";
 import { Create, ClearIcon } from '../styles/iaSvgIcons'
-//import IaColors from '../styles/iaColors'
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
