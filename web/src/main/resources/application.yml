@@ -1,3 +1,6 @@
+app:
+  name: intygsadmin
+
 server:
   port: 8080
   use-forward-headers: true
@@ -17,10 +20,26 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: dev, fake
+    active: dev, fake, caching-enabled
   h2:
     console:
       enabled: false
+  session:
+    store-type: redis
+    redis:
+      namespace: "${app.name}:session"
+      flush-mode: immediate
+
+intyg:
+  redis:
+    sentinel:
+      master:
+        name: master
+    password:
+    cache:
+      default_entry_expiry_time_in_seconds: 86400
+    port: 6379
+    host: 127.0.0.1
 
 inera:
   idp:

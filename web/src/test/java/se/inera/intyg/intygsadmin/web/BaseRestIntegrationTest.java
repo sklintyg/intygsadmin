@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
+import io.restassured.config.SessionConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,7 @@ public abstract class BaseRestIntegrationTest {
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
 
     private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
+    private static final String SESSION_COOKIE = "SESSION";
 
     protected final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     protected String baseUrl = System.getProperty("integration.tests.baseUrl", "http://localhost:8680");
@@ -61,6 +63,7 @@ public abstract class BaseRestIntegrationTest {
     @BeforeEach
     public void setup() {
         RestAssured.reset();
+        RestAssured.config = RestAssured.config().sessionConfig(new SessionConfig().sessionIdName(SESSION_COOKIE));
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.baseURI = baseUrl;
     }
