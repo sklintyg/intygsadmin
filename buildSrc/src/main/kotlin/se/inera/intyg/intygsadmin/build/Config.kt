@@ -19,9 +19,11 @@ object Config {
     const val npmVersion = "6.10.3"
 
     const val kotlinVersion = "1.3.31"
-    const val springBootVersion = "2.1.5.RELEASE"
-    const val springDependencyManagementVersion = "1.0.7.RELEASE"
-    const val springSecurityOauth2Version = "2.3.5.RELEASE"
+    const val springBootVersion = "2.1.7.RELEASE"
+    const val springDependencyManagementVersion = "1.0.8.RELEASE"
+    const val springSecurityOauth2Version = "2.3.6.RELEASE"
+
+    const val embeddedRedisVersion = "0.7.2"
 
     const val mapstructVersion = "1.3.0.Final"
     const val hibernateJpsVersion = "1.0.2.Final"

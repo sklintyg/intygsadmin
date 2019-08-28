@@ -21,8 +21,12 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
   implementation("org.springframework.security.oauth:spring-security-oauth2:${Dependencies.springSecurityOauth2Version}")
+  implementation("org.springframework.session:spring-session-data-redis")
   implementation("org.mapstruct:mapstruct:${Dependencies.mapstructVersion}")
   implementation("com.querydsl:querydsl-core")
+
+  implementation("it.ozimov:embedded-redis:${Dependencies.embeddedRedisVersion}")
+  implementation("redis.clients:jedis")
 
   //api documentation
   implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
