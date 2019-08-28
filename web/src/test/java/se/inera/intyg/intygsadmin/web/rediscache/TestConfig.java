@@ -21,12 +21,10 @@ package se.inera.intyg.intygsadmin.web.rediscache;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles(profiles = "dev")
 @Configuration
 @Import(EmbeddedCacheConfiguration.class)
-@PropertySource("classpath:cache.properties")
 public class TestConfig {
 }
