@@ -8,7 +8,7 @@ data:
   INERA_IDP_REDIRECTURI: "https://intygsadmin-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net:443/login/inera"
   INERA_IDP_LOGOUTREDIRECTURI: "https://intygsadmin-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net:443/#/loggedout/m"
   INERA_IDP_ISSUERURI: "https://idp.ineradev.org:443/oidc"
-  WEBCERT_INTERNALAPI: "http://webcert-demo-demointyg.app-test1.ind-ocp.sth.basefarm.net:8081"
+  WEBCERT_INTERNALAPI: "http://webcert-demo:8081"
 kind: ConfigMap
 metadata:
   name: intygsadmin-demo-configmap-envvar
