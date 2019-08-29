@@ -196,8 +196,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configureOidc(http);
 
         http.csrf().disable();
-
-        http.headers().frameOptions().sameOrigin();
     }
 
     private void configureOidc(HttpSecurity http) throws Exception {

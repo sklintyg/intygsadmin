@@ -20,7 +20,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: dev, fake, caching-enabled
+    active: dev, fake, caching-enabled, wc-unit-stub
   h2:
     console:
       enabled: false
@@ -50,4 +50,4 @@ inera:
     issuer-uri: https://idp.ineradev.org:443/oidc
 
 webcert:
-  url: http://localhost:9088
+  internalapi: http://localhost:9088

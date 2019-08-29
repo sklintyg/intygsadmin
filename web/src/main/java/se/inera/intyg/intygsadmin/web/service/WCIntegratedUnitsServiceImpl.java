@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 
-@Profile("!dev")
+@Profile("!wc-unit-stub")
 @Service
 public class WCIntegratedUnitsServiceImpl implements WCIntegratedUnitsService {
 
@@ -44,7 +44,7 @@ public class WCIntegratedUnitsServiceImpl implements WCIntegratedUnitsService {
     @Qualifier("wcRestTemplate")
     private RestTemplate restTemplate;
 
-    @Value("${webcert.url}")
+    @Value("${webcert.internalapi}")
     private String webcertUrl;
 
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {

@@ -32,7 +32,7 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
               Enhet:
             </h5>
             <span>
-              {<div dangerouslySetInnerHTML={{ __html: text.unit }} />}
+              {text.unit}
             </span>
           </FlexDiv>
           <FlexDiv>
@@ -40,7 +40,7 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
               Enhetsnamn:
             </h5>
             <span>
-              {<div dangerouslySetInnerHTML={{ __html: text.unitName }} />}
+              {text.unitName}
             </span>
           </FlexDiv>
           <FlexDiv>
@@ -48,7 +48,7 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
               Vårdgivar-id:
             </h5>
             <span>
-              {<div dangerouslySetInnerHTML={{ __html: text.healthcareProvidersId }} />}
+              {text.healthcareProvidersId}
             </span>
           </FlexDiv>
           <FlexDiv>
@@ -56,7 +56,7 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
               Vårdgivar namn:
             </h5>
             <span>
-              {<div dangerouslySetInnerHTML={{ __html: text.healthcareProvidersName }} />}
+              {text.healthcareProvidersName}
             </span>
           </FlexDiv>
           <FlexDiv>
@@ -64,7 +64,7 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
               Tillagd:
             </h5>
             <span>
-              {<div dangerouslySetInnerHTML={{ __html: text.addedDate }} />}
+              {text.addedDate}
             </span>
           </FlexDiv>
           <FlexDiv>
@@ -72,7 +72,7 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
               Senast kontrollerad:
             </h5>
             <span>
-              {<div dangerouslySetInnerHTML={{ __html: text.checkedDate }} />}
+              {text.checkedDate}
             </span>
           </FlexDiv>
         </ModalBody>
