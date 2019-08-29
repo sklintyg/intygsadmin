@@ -20,7 +20,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: dev, fake, caching-enabled
+    active: dev, fake, caching-enabled, wc-unit-stub
   h2:
     console:
       enabled: false
@@ -48,3 +48,6 @@ inera:
     redirect-uri: http://localhost:8680/login/inera
     logout-redirect-uri: http://localhost:8680/#/loggedout/m
     issuer-uri: https://idp.ineradev.org:443/oidc
+
+webcert:
+  internalapi: http://localhost:9088

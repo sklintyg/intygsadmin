@@ -30,6 +30,7 @@ object Config {
     const val commonsIOVersion = "2.6"
     const val swaggerVersion = "2.9.2"
     const val commonsLang3Version = "3.9"
+    const val apachePoiVersion = "4.1.0"
 
     // Spotbugs annotations
     const val spotbugsAnnotationsVersion = "3.1.12"

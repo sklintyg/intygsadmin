@@ -41,6 +41,7 @@ public abstract class BaseRestIntegrationTest {
     public static final int NOT_FOUND = HttpStatus.NOT_FOUND.value();
     public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
+    public static final int NOT_CONTENT = HttpStatus.NO_CONTENT.value();
 
     private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
     private static final String SESSION_COOKIE = "SESSION";

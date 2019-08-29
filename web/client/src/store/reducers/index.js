@@ -6,6 +6,7 @@ import sessionPoll from './sessionPoll'
 import appConfig from './appConfig'
 import bannerList from './bannerList.reducer'
 import banner from './banner'
+import integratedUnits from './integratedUnits'
 
 const appReducer = (history) =>
   combineReducers({
@@ -15,7 +16,8 @@ const appReducer = (history) =>
     sessionPoll,
     appConfig,
     bannerList,
-    banner
+    banner,
+    integratedUnits
   })
 
 const reducers = (history) => (state, action) => {
