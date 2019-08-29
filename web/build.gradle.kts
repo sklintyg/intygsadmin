@@ -24,6 +24,8 @@ dependencies {
   implementation("org.springframework.session:spring-session-data-redis")
   implementation("org.mapstruct:mapstruct:${Dependencies.mapstructVersion}")
   implementation("com.querydsl:querydsl-core")
+  implementation("org.apache.poi:poi:${Dependencies.apachePoiVersion}")
+  implementation("org.apache.poi:poi-ooxml:${Dependencies.apachePoiVersion}")
 
   implementation("it.ozimov:embedded-redis:${Dependencies.embeddedRedisVersion}")
   implementation("redis.clients:jedis")
@@ -67,6 +69,14 @@ tasks {
     setEnvironment(mapOf("CI" to true))
 
     setArgs(listOf("run", "build"))
+  }
+
+  val startReactApp by creating(NpmTask::class) {
+    dependsOn(npmInstall)
+
+    setEnvironment(mapOf("CI" to true))
+
+    setArgs(listOf("run", "start"))
   }
 
   val testReactApp by creating(NpmTask::class) {

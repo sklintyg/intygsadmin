@@ -40,6 +40,11 @@ const MenuBar = ({ stat }) => {
       text: 'Administratörer',
       enabled: false
     },
+    {
+      to: '/integratedUnits',
+      text: 'Integrerade enheter',
+      enabled: true
+    },
   ]
 
   return (

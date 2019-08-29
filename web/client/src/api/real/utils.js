@@ -52,6 +52,9 @@ export const handleResponse = (config) => (response) => {
     if (config.emptyBody) {
       return {}
     }
+    if (config.nonJson) {
+      return response
+    }
   }
 
   return response.json()
