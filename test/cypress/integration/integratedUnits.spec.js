@@ -25,7 +25,7 @@ context("IntegratedUnits", () => {
 
   })
 
-  it("Export integrated units", () => {
+  xit("Export integrated units", () => {
 
     cy.route({
       method: 'GET',
