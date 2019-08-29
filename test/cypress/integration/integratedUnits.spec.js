@@ -7,7 +7,7 @@ context("IntegratedUnits", () => {
 
     cy.login('TSTNMT2321000156-10KK');
     cy.removeFetch();
-    cy.visit("#/integratedUnits");
+    cy.get("#MenuBar-integratedUnits").click();
   });
 
   it("Search integrated unit", () => {
