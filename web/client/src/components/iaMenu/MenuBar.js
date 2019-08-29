@@ -26,21 +26,25 @@ const Wrapper = styled.div`
 const MenuBar = ({ stat }) => {
   const menu = [
     {
+      id: 'intyginfo',
       to: '/intygsinformation',
       text: 'Intygsinformation',
       enabled: false
     },
     {
+      id: 'banners',
       to: '/banner',
       text: 'Driftbanner',
       enabled: true
     },
     {
+      id: 'administratorer',
       to: '/administratorer',
       text: 'Administratörer',
       enabled: false
     },
     {
+      id: 'integratedUnits',
       to: '/integratedUnits',
       text: 'Integrerade enheter',
       enabled: true

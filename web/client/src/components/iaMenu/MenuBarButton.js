@@ -45,7 +45,7 @@ const MenuBarButton = ({ menuItem }) => {
   return (
     <Wrapper>
       <NavItem key={menuItem.text}>
-        <NavLink to={menuItem.to} id={'MenuBar-' + menuItem.text}>
+        <NavLink to={menuItem.to} id={'MenuBar-' + menuItem.id}>
           {menuItem.text}
         </NavLink>
       </NavItem>
