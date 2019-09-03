@@ -48,6 +48,10 @@ export const handleResponse = (config) => (response) => {
       })
   }
 
+  if (response.status === 204) {
+    return {};
+  }
+
   if (config) {
     if (config.emptyBody) {
       return {}

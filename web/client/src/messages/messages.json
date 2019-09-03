@@ -40,6 +40,14 @@
         "title": "Tekniskt fel",
         "message": "Kunde inte hämta konfiguration. Prova igen om en stund."
       }
+    },
+    "integratedUnit": {
+      "unknown": {
+        "message": "Sökningen kunde inte genomföras på grund av ett tekniskt fel. Prova igen om en stund."
+      },
+      "not_found": {
+        "message": "Kunde inte hitta någon enhet med detta HSA-id. Kontrollera att du matat in ett korrekt ID."
+      }
     }
   }
 }

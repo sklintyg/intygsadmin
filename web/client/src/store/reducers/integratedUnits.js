@@ -6,6 +6,8 @@ const integratedUnit = (state = {}, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_INTEGRATED_UNIT_SUCCESS:
       return action.response
+    case ActionConstants.FETCH_INTEGRATED_UNIT_FAILURE:
+      return {}
     default:
       return state
   }
