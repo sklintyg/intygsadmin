@@ -41,7 +41,7 @@ const App = () => {
 }
 
 const lifeCycleValues = {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.fetchAppConfig()
     this.props.getUser()
   },

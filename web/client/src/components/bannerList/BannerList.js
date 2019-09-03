@@ -12,6 +12,7 @@ import IaAlert, { alertType } from '../alert/Alert'
 import StatusText from "./StatusText";
 import AppConstants from "../../AppConstants";
 import { Create, ClearIcon } from '../styles/iaSvgIcons'
+import DisplayDateTime from '../displayDateTime/DisplayDateTime';
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -84,7 +85,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
     })
   }
 
-  const dateShowPeriodOptions = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+
 
   return (
     <Wrapper>
@@ -153,9 +154,9 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                 <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
                 <td>{AppConstants.service[banner.application]}</td>
                 <td>
-                  {new Date(banner.displayFrom).toLocaleString('sv-SE', dateShowPeriodOptions)}
+                  <DisplayDateTime date={banner.displayFrom} />
                   <br />
-                  {new Date(banner.displayTo).toLocaleString('sv-SE', dateShowPeriodOptions)}
+                  <DisplayDateTime date={banner.displayTo} />
                 </td>
                 <td>{AppConstants.prio[banner.priority]}</td>
                 <MessageColumn className='banner-message show-external-link' dangerouslySetInnerHTML={{ __html: banner.message }} />
