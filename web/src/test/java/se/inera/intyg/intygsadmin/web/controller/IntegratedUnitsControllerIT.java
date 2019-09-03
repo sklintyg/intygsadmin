@@ -46,12 +46,12 @@ public class IntegratedUnitsControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    public void testGetIntegratedUnitNoContent() {
+    public void testGetIntegratedUnitNoFound() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         final String nonExistingUnitId = "SE4815162344-XXXX";
 
-        given().expect().statusCode(NOT_CONTENT)
+        given().expect().statusCode(NOT_FOUND)
             .when()
             .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + nonExistingUnitId);
     }
