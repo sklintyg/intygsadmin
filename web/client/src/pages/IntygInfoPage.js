@@ -3,6 +3,7 @@ import { FlexColumnContainer, CustomScrollingContainer, PageContainer } from '..
 import MenuBar from '../components/iaMenu/MenuBar';
 import IntygInfoPageHeader from "../components/inygInfo/IntygInfoPageHeader";
 import IntygInfoSearch from "../components/inygInfo/IntygInfoSearch";
+import IntygInfoHistory from "../components/inygInfo/IntygInfoHistory";
 
 const IntygInfoPage = () => {
   return (
@@ -12,6 +13,7 @@ const IntygInfoPage = () => {
         <IntygInfoPageHeader />
         <PageContainer>
           <IntygInfoSearch />
+          <IntygInfoHistory />
         </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>

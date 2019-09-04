@@ -4,7 +4,7 @@ import BannerListContainer from "./BannerListContainer";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import BannerListPagination from "./BannerListPagination";
+import ListPagination from "../styles/ListPagination";
 import { getBannerList } from "../../store/reducers/bannerList.reducer";
 
 const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
@@ -21,7 +21,7 @@ const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
   return (
     <>
       <BannerListContainer />
-      <BannerListPagination bannerList={bannerList} handlePageChange={handlePageChange}/>
+      <ListPagination list={bannerList} handlePageChange={handlePageChange} />
     </>
   );
 };

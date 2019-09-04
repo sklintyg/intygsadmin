@@ -66,6 +66,12 @@
         "title": "",
         "message": "Kunde inte hitta något intyg med detta ID."
       }
+    },
+    "intygInfoList": {
+      "unknown": {
+        "title": "",
+        "message": "Information om de senaste sökningar kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { DownIcon, UpDownIcon, UpIcon } from '../styles/iaSvgIcons'
+import { DownIcon, UpDownIcon, UpIcon } from './iaSvgIcons'
 import {Button, UncontrolledTooltip} from 'reactstrap'
 
 const TableSortHead = ({ id, currentSortColumn, currentSortDirection, text, sortId, onSort, tooltip }) => {
