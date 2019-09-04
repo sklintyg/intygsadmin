@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createRef } from 'react'
 import { Button, UncontrolledTooltip, Input } from 'reactstrap'
-import IntegratedUnitSearchResult from './IntegratedUnitSearchResult.dialog'
-import { IntegratedUnitSearchResultId } from './IntegratedUnitSearchResult.dialog'
 import { IaTypo03 } from "../styles/iaTypography"
 import styled from "styled-components"
 import colors from "../styles/iaColors";
-import { validateIntegratedUnit, validateIntegratedUnitsFile, COULD_NOT_FIND_UNIT  } from "./IntegratedUnitsValidator";
+import {getMessage} from "../../messages/messages";
+import {getErrorMessage, getIntygInfo, getIsFetching} from "../../store/reducers/intygInfo";
+import {compose} from "recompose";
+import {connect} from "react-redux";
+import * as actions from "../../store/actions/intygInfo";
+import * as modalActions from "../../store/actions/modal";
 
 const Wrapper = styled.div`
   & th:last-child {
     width: 1%;
   }
-`
-
-const SpinnerWrapper = styled.div`
-  position: relative;
 `
 
 const PageHeader = styled.div`
@@ -55,72 +54,65 @@ const Container = styled.div`
 `
 
 const searchInput = {
-  width: '150px'
+  width: '300px'
 }
 
-const IntygInfoSearch = ({ openModal, fetchIntegratedUnit, integratedUnit, isFetching, errorMessage, isFetchingIntegratedUnitsFile, errorMessageIntegratedUnitsFile }) => {
+const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, errorMessage }) => {
   const [searchString, setSearchString] = useState('')
-  const [validationSearchMessage, setValidationSearchMessage] = useState(undefined)
+  const [validationSearchMessage, setValidationSearchMessage] = useState(errorMessage)
   const [searchResult, setSearchResult] = useState(undefined)
+  const inputRef = createRef();
 
-  const searchIntegratedUnit = (hsaId) => {
+  const searchIntegratedUnit = (intygsId) => {
     setSearchResult(undefined)
-    if (hsaId === "") {
-      setValidationSearchMessage(COULD_NOT_FIND_UNIT)
+    if (intygsId === '' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(intygsId)) {
+      setValidationSearchMessage(getMessage('intygInfo.intygsId.wrongformat'))
     } else {
-      fetchIntegratedUnit(hsaId)
+      fetchIntygInfo(intygsId)
     }
   }
 
-  useEffect(() => {
-    setValidationSearchMessage(validateIntegratedUnit(integratedUnit.enhetsId, errorMessage))
-  }, [integratedUnit, errorMessage])
+  useEffect(() => inputRef.current.focus(), [inputRef]);
 
   useEffect(() => {
-    setValidationExportMessage(validateIntegratedUnitsFile(errorMessageIntegratedUnitsFile))
-  }, [errorMessageIntegratedUnitsFile])
+    setValidationSearchMessage(errorMessage)
+  }, [errorMessage])
 
   useEffect(() => {
-    setSearchResult(integratedUnit.enhetsId)
-  }, [integratedUnit])
+    setSearchResult(intygInfo.intygsId)
+  }, [intygInfo])
 
   useEffect(() => {
     if (searchResult !== undefined
       && validationSearchMessage === undefined) {
-      let text = {
-        unit: integratedUnit.enhetsId,
-        unitName: integratedUnit.enhetsNamn,
-        healthcareProvidersId: integratedUnit.vardgivarId,
-        healthcareProvidersName: integratedUnit.vardgivarNamn,
-        addedDate: integratedUnit.skapadDatum,
-        checkedDate: integratedUnit.senasteKontrollDatum
-      }
-      openModal(IntegratedUnitSearchResultId, {text})
+      //let text = {}
+      //openModal(IntegratedUnitSearchResultId, {text})
+      setSearchString('')
     }
-  }, [searchResult, integratedUnit, validationSearchMessage, openModal])
+  }, [searchResult, intygInfo, validationSearchMessage, openModal])
 
   return (
     <Wrapper>
-      <IntegratedUnitSearchResult/>
       <PageSearchRow>
         <PageHeader>
-          <IaTypo03>Ange HSA-id för enhet</IaTypo03>
+          <IaTypo03>Ange intygets ID</IaTypo03>
         </PageHeader>
         <FlexDiv>
-          <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
+          <Container className={validationSearchMessage ? 'error' : ''}>
             <Input
               id={'searchInput'}
-              placeholder='SE1234567890-1X23'
+              placeholder='a92703da-c032-4833-b052-bdb6f54e0bf5'
               value={searchString}
               onChange={(e) => setSearchString(e.target.value)}
               style={searchInput}
+              innerRef={inputRef}
             />
           </Container>
           <Button id={'searchBtn'} onClick={() => searchIntegratedUnit(searchString)} color={'success'}>
-            Sök enhet
+            Sök intyg
           </Button>
-          <UncontrolledTooltip placement='auto' target='searchBtn'>
-            Öppnar ett modalfönster med information om enheten.
+          <UncontrolledTooltip placement='auto' target='searchBtn' >
+            Öppnar ett modalfönster med information om intyget.
           </UncontrolledTooltip>
         </FlexDiv>
         <ValidationMessage id={'validationSearchMessageId'}>{validationSearchMessage}</ValidationMessage>
@@ -129,4 +121,17 @@ const IntygInfoSearch = ({ openModal, fetchIntegratedUnit, integratedUnit, isFet
   )
 }
 
-export default IntygInfoSearch
+const mapStateToProps = (state) => {
+  return {
+    intygInfo: getIntygInfo(state),
+    isFetching: getIsFetching(state),
+    errorMessage: getErrorMessage(state)
+  }
+}
+
+export default compose(
+  connect(
+    mapStateToProps,
+    { ...actions, ...modalActions }
+  )
+)(IntygInfoSearch)

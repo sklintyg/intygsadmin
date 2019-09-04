@@ -7,6 +7,12 @@
     }
   },
 
+  "intygInfo": {
+    "intygsId": {
+      "wrongformat": "Ange ett giltigt intygs-ID."
+    }
+  },
+
   "error": {
     "logid_footer": "Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand {inerakundtjanst} och uppge då följande logg id: {logId}",
     "common": {
@@ -43,10 +49,22 @@
     },
     "integratedUnit": {
       "unknown": {
+        "title": "",
         "message": "Sökningen kunde inte genomföras på grund av ett tekniskt fel. Prova igen om en stund."
       },
       "not_found": {
+        "title": "",
         "message": "Kunde inte hitta någon enhet med detta HSA-id. Kontrollera att du matat in ett korrekt ID."
+      }
+    },
+    "intygInfo": {
+      "unknown": {
+        "title": "",
+        "message": "Information om intyget kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
+      },
+      "not_found": {
+        "title": "",
+        "message": "Kunde inte hitta något intyg med detta ID."
       }
     }
   }

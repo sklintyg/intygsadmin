@@ -2,7 +2,7 @@ import { functionToTest, mockStore } from '../../testUtils/actionUtils'
 import * as actions from './integratedUnits'
 import * as api from '../../api/integratedUnits.api'
 
-describe('bannerList actions', () => {
+describe('integratedUnits actions', () => {
   let store
 
   beforeEach(() => {

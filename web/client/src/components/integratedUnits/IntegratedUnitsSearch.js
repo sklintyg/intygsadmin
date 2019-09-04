@@ -55,7 +55,7 @@ const Container = styled.div`
 `
 
 const searchInput = {
-  width: '150px'
+  width: '180px'
 }
 
 const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit, isFetching, errorMessage }) => {
@@ -66,7 +66,7 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
 
   const searchIntegratedUnit = (hsaId) => {
     setSearchResult(undefined)
-    if (hsaId === "") {
+    if (hsaId === '') {
       setValidationSearchMessage(COULD_NOT_FIND_UNIT)
     } else {
       fetchIntegratedUnit(hsaId)

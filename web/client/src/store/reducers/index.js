@@ -7,6 +7,7 @@ import appConfig from './appConfig'
 import bannerList from './bannerList.reducer'
 import banner from './banner'
 import integratedUnits from './integratedUnits'
+import intygInfo from './intygInfo'
 
 const appReducer = (history) =>
   combineReducers({
@@ -17,7 +18,8 @@ const appReducer = (history) =>
     appConfig,
     bannerList,
     banner,
-    integratedUnits
+    integratedUnits,
+    intygInfo
   })
 
 const reducers = (history) => (state, action) => {
