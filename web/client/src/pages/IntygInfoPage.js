@@ -1,21 +1,22 @@
 import React from 'react'
 import { FlexColumnContainer, CustomScrollingContainer, PageContainer } from '../components/styles/iaLayout'
-import IntegratedUnitsPageHeader from '../components/integratedUnits/IntegratedUnitsPageHeader'
-import IntegratedUnitsSearchAndExportPage from '../components/integratedUnits/IntegratedUnitsSearchAndExportPage'
+import PaginatedListContainer from '../components/bannerList/PaginatedListContainer'
 import MenuBar from '../components/iaMenu/MenuBar';
+import IntygInfoPageHeader from "../components/inygInfo/IntygInfoPageHeader";
+import IntygInfoSearch from "../components/inygInfo/IntygInfoSearch";
 
-const IntegratedUnitsPage = () => {
+const IntygInfoPage = () => {
   return (
     <FlexColumnContainer>
       <MenuBar/>
       <CustomScrollingContainer>
-        <IntegratedUnitsPageHeader />
+        <IntygInfoPageHeader />
         <PageContainer>
-          <IntegratedUnitsSearchAndExportPage />
+          <IntygInfoSearch />
         </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )
 }
 
-export default IntegratedUnitsPage
+export default IntygInfoPage

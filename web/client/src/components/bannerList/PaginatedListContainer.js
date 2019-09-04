@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import * as actions from "../../store/actions/bannerList.actions";
 import BannerListContainer from "./BannerListContainer";
 import { compose } from "recompose";
@@ -19,10 +19,10 @@ const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
   }
 
   return (
-    <Fragment>
+    <>
       <BannerListContainer />
       <BannerListPagination bannerList={bannerList} handlePageChange={handlePageChange}/>
-    </Fragment>
+    </>
   );
 };
 

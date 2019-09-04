@@ -1,28 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { IaTypo01, IaTypo05 } from '../components/styles/iaTypography'
-import { FlexColumnContainer, ScrollingContainer, Section, WorkareaContainer } from '../components/styles/iaLayout'
-import ibValues from '../components/styles/iaValues'
+import { FlexColumnContainer, CustomScrollingContainer, Section, PageContainer } from '../components/styles/iaLayout'
 import IaAlert, { alertType } from '../components/alert/Alert'
 import LoginOptions from '../components/loginOptions'
 
-const CustomScrollingContainer = styled(ScrollingContainer)`
-  max-width: none;
-`
-
-const PageContainer = styled(WorkareaContainer)`
-  margin: auto;
-  width: 100%;
-  max-width: ${ibValues.maxContentWidth};
-  display: flex;
+const CustomPageContainer = styled(PageContainer)`
   flex-direction: row;
-  min-height: calc(100vh - 290px);
-  padding-bottom: 60px;
-
-  img {
-    width: 100%;
-    padding-bottom: 20px;
-  }
 `
 
 const Wrapper = styled.div`
@@ -54,7 +38,7 @@ const HomePage = ({ match }) => {
   return (
     <FlexColumnContainer>
       <CustomScrollingContainer>
-        <PageContainer>
+        <CustomPageContainer>
           <Wrapper>
             <IaTypo01 as="h1" id="indexTitle">{title}</IaTypo01>
             {message && (
@@ -73,7 +57,7 @@ const HomePage = ({ match }) => {
             <Section />
             <LoginOptions />
           </Wrapper>
-        </PageContainer>
+        </CustomPageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )

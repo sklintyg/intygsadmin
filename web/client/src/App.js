@@ -17,6 +17,7 @@ import ErrorModal from './components/errorModal'
 import TestLinks from './components/TestLinks/TestLinks'
 import SessionPoller from './components/sessionPoller'
 import {fetchAppConfig} from './store/actions/appConfig'
+import IntygInfoPage from "./pages/IntygInfoPage";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
             <UnsecuredRoute path="/loggedout/:code" component={HomePage} />
             <SecuredRoute path="/banner" component={BannerPage} />
             <SecuredRoute path="/integratedUnits" component={IntegratedUnitsPage} />
+            <SecuredRoute path="/intygInfo" component={IntygInfoPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>

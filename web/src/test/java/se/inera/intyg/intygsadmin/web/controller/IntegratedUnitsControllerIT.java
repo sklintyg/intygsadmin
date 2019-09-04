@@ -46,7 +46,7 @@ public class IntegratedUnitsControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    public void testGetIntegratedUnitNoFound() {
+    public void testGetIntegratedUnitNotFound() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         final String nonExistingUnitId = "SE4815162344-XXXX";

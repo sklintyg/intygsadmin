@@ -44,3 +44,22 @@ export const ErrorSection = styled.div`
 export const ErrorWrapper = styled.div`
   margin: 15px 15px 0 15px;
 `
+
+export const CustomScrollingContainer = styled(ScrollingContainer)`
+  max-width: none;
+`
+
+export const PageContainer = styled(WorkareaContainer)`
+  margin: auto;
+  width: 100%;
+  max-width: ${ibValues.maxContentWidth};
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 290px);
+  padding-bottom: 60px;
+
+  img {
+    width: 100%;
+    padding-bottom: 20px;
+  }
+`
