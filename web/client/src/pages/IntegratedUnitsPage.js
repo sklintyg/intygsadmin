@@ -1,7 +1,8 @@
 import React from 'react'
 import { FlexColumnContainer, CustomScrollingContainer, PageContainer } from '../components/styles/iaLayout'
 import IntegratedUnitsPageHeader from '../components/integratedUnits/IntegratedUnitsPageHeader'
-import IntegratedUnitsSearchAndExportPage from '../components/integratedUnits/IntegratedUnitsSearchAndExportPage'
+import IntegratedUnitsSearch from '../components/integratedUnits/IntegratedUnitsSearch'
+import IntegratedUnitsExport from '../components/integratedUnits/IntegratedUnitsExport'
 import MenuBar from '../components/iaMenu/MenuBar';
 
 const IntegratedUnitsPage = () => {
@@ -11,7 +12,8 @@ const IntegratedUnitsPage = () => {
       <CustomScrollingContainer>
         <IntegratedUnitsPageHeader />
         <PageContainer>
-          <IntegratedUnitsSearchAndExportPage />
+          <IntegratedUnitsSearch />
+          <IntegratedUnitsExport />
         </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>

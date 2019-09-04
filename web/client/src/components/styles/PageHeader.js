@@ -1,5 +1,6 @@
 import React from 'react'
 import iaValues from '../styles/iaValues'
+import iaColors from '../styles/iaColors'
 import styled from 'styled-components'
 import { IaTypo01, IaTypo05 } from '../styles/iaTypography'
 
@@ -13,6 +14,7 @@ const CenterContainer = styled.div`
 const HeaderContainer = styled.div`
   box-shadow: 0px 5px 9px -6px #000;
   position: relative;
+  background-color: ${iaColors.IA_COLOR_00}
 `
 
 const ButtonRow = styled.div`
