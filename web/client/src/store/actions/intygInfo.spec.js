@@ -1,6 +1,7 @@
 import { functionToTest, mockStore } from '../../testUtils/actionUtils'
 import * as actions from './intygInfo'
 import * as api from '../../api/intygInfo.api'
+import * as intygInfoList from './intygInfoList'
 
 describe('intygInfo actions', () => {
   let store
@@ -22,8 +23,15 @@ describe('intygInfo actions', () => {
         return Promise.resolve(response)
       }
 
+      intygInfoList.fetchIntygInfoList = () => {
+        return {
+          type: 'TEMP_ACTION'
+        }
+      }
+
       const expectedActions = [
         { type: actions.FETCH_INTYG_INFO_REQUEST },
+        { type: 'TEMP_ACTION' },
         { type: actions.FETCH_INTYG_INFO_SUCCESS, response },
       ]
 
