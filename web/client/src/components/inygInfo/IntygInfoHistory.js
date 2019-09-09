@@ -6,6 +6,11 @@ import {compose} from "recompose";
 import {connect} from "react-redux";
 import * as actions from "../../store/actions/intygInfoList";
 import {getIntygInfoList} from "../../store/reducers/intygInfoList";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  margin: 45px 0 0 0;
+`
 
 const IntygInfoHistory = ({intygInfoList, fetchIntygInfoList}) => {
 
@@ -19,11 +24,11 @@ const IntygInfoHistory = ({intygInfoList, fetchIntygInfoList}) => {
   }
 
   return (
-    <>
+    <Wrapper>
       <IaTypo03>Senaste sökningar</IaTypo03>
       <IntygInfoHistoryList />
       <ListPagination list={intygInfoList} handlePageChange={handlePageChange} />
-    </>
+    </Wrapper>
   );
 }
 

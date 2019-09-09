@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "required": [
+    "intygId"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "intygId": {
+      "type": "string"
+    }
+  }
+}

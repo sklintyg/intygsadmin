@@ -10,21 +10,11 @@ import {connect} from "react-redux";
 import * as actions from "../../store/actions/intygInfo";
 import * as modalActions from "../../store/actions/modal";
 
-const Wrapper = styled.div`
-  & th:last-child {
-    width: 1%;
-  }
-`
-
 const PageHeader = styled.div`
     padding: 12px 0 4px;
     &:first-of-type {
       padding: 4px 0;
     }
-`
-
-const PageSearchRow = styled.div`
-  padding: 20px 0 10px 0;
 `
 
 const FlexDiv = styled.div`
@@ -92,32 +82,30 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
   }, [searchResult, intygInfo, validationSearchMessage, openModal])
 
   return (
-    <Wrapper>
-      <PageSearchRow>
-        <PageHeader>
-          <IaTypo03>Ange intygets ID</IaTypo03>
-        </PageHeader>
-        <FlexDiv>
-          <Container className={validationSearchMessage ? 'error' : ''}>
-            <Input
-              id={'searchInput'}
-              placeholder='a92703da-c032-4833-b052-bdb6f54e0bf5'
-              value={searchString}
-              onChange={(e) => setSearchString(e.target.value)}
-              style={searchInput}
-              innerRef={inputRef}
-            />
-          </Container>
-          <Button id={'searchBtn'} onClick={() => searchIntegratedUnit(searchString)} color={'success'}>
-            Sök intyg
-          </Button>
-          <UncontrolledTooltip placement='auto' target='searchBtn' >
-            Öppnar ett modalfönster med information om intyget.
-          </UncontrolledTooltip>
-        </FlexDiv>
-        <ValidationMessage id={'validationSearchMessageId'}>{validationSearchMessage}</ValidationMessage>
-      </PageSearchRow>
-    </Wrapper>
+    <>
+      <PageHeader>
+        <IaTypo03>Ange intygets ID</IaTypo03>
+      </PageHeader>
+      <FlexDiv>
+        <Container className={validationSearchMessage ? 'error' : ''}>
+          <Input
+            id={'searchInput'}
+            placeholder='a92703da-c032-4833-b052-bdb6f54e0bf5'
+            value={searchString}
+            onChange={(e) => setSearchString(e.target.value)}
+            style={searchInput}
+            innerRef={inputRef}
+          />
+        </Container>
+        <Button id={'searchBtn'} onClick={() => searchIntegratedUnit(searchString)} color={'success'}>
+          Sök intyg
+        </Button>
+        <UncontrolledTooltip placement='auto' target='searchBtn' >
+          Öppnar ett modalfönster med information om intyget.
+        </UncontrolledTooltip>
+      </FlexDiv>
+      <ValidationMessage id={'validationSearchMessageId'}>{validationSearchMessage}</ValidationMessage>
+    </>
   )
 }
 

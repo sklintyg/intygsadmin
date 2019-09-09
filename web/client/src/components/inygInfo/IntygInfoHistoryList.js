@@ -13,25 +13,36 @@ const ResultLine = styled.div`
   padding: 20px 0 10px 0;
 `
 
-const Wrapper = styled.div`
-  & th:last-child {
-    width: 1%;
-  }
-`
-
-const IntygInfoHistoryList = ({ intygInfoList, onSort, errorMessage }) => {
+const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => {
   if (errorMessage) {
     return (
-      <IaAlert type={alertType.ERROR}>{errorMessage}</IaAlert>
+      <ResultLine>
+        <IaAlert type={alertType.ERROR}>{errorMessage}</IaAlert>
+      </ResultLine>
     )
   }
 
-  const handleSort = (sortColumn) => {
-    onSort(sortColumn)
+  if (intygInfoList.content && intygInfoList.content.length === 0) {
+    if (intygInfoList.totalElements === 0) {
+      return (
+        <ResultLine></ResultLine>
+      )
+    }
+  }
+
+  const handleSort = (newSortColumn) => {
+    let { sortColumn, sortDirection } = intygInfoList
+    if (sortColumn === newSortColumn) {
+      sortDirection = intygInfoList.sortDirection === 'DESC' ? 'ASC' : 'DESC'
+    } else {
+      sortColumn = newSortColumn
+    }
+
+    fetchData({ ...otherProps, sortColumn, sortDirection })
   }
 
   return (
-    <Wrapper>
+    <>
       <ResultLine>
         Visar {intygInfoList.start}-{intygInfoList.end} av {intygInfoList.totalElements} sökningar
       </ResultLine>
@@ -49,7 +60,7 @@ const IntygInfoHistoryList = ({ intygInfoList, onSort, errorMessage }) => {
               currentSortColumn={intygInfoList.sortColumn}
               currentSortDirection={intygInfoList.sortDirection}
               text="Administratör"
-              sortId="user"
+              sortId="employeeName"
               onSort={handleSort}
             />
             <TableSortHead
@@ -65,13 +76,13 @@ const IntygInfoHistoryList = ({ intygInfoList, onSort, errorMessage }) => {
         { intygInfoList.content && intygInfoList.content.map((intygInfo) => (
           <tr key={intygInfo.intygId}>
             <td><DisplayDateTime date={intygInfo.createdAt} includeSeconds={true} /></td>
-            <td>{intygInfo.user}</td>
+            <td>{intygInfo.employeeName}</td>
             <td>{intygInfo.intygId}</td>
           </tr>
         ))}
         </tbody>
       </Table>
-    </Wrapper>
+    </>
   )
 }
 

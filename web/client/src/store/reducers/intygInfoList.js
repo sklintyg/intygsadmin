@@ -16,7 +16,16 @@ export const IntygInfoListDefaultState = {
 const intygInfoList = (state = IntygInfoListDefaultState, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_INTYG_INFO_LIST_SUCCESS:
-      return action.response
+      return { ...state,
+        content: action.response.content,
+        numberOfElements: action.response.numberOfElements,
+        pageIndex: action.response.number,
+        start: action.response.number * action.response.size + 1,
+        end: action.response.number * action.response.size + action.response.numberOfElements,
+        totalElements: action.response.totalElements,
+        sortColumn: action.sortColumn,
+        sortDirection: action.sortDirection,
+      }
     case ActionConstants.FETCH_INTYG_INFO_LIST_FAILURE:
       return IntygInfoListDefaultState
     default:
@@ -47,7 +56,6 @@ const errorMessage = (state = null, action) => {
       return state
   }
 }
-
 
 export default combineReducers({
   intygInfoList,
