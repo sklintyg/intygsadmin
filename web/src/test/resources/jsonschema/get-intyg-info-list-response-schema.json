@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "required": [
+    "content",
+    "empty",
+    "first",
+    "last",
+    "pageable",
+    "totalPages",
+    "number",
+    "numberOfElements",
+    "totalElements",
+    "sort",
+    "size"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "employeeName",
+          "employeeHsaId",
+          "intygId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "employeeName": {
+            "type": "string"
+          },
+          "employeeHsaId": {
+            "type": "string"
+          },
+          "intygId": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "empty": {
+      "type": "boolean"
+    },
+    "first": {
+      "type": "boolean"
+    },
+    "last": {
+      "type": "boolean"
+    },
+    "totalElements": {
+      "type": "integer"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "pageable": {
+      "type": "object"
+    },
+    "size": {
+      "type": "integer"
+    },
+    "sort": {
+      "type": "object"
+    },
+    "totalPages": {
+      "type": "integer"
+    },
+    "numberOfElements": {
+      "type": "integer"
+    }
+  }
+}

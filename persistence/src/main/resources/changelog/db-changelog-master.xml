@@ -97,4 +97,26 @@
 
   </changeSet>
 
+  <changeSet id="5" author="martin hesslund">
+
+    <createTable tableName="intyg_info">
+      <column name="id" type="varchar(40)">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="employee_hsa_id" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="employee_name" type="varchar(200)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="intyg_id" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_at" type="datetime">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+  </changeSet>
+
 </databaseChangeLog>

@@ -27,9 +27,9 @@ const MenuBar = ({ stat }) => {
   const menu = [
     {
       id: 'intyginfo',
-      to: '/intygsinformation',
+      to: '/intygInfo',
       text: 'Intygsinformation',
-      enabled: false
+      enabled: true
     },
     {
       id: 'banners',

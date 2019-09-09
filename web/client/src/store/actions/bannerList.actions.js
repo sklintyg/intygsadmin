@@ -11,7 +11,7 @@ export const fetchBannerList = (bannerRequest) => (dispatch, getState) => {
   }
 
   dispatch({
-    type: 'FETCH_BANNERLIST_REQUEST',
+    type: FETCH_BANNERLIST_REQUEST,
   })
 
   let requestParams = bannerRequest;
@@ -28,7 +28,7 @@ export const fetchBannerList = (bannerRequest) => (dispatch, getState) => {
   return api.fetchBannerList(requestParams).then(
     (response) => {
       dispatch({
-        type: 'FETCH_BANNERLIST_SUCCESS',
+        type: FETCH_BANNERLIST_SUCCESS,
         response: response,
         sortColumn: requestParams.sortColumn,
         sortDirection: requestParams.sortDirection
@@ -36,7 +36,7 @@ export const fetchBannerList = (bannerRequest) => (dispatch, getState) => {
     },
     (errorResponse) => {
       dispatch({
-        type: 'FETCH_BANNERLIST_FAILURE',
+        type: FETCH_BANNERLIST_FAILURE,
         payload: errorResponse,
       })
 

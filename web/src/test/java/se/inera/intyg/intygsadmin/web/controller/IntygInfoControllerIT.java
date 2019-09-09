@@ -21,50 +21,48 @@ package se.inera.intyg.intygsadmin.web.controller;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
-public class IntegratedUnitsControllerIT extends BaseRestIntegrationTest {
+public class IntygInfoControllerIT extends BaseRestIntegrationTest {
 
-    private static final String INTEGRATED_UNITS_API_ENDPOINT = "/api/integratedUnits";
+    private static final String INTYG_INFO_API_ENDPOINT = "/api/intygInfo";
 
     @Test
     public void testGetIntegratedUnitOk() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String existingUnitId = "SE4815162344-1A01";
+        final String existingIntygId = "f63c813d-a13a-4b4b-965f-419dfe98fffe";
 
         given().expect().statusCode(OK)
             .when()
-            .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + existingUnitId)
+            .get(INTYG_INFO_API_ENDPOINT + "/" + existingIntygId)
             .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-integrated-unit-response-schema.json"));
+            .body(matchesJsonSchemaInClasspath("jsonschema/get-intyg-info-response-schema.json"));
     }
 
     @Test
     public void testGetIntegratedUnitNotFound() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String nonExistingUnitId = "SE4815162344-XXXX";
+        final String nonExistingIntygId = "9ae0c3b4-3d80-46f3-acde-b332970ba0ea";
 
         given().expect().statusCode(NOT_FOUND)
             .when()
-            .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + nonExistingUnitId);
+            .get(INTYG_INFO_API_ENDPOINT + "/" + nonExistingIntygId);
     }
 
     @Test
-    public void testGetIntegratedUnitsFile() {
+    public void testGetBanners() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         given().expect().statusCode(OK)
             .when()
-            .get(INTEGRATED_UNITS_API_ENDPOINT + "/file")
+            .get(INTYG_INFO_API_ENDPOINT)
             .then()
-            .contentType(is(MediaType.APPLICATION_OCTET_STREAM.toString()));
+            .body(matchesJsonSchemaInClasspath("jsonschema/get-intyg-info-list-response-schema.json"));
     }
 
 }

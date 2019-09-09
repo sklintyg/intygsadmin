@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import ibValues from './iaValues'
+import iaValues from './iaValues'
+import iaColors from './iaColors'
 
 /**
  *
@@ -18,16 +19,16 @@ export const FlexColumnContainer = styled.div`
 export const PageHeaderContainer = styled.div`
   margin: auto;
   width: 100%;
-  max-width: ${ibValues.maxContentWidth};
+  max-width: ${iaValues.maxContentWidth};
 `
 
 export const ScrollingContainer = styled.div`
   overflow-y: auto;
-  background: #fff;
+  background-color: ${iaColors.IA_COLOR_07}
   height: 100%;
   margin: auto;
   width: 100%;
-  max-width: ${ibValues.maxContentWidth};
+  max-width: ${iaValues.maxContentWidth};
 `
 export const WorkareaContainer = styled.div`
   padding: 30px;
@@ -43,4 +44,23 @@ export const ErrorSection = styled.div`
 
 export const ErrorWrapper = styled.div`
   margin: 15px 15px 0 15px;
+`
+
+export const CustomScrollingContainer = styled(ScrollingContainer)`
+  max-width: none;
+`
+
+export const PageContainer = styled(WorkareaContainer)`
+  margin: auto;
+  width: 100%;
+  max-width: ${iaValues.maxContentWidth};
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 290px);
+  padding-bottom: 60px;
+
+  img {
+    width: 100%;
+    padding-bottom: 20px;
+  }
 `
