@@ -97,9 +97,9 @@ public class IntegratedUnitsFileWriter {
     private void writeIntegratedUnit(IntegratedUnitDTO integratedUnitDTO, Row row) {
         int columnCount = 0;
 
-        String skapadDatum = integratedUnitDTO.getSkapadDatum() != null ? formatter.format(integratedUnitDTO.getSkapadDatum()) : "";
-        String kontrollDatum = integratedUnitDTO.getSenasteKontrollDatum() != null ?
-            formatter.format(integratedUnitDTO.getSenasteKontrollDatum()) : "";
+        final String skapadDatum = integratedUnitDTO.getSkapadDatum() != null ? formatter.format(integratedUnitDTO.getSkapadDatum()) : "";
+        final String kontrollDatum = integratedUnitDTO.getSenasteKontrollDatum() != null
+            ? formatter.format(integratedUnitDTO.getSenasteKontrollDatum()) : "";
 
         Cell cell = row.createCell(columnCount++);
         cell.setCellValue(integratedUnitDTO.getEnhetsId());
