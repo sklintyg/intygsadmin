@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
 import { compose } from 'recompose'
 import * as actions from '../../store/actions/banner'
@@ -76,6 +76,14 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
             </span>
           </FlexDiv>
         </ModalBody>
+        <ModalFooter className="no-border">
+          <Button
+            id="closeModal"
+            color={'default'}
+            onClick={handleClose}>
+            Stäng
+          </Button>
+        </ModalFooter>
       </Modal>
   )
 }
