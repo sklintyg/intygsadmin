@@ -25,6 +25,7 @@
       "IS007": "Intyget förnyades av {hsaId}",
       "IS008": "Intyget ersattes av {hsaId}",
       "IS009": "Intyget makulerades av {hsaId}",
+      "IS010": "Utkastet sparades senast av {hsaId}",
       "IS011": "{intygsmottagare} skickade en kompletteringsbegäran",
       "IS012": "{intygsmottagare} skickade en administrativ fråga",
       "IS013": "{name} skickade en administrativ fråga till {intygsmottagare}",
@@ -38,6 +39,9 @@
       "IS021": "Utkastet skapades för att komplettera intyg {intygsId}",
       "IS022": "Utkastet skapades som en kopia på {intygsId}",
 
+      "IS024": "Administrativ fråga från {intygsmottagare} besvarad av vården",
+      "IS026": "Administrativ fråga besvarades av {intygsmottagare}",
+      "IS027": "Administrativ fråga från vården markerades som hanterad av vården",
 
       "IS101": "Notifiering SKAPAT skickades till journalsystem",
       "IS102": "Notifiering ANDRAT skickades till journalsystem",

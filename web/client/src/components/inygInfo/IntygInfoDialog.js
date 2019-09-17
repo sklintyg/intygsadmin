@@ -210,12 +210,6 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
               title='Intyg skickades till intygsmottagaren'
               value={intygInfo.sentToRecipient}
               noValue={intygInfo.numberOfRecipients  > 0 ? 'Ej skickat' : 'Finns ingen mottagare'} />
-
-            {
-              intygInfo.numberOfRecipients === 1 ?
-              <InfoBox title='Intyget togs emot av intygsmottagaren' value={intygInfo.receivedByRecipient} noValue='Ej mottagit' />
-              : ''
-            }
           </RowWrapperBox>
 
           <RowWrapper>
