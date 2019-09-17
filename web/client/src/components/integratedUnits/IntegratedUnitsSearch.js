@@ -55,7 +55,7 @@ const Container = styled.div`
 `
 
 const searchInput = {
-  width: '180px'
+  width: '250px'
 }
 
 const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit, isFetching, errorMessage }) => {
@@ -118,6 +118,7 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
               onChange={(e) => setSearchString(e.target.value)}
               innerRef={inputRef}
               style={searchInput}
+              maxLength="40"
             />
           </Container>
           <Button id={'searchBtn'} onClick={() => searchIntegratedUnit(searchString)} color={'success'}>

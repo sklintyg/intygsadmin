@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,6 +33,8 @@ import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 
 public class IntegratedUnitsFileWriter {
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public ByteArrayOutputStream writeExcel(List<IntegratedUnitDTO> integratedUnitDTOList) throws IOException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Integrerade enheter");
@@ -39,11 +42,15 @@ public class IntegratedUnitsFileWriter {
         int rowCount = 0;
 
         Row headerRow = sheet.createRow(rowCount++);
-        writeHeader(headerRow, workbook);
+        int lastColumnIndex = writeHeader(headerRow, workbook);
 
         for (IntegratedUnitDTO integratedUnitDTO : integratedUnitDTOList) {
             Row row = sheet.createRow(rowCount++);
             writeIntegratedUnit(integratedUnitDTO, row);
+        }
+
+        for (int a = 0; a <= lastColumnIndex; a++) {
+            sheet.autoSizeColumn(a);
         }
 
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -52,7 +59,7 @@ public class IntegratedUnitsFileWriter {
         }
     }
 
-    private void writeHeader(Row row, XSSFWorkbook workbook) {
+    private int writeHeader(Row row, XSSFWorkbook workbook) {
         XSSFCellStyle style = createHeaderStyle(workbook);
 
         int columnCount = 0;
@@ -75,6 +82,8 @@ public class IntegratedUnitsFileWriter {
         cell = row.createCell(columnCount);
         cell.setCellStyle(style);
         cell.setCellValue("Senast kontrollerad");
+
+        return columnCount;
     }
 
     private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
@@ -88,6 +97,10 @@ public class IntegratedUnitsFileWriter {
     private void writeIntegratedUnit(IntegratedUnitDTO integratedUnitDTO, Row row) {
         int columnCount = 0;
 
+        String skapadDatum = integratedUnitDTO.getSkapadDatum() != null ? formatter.format(integratedUnitDTO.getSkapadDatum()) : "";
+        String kontrollDatum = integratedUnitDTO.getSenasteKontrollDatum() != null ?
+            formatter.format(integratedUnitDTO.getSenasteKontrollDatum()) : "";
+
         Cell cell = row.createCell(columnCount++);
         cell.setCellValue(integratedUnitDTO.getEnhetsId());
         cell = row.createCell(columnCount++);
@@ -97,10 +110,9 @@ public class IntegratedUnitsFileWriter {
         cell = row.createCell(columnCount++);
         cell.setCellValue(integratedUnitDTO.getVardgivarNamn());
         cell = row.createCell(columnCount++);
-        cell.setCellValue(integratedUnitDTO.getSkapadDatum() != null ? integratedUnitDTO.getSkapadDatum().toString() : "");
+        cell.setCellValue(skapadDatum);
         cell = row.createCell(columnCount);
-        cell.setCellValue(integratedUnitDTO.getSenasteKontrollDatum() != null
-            ? integratedUnitDTO.getSenasteKontrollDatum().toString() : "");
+        cell.setCellValue(kontrollDatum);
     }
 
 }
