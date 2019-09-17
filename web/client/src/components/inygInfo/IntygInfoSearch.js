@@ -9,6 +9,7 @@ import {compose} from "recompose";
 import {connect} from "react-redux";
 import * as actions from "../../store/actions/intygInfo";
 import * as modalActions from "../../store/actions/modal";
+import IntygInfoDialog, {intygInfoDialogId} from "./IntygInfoDialog";
 
 const PageHeader = styled.div`
     padding: 12px 0 4px;
@@ -58,6 +59,7 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
     if (intygsId === '' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(intygsId)) {
       setValidationSearchMessage(getMessage('intygInfo.intygsId.wrongformat'))
     } else {
+      setValidationSearchMessage(undefined);
       fetchIntygInfo(intygsId)
     }
   }
@@ -69,14 +71,13 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
   }, [errorMessage])
 
   useEffect(() => {
-    setSearchResult(intygInfo.intygsId)
+    setSearchResult(intygInfo.intygId)
   }, [intygInfo])
 
   useEffect(() => {
     if (searchResult !== undefined
-      && validationSearchMessage === undefined) {
-      //let text = {}
-      //openModal(IntegratedUnitSearchResultId, {text})
+      && !validationSearchMessage) {
+      openModal(intygInfoDialogId, {intygInfo})
       setSearchString('')
     }
   }, [searchResult, intygInfo, validationSearchMessage, openModal])
@@ -86,6 +87,7 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
       <PageHeader>
         <IaTypo03>Ange intygets ID</IaTypo03>
       </PageHeader>
+      <IntygInfoDialog />
       <FlexDiv>
         <Container className={validationSearchMessage ? 'error' : ''}>
           <Input

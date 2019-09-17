@@ -21,16 +21,24 @@ package se.inera.intyg.intygsadmin.web.mapper;
 
 import java.util.List;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
+import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
+import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring",
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
 public interface IntygInfoMapper {
 
-    IntygInfoListDTO toDTO(IntygInfoEntity s);
+    void updateInfoFromIT(ItIntygInfo s, @MappingTarget IntygInfoDTO target);
+
+    void updateInfoFromWC(WcIntygInfo s, @MappingTarget IntygInfoDTO target);
 
     List<IntygInfoListDTO> toListDTO(List<IntygInfoEntity> s);
-
-    IntygInfoEntity toEntity(IntygInfoListDTO s);
 }

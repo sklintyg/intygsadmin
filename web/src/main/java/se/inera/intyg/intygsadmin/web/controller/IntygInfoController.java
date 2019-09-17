@@ -42,7 +42,7 @@ public class IntygInfoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<IntygInfoListDTO>> listBanners(
+    public ResponseEntity<Page<IntygInfoListDTO>> listHistory(
         @PageableDefault(size = 20, sort = "createdAt")
             Pageable pageable) {
         Page<IntygInfoListDTO> bannerDTOS = intygInfoService.getIntygInfoList(pageable);
@@ -51,7 +51,7 @@ public class IntygInfoController {
     }
 
     @GetMapping("/{intygId}")
-    public ResponseEntity<IntygInfoDTO> getIntegratedUnit(@PathVariable String intygId) {
+    public ResponseEntity<IntygInfoDTO> getIntygInfo(@PathVariable String intygId) {
 
         IntygInfoDTO intygInfoDTO = intygInfoService.getIntygInfo(intygId);
         if (intygInfoDTO == null) {

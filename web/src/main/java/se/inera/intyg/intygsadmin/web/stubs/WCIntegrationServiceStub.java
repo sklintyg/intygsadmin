@@ -25,12 +25,13 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
-import se.inera.intyg.intygsadmin.web.service.WCIntegratedUnitsService;
+import se.inera.intyg.intygsadmin.web.service.WCIntegrationService;
 
 @Profile("wc-unit-stub")
 @Service
-public class WCIntegratedUnitsServiceStub implements WCIntegratedUnitsService {
+public class WCIntegrationServiceStub implements WCIntegrationService {
 
     private static final String UNIT_ID_1 = "SE4815162344-1A01";
     private static final String UNIT_ID_2 = "SE4815162344-1A02";
@@ -63,6 +64,7 @@ public class WCIntegratedUnitsServiceStub implements WCIntegratedUnitsService {
                 LocalDateTime.now(),
                 LocalDateTime.now()));
 
+    @Override
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
         if (VALID_UNITS.containsKey(hsaId)) {
             return VALID_UNITS.get(hsaId);
@@ -70,8 +72,14 @@ public class WCIntegratedUnitsServiceStub implements WCIntegratedUnitsService {
         return null;
     }
 
+    @Override
     public List<IntegratedUnitDTO> getAllIntegratedUnits() {
         return new ArrayList<>(VALID_UNITS.values());
     }
 
+    @Override
+    public WcIntygInfo getIntygInfo(String intygId) {
+
+        return null;
+    }
 }

@@ -19,14 +19,48 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class IntygInfoDTO {
 
     private String intygId;
+    private String intygType;
+    private String intygVersion;
+
+    private LocalDateTime draftCreated;
+    private LocalDateTime receivedDate;
+    private LocalDateTime signedDate;
+    private LocalDateTime sentToRecipient;
+    private LocalDateTime receivedByRecipient;
+
+    private int numberOfRecipients;
+
+    private String signedByName;
+    private String signedByHsaId;
+    private String signedByEmail;
+
+    private String careUnitName;
+    private String careUnitHsaId;
+
+    private String careGiverName;
+    private String careGiverHsaId;
+
+    private boolean inWebcert;
+
+    private int komletteingar;
+    private int komletteingarAnswered;
+
+    private int adminQuestionsSent;
+    private int adminQuestionsSentAnswered;
+
+    private int adminQuestionsReceived;
+    private int adminQuestionsReceivedAnswered;
+
+    private List<IntygInfoEvent> events;
 }

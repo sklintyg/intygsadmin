@@ -6,6 +6,7 @@ const intygInfo = (state = {}, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_INTYG_INFO_SUCCESS:
       return action.response
+    case ActionConstants.FETCH_INTYG_INFO_REQUEST:
     case ActionConstants.FETCH_INTYG_INFO_FAILURE:
       return {}
     default:

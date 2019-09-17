@@ -20,7 +20,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: dev, fake, caching-enabled, wc-unit-stub
+    active: dev, fake, caching-enabled
   h2:
     console:
       enabled: false
@@ -51,3 +51,6 @@ inera:
 
 webcert:
   internalapi: http://localhost:9088
+
+intygstjansten:
+  internalapi: http://localhost:8080/inera-certificate

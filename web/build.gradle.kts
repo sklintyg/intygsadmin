@@ -30,6 +30,8 @@ dependencies {
   implementation("it.ozimov:embedded-redis:${Dependencies.embeddedRedisVersion}")
   implementation("redis.clients:jedis")
 
+  implementation("se.inera.intyg.infra:intyginfo:${project.extra["intygInfraVersion"]}")
+
   //api documentation
   implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
   implementation("io.springfox:springfox-swagger-ui:${Dependencies.swaggerVersion}")
