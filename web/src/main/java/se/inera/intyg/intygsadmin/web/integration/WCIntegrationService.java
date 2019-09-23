@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service;
+package se.inera.intyg.intygsadmin.web.integration;
 
 import java.util.List;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;

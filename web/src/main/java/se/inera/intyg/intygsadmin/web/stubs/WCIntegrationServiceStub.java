@@ -27,9 +27,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
-import se.inera.intyg.intygsadmin.web.service.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 
-@Profile("wc-unit-stub")
+@Profile("wc-stub")
 @Service
 public class WCIntegrationServiceStub implements WCIntegrationService {
 

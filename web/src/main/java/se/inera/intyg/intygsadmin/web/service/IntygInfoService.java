@@ -36,6 +36,7 @@ import se.inera.intyg.intygsadmin.persistence.service.IntygInfoPersistenceServic
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
 import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 import se.inera.intyg.intygsadmin.web.mapper.IntygInfoMapper;
 
 @Service
@@ -110,7 +111,7 @@ public class IntygInfoService {
             LOG.warn("intyg info not found in wc", e);
         }
 
-        intygInfo.setInWebcert(wcIntygInfoDTO != null);
+        intygInfo.setInWebcert(wcIntygInfoDTO != null && wcIntygInfoDTO.getDraftCreated() != null);
 
         if (wcIntygInfoDTO != null) {
             intygInfoMapper.updateInfoFromWC(wcIntygInfoDTO, intygInfo);

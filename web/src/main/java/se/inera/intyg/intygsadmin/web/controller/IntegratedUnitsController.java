@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
-import se.inera.intyg.intygsadmin.web.service.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 import se.inera.intyg.intygsadmin.web.util.IntegratedUnitsFileWriter;
 
 @RestController

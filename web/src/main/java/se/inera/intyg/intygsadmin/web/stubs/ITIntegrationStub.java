@@ -22,17 +22,14 @@ package se.inera.intyg.intygsadmin.web.stubs;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
+import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
 
 @Profile("it-stub")
-@RestController
-@RequestMapping("/stub/it/")
-public class ITIntegrationStub {
+@Service
+public class ITIntegrationStub implements ITIntegrationService {
 
     private Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
 
@@ -43,13 +40,13 @@ public class ITIntegrationStub {
         intygInfoMap.put("f63c813d-a13a-4b4b-965f-419dfe98fffe", intygInfoDTO);
     }
 
-    @GetMapping("/internalapi/intygInfo/{hsaId}")
-    public ResponseEntity<ItIntygInfo> getIntygInfo(@PathVariable String intygId) {
+    @Override
+    public ItIntygInfo getIntygInfo(@PathVariable String intygId) {
 
         if (!intygInfoMap.containsKey(intygId)) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
 
-        return ResponseEntity.ok(intygInfoMap.get(intygId));
+        return intygInfoMap.get(intygId);
     }
 }

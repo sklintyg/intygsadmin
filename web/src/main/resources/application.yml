@@ -20,7 +20,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: dev, fake, caching-enabled
+    active: dev, fake, caching-enabled, it-stub, wc-stub
   h2:
     console:
       enabled: false

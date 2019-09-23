@@ -19,9 +19,6 @@
 
 package se.inera.intyg.intygsadmin.web.integration;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,49 +26,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
+import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 
-@Profile("!wc-stub")
+@Profile("!it-stub")
 @Service
-public class WCIntegrationServiceImpl implements WCIntegrationService {
+public class ITIntegrationServiceImpl implements ITIntegrationService {
 
-    @Bean("wcRestTemplate")
+    @Bean("itRestTemplate")
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
     @Autowired
-    @Qualifier("wcRestTemplate")
+    @Qualifier("itRestTemplate")
     private RestTemplate restTemplate;
 
-    @Value("${webcert.internalapi}")
-    private String webcertUrl;
+    @Value("${intygstjansten.internalapi}")
+    private String intygstjanstenUrl;
 
     @Override
-    public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
-        String url = webcertUrl + "/internalapi/integratedUnits/" + hsaId;
+    public ItIntygInfo getIntygInfo(String intygId) {
+        String url = intygstjanstenUrl + "/internalapi/intygInfo/" + intygId;
 
-        return restTemplate.getForObject(url, IntegratedUnitDTO.class);
+        return restTemplate.getForObject(url, ItIntygInfo.class);
     }
-
-    @Override
-    public List<IntegratedUnitDTO> getAllIntegratedUnits() {
-        String url = webcertUrl + "/internalapi/integratedUnits/all";
-
-        IntegratedUnitDTO[] integratedUnitDTOArray = restTemplate.getForObject(url, IntegratedUnitDTO[].class);
-
-        if (integratedUnitDTOArray == null) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(integratedUnitDTOArray);
-    }
-
-    @Override
-    public WcIntygInfo getIntygInfo(String intygId) {
-        String url = webcertUrl + "/internalapi/intygInfo/" + intygId;
-
-        return restTemplate.getForObject(url, WcIntygInfo.class);
-    }
-
 }
