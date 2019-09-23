@@ -21,10 +21,15 @@ package se.inera.intyg.intygsadmin.web.stubs;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
@@ -38,48 +43,108 @@ public class WCIntegrationServiceStub implements WCIntegrationService {
     private static final String UNIT_ID_3 = "SE4815162344-1A03";
     private static final String UNIT_ID_4 = "SE4815162344-1A04";
 
-    private static final Map<String, IntegratedUnitDTO> VALID_UNITS = Map
-        .of(UNIT_ID_1, new IntegratedUnitDTO(UNIT_ID_1,
-                "enhetsnamn1",
-                "VardgivareId1",
-                "vargivarenamn1",
-                LocalDateTime.now(),
-                LocalDateTime.now()),
-            UNIT_ID_2, new IntegratedUnitDTO(UNIT_ID_2,
-                "enhetsnamn2",
-                "VardgivareId2",
-                "vargivarenamn2",
-                LocalDateTime.now(),
-                LocalDateTime.now()),
-            UNIT_ID_3, new IntegratedUnitDTO(UNIT_ID_3,
-                "enhetsnamn3",
-                "VardgivareId3",
-                "vargivarenamn3",
-                LocalDateTime.now(),
-                LocalDateTime.now()),
-            UNIT_ID_4, new IntegratedUnitDTO(UNIT_ID_4,
-                "enhetsnamn4",
-                "VardgivareId5",
-                "vargivarenamn5",
-                LocalDateTime.now(),
-                LocalDateTime.now()));
+    public static final String INTYG_ID_1 = "1edf4f03-0c48-4fe8-9a64-64946aae212a";
+    private static final String INTYG_ID_2 = "9afbe083-4da3-41e6-a2a6-43a8dee9d5a4";
+
+    private Map<String, IntegratedUnitDTO> validUnit = new HashMap<>();
+    private Map<String, WcIntygInfo> intygInfoMap = new HashMap<>();
+
+    public WCIntegrationServiceStub() {
+        addUnit(UNIT_ID_1);
+        addUnit(UNIT_ID_2);
+        addUnit(UNIT_ID_3);
+        addUnit(UNIT_ID_4);
+
+        addIntyg(INTYG_ID_1);
+        addIntyg(INTYG_ID_2, INTYG_ID_1); // Only WC
+    }
 
     @Override
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
-        if (VALID_UNITS.containsKey(hsaId)) {
-            return VALID_UNITS.get(hsaId);
+        if (validUnit.containsKey(hsaId)) {
+            return validUnit.get(hsaId);
         }
         return null;
     }
 
     @Override
     public List<IntegratedUnitDTO> getAllIntegratedUnits() {
-        return new ArrayList<>(VALID_UNITS.values());
+        return new ArrayList<>(validUnit.values());
     }
 
     @Override
     public WcIntygInfo getIntygInfo(String intygId) {
+        if (intygInfoMap.containsKey(intygId)) {
+            return intygInfoMap.get(intygId);
+        }
 
         return null;
+    }
+
+    private void addUnit(String unitId) {
+        int number = validUnit.size() + 1;
+
+        IntegratedUnitDTO enhet = new IntegratedUnitDTO(unitId,
+            "enhetsnamn" + number,
+            "VardgivareId" + number,
+            "vargivarenamn" + number,
+            LocalDateTime.now(),
+            LocalDateTime.now());
+
+        validUnit.put(unitId, enhet);
+    }
+
+    private void addIntyg(String intygId) {
+        addIntyg(intygId, null);
+    }
+
+    private void addIntyg(String intygId, String intygId2) {
+        LocalDateTime date = LocalDateTime.now();
+
+        WcIntygInfo intygInfo = new WcIntygInfo();
+        intygInfo.setIntygId(intygId);
+        intygInfo.setIntygType("lisjp");
+        intygInfo.setIntygVersion("1.0");
+        intygInfo.setDraftCreated(date);
+        intygInfo.setSignedDate(date.plusHours(1));
+        intygInfo.setSentToRecipient(date.plusHours(1));
+        intygInfo.setCareGiverHsaId("vg1-id");
+        intygInfo.setCareGiverName("vg1");
+        intygInfo.setCareUnitName("ve1");
+        intygInfo.setCareUnitHsaId("ve1-id");
+        intygInfo.setSignedByName("name");
+        intygInfo.setSignedByHsaId("hsaId");
+
+        if (!Objects.isNull(intygId2)) {
+            intygInfo.getEvents().add(createEvent(date, IntygInfoEventType.IS019, "intygsId", intygId2));
+        }
+
+        intygInfo.getEvents().add(createEvent(date, IntygInfoEventType.IS001, "hsaId", "created-by-id", "name", "created-by-name"));
+        intygInfo.getEvents().add(createEvent(date.plusMinutes(20), IntygInfoEventType.IS018));
+        intygInfo.getEvents().add(createEvent(date.plusHours(1), IntygInfoEventType.IS004, "hsaId", "hsaId", "name", "name"));
+        intygInfo.getEvents().add(createEvent(date.plusHours(1), IntygInfoEventType.IS006, "intygsmottagare", "FK"));
+
+        intygInfoMap.put(intygInfo.getIntygId(), intygInfo);
+    }
+
+    private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type) {
+        return createEvent(date, type, null, null);
+    }
+
+    private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type, String key1, String data1) {
+        return createEvent(date, type, key1, data1, null, null);
+    }
+
+    private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type, String key1, String data1, String key2, String data2) {
+        IntygInfoEvent event = new IntygInfoEvent(Source.WEBCERT, date, type);
+
+        if (!Objects.isNull(key1)) {
+            event.addData(key1, data1);
+        }
+
+        if (!Objects.isNull(key2)) {
+            event.addData(key2, data2);
+        }
+        return event;
     }
 }

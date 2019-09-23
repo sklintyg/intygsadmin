@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -53,12 +54,12 @@ public class IntygInfoController {
     @GetMapping("/{intygId}")
     public ResponseEntity<IntygInfoDTO> getIntygInfo(@PathVariable String intygId) {
 
-        IntygInfoDTO intygInfoDTO = intygInfoService.getIntygInfo(intygId);
-        if (intygInfoDTO == null) {
+        Optional<IntygInfoDTO> intygInfoDTO = intygInfoService.getIntygInfo(intygId);
+        if (!intygInfoDTO.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(intygInfoDTO);
+        return ResponseEntity.ok(intygInfoDTO.get());
     }
 
 }

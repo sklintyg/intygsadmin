@@ -46,7 +46,7 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
       <ResultLine>
         Visar {intygInfoList.start}-{intygInfoList.end} av {intygInfoList.totalElements} sökningar
       </ResultLine>
-      <Table striped>
+      <Table striped id='intygInfoHistoryTable'>
         <thead>
           <tr>
             <TableSortHead

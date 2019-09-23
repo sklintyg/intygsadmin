@@ -22,6 +22,7 @@ package se.inera.intyg.intygsadmin.web.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -67,19 +68,18 @@ public class IntygInfoService {
         return new PageImpl<>(mapBanners, pageable, intygInfoEntities.getTotalElements());
     }
 
-    public IntygInfoDTO getIntygInfo(String intygId) {
+    public Optional<IntygInfoDTO> getIntygInfo(String intygId) {
         IntygInfoDTO info = new IntygInfoDTO();
         info.setEvents(new ArrayList<>());
 
         getInfoFromIT(intygId, info);
         List<IntygInfoEvent> events = new ArrayList<>(info.getEvents());
 
-        getInfoFromWC(intygId, info);
-        events.addAll(info.getEvents());
+        getInfoFromWC(intygId, info, events);
 
         // Intyg not found
         if (info.getIntygId() == null) {
-            return null;
+            return Optional.empty();
         }
 
         storeLog(intygId);
@@ -87,7 +87,7 @@ public class IntygInfoService {
         events.sort(Comparator.comparing(IntygInfoEvent::getDate).reversed());
         info.setEvents(events);
 
-        return info;
+        return Optional.of(info);
     }
 
     private void getInfoFromIT(String intygId, IntygInfoDTO intygInfo) {
@@ -103,7 +103,7 @@ public class IntygInfoService {
         }
     }
 
-    private void getInfoFromWC(String intygId, IntygInfoDTO intygInfo) {
+    private void getInfoFromWC(String intygId, IntygInfoDTO intygInfo, List<IntygInfoEvent> events) {
         WcIntygInfo wcIntygInfoDTO = null;
         try {
             wcIntygInfoDTO = wcIntegrationService.getIntygInfo(intygId);
@@ -115,6 +115,7 @@ public class IntygInfoService {
 
         if (wcIntygInfoDTO != null) {
             intygInfoMapper.updateInfoFromWC(wcIntygInfoDTO, intygInfo);
+            events.addAll(intygInfo.getEvents());
         }
     }
 

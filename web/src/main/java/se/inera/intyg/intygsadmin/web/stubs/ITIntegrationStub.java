@@ -19,11 +19,15 @@
 
 package se.inera.intyg.intygsadmin.web.stubs;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
 
@@ -34,19 +38,45 @@ public class ITIntegrationStub implements ITIntegrationService {
     private Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
 
     public ITIntegrationStub() {
-        ItIntygInfo intygInfoDTO = new ItIntygInfo();
-        intygInfoDTO.setIntygId("f63c813d-a13a-4b4b-965f-419dfe98fffe");
-
-        intygInfoMap.put("f63c813d-a13a-4b4b-965f-419dfe98fffe", intygInfoDTO);
+        addIntyg(WCIntegrationServiceStub.INTYG_ID_1);
+        addIntyg("f63c813d-a13a-4b4b-965f-419dfe98fffe"); // Only in IT
     }
 
     @Override
     public ItIntygInfo getIntygInfo(@PathVariable String intygId) {
-
-        if (!intygInfoMap.containsKey(intygId)) {
-            return null;
+        if (intygInfoMap.containsKey(intygId)) {
+            return intygInfoMap.get(intygId);
         }
 
-        return intygInfoMap.get(intygId);
+        return null;
+    }
+
+
+    private void addIntyg(String intygId) {
+        LocalDateTime date = LocalDateTime.now();
+
+        ItIntygInfo intygInfo = new ItIntygInfo();
+        intygInfo.setIntygId(intygId);
+        intygInfo.setNumberOfRecipients(intygInfoMap.size());
+        intygInfo.setIntygType("lisjp");
+        intygInfo.setIntygVersion("1.0");
+        intygInfo.setSignedDate(date);
+        intygInfo.setReceivedDate(date.plusMinutes(1));
+        intygInfo.setSentToRecipient(date.plusMinutes(10));
+        intygInfo.setCareGiverHsaId("vg1-id");
+        intygInfo.setCareGiverName("vg1");
+        intygInfo.setCareUnitName("ve1");
+        intygInfo.setCareUnitHsaId("ve1-id");
+        intygInfo.setSignedByName("name");
+        intygInfo.setSignedByHsaId("hsaId");
+
+        intygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, date.plusMinutes(1), IntygInfoEventType.IS005));
+
+        IntygInfoEvent signed = new IntygInfoEvent(Source.INTYGSTJANSTEN, date, IntygInfoEventType.IS004);
+        signed.addData("name", "name");
+        signed.addData("hsaId", "hsaId");
+        intygInfo.getEvents().add(signed);
+
+        intygInfoMap.put(intygInfo.getIntygId(), intygInfo);
     }
 }
