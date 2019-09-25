@@ -7,7 +7,6 @@ plugins {
 
 node {
   version = Dependencies.nodeVersion
-  npmVersion = Dependencies.npmVersion
   download = true
   distBaseUrl = "https://build-inera.nordicmedtest.se/node/"
   nodeModulesDir = file("${project.projectDir}")
