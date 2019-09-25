@@ -56,14 +56,14 @@ public class IntygInfoDTO {
 
     private boolean inWebcert;
 
-    private int komletteingar;
-    private int komletteingarAnswered;
+    private int kompletteringar;
+    private int kompletteringarAnswered;
 
-    private int adminQuestionsSent;
-    private int adminQuestionsSentAnswered;
+    private int administrativaFragorSent;
+    private int administrativaFragorSentAnswered;
 
-    private int adminQuestionsReceived;
-    private int adminQuestionsReceivedAnswered;
+    private int administrativaFragorReceived;
+    private int administrativaFragorReceivedAnswered;
 
     private List<IntygInfoEvent> events;
 }

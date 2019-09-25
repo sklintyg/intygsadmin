@@ -90,7 +90,7 @@ const Kompletteringar = ({intygInfo}) => {
 
   return (
     <>
-      {intygInfo.komletteingar} kompletteringsbegäran - {intygInfo.komletteingarAnswered} besvarad(e)
+      {intygInfo.kompletteringar} kompletteringsbegäran - {intygInfo.kompletteringarAnswered} besvarad(e)
     </>
   )
 }
@@ -115,17 +115,17 @@ const AdminQuestionsSent = ({intygInfo}) => {
     return '-';
   }
 
-  if (intygInfo.adminQuestionsSent === 0) {
+  if (intygInfo.administrativaFragorSent === 0) {
     return (<div>0 administrativa frågor från vården</div>)
   }
 
-  if (intygInfo.adminQuestionsSent === 1) {
-    return (<div>1 administrativ fråga av vården - {intygInfo.adminQuestionsSentAnswered} besvarad</div>)
+  if (intygInfo.administrativaFragorSent === 1) {
+    return (<div>1 administrativ fråga av vården - {intygInfo.administrativaFragorSentAnswered} besvarad</div>)
   }
 
   return (
     <div>
-      {intygInfo.adminQuestionsSent} administrativa frågor från vården - {intygInfo.adminQuestionsSentAnswered} besvarad(e)
+      {intygInfo.administrativaFragorSent} administrativa frågor från vården - {intygInfo.administrativaFragorSentAnswered} besvarad(e)
     </div>
   )
 }
@@ -136,17 +136,17 @@ const AdminQuestionsReceived = ({intygInfo}) => {
     return '-';
   }
 
-  if (intygInfo.adminQuestionsReceived === 0) {
+  if (intygInfo.administrativaFragorReceived === 0) {
     return (<div>0 administrativa frågor från intygsutfärdaren</div>)
   }
 
-  if (intygInfo.adminQuestionsReceived === 1) {
-    return (<div>1 administrativ fråga av intygsutfärdaren - {intygInfo.adminQuestionsReceivedAnswered} besvarad</div>)
+  if (intygInfo.administrativaFragorReceived === 1) {
+    return (<div>1 administrativ fråga av intygsutfärdaren - {intygInfo.administrativaFragorReceivedAnswered} besvarad</div>)
   }
 
   return (
     <div>
-      {intygInfo.adminQuestionsReceived} administrativa frågor från intygsutfärdaren - {intygInfo.adminQuestionsReceivedAnswered} besvarad(e)
+      {intygInfo.administrativaFragorReceived} administrativa frågor från intygsutfärdaren - {intygInfo.administrativaFragorReceivedAnswered} besvarad(e)
     </div>
   )
 }
