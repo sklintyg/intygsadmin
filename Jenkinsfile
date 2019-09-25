@@ -2,8 +2,9 @@
 
 node {
     def buildVersion = "1.1.0.${BUILD_NUMBER}"
+    def infraVersion = "3.11.0.+"
 
-    def versionFlags = "-DbuildVersion=${buildVersion}"
+    def versionFlags = "-DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
 
     stage('checkout') {
         git url: "https://github.com/sklintyg/intygsadmin.git", branch: GIT_BRANCH
@@ -28,6 +29,7 @@ node {
         releaseFlag = "${GIT_BRANCH.startsWith("release")}"
         build job: "intygsadmin-dintyg-build", wait: false, parameters: [
                 [$class: 'StringParameterValue', name: 'BUILD_VERSION', value: buildVersion],
+                [$class: 'StringParameterValue', name: 'INFRA_VERSION', value: infraVersion],
                 [$class: 'StringParameterValue', name: 'GIT_REF', value: gitRef],
                 [$class: 'StringParameterValue', name: 'RELEASE_FLAG', value: releaseFlag]
         ]
