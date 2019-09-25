@@ -50,16 +50,16 @@
     "numberOfRecipients": {
       "type": "number"
     },
-    "adminQuestionsReceived": {
+    "administrativaFragorReceived": {
       "type": "number"
     },
-    "adminQuestionsReceivedAnswered": {
+    "administrativaFragorReceivedAnswered": {
       "type": "number"
     },
-    "adminQuestionsSent": {
+    "administrativaFragorSent": {
       "type": "number"
     },
-    "adminQuestionsSentAnswered": {
+    "administrativaFragorSentAnswered": {
       "type": "number"
     },
     "draftCreated": {
@@ -68,10 +68,10 @@
     "inWebcert": {
       "type": "boolean"
     },
-    "komletteingar": {
+    "kompletteringar": {
       "type": "number"
     },
-    "komletteingarAnswered": {
+    "kompletteringarAnswered": {
       "type": "number"
     },
     "events":  {
@@ -95,7 +95,7 @@
             "type": "string"
           },
           "data": {
-            "type": "object"
+            "type": [ "object", "null" ]
           }
         }
       }
