@@ -31,7 +31,7 @@ public class IntygInfoControllerIT extends BaseRestIntegrationTest {
     private static final String INTYG_INFO_API_ENDPOINT = "/api/intygInfo";
 
     @Test
-    public void testGetIntegratedUnitOk() {
+    public void testGetIntygInfoOk() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         final String existingIntygId = "f63c813d-a13a-4b4b-965f-419dfe98fffe";
@@ -44,7 +44,7 @@ public class IntygInfoControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    public void testGetIntegratedUnitNotFound() {
+    public void testGetIntygInfotNotFound() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         final String nonExistingIntygId = "9ae0c3b4-3d80-46f3-acde-b332970ba0ea";
@@ -55,7 +55,7 @@ public class IntygInfoControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    public void testGetBanners() {
+    public void testGetList() {
         RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
         given().expect().statusCode(OK)

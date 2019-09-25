@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service;
+package se.inera.intyg.intygsadmin.web.integration;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,11 +29,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 
-@Profile("!wc-unit-stub")
+@Profile("!wc-stub")
 @Service
-public class WCIntegratedUnitsServiceImpl implements WCIntegratedUnitsService {
+public class WCIntegrationServiceImpl implements WCIntegrationService {
 
     @Bean("wcRestTemplate")
     public RestTemplate restTemplate() {
@@ -47,12 +48,14 @@ public class WCIntegratedUnitsServiceImpl implements WCIntegratedUnitsService {
     @Value("${webcert.internalapi}")
     private String webcertUrl;
 
+    @Override
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
         String url = webcertUrl + "/internalapi/integratedUnits/" + hsaId;
 
         return restTemplate.getForObject(url, IntegratedUnitDTO.class);
     }
 
+    @Override
     public List<IntegratedUnitDTO> getAllIntegratedUnits() {
         String url = webcertUrl + "/internalapi/integratedUnits/all";
 
@@ -62,6 +65,13 @@ public class WCIntegratedUnitsServiceImpl implements WCIntegratedUnitsService {
             return Collections.emptyList();
         }
         return Arrays.asList(integratedUnitDTOArray);
+    }
+
+    @Override
+    public WcIntygInfo getIntygInfo(String intygId) {
+        String url = webcertUrl + "/internalapi/intygInfo/" + intygId;
+
+        return restTemplate.getForObject(url, WcIntygInfo.class);
     }
 
 }

@@ -10,6 +10,51 @@
   "intygInfo": {
     "intygsId": {
       "wrongformat": "Ange ett giltigt intygs-ID."
+    },
+    "source": {
+      "WEBCERT": "Webcert",
+      "INTYGSTJANSTEN": "Intygstjänsten"
+    },
+    "eventType": {
+      "IS001": "Utkastet skapades av {hsaId}",
+      "IS002": "Utkastet raderades av {hsaId}",
+      "IS003": "Utkastet låstes",
+      "IS004": "Intyget signerades av {hsaId}",
+      "IS005": "Intyget är tillgängligt för patienten via Mina intyg",
+      "IS006": "Intyget skickades till {intygsmottagare}",
+      "IS007": "Intyget förnyades av {hsaId}",
+      "IS008": "Intyget ersattes av {hsaId}",
+      "IS009": "Intyget makulerades av {hsaId}",
+      "IS010": "Utkastet sparades senast av {hsaId}",
+      "IS011": "{intygsmottagare} skickade en kompletteringsbegäran",
+      "IS012": "{intygsmottagare} skickade en administrativ fråga",
+      "IS013": "{name} skickade en administrativ fråga till {intygsmottagare}",
+      "IS014": "Intyget kompletterades med ett nytt intyg av {hsaId}",
+      "IS015": "Intyget kompletterades med ett meddelande av {hsaId}",
+      "IS016": "{intygsmottagare}s kompletteringsbegäran markerades automatiskt som hanterad",
+      "IS017": "{intygsmottagare}s administrativ fråga markerades automatiskt som hanterad",
+      "IS018": "Intygsutkast markerades som klart för signering",
+      "IS019": "Utkastet skapades för att förnya intyg {intygsId}",
+      "IS020": "Utkastet skapades för att ersätta intyg {intygsId}",
+      "IS021": "Utkastet skapades för att komplettera intyg {intygsId}",
+      "IS022": "Utkastet skapades som en kopia på {intygsId}",
+      "IS023": "Administrativ fråga från {intygsmottagare} besvarad av vården",
+      "IS024": "Administrativ fråga besvarades av {intygsmottagare}",
+      "IS027": "Administrativ fråga från vården markerades som hanterad av vården",
+
+      "IS101": "Notifiering SKAPAT skickades till journalsystem",
+      "IS102": "Notifiering ANDRAT skickades till journalsystem",
+      "IS103": "Notifiering RADERA skickades till journalsystem",
+      "IS104": "Notifiering LAST skickades till journalsystem",
+      "IS105": "Notifiering KFSIGN skickades till journalsystem",
+      "IS106": "Notifiering SIGNAT skickades till journalsystem",
+      "IS107": "Notifiering SKICKA skickades till journalsystem",
+      "IS108": "Notifiering MAKULE skickades till journalsystem",
+      "IS109": "Notifiering NYFRFM skickades till journalsystem",
+      "IS110": "Notifiering NYFRFV skickades till journalsystem",
+      "IS111": "Notifiering NYSVFM skickades till journalsystem",
+      "IS112": "Notifiering HANFRFM skickades till journalsystem",
+      "IS113": "Notifiering HANFRFV skickades till journalsystem"
     }
   },
 

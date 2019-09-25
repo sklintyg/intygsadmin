@@ -17,6 +17,7 @@ $table-accent-bg: $ia-color-00;
 //We use icon to the left of actual alert-text, do decrease horizontal padding.
 $alert-padding-x: 0.5rem;
 $tooltip-bg: $ia-color-02;
+$modal-xl: 1400px;
 
 // Import only what we use from Bootstrap scss components
 @import '~bootstrap/scss/_functions';

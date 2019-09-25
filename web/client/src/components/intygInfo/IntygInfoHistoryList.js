@@ -46,7 +46,7 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
       <ResultLine>
         Visar {intygInfoList.start}-{intygInfoList.end} av {intygInfoList.totalElements} sökningar
       </ResultLine>
-      <Table striped>
+      <Table striped id='intygInfoHistoryTable'>
         <thead>
           <tr>
             <TableSortHead
@@ -74,7 +74,7 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
         </thead>
         <tbody id={'IntygInfoListTable'}>
         { intygInfoList.content && intygInfoList.content.map((intygInfo) => (
-          <tr key={intygInfo.intygId}>
+          <tr key={intygInfo.id}>
             <td><DisplayDateTime date={intygInfo.createdAt} includeSeconds={true} /></td>
             <td>{intygInfo.employeeName}</td>
             <td>{intygInfo.intygId}</td>

@@ -31,16 +31,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
-import se.inera.intyg.intygsadmin.web.service.WCIntegratedUnitsService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 import se.inera.intyg.intygsadmin.web.util.IntegratedUnitsFileWriter;
 
 @RestController
 @RequestMapping("/api/integratedUnits")
 public class IntegratedUnitsController {
 
-    private WCIntegratedUnitsService wcIntegratedUnitsService;
+    private WCIntegrationService wcIntegratedUnitsService;
 
-    public IntegratedUnitsController(WCIntegratedUnitsService wcIntegratedUnitsService) {
+    public IntegratedUnitsController(WCIntegrationService wcIntegratedUnitsService) {
         this.wcIntegratedUnitsService = wcIntegratedUnitsService;
     }
 

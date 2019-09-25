@@ -3,9 +3,20 @@ import jsonMessage from './messages.json';
 const flatten = require('flat');
 const messages = flatten(jsonMessage);
 
-export const getMessage = (key) => {
+export const getMessage = (key, data) => {
   if (haveMessage(key)) {
-    return messages[key];
+
+    let message = messages[key];
+
+    if (data) {
+      Object.keys(data).forEach((key) => {
+        message = message.replace(new RegExp(`{${key}}`, 'g'), data[key]);
+      });
+    }
+
+    message = message.replace(new RegExp('{[a-z0-9]*}', 'gi'), '-');
+
+    return message;
   }
 
   console.error(`Missing key ${key}`)

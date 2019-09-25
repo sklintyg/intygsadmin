@@ -2,8 +2,6 @@ import React from 'react'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
 import { compose } from 'recompose'
-import * as actions from '../../store/actions/banner'
-import { connect } from 'react-redux'
 import styled from "styled-components";
 import DisplayDateTime from '../displayDateTime/DisplayDateTime';
 
@@ -91,9 +89,5 @@ const IntegratedUnitSearchResult = ({ handleClose, isOpen, data }) => {
 export const IntegratedUnitSearchResultId = 'integratedUnitSearchResult'
 
 export default compose(
-  connect(
-    null,
-    { ...actions }
-  ),
   modalContainer(IntegratedUnitSearchResultId)
 )(IntegratedUnitSearchResult)
