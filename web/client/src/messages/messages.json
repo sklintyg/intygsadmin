@@ -6,7 +6,6 @@
       "AVVISADE": "avvisade"
     }
   },
-
   "intygInfo": {
     "intygsId": {
       "wrongformat": "Ange ett giltigt intygs-ID."
@@ -17,7 +16,6 @@
     },
     "eventType": {
       "IS001": "Utkastet skapades av {hsaId}",
-      "IS002": "Utkastet raderades av {hsaId}",
       "IS003": "Utkastet låstes",
       "IS004": "Intyget signerades av {hsaId}",
       "IS005": "Intyget är tillgängligt för patienten via Mina intyg",
@@ -28,36 +26,35 @@
       "IS010": "Utkastet sparades senast av {hsaId}",
       "IS011": "{intygsmottagare} skickade en kompletteringsbegäran",
       "IS012": "{intygsmottagare} skickade en administrativ fråga",
-      "IS013": "{name} skickade en administrativ fråga till {intygsmottagare}",
+      "IS013": "Vården skickade en administrativ fråga till {intygsmottagare}.",
       "IS014": "Intyget kompletterades med ett nytt intyg av {hsaId}",
-      "IS015": "Intyget kompletterades med ett meddelande av {hsaId}",
-      "IS016": "{intygsmottagare}s kompletteringsbegäran markerades automatiskt som hanterad",
-      "IS017": "{intygsmottagare}s administrativ fråga markerades automatiskt som hanterad",
+      "IS015": "Intyget kompletterades med ett meddelande",
+      "IS016": "{intygsmottagare}s kompletteringsbegäran markerades som hanterad",
+      "IS017": "{intygsmottagare}s administrativ fråga markerades som hanterad",
       "IS018": "Intygsutkast markerades som klart för signering",
       "IS019": "Utkastet skapades för att förnya intyg {intygsId}",
       "IS020": "Utkastet skapades för att ersätta intyg {intygsId}",
       "IS021": "Utkastet skapades för att komplettera intyg {intygsId}",
       "IS022": "Utkastet skapades som en kopia på {intygsId}",
-      "IS023": "Administrativ fråga från {intygsmottagare} besvarad av vården",
+      "IS023": "Administrativ fråga från intygsmottagaren besvarad av vården",
       "IS024": "Administrativ fråga besvarades av {intygsmottagare}",
-      "IS027": "Administrativ fråga från vården markerades som hanterad av vården",
-
-      "IS101": "Notifiering SKAPAT skickades till journalsystem",
-      "IS102": "Notifiering ANDRAT skickades till journalsystem",
-      "IS103": "Notifiering RADERA skickades till journalsystem",
-      "IS104": "Notifiering LAST skickades till journalsystem",
-      "IS105": "Notifiering KFSIGN skickades till journalsystem",
-      "IS106": "Notifiering SIGNAT skickades till journalsystem",
-      "IS107": "Notifiering SKICKA skickades till journalsystem",
-      "IS108": "Notifiering MAKULE skickades till journalsystem",
-      "IS109": "Notifiering NYFRFM skickades till journalsystem",
-      "IS110": "Notifiering NYFRFV skickades till journalsystem",
-      "IS111": "Notifiering NYSVFM skickades till journalsystem",
-      "IS112": "Notifiering HANFRFM skickades till journalsystem",
-      "IS113": "Notifiering HANFRFV skickades till journalsystem"
+      "IS025": "Administrativ fråga från vården markerades som hanterad av vården",
+      "IS026": "Utkastet kopierades av {hsaId}",
+      "IS101": "Notifiering SKAPAT har lagts på kö för sändning till journalsystem.",
+      "IS102": "Notifiering ANDRAT har lagts på kö för sändning till journalsystem.",
+      "IS103": "Notifiering RADERA har lagts på kö för sändning till journalsystem.",
+      "IS104": "Notifiering LAST har lagts på kö för sändning till journalsystem.",
+      "IS105": "Notifiering KFSIGN har lagts på kö för sändning till journalsystem.",
+      "IS106": "Notifiering SIGNAT har lagts på kö för sändning till journalsystem.",
+      "IS107": "Notifiering SKICKA har lagts på kö för sändning till journalsystem.",
+      "IS108": "Notifiering MAKULE har lagts på kö för sändning till journalsystem.",
+      "IS109": "Notifiering NYFRFM har lagts på kö för sändning till journalsystem.",
+      "IS110": "Notifiering NYFRFV har lagts på kö för sändning till journalsystem.",
+      "IS111": "Notifiering NYSVFM har lagts på kö för sändning till journalsystem.",
+      "IS112": "Notifiering HANFRFM har lagts på kö för sändning till journalsystem.",
+      "IS113": "Notifiering HANFRFV har lagts på kö för sändning till journalsystem."
     }
   },
-
   "error": {
     "logid_footer": "Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand {inerakundtjanst} och uppge då följande logg id: {logId}",
     "common": {
