@@ -84,7 +84,7 @@ public class IntygInfoService {
 
         storeLog(intygId);
 
-        events.sort(Comparator.comparing(IntygInfoEvent::getDate).reversed());
+        events.sort(Comparator.comparing(IntygInfoEvent::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
         info.setEvents(events);
 
         return Optional.of(info);

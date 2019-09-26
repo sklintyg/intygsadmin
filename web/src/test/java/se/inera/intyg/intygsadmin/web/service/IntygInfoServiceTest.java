@@ -190,6 +190,40 @@ public class IntygInfoServiceTest {
         verify(intygInfoPersistenceService, times(1)).create(any());
     }
 
+    @Test
+    public void testGetIntygInfoNull() {
+        mockUser();
+
+        String intygId = "intygId";
+
+        WcIntygInfo wcIntygInfo = new WcIntygInfo();
+        wcIntygInfo.setIntygId(intygId);
+        wcIntygInfo.setIntygType("lisjp");
+        wcIntygInfo.setDraftCreated(LocalDateTime.now());
+        wcIntygInfo.getEvents().add(new IntygInfoEvent(Source.WEBCERT, null, IntygInfoEventType.IS001));
+
+        ItIntygInfo itIntygInfo = new ItIntygInfo();
+        itIntygInfo.setIntygId(intygId);
+        itIntygInfo.setIntygType("lisjp");
+        itIntygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, LocalDateTime.now(), IntygInfoEventType.IS005));
+
+        when(wcIntegrationService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
+        when(itIntegrationService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
+
+        Optional<IntygInfoDTO> optionalIntygInfo = intygInfoService.getIntygInfo(intygId);
+
+        assertTrue(optionalIntygInfo.isPresent());
+
+        IntygInfoDTO intygInfo = optionalIntygInfo.get();
+        assertEquals("lisjp", intygInfo.getIntygType());
+        assertTrue(intygInfo.isInWebcert());
+        assertEquals(2, intygInfo.getEvents().size());
+        assertEquals(Source.WEBCERT, intygInfo.getEvents().get(1).getSource());
+        assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
+
+        verify(intygInfoPersistenceService, times(1)).create(any());
+    }
+
     private void mockUser() {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(UUID.randomUUID());
