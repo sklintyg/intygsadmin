@@ -27,11 +27,11 @@ import java.util.Map;
 import java.util.Objects;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 
 @Profile("wc-stub")

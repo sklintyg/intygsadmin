@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 import se.inera.intyg.intygsadmin.web.util.IntegratedUnitsFileWriter;
 
@@ -80,4 +80,3 @@ public class IntegratedUnitsController {
     }
 
 }
-    
