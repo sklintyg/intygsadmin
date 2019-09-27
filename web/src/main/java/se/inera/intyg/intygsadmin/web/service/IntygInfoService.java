@@ -95,7 +95,7 @@ public class IntygInfoService {
         try {
             itIntygInfoDTO = itIntegrationService.getIntygInfo(intygId);
         } catch (Exception e) {
-            LOG.warn("intyg info not found in it", e);
+            LOG.debug("intyg '" + intygId + "' not found in it", e);
         }
 
         if (itIntygInfoDTO != null) {
@@ -108,7 +108,7 @@ public class IntygInfoService {
         try {
             wcIntygInfoDTO = wcIntegrationService.getIntygInfo(intygId);
         } catch (Exception e) {
-            LOG.warn("intyg info not found in wc", e);
+            LOG.debug("intyg '" + intygId + "' not found in wc", e);
         }
 
         intygInfo.setInWebcert(wcIntygInfoDTO != null && wcIntygInfoDTO.getDraftCreated() != null);
