@@ -2,6 +2,7 @@ import React from 'react';
 import {Redirect, Route} from 'react-router-dom';
 import {connect} from 'react-redux'
 import Loading from './Loading';
+import AppConstants from "../../AppConstants";
 
 const mapStateToProps = (state) => {
   return {
@@ -19,7 +20,7 @@ const UnsecuredRoute = ({component: Component, isAuthenticated, isErrorPage, isL
   return (
     <Route {...rest} render={(props) => {
       if (isAuthenticated && !isErrorPage) {
-        return <Redirect to='/banner' />;
+        return <Redirect to={AppConstants.DEFAULT_PAGE} />;
       }
       return (<Component {...props}/>)
     }} />
