@@ -11,6 +11,11 @@ import * as actions from "../../store/actions/intygInfo";
 import {connect} from "react-redux";
 import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip";
 
+const BodyHeight = styled(ModalBody)`
+  height: 60vh;
+  overflow: auto
+`
+
 const RowWrapper = styled.div`
   margin-bottom: 30px;
   
@@ -191,7 +196,7 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
   return (
     <Modal id={'intygInfoDialogId'} isOpen={isOpen} size={'xl'} backdrop={true} toggle={handleClose}>
       <ModalHeader toggle={handleClose}>Intygsinformation för ID: {intygInfo.intygId}</ModalHeader>
-      <ModalBody>
+      <BodyHeight>
 
         <RowWrapper>
           <IaTypo03 color={colors.IA_COLOR_01}>
@@ -271,7 +276,7 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
           </Table>
         </RowWrapper>
 
-      </ModalBody>
+      </BodyHeight>
       <ModalFooter>
         <Button id={'closeBtn'} onClick={handleClose} color={'default'}>
           Stäng
