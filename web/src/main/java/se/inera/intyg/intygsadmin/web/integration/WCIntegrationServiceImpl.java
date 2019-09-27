@@ -29,8 +29,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 
 @Profile("!wc-stub")
 @Service

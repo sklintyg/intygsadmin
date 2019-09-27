@@ -29,7 +29,7 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 
 public class IntegratedUnitsFileWriter {
 

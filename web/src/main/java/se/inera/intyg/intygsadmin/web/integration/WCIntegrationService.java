@@ -20,8 +20,8 @@
 package se.inera.intyg.intygsadmin.web.integration;
 
 import java.util.List;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
 
 public interface WCIntegrationService {
 

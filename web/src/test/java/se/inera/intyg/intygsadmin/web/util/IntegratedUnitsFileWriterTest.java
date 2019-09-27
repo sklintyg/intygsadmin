@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.intygsadmin.web.controller.dto.IntegratedUnitDTO;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 
 public class IntegratedUnitsFileWriterTest {
 
