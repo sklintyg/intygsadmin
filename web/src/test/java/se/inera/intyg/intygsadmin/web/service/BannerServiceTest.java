@@ -48,12 +48,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
 import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
+import se.inera.intyg.intygsadmin.web.mapper.BannerApiMapper;
 import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 
@@ -62,6 +64,9 @@ public class BannerServiceTest {
 
     @Spy
     private BannerMapper bannerMapper = Mappers.getMapper(BannerMapper.class);
+
+    @Spy
+    private BannerApiMapper bannerApiMapper = Mappers.getMapper(BannerApiMapper.class);
 
     @Mock
     private BannerPersistenceService bannerPersistenceService;
@@ -143,12 +148,10 @@ public class BannerServiceTest {
 
         when(bannerPersistenceService.findActiveAndFuture(any(), eq(Application.WEBCERT))).thenReturn(bannerEntities);
 
-        List<BannerDTO> banners = bannerService.getActiveAndFutureBanners(Application.WEBCERT);
+        List<Banner> banners = bannerService.getActiveAndFutureBanners(Application.WEBCERT);
 
         verify(bannerPersistenceService, times(1)).findActiveAndFuture(any(), eq(Application.WEBCERT));
         assertEquals(2, banners.size());
-        assertEquals(BannerStatus.FUTURE, banners.get(0).getStatus());
-        assertEquals(BannerStatus.ACTIVE, banners.get(1).getStatus());
     }
 
     @Test

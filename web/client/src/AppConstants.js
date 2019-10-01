@@ -9,6 +9,7 @@ const service = {
   INTYGSSTATISTIK: 'Intygsstatistik',
   WEBCERT: 'Webcert',
   REHABSTOD: 'Rehabstöd',
+  MINA_INTYG: 'Mina intyg',
 }
 
 const AppConstants = {

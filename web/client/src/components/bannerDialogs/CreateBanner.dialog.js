@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
+import React, {useEffect, useRef, useState} from 'react'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
-import { compose } from 'recompose'
-import { RadioWrapper } from '../radioButton'
+import {compose} from 'recompose'
+import {RadioWrapper} from '../radioButton'
 import CustomTextarea from '../CustomTextarea'
 import DatePicker from '../datePicker'
 import * as actions from '../../store/actions/banner'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import TimePicker from '../timePicker'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import isEmpty from 'lodash/isEmpty'
-import { validateBanner } from './BannerValidator'
+import {validateBanner} from './BannerValidator'
 import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
-import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
-import IaAlert, { alertType } from '../alert/Alert'
-import { getFutureBanners } from '../../store/reducers/banner'
+import {ErrorSection, ErrorWrapper} from '../styles/iaLayout'
+import IaAlert, {alertType} from '../alert/Alert'
+import {getFutureBanners} from '../../store/reducers/banner'
 import AppConstants from "../../AppConstants";
 
 const StyledBody = styled(ModalBody)`
@@ -120,8 +120,8 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
     return {
       application: newBanner.application,
       message: newBanner.message,
-      displayFrom: newBanner.displayFrom + 'T' + newBanner.displayFromTime,
-      displayTo: newBanner.displayTo + 'T' + newBanner.displayToTime,
+      displayFrom: newBanner.displayFrom + 'T' + newBanner.displayFromTime + ':00',
+      displayTo: newBanner.displayTo + 'T' + newBanner.displayToTime + ':00',
       priority: newBanner.priority,
     }
   }

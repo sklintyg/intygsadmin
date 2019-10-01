@@ -17,8 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.persistence.enums;
+package se.inera.intyg.intygsadmin.web.mapper;
 
-public enum Application {
-    WEBCERT, REHABSTOD, INTYGSSTATISTIK
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+import se.inera.intyg.infra.driftbannerdto.Banner;
+import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface BannerApiMapper {
+
+    List<Banner> toApiDTO(List<BannerEntity> s);
 }

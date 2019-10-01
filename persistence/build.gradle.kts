@@ -13,6 +13,8 @@ dependencies {
   implementation("com.querydsl:querydsl-jpa")
   implementation("com.fasterxml.jackson.core:jackson-databind")
 
+  implementation("se.inera.intyg.infra:driftbanner-dto:${project.extra["intygInfraVersion"]}")
+
   compileOnly("org.projectlombok:lombok")
   annotationProcessor("com.querydsl:querydsl-apt::jpa")
   annotationProcessor("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:${Dependencies.hibernateJpsVersion}")

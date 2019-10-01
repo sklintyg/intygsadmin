@@ -25,8 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.intygsadmin.web.service.BannerService;
 
 @Component
@@ -40,8 +40,8 @@ public class BannerEndpoint {
     }
 
     @GetMapping("/{application}")
-    public ResponseEntity<List<BannerDTO>> getActiveAndFutureBanners(@PathVariable Application application) {
-        List<BannerDTO> banners = bannerService.getActiveAndFutureBanners(application);
+    public ResponseEntity<List<Banner>> getActiveAndFutureBanners(@PathVariable Application application) {
+        List<Banner> banners = bannerService.getActiveAndFutureBanners(application);
 
         return ResponseEntity.ok(banners);
     }

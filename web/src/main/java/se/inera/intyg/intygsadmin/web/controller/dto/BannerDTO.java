@@ -20,27 +20,17 @@
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
 
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BannerDTO {
-
-    private UUID id;
-
-    private LocalDateTime createdAt;
-    private Application application;
-    private String message;
-    private LocalDateTime displayFrom;
-    private LocalDateTime displayTo;
-    private BannerPriority priority;
+public class BannerDTO extends Banner {
 
     private BannerStatus status;
 }

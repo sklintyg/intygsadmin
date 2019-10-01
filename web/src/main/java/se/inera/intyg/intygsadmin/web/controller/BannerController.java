@@ -34,7 +34,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.service.BannerService;
 
@@ -58,9 +59,9 @@ public class BannerController {
     }
 
     @GetMapping("/activeAndFuture")
-    public ResponseEntity<List<BannerDTO>> listBannersActiveAndFutureBanners(
+    public ResponseEntity<List<Banner>> listBannersActiveAndFutureBanners(
         @RequestParam Application application) {
-        List<BannerDTO> bannerDTOS = bannerService.getActiveAndFutureBanners(application);
+        List<Banner> bannerDTOS = bannerService.getActiveAndFutureBanners(application);
 
         return ResponseEntity.ok(bannerDTOS);
     }
@@ -87,4 +88,3 @@ public class BannerController {
         return ResponseEntity.ok().build();
     }
 }
-    
