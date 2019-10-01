@@ -33,7 +33,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 
 @Entity

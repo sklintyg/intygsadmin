@@ -27,13 +27,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
+import se.inera.intyg.intygsadmin.web.mapper.BannerApiMapper;
 import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 @Service
@@ -42,11 +44,13 @@ public class BannerService {
     private BannerValidationService bannerValidationService;
     private BannerPersistenceService bannerPersistenceService;
     private BannerMapper bannerMapper;
+    private BannerApiMapper bannerApiMapper;
 
-    public BannerService(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper,
+    public BannerService(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper, BannerApiMapper bannerApiMapper,
         BannerValidationService bannerValidationService) {
         this.bannerPersistenceService = bannerPersistenceService;
         this.bannerMapper = bannerMapper;
+        this.bannerApiMapper = bannerApiMapper;
         this.bannerValidationService = bannerValidationService;
     }
 
@@ -58,12 +62,12 @@ public class BannerService {
         return new PageImpl<>(mapBanners, pageable, banners.getTotalElements());
     }
 
-    public List<BannerDTO> getActiveAndFutureBanners(Application application) {
+    public List<Banner> getActiveAndFutureBanners(Application application) {
         LocalDateTime today = LocalDateTime.now();
 
         List<BannerEntity> banners = bannerPersistenceService.findActiveAndFuture(today, application);
 
-        return bannerMapper.toListDTO(banners);
+        return bannerApiMapper.toApiDTO(banners);
     }
 
     public BannerDTO createBanner(BannerDTO bannerDTO) {

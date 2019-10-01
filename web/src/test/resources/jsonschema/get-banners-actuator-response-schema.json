@@ -9,8 +9,7 @@
       "message",
       "displayFrom",
       "displayTo",
-      "priority",
-      "status"
+      "priority"
     ],
     "additionalProperties": false,
     "properties": {
@@ -33,9 +32,6 @@
         "type": "string"
       },
       "priority": {
-        "type": "string"
-      },
-      "status": {
         "type": "string"
       }
     }

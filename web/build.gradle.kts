@@ -32,6 +32,7 @@ dependencies {
 
   implementation("se.inera.intyg.infra:intyginfo:${project.extra["intygInfraVersion"]}")
   implementation("se.inera.intyg.infra:integreradeenheter:${project.extra["intygInfraVersion"]}")
+  implementation("se.inera.intyg.infra:driftbanner-dto:${project.extra["intygInfraVersion"]}")
 
   //api documentation
   implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")

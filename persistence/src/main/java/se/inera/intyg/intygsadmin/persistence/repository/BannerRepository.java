@@ -27,8 +27,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
 
 @Repository
 public interface BannerRepository extends JpaRepository<BannerEntity, UUID>,

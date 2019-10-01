@@ -28,8 +28,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
-import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
+import se.inera.intyg.infra.driftbannerdto.Application;
+import se.inera.intyg.infra.driftbannerdto.BannerPriority;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 

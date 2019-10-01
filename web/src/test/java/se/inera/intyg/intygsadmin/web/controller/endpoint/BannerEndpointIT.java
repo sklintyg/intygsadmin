@@ -23,7 +23,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 import org.junit.jupiter.api.Test;
-import se.inera.intyg.intygsadmin.persistence.enums.Application;
+import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class BannerEndpointIT extends BaseRestIntegrationTest {
