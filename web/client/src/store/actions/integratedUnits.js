@@ -1,5 +1,5 @@
 import * as api from '../../api/integratedUnits.api'
-import { getIsFetching, getIsFetchingIntegratedUnitsFile } from '../reducers/integratedUnits'
+import {getIsFetching, getIsFetchingIntegratedUnitsFile} from '../reducers/integratedUnits'
 
 export const FETCH_INTEGRATED_UNIT_REQUEST = 'FETCH_INTEGRATED_UNIT_REQUEST'
 export const FETCH_INTEGRATED_UNIT_SUCCESS = 'FETCH_INTEGRATED_UNIT_SUCCESS'
@@ -26,12 +26,10 @@ export const fetchIntegratedUnit = (hsaId) => (dispatch, getState) => {
       })
     },
     (errorResponse) => {
-      dispatch({
+      return dispatch({
         type: FETCH_INTEGRATED_UNIT_FAILURE,
         payload: errorResponse,
       })
-
-      return Promise.reject();
     }
   )
 }
@@ -54,12 +52,10 @@ export const fetchIntegratedUnitsFile = () => (dispatch, getState) => {
       return response
     },
     (errorResponse) => {
-      dispatch({
+      return dispatch({
         type: FETCH_INTEGRATED_UNITS_FILE_FAILURE,
         payload: errorResponse,
       })
-
-      return Promise.reject();
     }
   )
 }

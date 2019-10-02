@@ -1,6 +1,6 @@
-import React, { useState, useEffect, createRef } from 'react'
-import { Button, UncontrolledTooltip, Input } from 'reactstrap'
-import { IaTypo03 } from "../styles/iaTypography"
+import React, {createRef, useEffect, useState} from 'react'
+import {Button, Form, Input, UncontrolledTooltip} from 'reactstrap'
+import {IaTypo03} from "../styles/iaTypography"
 import styled from "styled-components"
 import colors from "../styles/iaColors";
 import {getMessage} from "../../messages/messages";
@@ -10,6 +10,11 @@ import {connect} from "react-redux";
 import * as actions from "../../store/actions/intygInfo";
 import * as modalActions from "../../store/actions/modal";
 import IntygInfoDialog, {intygInfoDialogId} from "./IntygInfoDialog";
+import LoadingSpinner from "../loadingSpinner";
+
+const SpinnerWrapper = styled.div`
+  position: relative;
+`
 
 const PageHeader = styled.div`
     padding: 12px 0 4px;
@@ -54,9 +59,10 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
   const [searchResult, setSearchResult] = useState(undefined)
   const inputRef = createRef();
 
-  const searchIntegratedUnit = (intygsId) => {
+  const searchIntygInfo = (event, intygsId) => {
+    event.preventDefault()
     setSearchResult(undefined)
-    if (intygsId === '' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(intygsId)) {
+    if (intygsId === '') {
       setValidationSearchMessage(getMessage('intygInfo.intygsId.wrongformat'))
     } else {
       setValidationSearchMessage(undefined);
@@ -84,28 +90,33 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
 
   return (
     <>
+      <SpinnerWrapper>
+        <LoadingSpinner loading={isFetching} message={'Söker'} />
+      </SpinnerWrapper>
       <PageHeader>
         <IaTypo03>Ange intygets ID</IaTypo03>
       </PageHeader>
       <IntygInfoDialog />
-      <FlexDiv>
-        <Container className={validationSearchMessage ? 'error' : ''}>
-          <Input
-            id={'searchInput'}
-            placeholder='a92703da-c032-4833-b052-bdb6f54e0bf5'
-            value={searchString}
-            onChange={(e) => setSearchString(e.target.value)}
-            style={searchInput}
-            innerRef={inputRef}
-          />
-        </Container>
-        <Button id={'searchBtn'} onClick={() => searchIntegratedUnit(searchString)} color={'success'}>
-          Sök intyg
-        </Button>
-        <UncontrolledTooltip placement='auto' target='searchBtn' >
-          Öppnar ett modalfönster med information om intyget.
-        </UncontrolledTooltip>
-      </FlexDiv>
+      <Form onSubmit={(event) => searchIntygInfo(event, searchString)}>
+        <FlexDiv>
+          <Container className={validationSearchMessage ? 'error' : ''}>
+            <Input
+              id={'searchInput'}
+              placeholder='a92703da-c032-4833-b052-bdb6f54e0bf5'
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
+              style={searchInput}
+              innerRef={inputRef}
+            />
+          </Container>
+          <Button id={'searchBtn'} color={'success'}>
+            Sök intyg
+          </Button>
+          <UncontrolledTooltip placement='auto' target='searchBtn' >
+            Öppnar ett modalfönster med information om intyget.
+          </UncontrolledTooltip>
+        </FlexDiv>
+      </Form>
       <ValidationMessage id={'validationSearchMessageId'}>{validationSearchMessage}</ValidationMessage>
     </>
   )

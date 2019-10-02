@@ -102,6 +102,7 @@ public class WCIntegrationServiceStub implements WCIntegrationService {
         LocalDateTime date = LocalDateTime.now();
 
         WcIntygInfo intygInfo = new WcIntygInfo();
+        intygInfo.setCreatedInWC(true);
         intygInfo.setIntygId(intygId);
         intygInfo.setIntygType("lisjp");
         intygInfo.setIntygVersion("1.0");

@@ -1,18 +1,22 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
 import styled from 'styled-components'
 import TableSortHead from '../styles/TableSortHead'
-import { Table, Button, UncontrolledTooltip } from 'reactstrap'
+import {Button, Table, UncontrolledTooltip} from 'reactstrap'
 import FetchError from './FetchError'
-import { RemoveBannerId, CreateBannerId } from '../bannerDialogs'
+import {CreateBannerId, RemoveBannerId} from '../bannerDialogs'
 import * as modalActions from '../../store/actions/modal'
 import * as actions from '../../store/actions/banner'
-import IaAlert, { alertType } from '../alert/Alert'
+import IaAlert, {alertType} from '../alert/Alert'
 import StatusText from "./StatusText";
 import AppConstants from "../../AppConstants";
-import { Create, ClearIcon } from '../styles/iaSvgIcons'
+import {ClearIcon, Create} from '../styles/iaSvgIcons'
 import DisplayDateTime from '../displayDateTime/DisplayDateTime';
+
+const NoWrapTd = styled.td`
+  white-space: nowrap;
+`
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -151,7 +155,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
           { bannerList.content &&
             bannerList.content.map((banner) => (
               <tr key={banner.id}>
-                <td>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</td>
+                <NoWrapTd>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</NoWrapTd>
                 <td>{AppConstants.service[banner.application]}</td>
                 <td>
                   <DisplayDateTime date={banner.displayFrom} />

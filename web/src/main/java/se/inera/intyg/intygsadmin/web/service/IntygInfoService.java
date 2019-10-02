@@ -111,8 +111,6 @@ public class IntygInfoService {
             LOG.debug("intyg '" + intygId + "' not found in wc", e);
         }
 
-        intygInfo.setInWebcert(wcIntygInfoDTO != null && wcIntygInfoDTO.getDraftCreated() != null);
-
         if (wcIntygInfoDTO != null) {
             intygInfoMapper.updateInfoFromWC(wcIntygInfoDTO, intygInfo);
             events.addAll(intygInfo.getEvents());
