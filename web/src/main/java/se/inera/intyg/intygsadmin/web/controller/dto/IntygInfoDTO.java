@@ -54,7 +54,7 @@ public class IntygInfoDTO {
     private String careGiverName;
     private String careGiverHsaId;
 
-    private boolean inWebcert;
+    private boolean createdInWC;
 
     private int kompletteringar;
     private int kompletteringarAnswered;

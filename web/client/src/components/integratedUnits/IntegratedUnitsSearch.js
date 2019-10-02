@@ -1,17 +1,16 @@
-import React, { useState, useEffect, createRef } from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
-import { Button, UncontrolledTooltip, Input } from 'reactstrap'
+import React, {createRef, useEffect, useState} from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
+import {Button, Form, Input, UncontrolledTooltip} from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
-import IntegratedUnitSearchResult from './IntegratedUnitSearchResult.dialog'
-import { IntegratedUnitSearchResultId } from './IntegratedUnitSearchResult.dialog'
-import { IaTypo03 } from "../styles/iaTypography"
+import IntegratedUnitSearchResult, {IntegratedUnitSearchResultId} from './IntegratedUnitSearchResult.dialog'
+import {IaTypo03} from "../styles/iaTypography"
 import styled from "styled-components"
 import * as actions from '../../store/actions/integratedUnits'
-import { getIntegratedUnit, getIsFetching, getErrorMessage } from "../../store/reducers/integratedUnits";
+import {getErrorMessage, getIntegratedUnit, getIsFetching} from "../../store/reducers/integratedUnits";
 import colors from "../styles/iaColors";
 import LoadingSpinner from "../loadingSpinner";
-import { validateIntegratedUnit, COULD_NOT_FIND_UNIT  } from "./IntegratedUnitsValidator";
+import {COULD_NOT_FIND_UNIT, validateIntegratedUnit} from "./IntegratedUnitsValidator";
 
 const SpinnerWrapper = styled.div`
   position: relative;
@@ -64,7 +63,8 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
   const [searchResult, setSearchResult] = useState(undefined)
   const inputRef = createRef();
 
-  const searchIntegratedUnit = (hsaId) => {
+  const searchIntegratedUnit = (event, hsaId) => {
+    event.preventDefault()
     setSearchResult(undefined)
     if (hsaId === '') {
       setValidationSearchMessage(COULD_NOT_FIND_UNIT)
@@ -109,25 +109,27 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
         <PageHeader>
           <IaTypo03>Ange HSA-id för enhet</IaTypo03>
         </PageHeader>
-        <FlexDiv>
-          <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
-            <Input
-              id={'searchInput'}
-              placeholder='SE1234567890-1X23'
-              value={searchString}
-              onChange={(e) => setSearchString(e.target.value)}
-              innerRef={inputRef}
-              style={searchInput}
-              maxLength="40"
-            />
-          </Container>
-          <Button id={'searchBtn'} onClick={() => searchIntegratedUnit(searchString)} color={'success'}>
-            Sök enhet
-          </Button>
-          <UncontrolledTooltip placement='auto' target='searchBtn'>
-            Öppnar ett modalfönster med information om enheten.
-          </UncontrolledTooltip>
-        </FlexDiv>
+        <Form onSubmit={(event) => searchIntegratedUnit(event, searchString)}>
+          <FlexDiv>
+            <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
+              <Input
+                id={'searchInput'}
+                placeholder='SE1234567890-1X23'
+                value={searchString}
+                onChange={(e) => setSearchString(e.target.value)}
+                innerRef={inputRef}
+                style={searchInput}
+                maxLength="40"
+              />
+            </Container>
+            <Button id={'searchBtn'} color={'success'}>
+              Sök enhet
+            </Button>
+            <UncontrolledTooltip placement='auto' target='searchBtn'>
+              Öppnar ett modalfönster med information om enheten.
+            </UncontrolledTooltip>
+          </FlexDiv>
+        </Form>
         <ValidationMessage id={'validationSearchMessageId'}>{validationSearchMessage}</ValidationMessage>
       </PageSearchRow>
     </>

@@ -1,5 +1,5 @@
 import * as api from '../../api/intygInfo.api'
-import { getIsFetching } from '../reducers/intygInfo'
+import {getIsFetching} from '../reducers/intygInfo'
 import {fetchIntygInfoList} from "./intygInfoList";
 
 export const FETCH_INTYG_INFO_REQUEST = 'FETCH_INTYG_INFO_REQUEST'
@@ -26,12 +26,10 @@ export const fetchIntygInfo = (intygsId) => (dispatch, getState) => {
       })
     },
     (errorResponse) => {
-      dispatch({
+      return dispatch({
         type: FETCH_INTYG_INFO_FAILURE,
         payload: errorResponse,
       })
-
-      return Promise.reject();
     }
   )
 }

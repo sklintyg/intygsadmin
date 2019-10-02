@@ -246,7 +246,7 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
               <TableTD>HSA-ID: {intygInfo.signedByHsaId}</TableTD>
             </tr>
             <tr>
-              <TableTH>Vårdenhet</TableTH>
+              <TableTH>Utfärdande Vårdenhet/enhet</TableTH>
               <TableTD>{intygInfo.careUnitName}</TableTD>
               <TableTD>HSA-ID: {intygInfo.careUnitHsaId}</TableTD>
             </tr>
@@ -269,7 +269,7 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
             </tr>
             <tr>
               <TableTH>Utfärdande system</TableTH>
-              <TableTD>{intygInfo.inWebcert ? 'Webcert' : 'Annan'}</TableTD>
+              <TableTD>{intygInfo.createdInWC ? 'Webcert' : 'Annat än Webcert'}</TableTD>
               <TableTD />
             </tr>
             </tbody>
