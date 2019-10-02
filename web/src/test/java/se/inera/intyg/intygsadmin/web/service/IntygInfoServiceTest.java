@@ -123,7 +123,7 @@ public class IntygInfoServiceTest {
         assertEquals("lisjp", intygInfo.getIntygType());
         assertEquals(1, intygInfo.getEvents().size());
         assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
-        assertFalse(intygInfo.isInWebcert());
+        assertFalse(intygInfo.isCreatedInWC());
 
         verify(intygInfoPersistenceService, times(1)).create(any());
     }
@@ -135,6 +135,7 @@ public class IntygInfoServiceTest {
         String intygId = "intygId";
 
         WcIntygInfo wcIntygInfo = new WcIntygInfo();
+        wcIntygInfo.setCreatedInWC(true);
         wcIntygInfo.setIntygId(intygId);
         wcIntygInfo.setIntygType("lisjp");
         wcIntygInfo.setDraftCreated(LocalDateTime.now());
@@ -151,7 +152,7 @@ public class IntygInfoServiceTest {
         assertEquals("lisjp", intygInfo.getIntygType());
         assertEquals(1, intygInfo.getEvents().size());
         assertEquals(Source.WEBCERT, intygInfo.getEvents().get(0).getSource());
-        assertTrue(intygInfo.isInWebcert());
+        assertTrue(intygInfo.isCreatedInWC());
 
         verify(intygInfoPersistenceService, times(1)).create(any());
     }
@@ -163,6 +164,7 @@ public class IntygInfoServiceTest {
         String intygId = "intygId";
 
         WcIntygInfo wcIntygInfo = new WcIntygInfo();
+        wcIntygInfo.setCreatedInWC(true);
         wcIntygInfo.setIntygId(intygId);
         wcIntygInfo.setIntygType("lisjp");
         wcIntygInfo.setDraftCreated(LocalDateTime.now());
@@ -182,7 +184,7 @@ public class IntygInfoServiceTest {
 
         IntygInfoDTO intygInfo = optionalIntygInfo.get();
         assertEquals("lisjp", intygInfo.getIntygType());
-        assertTrue(intygInfo.isInWebcert());
+        assertTrue(intygInfo.isCreatedInWC());
         assertEquals(2, intygInfo.getEvents().size());
         assertEquals(Source.WEBCERT, intygInfo.getEvents().get(1).getSource());
         assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
@@ -191,12 +193,13 @@ public class IntygInfoServiceTest {
     }
 
     @Test
-    public void testGetIntygInfoNull() {
+    public void testGetIntygInfoDateNull() {
         mockUser();
 
         String intygId = "intygId";
 
         WcIntygInfo wcIntygInfo = new WcIntygInfo();
+        wcIntygInfo.setCreatedInWC(true);
         wcIntygInfo.setIntygId(intygId);
         wcIntygInfo.setIntygType("lisjp");
         wcIntygInfo.setDraftCreated(LocalDateTime.now());
@@ -216,7 +219,7 @@ public class IntygInfoServiceTest {
 
         IntygInfoDTO intygInfo = optionalIntygInfo.get();
         assertEquals("lisjp", intygInfo.getIntygType());
-        assertTrue(intygInfo.isInWebcert());
+        assertTrue(intygInfo.isCreatedInWC());
         assertEquals(2, intygInfo.getEvents().size());
         assertEquals(Source.WEBCERT, intygInfo.getEvents().get(1).getSource());
         assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());

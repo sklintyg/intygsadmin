@@ -65,7 +65,7 @@
     "draftCreated": {
       "type": "string"
     },
-    "inWebcert": {
+    "createdInWC": {
       "type": "boolean"
     },
     "kompletteringar": {
