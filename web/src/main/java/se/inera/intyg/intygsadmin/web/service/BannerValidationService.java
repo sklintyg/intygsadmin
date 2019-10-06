@@ -27,6 +27,8 @@ import org.springframework.util.StringUtils;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;
+import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
+import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
 import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
 
 @Service
@@ -123,7 +125,7 @@ public class BannerValidationService {
                 bannerDTO.getId());
 
             if (count > 0) {
-                addValidation(FIELD_DISPLAY_TO, "Already exists");
+                throw new IaServiceException(IaErrorCode.ALREADY_EXISTS);
             }
         }
 

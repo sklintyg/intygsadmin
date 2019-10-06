@@ -16,7 +16,7 @@ import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
 import {ErrorSection, ErrorWrapper} from '../styles/iaLayout'
 import IaAlert, {alertType} from '../alert/Alert'
-import {getFutureBanners} from '../../store/reducers/banner'
+import {getErrorMessage, getFutureBanners} from '../../store/reducers/banner'
 import AppConstants from "../../AppConstants";
 
 const StyledBody = styled(ModalBody)`
@@ -69,11 +69,12 @@ const prioButtons = Object.entries(AppConstants.prio).map(([key, value]) => {
   }
 })
 
-const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data, fetchFutureBanners, futureBanners }) => {
+const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data, fetchFutureBanners, futureBanners, errorMessage }) => {
   const [validationMessages, setValidationMessages] = useState({})
   const [update, setUpdate] = useState(false)
   const [newBanner, setNewBanner] = useState(initialBanner)
   const [errorActive, setErrorActive] = useState(false)
+  const [serverErrorActive, setServerErrorActive] = useState(false)
   const [initialMessageValue, setInitialMessageValue] = useState('')
 
   const setApplicationAndCheckFuture = (application) => {
@@ -107,6 +108,19 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
     setValidationMessages(validateBanner(newBanner, futureBanners))
   }, [newBanner, futureBanners])
 
+  //Show correct message for server induced errors
+  useEffect(() => {
+    if (!serverErrorActive) {
+      return
+    }
+    if (errorMessage != null && 'ALREADY_EXISTS' === errorMessage.code) {
+      const message = 'Ändra visningsperioden. Det finns redan en driftbanner som infaller i denna period.';
+      setValidationMessages({displayTo: message, displayFrom: '', displayToTime: '', displayFromTime: ''})
+    } else {
+      setErrorActive(true)
+    }
+  }, [serverErrorActive, errorMessage])
+
   const previousBanner = useRef()
   useEffect(() => {
     previousBanner.current = newBanner
@@ -135,12 +149,13 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
         onComplete()
       })
       .catch((data) => {
-        setErrorActive(true)
+        setServerErrorActive(true)
       })
   }
 
   const cancel = () => {
     setErrorActive(false)
+    setServerErrorActive(false)
     setNewBanner(initialBanner)
     setInitialMessageValue('')
     handleClose()
@@ -288,6 +303,7 @@ export const CreateBannerId = 'createBanner'
 const mapStateToProps = (state) => {
   return {
     futureBanners: getFutureBanners(state),
+    errorMessage: getErrorMessage(state)
   }
 }
 
