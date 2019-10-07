@@ -13,7 +13,6 @@ context("Banners", () => {
 
 
     cy.login('TSTNMT2321000156-10KK');
-    cy.removeFetch();
     cy.get("#MenuBar-banners").click();
     cy.wait('@apiCheck');
   });

@@ -39,10 +39,21 @@ Cypress.Commands.add("loadWelcome", () => {
 });
 
 Cypress.Commands.add("login", loginId => {
+  cy.server()
+  cy.route({
+    method: 'GET',
+    url: '**api/anvandare**'
+  }).as('anvandare');
 
   cy.loadWelcome();
-  cy.get(`#${loginId}`);
+  cy.wait('@anvandare');
+
+  cy.get(`#jsonSelect`).select(loginId);
   cy.get("#loginBtn").click();
+  cy.removeFetch();
+
+  cy.wait('@anvandare');
+  cy.wait(200);
 });
 
 Cypress.Commands.add("loginJson", json => {
@@ -58,4 +69,8 @@ Cypress.Commands.add('removeFetch', () => {
       win.fetch = null;
     }
   });
+});
+
+Cypress.Commands.add('logout', () => {
+  cy.visit('/logout');
 });

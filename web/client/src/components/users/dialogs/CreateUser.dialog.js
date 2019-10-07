@@ -39,8 +39,8 @@ const roleButtons = Object.entries(AppConstants.role).map(([key, value]) => {
 })
 
 const initialUser = {
-  name: undefined,
-  employeeHsaId: undefined,
+  name: "",
+  employeeHsaId: "",
   intygsadminRole: undefined
 }
 

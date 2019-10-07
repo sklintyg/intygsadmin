@@ -6,7 +6,6 @@ context("IntygInfo", () => {
     cy.server()
 
     cy.login('TSTNMT2321000156-10KK');
-    cy.removeFetch();
     cy.get("#MenuBar-intyginfo").click();
   });
 

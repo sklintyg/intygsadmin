@@ -143,7 +143,7 @@ const UsersList = ({ usersList, errorMessage, openModal, currentUserHsaId, ...ot
           <tr key={user.id}>
             <td><DisplayDate date={user.createdAt} /></td>
             <td>{AppConstants.role[user.intygsadminRole]}</td>
-            <td>{user.name}</td>
+            <td className="user-name">{user.name}</td>
             <td>{user.employeeHsaId}</td>
             <td>
               <Button

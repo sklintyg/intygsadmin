@@ -1,4 +1,5 @@
 var fakeUsers = [];
+var fakeUsersMap = {};
 var jsonSelect;
 
 var validProperties = [
@@ -39,13 +40,14 @@ function updateUserList() {
   jsonSelect.innerHtml = "";
 
   fakeUsers.forEach(function(item, index) {
+    fakeUsersMap[item.employeeHsaId] = item;
     jsonSelect.append(
-      '<option id="' + item.employeeHsaId + '" value="' + index + '">' + item.name + ' ' + item.intygsadminRole +
+      '<option id="' + item.employeeHsaId + '" value="' + item.employeeHsaId + '">' + item.name + ' ' + item.intygsadminRole +
       '</option>');
   });
 
-  jsonSelect.val(0);
-  updateUserContext(0);
+  jsonSelect.val(fakeUsers[0].employeeHsaId);
+  updateUserContext(fakeUsers[0].employeeHsaId);
 }
 
 function _replacer(key, value) {
@@ -62,13 +64,13 @@ function _stringify(fakeUser) {
   return JSON.stringify(object, _replacer, 1);
 }
 
-function updateUserContext(newSelected, oldVal) {
+function updateUserContext(newSelected) {
   if (newSelected === undefined) {
     return;
   }
 
   // Catch user login option
-  var login = fakeUsers[newSelected];
+  var login = fakeUsersMap[newSelected];
 
   if (typeof login !== 'undefined') {
 
