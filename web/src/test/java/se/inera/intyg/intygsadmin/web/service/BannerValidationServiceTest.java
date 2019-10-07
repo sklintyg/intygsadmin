@@ -40,6 +40,8 @@ import se.inera.intyg.infra.driftbannerdto.BannerPriority;
 import se.inera.intyg.intygsadmin.persistence.service.BannerPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.ValidationDTO;
+import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
+import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
 import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
 
 @ExtendWith(MockitoExtension.class)
@@ -170,10 +172,9 @@ public class BannerValidationServiceTest {
         try {
             bannerValidationService.validateBanner(bannerDTO);
             fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertEquals(1, validationErrors.size());
+        } catch (IaServiceException e) {
+            IaErrorCode errorCode = e.getErrorCode();
+            assertEquals(IaErrorCode.ALREADY_EXISTS, errorCode);
         }
 
         verify(bannerPersistenceService, times(1)).countByApplicationAndTime(any(), any(), any(), any());

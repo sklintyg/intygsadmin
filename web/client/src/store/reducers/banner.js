@@ -40,7 +40,10 @@ const errorMessage = (state = null, action) => {
     case ActionConstants.CREATE_BANNER_FAILURE:
     case ActionConstants.UPDATE_BANNER_FAILURE:
     case ActionConstants.FETCH_FUTURE_FAILURE:
-      return buildClientError(action.payload, 'error.banner').message
+      return {
+        code: action.payload.error.errorCode,
+        error: buildClientError(action.payload, 'error.banner').message
+      }
     case ActionConstants.REMOVE_BANNER_REQUEST:
     case ActionConstants.REMOVE_BANNER_SUCCESS:
     case ActionConstants.CREATE_BANNER_REQUEST:
