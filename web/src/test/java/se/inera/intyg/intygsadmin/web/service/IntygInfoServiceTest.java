@@ -231,8 +231,9 @@ public class IntygInfoServiceTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(UUID.randomUUID());
         userEntity.setEmployeeHsaId("hsaId");
+        userEntity.setName("User1");
 
-        IntygsadminUser user = new IntygsadminUser(userEntity, null, null, "User1");
+        IntygsadminUser user = new IntygsadminUser(userEntity, null, null);
         when(userService.getActiveUser()).thenReturn(user);
     }
 }

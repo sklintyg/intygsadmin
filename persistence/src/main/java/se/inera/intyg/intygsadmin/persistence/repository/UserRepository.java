@@ -22,13 +22,16 @@ package se.inera.intyg.intygsadmin.persistence.repository;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID>,
+    QuerydslPredicateExecutor<UserEntity> {
 
     Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
 
-    void deleteByEmployeeHsaId(String employeeHsaId);
+    long countByIntygsadminRoleEqualsAndIdNot(IntygsadminRole role, UUID id);
 }

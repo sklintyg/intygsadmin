@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "createdAt",
+    "employeeHsaId",
+    "intygsadminRole"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "employeeHsaId": {
+      "type": "string"
+    },
+    "intygsadminRole": {
+      "type": "string"
+    }
+  }
+}

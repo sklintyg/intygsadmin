@@ -27,6 +27,7 @@ import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +38,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
@@ -95,13 +97,12 @@ public class IneraOidcFilter extends AbstractAuthenticationProcessingFilter {
                         "Failed authentication. No IntygsadminUser for employeeHsaId " + employeeHsaId));
             // CHECKSTYLE:ON Indentation
 
-            String name = idTokenClaimsSet.getStringClaim("given_name")
-                + " "
-                + idTokenClaimsSet.getStringClaim("family_name");
+            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken);
 
-            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, accessToken, name);
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(userEntity.getIntygsadminRole().name()));
 
-            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(user, null, authorities);
 
         } catch (final BadCredentialsException exception) {
             LOG.warn(exception.getMessage());

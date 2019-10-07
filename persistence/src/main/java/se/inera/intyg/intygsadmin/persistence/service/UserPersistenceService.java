@@ -19,9 +19,13 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
-import java.util.List;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import java.util.Optional;
+import java.util.UUID;
 import javax.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
@@ -40,22 +44,35 @@ public class UserPersistenceService {
         return userRepository.findByEmployeeHsaId(employeeHsaId);
     }
 
-    public void delete(String employeeHsaId) {
-        userRepository.deleteByEmployeeHsaId(employeeHsaId);
+    public void delete(UUID id) {
+        userRepository.deleteById(id);
     }
 
-    public UserEntity upsert(UserEntity newUserEntity) {
-        UserEntity userEntity = userRepository.findByEmployeeHsaId(newUserEntity.getEmployeeHsaId())
-            .orElse(new UserEntity());
+    public UserEntity add(UserEntity newUserEntity) {
+        UserEntity userEntity = new UserEntity();
 
+        return upsert(userEntity, newUserEntity);
+    }
+
+    public UserEntity update(UserEntity newUserEntity) {
+        UserEntity userEntity = userRepository.getOne(newUserEntity.getId());
+
+        return upsert(userEntity, newUserEntity);
+    }
+
+    private UserEntity upsert(UserEntity userEntity, UserEntity newUserEntity) {
         userEntity.setEmployeeHsaId(newUserEntity.getEmployeeHsaId());
         userEntity.setIntygsadminRole(newUserEntity.getIntygsadminRole());
+        userEntity.setName(newUserEntity.getName());
 
         return userRepository.save(userEntity);
     }
 
-    public List<UserEntity> findAll() {
-        return userRepository.findAll();
+    public Page<UserEntity> findAll(Pageable pageable) {
+        BooleanBuilder builder = new BooleanBuilder();
+        Predicate predicate = builder.getValue();
+
+        return userRepository.findAll(predicate, pageable);
     }
 
 }

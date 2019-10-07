@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +40,9 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @ContextConfiguration
 class LoggingSessionRegistryImplTest {
 
-    private static final IntygsadminUser IAU = new IntygsadminUser(new UserEntity(UUID.randomUUID(), "HSA1", IntygsadminRole.FULL),
-        AuthenticationMethod.FAKE, null, "karl Nilsson");
+    private static final IntygsadminUser IAU = new IntygsadminUser(new UserEntity(UUID.randomUUID(), LocalDateTime.now(),
+        "HSA1", "karl Nilsson", IntygsadminRole.FULL),
+        AuthenticationMethod.FAKE, null);
 
     @Mock
     private MonitoringLogService monitoringLogService;

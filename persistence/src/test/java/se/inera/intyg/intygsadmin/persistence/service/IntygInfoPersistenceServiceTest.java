@@ -19,34 +19,44 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
-import javax.transaction.Transactional;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.persistence.TestContext;
+import se.inera.intyg.intygsadmin.persistence.TestSupport;
 import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.IntygInfoRepository;
 
-@Service
-@Transactional
-public class IntygInfoPersistenceService {
+@TestContext
+public class IntygInfoPersistenceServiceTest extends TestSupport {
 
+    @Autowired
     private IntygInfoRepository intygInfoRepository;
 
-    public IntygInfoPersistenceService(IntygInfoRepository intygInfoRepository) {
-        this.intygInfoRepository = intygInfoRepository;
+    @Autowired
+    private IntygInfoPersistenceService intygInfoPersistenceService;
+
+    private final int total = 10;
+    private final int pageSize = 20;
+
+    @BeforeEach
+    public void before() {
+        intygInfoRepository.deleteAll();
+        randomizer()
+            .objects(IntygInfoEntity.class, total)
+            .forEach(intygInfoPersistenceService::create);
     }
 
-    public Page<IntygInfoEntity> findAll(Pageable pageable) {
-        BooleanBuilder builder = new BooleanBuilder();
-        Predicate predicate = builder.getValue();
+    @Test
+    public void findAllTest() {
+        Pageable pageable = PageRequest.of(0, pageSize);
+        Page<IntygInfoEntity> list = intygInfoPersistenceService.findAll(pageable);
 
-        return intygInfoRepository.findAll(predicate, pageable);
-    }
-
-    public IntygInfoEntity create(IntygInfoEntity intygInfoEntity) {
-        intygInfoEntity.setId(null);
-        return intygInfoRepository.save(intygInfoEntity);
+        assertEquals(total, list.getTotalElements());
     }
 }

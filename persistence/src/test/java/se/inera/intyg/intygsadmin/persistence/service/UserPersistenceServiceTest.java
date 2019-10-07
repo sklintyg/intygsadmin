@@ -23,11 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import se.inera.intyg.intygsadmin.persistence.TestContext;
 import se.inera.intyg.intygsadmin.persistence.TestSupport;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -44,20 +46,22 @@ public class UserPersistenceServiceTest extends TestSupport {
     private UserPersistenceService userPersistenceService;
 
     private final int total = 10;
+    private final int pageSize = 20;
 
     @BeforeEach
     public void before() {
         userRepository.deleteAll();
         randomizer()
             .objects(UserEntity.class, total)
-            .forEach(userPersistenceService::upsert);
+            .forEach(userPersistenceService::add);
     }
 
     @Test
     public void findByEmployeeHsaIdTest() {
-        List<UserEntity> list = userPersistenceService.findAll();
-        assertEquals(total, list.size());
-        UserEntity userEntityFromList = list.get(0);
+        Pageable pageable = PageRequest.of(0, pageSize);
+        Page<UserEntity> list = userPersistenceService.findAll(pageable);
+        assertEquals(total, list.getTotalElements());
+        UserEntity userEntityFromList = list.getContent().get(0);
 
         Optional<UserEntity> byEmployeeHsaId = userPersistenceService.findByEmployeeHsaId(userEntityFromList.getEmployeeHsaId());
         assertTrue(byEmployeeHsaId.isPresent());
@@ -70,13 +74,14 @@ public class UserPersistenceServiceTest extends TestSupport {
 
     @Test
     public void deleteTest() {
-        List<UserEntity> list = userPersistenceService.findAll();
-        assertEquals(total, list.size());
-        UserEntity userEntity = list.get(0);
+        Pageable pageable = PageRequest.of(0, pageSize);
+        Page<UserEntity> list = userPersistenceService.findAll(pageable);
+        assertEquals(total, list.getTotalElements());
+        UserEntity userEntity = list.getContent().get(0);
 
-        userPersistenceService.delete(userEntity.getEmployeeHsaId());
-        list = userPersistenceService.findAll();
-        assertEquals(total - 1, list.size());
+        userPersistenceService.delete(userEntity.getId());
+        list = userPersistenceService.findAll(pageable);
+        assertEquals(total - 1, list.getTotalElements());
 
         Optional<UserEntity> byEmployeeHsaId = userPersistenceService.findByEmployeeHsaId(userEntity.getEmployeeHsaId());
         assertTrue(byEmployeeHsaId.isEmpty());
@@ -84,29 +89,30 @@ public class UserPersistenceServiceTest extends TestSupport {
 
     @Test
     public void upsertTest() {
+        Pageable pageable = PageRequest.of(0, pageSize);
         userRepository.deleteAll();
 
-        List<UserEntity> list = userPersistenceService.findAll();
-        assertEquals(0, list.size());
+        Page<UserEntity> list = userPersistenceService.findAll(pageable);
+        assertEquals(0, list.getTotalElements());
 
-        UserEntity newUser = new UserEntity(null, "TEST-HSA-1", IntygsadminRole.FULL);
-        userPersistenceService.upsert(newUser);
+        UserEntity newUser = new UserEntity(null, null, "TEST-HSA-1", "name", IntygsadminRole.FULL);
+        userPersistenceService.add(newUser);
 
-        list = userPersistenceService.findAll();
-        assertEquals(1, list.size());
+        list = userPersistenceService.findAll(pageable);
+        assertEquals(1, list.getTotalElements());
 
-        UserEntity newUserEntity = list.get(0);
+        UserEntity newUserEntity = list.getContent().get(0);
         assertEquals(newUser.getEmployeeHsaId(), newUserEntity.getEmployeeHsaId());
         assertEquals(newUser.getIntygsadminRole(), newUserEntity.getIntygsadminRole());
         assertNotNull(newUserEntity.getId());
 
         newUserEntity.setIntygsadminRole(IntygsadminRole.BAS);
-        userPersistenceService.upsert(newUserEntity);
+        userPersistenceService.update(newUserEntity);
 
-        list = userPersistenceService.findAll();
-        assertEquals(1, list.size());
+        list = userPersistenceService.findAll(pageable);
+        assertEquals(1, list.getTotalElements());
 
-        UserEntity updatedUserEntity = list.get(0);
+        UserEntity updatedUserEntity = list.getContent().get(0);
         assertEquals(newUserEntity.getEmployeeHsaId(), updatedUserEntity.getEmployeeHsaId());
         assertEquals(newUserEntity.getIntygsadminRole(), updatedUserEntity.getIntygsadminRole());
         assertEquals(newUserEntity.getId(), updatedUserEntity.getId());
@@ -115,7 +121,9 @@ public class UserPersistenceServiceTest extends TestSupport {
 
     @Test
     public void findAllTest() {
-        List<UserEntity> list = userPersistenceService.findAll();
-        assertEquals(total, list.size());
+        Pageable pageable = PageRequest.of(0, pageSize);
+        Page<UserEntity> list = userPersistenceService.findAll(pageable);
+
+        assertEquals(total, list.getTotalElements());
     }
 }

@@ -119,4 +119,15 @@
 
   </changeSet>
 
+  <changeSet id="6" author="martin hesslund">
+
+    <addColumn tableName="user">
+      <column name="created_at" type="datetime" defaultValueComputed="NOW()">
+        <constraints nullable="false"/>
+      </column>
+      <column name="name" type="varchar(200)" />
+    </addColumn>
+
+  </changeSet>
+
 </databaseChangeLog>

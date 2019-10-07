@@ -19,16 +19,21 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntityDTO {
+public class UserDTO {
 
-    private String id;
+    private UUID id;
+    private String name;
     private String employeeHsaId;
-    private String intygsadminRole;
+    private IntygsadminRole intygsadminRole;
+    private LocalDateTime createdAt;
 }

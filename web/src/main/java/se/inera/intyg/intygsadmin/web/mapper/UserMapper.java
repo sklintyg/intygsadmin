@@ -20,26 +20,18 @@
 package se.inera.intyg.intygsadmin.web.mapper;
 
 import java.util.List;
-import java.util.UUID;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserEntityDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    UserEntityDTO toDTO(UserEntity s);
+    UserDTO toDTO(UserEntity s);
 
-    List<UserEntityDTO> toListDTO(List<UserEntity> s);
+    List<UserDTO> toListDTO(List<UserEntity> s);
 
-    UserEntity toEntity(UserEntityDTO newSourceAccount);
+    UserEntity toEntity(UserDTO s);
 
-    default String mapId(UUID id) {
-        return id != null ? id.toString() : null;
-    }
-
-    default UUID mapId(String id) {
-        return id != null ? UUID.fromString(id) : null;
-    }
 }

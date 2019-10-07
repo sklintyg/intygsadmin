@@ -20,7 +20,10 @@
 package se.inera.intyg.intygsadmin.web;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
@@ -36,11 +39,16 @@ public class WithMockIntygsadminUserSecurityContextFactory implements WithSecuri
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
         UserEntity userEntity = new UserEntity();
+        userEntity.setId(UUID.randomUUID());
+        userEntity.setName(mockIntygsadminUser.name());
         userEntity.setEmployeeHsaId(mockIntygsadminUser.employeeHsaId());
         userEntity.setIntygsadminRole(IntygsadminRole.valueOf(mockIntygsadminUser.intygsadminRole()));
 
-        final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null, mockIntygsadminUser.name());
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name()));
+
+        final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null);
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, authorities));
 
         return context;
     }

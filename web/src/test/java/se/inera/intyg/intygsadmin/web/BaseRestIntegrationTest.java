@@ -55,7 +55,7 @@ public abstract class BaseRestIntegrationTest {
         "Karl Nilsson");
     protected static final FakeUser BASIC_USER = new FakeUser(
         "TSTNMT2321000156-10KL",
-        "BASIC",
+        "BAS",
         "Lena Svensson");
 
     /**

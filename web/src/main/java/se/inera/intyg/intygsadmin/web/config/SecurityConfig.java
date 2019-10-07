@@ -37,6 +37,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -68,6 +69,7 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImp
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(value = {IdpProperties.class})
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private OIDCProviderMetadata ineraOIDCProviderMetadata;
@@ -139,7 +141,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Profile({FAKE_PROFILE})
     public FakeAuthenticationFilter fakeAuthenticationFilter() {
-        FakeAuthenticationFilter fakeAuthenticationFilter = new FakeAuthenticationFilter();
+        FakeAuthenticationFilter fakeAuthenticationFilter = new FakeAuthenticationFilter(userPersistenceService);
         fakeAuthenticationFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
         fakeAuthenticationFilter.setAuthenticationSuccessHandler(successRedirectHandler());
         fakeAuthenticationFilter.setAuthenticationFailureHandler(failureHandler());
