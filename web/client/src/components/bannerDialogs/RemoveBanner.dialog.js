@@ -1,11 +1,9 @@
 import React, {useState} from 'react'
-import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
-import { compose } from 'recompose'
-import * as actions from '../../store/actions/banner'
-import { connect } from 'react-redux'
-import IaAlert, { alertType } from '../alert/Alert'
-import {ErrorSection, ErrorWrapper } from '../styles/iaLayout'
+import {compose} from 'recompose'
+import IaAlert, {alertType} from '../alert/Alert'
+import {ErrorSection, ErrorWrapper} from '../styles/iaLayout'
 
 const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
 
@@ -22,8 +20,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
     removeBanner(bannerId).then(() => {
       handleClose()
       onComplete()
-    }).catch((data)=>{
-      console.log(data)
+    }).catch(() => {
       setErrorActive(true)
     })
   }
@@ -33,7 +30,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={handleClose}>
         <ModalHeader toggle={handleClose}>Avsluta driftbanner</ModalHeader>
         <ModalBody>
-          <div dangerouslySetInnerHTML={{ __html: text }} />
+          <div>{text}</div>
         </ModalBody>
         <ErrorSection>
           {errorActive && (
@@ -70,9 +67,5 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
 export const RemoveBannerId = 'removeBanner'
 
 export default compose(
-  connect(
-    null,
-    { ...actions }
-  ),
   modalContainer(RemoveBannerId)
 )(RemoveBanner)

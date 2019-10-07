@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 import PropTypes from 'prop-types'
-import { compose, lifecycle } from 'recompose'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import {compose, lifecycle} from 'recompose'
+import {connect} from 'react-redux'
+import {withRouter} from 'react-router-dom'
 import * as actions from '../../store/actions/bannerList.actions'
-import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList.reducer'
+import {getBannerList, getErrorMessage, getIsFetching} from '../../store/reducers/bannerList.reducer'
 import CreateBanner from '../bannerDialogs/CreateBanner.dialog'
 import RemoveBanner from '../bannerDialogs/RemoveBanner.dialog'
 import BannerList from './BannerList'
@@ -38,7 +38,7 @@ const BannerListContainer = (props) => {
       <ListWrapper>
         <RemoveBanner onComplete={onActionComplete}/>
         <CreateBanner onComplete={onActionComplete}/>
-        <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} onActionComplete={onActionComplete} />
+        <BannerList bannerList={bannerList} errorMessage={errorMessage} onSort={handleSort} />
         {isFetching && !bannerList.length && <LoadingSpinner loading={isFetching} message={'Laddar sidan'} />}
       </ListWrapper>
     </Fragment>

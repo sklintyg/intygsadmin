@@ -64,3 +64,7 @@ export const PageContainer = styled(WorkareaContainer)`
     padding-bottom: 20px;
   }
 `
+
+export const NoWrapTd = styled.td`
+  white-space: nowrap;
+`
