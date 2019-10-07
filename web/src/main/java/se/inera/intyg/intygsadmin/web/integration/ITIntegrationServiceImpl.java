@@ -24,7 +24,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 
@@ -47,7 +49,13 @@ public class ITIntegrationServiceImpl implements ITIntegrationService {
     @Override
     public ItIntygInfo getIntygInfo(String intygId) {
         String url = intygstjanstenUrl + "/internalapi/intygInfo/" + intygId;
-
-        return restTemplate.getForObject(url, ItIntygInfo.class);
+        try {
+            return restTemplate.getForObject(url, ItIntygInfo.class);
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw ex;
+            }
+            return null;
+        }
     }
 }
