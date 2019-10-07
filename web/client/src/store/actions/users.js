@@ -17,6 +17,8 @@ export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST'
 export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS'
 export const UPDATE_USER_FAILURE = 'UPDATE_USER_FAILURE'
 
+export const USER_CLEAR_ERROR = 'USER_CLEAR_ERROR'
+
 export const fetchUsersList = (request) => (dispatch, getState) => {
   if (getIsFetching(getState())) {
     return Promise.resolve()
@@ -134,3 +136,7 @@ export const updateUser = (user, id) => (dispatch, getState) => {
     }
   )
 }
+
+export const clearError = () => ({
+  type: USER_CLEAR_ERROR
+})

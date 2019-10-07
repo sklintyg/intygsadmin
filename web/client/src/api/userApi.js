@@ -1,5 +1,5 @@
-import * as api from './real/userApi'
+import * as util from './utils'
 
-export const fetchAnvandare = () => api.fetchAnvandare();
+export const fetchAnvandare = () => util.makeServerRequest('anvandare')
 
-export const pollSession = () => api.pollSession();
+export const pollSession = () => util.makeServerRequest('public-api/session-stat/ping', { pathComplete: true })

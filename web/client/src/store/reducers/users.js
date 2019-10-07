@@ -57,10 +57,28 @@ const errorMessage = (state = null, action) => {
   }
 }
 
+const errorMessageCreateUpdate = (state = null, action) => {
+  switch (action.type) {
+  case ActionConstants.UPDATE_USER_FAILURE:
+    return buildClientError(action.payload, 'error.userUpdate').message
+  case ActionConstants.CREATE_USER_FAILURE:
+    return buildClientError(action.payload, 'error.userCreate').message
+  case ActionConstants.UPDATE_USER_REQUEST:
+  case ActionConstants.UPDATE_USER_SUCCESS:
+  case ActionConstants.CREATE_USER_REQUEST:
+  case ActionConstants.CREATE_USER_SUCCESS:
+  case ActionConstants.USER_CLEAR_ERROR:
+    return null
+  default:
+    return state
+  }
+}
+
 export default combineReducers({
   usersList,
   isFetching,
-  errorMessage
+  errorMessage,
+  errorMessageCreateUpdate
 })
 
 export const getUsersList = (state) => state.users.usersList
@@ -68,6 +86,8 @@ export const getUsersList = (state) => state.users.usersList
 export const getIsFetching = (state) => state.users.isFetching
 
 export const getErrorMessage = (state) => state.users.errorMessage
+
+export const getErrorMessageModal = (state) => state.users.errorMessageCreateUpdate
 
 export const getSortOrder = (state) => {
   return {

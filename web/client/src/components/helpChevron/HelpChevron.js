@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import colors from '../styles/iaColors'
 import Toggler from '../toggler/Toggler'
 import styled from 'styled-components'
@@ -15,7 +15,7 @@ const HelpDiv = styled.div`
   background-color: ${colors.IA_COLOR_15};
   max-height: 160px;
   padding: 12px 18px;
-  overflow-y: scroll;
+  overflow-y: auto;
   margin-bottom: 12px;
   h5 {
     color: ${colors.IA_COLOR_06}

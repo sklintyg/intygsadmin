@@ -11,6 +11,8 @@ import {IaTypo04} from "../../styles/iaTypography";
 import HelpChevron from "../../helpChevron";
 import {RadioWrapper} from "../../radioButton";
 import AppConstants from "../../../AppConstants";
+import HsaInput from "../../styles/HsaInput";
+import {getErrorMessageModal} from "../../../store/reducers/users";
 
 const StyledBody = styled(ModalBody)`
   
@@ -28,6 +30,10 @@ const StyledBody = styled(ModalBody)`
       padding: 4px 0;
     }
   }
+  
+  label {
+    display: block;
+  }
 `
 
 const roleButtons = Object.entries(AppConstants.role).map(([key, value]) => {
@@ -44,11 +50,9 @@ const initialUser = {
   intygsadminRole: undefined
 }
 
-const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, data }) => {
-  //const [validationMessages, setValidationMessages] = useState({})
+const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, data, errorMessage, clearError }) => {
   const [update, setUpdate] = useState(false)
   const [newUser, setNewUser] = useState(initialUser)
-  const [errorActive, setErrorActive] = useState(false)
 
   useEffect(() => {
     if (data && data.user) {
@@ -64,7 +68,7 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
     previousBanner.current = newUser
   })
 
-  const onChange = (value, prop) => {
+  const onChange = (prop) => (value) => {
     setNewUser({ ...newUser, [prop]: value })
   }
 
@@ -84,13 +88,11 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
         cancel()
         onComplete()
       })
-      .catch(() => {
-        setErrorActive(true)
-      })
+      .catch(() => {})
   }
 
   const cancel = () => {
-    setErrorActive(false)
+    clearError()
     setNewUser(initialUser)
     handleClose()
   }
@@ -102,8 +104,6 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
     let enable = fields.reduce((accumulator, currentValue) => {
       return accumulator && newUser[currentValue]
     }, true)
-
-    //enable = enable && isEmpty(validationMessages)
 
     if (update) {
       let changed = fields.reduce((accumulator, currentValue) => {
@@ -127,18 +127,13 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
             <Input
               id='userName'
               value={newUser.name}
-              onChange={(e) => onChange(e.target.value, 'name')}
+              onChange={(e) => onChange('name')(e.target.value)}
             />
           </FormGroup>
 
           <FormGroup>
             <Label for='userHsaId'><IaTypo04>Administratörens HSA-ID</IaTypo04></Label>
-            <Input
-              id='userHsaId'
-              placeholder='SE1234567890-1X23'
-              value={newUser.employeeHsaId}
-              onChange={(e) => onChange(e.target.value, 'employeeHsaId')}
-            />
+            <HsaInput id='userHsaId' value={newUser.employeeHsaId} onChange={onChange('employeeHsaId')} />
           </FormGroup>
 
           <FormGroup>
@@ -148,21 +143,16 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
             </HelpChevron>
             <RadioWrapper
               radioButtons={roleButtons}
-              onChange={(event) => onChange(event.target.value, 'intygsadminRole')}
+              onChange={(event) => onChange('intygsadminRole')(event.target.value)}
               selected={newUser.intygsadminRole}
             />
           </FormGroup>
         </StyledBody>
         <ErrorSection>
-          {errorActive && (
+          {errorMessage && (
             <ErrorWrapper>
               <IaAlert type={alertType.ERROR}>
-                {
-                  update ?
-                    'Kunde inte ändra administratörens uppgifter på grund av ett tekniskt fel. Prova igen om en stund.'
-                    :
-                    'Kunde inte lägga till administratören på grund av ett tekniskt fel. Prova igen om en stund.'
-                }
+                {errorMessage}
               </IaAlert>
             </ErrorWrapper>
           )}
@@ -190,11 +180,17 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
   )
 }
 
+const mapStateToProps = (state) => {
+  return {
+    errorMessage: getErrorMessageModal(state)
+  }
+}
+
 export const CreateUserId = 'createUser'
 
 export default compose(
   connect(
-    null,
+    mapStateToProps,
     { ...actions }
   ),
   modalContainer(CreateUserId)

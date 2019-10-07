@@ -1,9 +1,6 @@
-import * as api from './real/users.api'
+import * as utils from './utils'
 
-export const fetchUsersList = (requestParams) => {
-
-  let {pageIndex, sortColumn, sortDirection} = requestParams
-
+export const fetchUsersList = ({pageIndex, sortColumn, sortDirection}) => {
   if(!pageIndex) {
     pageIndex = 0
   }
@@ -16,11 +13,15 @@ export const fetchUsersList = (requestParams) => {
     sortDirection = 'DESC'
   }
 
-  return api.fetchUsersList({...requestParams, pageIndex, sortColumn, sortDirection})
+  return utils.makeServerRequest(utils.buildUrlFromParams('user', {
+    page: pageIndex,
+    size: 10,
+    sort: `${sortColumn},${sortDirection}`
+  }));
 }
 
-export const createUser = (user) => api.createUser(user);
+export const createUser = (user) => utils.makeServerPut('user', user)
 
-export const removeUser = (userId) => api.removeUser(userId);
+export const removeUser = (userId) => utils.makeServerDelete(`user/${userId}`, {}, {emptyBody: true})
 
-export const updateUser = (user, userId) => api.updateUser(user, userId);
+export const updateUser = (user, userId) => utils.makeServerPost(`user/${userId}`, user)

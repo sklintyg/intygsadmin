@@ -91,34 +91,44 @@
     },
     "integratedUnit": {
       "unknown": {
-        "title": "",
         "message": "Sökningen kunde inte genomföras på grund av ett tekniskt fel. Prova igen om en stund."
       },
       "not_found": {
-        "title": "",
         "message": "Kunde inte hitta någon enhet med detta HSA-id. Kontrollera att du matat in ett korrekt ID."
       }
     },
     "intygInfo": {
       "unknown": {
-        "title": "",
         "message": "Information om intyget kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
       },
       "not_found": {
-        "title": "",
         "message": "Kunde inte hitta något intyg med detta ID."
       }
     },
     "intygInfoList": {
       "unknown": {
-        "title": "",
         "message": "Information om de senaste sökningar kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
       }
     },
     "usersList": {
       "unknown": {
-        "title": "",
         "message": "Översikten över administratörerna kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
+      }
+    },
+    "userUpdate": {
+      "unknown": {
+        "message": "Kunde inte ändra administratörens uppgifter på grund av ett tekniskt fel. Prova igen om en stund."
+      },
+      "already_exists": {
+        "message": "Personen med detta HSA-ID är redan administratör."
+      }
+    },
+    "userCreate": {
+      "unknown": {
+        "message": "Kunde inte lägga till administratören på grund av ett tekniskt fel. Prova igen om en stund."
+      },
+      "already_exists": {
+        "message": "Personen med detta HSA-ID är redan administratör."
       }
     }
   }

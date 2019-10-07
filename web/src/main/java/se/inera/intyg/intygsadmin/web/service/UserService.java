@@ -78,6 +78,8 @@ public class UserService {
             throw new IaServiceException(IaErrorCode.BAD_STATE);
         }
 
+        userDTO.setEmployeeHsaId(userDTO.getEmployeeHsaId().trim());
+
         checkIfUserWithHsaIdExists(userDTO);
 
         UserEntity upsertedUser = userPersistenceService.update(userMapper.toEntity(userDTO));
@@ -85,9 +87,10 @@ public class UserService {
     }
 
     public UserDTO addUser(UserDTO userDTO) {
-        checkIfUserWithHsaIdExists(userDTO);
-
         userDTO.setId(null);
+        userDTO.setEmployeeHsaId(userDTO.getEmployeeHsaId().trim());
+
+        checkIfUserWithHsaIdExists(userDTO);
 
         UserEntity upsertedUser = userPersistenceService.add(userMapper.toEntity(userDTO));
 

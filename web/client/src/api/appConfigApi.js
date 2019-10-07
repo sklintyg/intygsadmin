@@ -1,3 +1,3 @@
-import * as api from './real/appConfigApi'
+import * as util from './utils'
 
-export const fetchAppConfig = () => api.fetchAppConfig()
+export const fetchAppConfig = () => util.makeServerRequest('public-api/appconfig', { pathComplete: true })

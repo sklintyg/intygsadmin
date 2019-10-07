@@ -1,8 +1,6 @@
-import * as api from './real/bannerList.api'
+import * as utils from "./utils";
 
-export const fetchBannerList = (bannerListRequest) => {
-
-  let {pageIndex, sortColumn, sortDirection} = bannerListRequest
+export const fetchBannerList = ({pageIndex, sortColumn, sortDirection}) => {
 
   if(!pageIndex) {
     pageIndex = 0
@@ -16,5 +14,9 @@ export const fetchBannerList = (bannerListRequest) => {
     sortDirection = 'DESC'
   }
 
-  return api.fetchBannerList({...bannerListRequest, pageIndex, sortColumn, sortDirection})
+  return utils.makeServerRequest(utils.buildUrlFromParams('banner', {
+    page: pageIndex,
+    size: 10,
+    sort: `${sortColumn},${sortDirection}`
+  }));
 }
