@@ -114,6 +114,12 @@
         "title": "",
         "message": "Information om de senaste sökningar kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
       }
+    },
+    "usersList": {
+      "unknown": {
+        "title": "",
+        "message": "Översikten över administratörerna kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."
+      }
     }
   }
 }

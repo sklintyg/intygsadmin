@@ -1,4 +1,9 @@
 
+const role = {
+  BAS: 'Basbehörighet',
+  FULL: 'Fullständig behörighet'
+}
+
 const prio = {
   LAG: 'Låg',
   MEDEL: 'Medel',
@@ -17,6 +22,7 @@ const AppConstants = {
   POLL_SESSION_INTERVAL_MS: 30000,
   TIMEOUT_REDIRECT_URL: '/#/loggedout/LOGIN_FEL003',
   service,
-  prio
+  prio,
+  role
 }
 export default AppConstants

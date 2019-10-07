@@ -18,6 +18,7 @@ import TestLinks from './components/TestLinks/TestLinks'
 import SessionPoller from './components/sessionPoller'
 import {fetchAppConfig} from './store/actions/appConfig'
 import IntygInfoPage from "./pages/IntygInfoPage";
+import UsersPage from "./pages/UsersPage";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
             <SecuredRoute path="/banner" component={BannerPage} />
             <SecuredRoute path="/integratedUnits" component={IntegratedUnitsPage} />
             <SecuredRoute path="/intygInfo" component={IntygInfoPage} />
+            <SecuredRoute path="/administratorer" component={UsersPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>
