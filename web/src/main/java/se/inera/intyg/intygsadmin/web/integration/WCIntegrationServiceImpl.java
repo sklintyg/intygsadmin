@@ -27,7 +27,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
@@ -51,8 +53,14 @@ public class WCIntegrationServiceImpl implements WCIntegrationService {
     @Override
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
         String url = webcertUrl + "/internalapi/integratedUnits/" + hsaId;
-
-        return restTemplate.getForObject(url, IntegratedUnitDTO.class);
+        try {
+            return restTemplate.getForObject(url, IntegratedUnitDTO.class);
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
     @Override
@@ -70,8 +78,14 @@ public class WCIntegrationServiceImpl implements WCIntegrationService {
     @Override
     public WcIntygInfo getIntygInfo(String intygId) {
         String url = webcertUrl + "/internalapi/intygInfo/" + intygId;
-
-        return restTemplate.getForObject(url, WcIntygInfo.class);
+        try {
+            return restTemplate.getForObject(url, WcIntygInfo.class);
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                throw ex;
+            }
+            return null;
+        }
     }
 
 }

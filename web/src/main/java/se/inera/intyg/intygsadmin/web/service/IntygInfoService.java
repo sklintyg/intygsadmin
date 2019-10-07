@@ -95,7 +95,7 @@ public class IntygInfoService {
         try {
             itIntygInfoDTO = itIntegrationService.getIntygInfo(intygId);
         } catch (Exception e) {
-            LOG.debug("intyg '" + intygId + "' not found in it", e);
+            LOG.error("Error while querying IT for intyg '" + intygId + "'", e);
         }
 
         if (itIntygInfoDTO != null) {
@@ -108,7 +108,7 @@ public class IntygInfoService {
         try {
             wcIntygInfoDTO = wcIntegrationService.getIntygInfo(intygId);
         } catch (Exception e) {
-            LOG.debug("intyg '" + intygId + "' not found in wc", e);
+            LOG.error("Error while querying WC for intyg '" + intygId + "'", e);
         }
 
         if (wcIntygInfoDTO != null) {
