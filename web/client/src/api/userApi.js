@@ -1,10 +1,4 @@
-let api;
-
-if (process.env.NODE_ENV === 'production' || true) {
-  api = require('./real/userApi');
-} else {
-  api = require('./mock/userApi')
-}
+import * as api from './real/userApi'
 
 export const fetchAnvandare = () => api.fetchAnvandare();
 

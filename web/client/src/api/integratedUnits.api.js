@@ -1,4 +1,4 @@
-let api = require('./real/integratedUnits.api');
+import * as api from './real/integratedUnits.api'
 
 export const fetchIntegratedUnit = (hsaId) => api.fetchIntegratedUnit(hsaId);
 

@@ -1,4 +1,4 @@
-let api = require('./real/banner.api');
+import * as api from './real/banner.api'
 
 export const createBanner = (banner) => api.createBanner(banner);
 

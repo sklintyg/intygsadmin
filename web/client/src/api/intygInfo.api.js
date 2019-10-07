@@ -1,4 +1,4 @@
-let api = require('./real/intygInfo.api');
+import * as api from './real/intygInfo.api'
 
 export const fetchIntygInfo = (intygsId) => api.fetchIntygInfo(intygsId);
 
