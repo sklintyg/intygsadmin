@@ -21,8 +21,6 @@ package se.inera.intyg.intygsadmin.persistence.service;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import java.util.Optional;
-import java.util.UUID;
 import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,15 +45,8 @@ public class IntygInfoPersistenceService {
         return intygInfoRepository.findAll(predicate, pageable);
     }
 
-    public Optional<IntygInfoEntity> findOne(UUID id) {
-        return intygInfoRepository.findById(id);
-    }
-
     public IntygInfoEntity create(IntygInfoEntity intygInfoEntity) {
+        intygInfoEntity.setId(null);
         return intygInfoRepository.save(intygInfoEntity);
-    }
-
-    public void delete(UUID id) {
-        intygInfoRepository.deleteById(id);
     }
 }

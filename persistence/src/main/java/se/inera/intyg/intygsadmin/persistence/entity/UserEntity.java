@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.persistence.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,6 +31,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
@@ -44,7 +46,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type = "uuid-char")
     private UUID id;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
     private String employeeHsaId;
+    private String name;
     @Enumerated(EnumType.STRING)
     private IntygsadminRole intygsadminRole;
 }

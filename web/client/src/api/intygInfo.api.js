@@ -1,11 +1,8 @@
-let api = require('./real/intygInfo.api');
+import * as utils from './utils'
 
-export const fetchIntygInfo = (intygsId) => api.fetchIntygInfo(intygsId);
+export const fetchIntygInfo = (intygsId) => utils.makeServerRequest(`intygInfo/${intygsId}`)
 
-export const fetchIntygInfoList = (requestParams) => {
-
-  let {pageIndex, sortColumn, sortDirection} = requestParams
-
+export const fetchIntygInfoList = ({pageIndex, sortColumn, sortDirection}) => {
   if(!pageIndex) {
     pageIndex = 0
   }
@@ -18,5 +15,9 @@ export const fetchIntygInfoList = (requestParams) => {
     sortDirection = 'DESC'
   }
 
-  return api.fetchIntygInfoList({...requestParams, pageIndex, sortColumn, sortDirection})
+  return utils.makeServerRequest(utils.buildUrlFromParams('intygInfo', {
+    page: pageIndex,
+    size: 10,
+    sort: `${sortColumn},${sortDirection}`
+  }));
 }

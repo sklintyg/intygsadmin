@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components/macro'
-import { PageHeaderContainer } from '../styles/iaLayout'
+import {PageHeaderContainer} from '../styles/iaLayout'
 import iaColors from '../styles/iaColors'
-import { Navbar, Nav } from 'reactstrap'
+import {Nav, Navbar} from 'reactstrap'
 import MenuBarButton from './MenuBarButton'
-import { compose } from 'recompose'
-import { connect } from 'react-redux'
+import {compose} from 'recompose'
+import {connect} from 'react-redux'
 
 const Wrapper = styled.div`
   background-color: ${iaColors.IA_COLOR_04};
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   }
 `
 
-const MenuBar = ({ stat }) => {
+const MenuBar = ({ userRole }) => {
   const menu = [
     {
       id: 'intyginfo',
@@ -41,7 +41,7 @@ const MenuBar = ({ stat }) => {
       id: 'administratorer',
       to: '/administratorer',
       text: 'Administratörer',
-      enabled: false
+      enabled: userRole === 'FULL'
     },
     {
       id: 'integratedUnits',
@@ -66,9 +66,15 @@ const MenuBar = ({ stat }) => {
   )
 }
 
+const mapStateToProps = (state) => {
+  return {
+    ...state.user
+  }
+};
+
 export default compose(
   connect(
-    null,
+    mapStateToProps,
     null
   )
 )(MenuBar)

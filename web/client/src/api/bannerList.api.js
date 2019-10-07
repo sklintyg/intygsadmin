@@ -1,14 +1,6 @@
-let api;
+import * as utils from "./utils";
 
-if (process.env.NODE_ENV === 'production' || true) {
-  api = require('./real/bannerList.api')
-} else {
-  api = require('./mock/bannerList.api');
-}
-
-export const fetchBannerList = (bannerListRequest) => {
-
-  let {pageIndex, sortColumn, sortDirection} = bannerListRequest
+export const fetchBannerList = ({pageIndex, sortColumn, sortDirection}) => {
 
   if(!pageIndex) {
     pageIndex = 0
@@ -22,5 +14,9 @@ export const fetchBannerList = (bannerListRequest) => {
     sortDirection = 'DESC'
   }
 
-  return api.fetchBannerList({...bannerListRequest, pageIndex, sortColumn, sortDirection})
+  return utils.makeServerRequest(utils.buildUrlFromParams('banner', {
+    page: pageIndex,
+    size: 10,
+    sort: `${sortColumn},${sortDirection}`
+  }));
 }

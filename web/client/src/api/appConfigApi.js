@@ -1,9 +1,3 @@
-let api
+import * as util from './utils'
 
-if (process.env.NODE_ENV === 'production' || true) {
-  api = require('./real/appConfigApi')
-} else {
-  api = require('./mock/appConfigApi')
-}
-
-export const fetchAppConfig = () => api.fetchAppConfig()
+export const fetchAppConfig = () => util.makeServerRequest('public-api/appconfig', { pathComplete: true })

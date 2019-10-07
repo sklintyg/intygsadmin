@@ -24,7 +24,9 @@ import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,10 +37,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.util.StringUtils;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
+import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
@@ -48,8 +51,13 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
     private static final Logger LOG = LoggerFactory.getLogger(FakeAuthenticationFilter.class);
 
-    public FakeAuthenticationFilter() {
+    private UserPersistenceService userPersistenceService;
+
+    public FakeAuthenticationFilter(UserPersistenceService userPersistenceService) {
         super(FAKE_LOGIN_ENDPOINT);
+
+        this.userPersistenceService = userPersistenceService;
+
         LOG.error("---- FakeAuthentication enabled. DO NOT USE IN PRODUCTION!!! ----");
         setAuthenticationManager(new NoopAuthenticationManager());
     }
@@ -63,7 +71,7 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
         }
         String parameter = request.getParameter("userJsonDisplay");
         // we manually encode the json parameter
-        String json = URLDecoder.decode(parameter, "UTF-8");
+        String json = URLDecoder.decode(parameter, StandardCharsets.UTF_8);
 
         return performFakeAuthentication(json);
     }
@@ -78,13 +86,20 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
                 throw new BadCredentialsException("Failed authentication. No IntygsadminUser for employeeHsaId ");
             }
 
-            UserEntity userEntity = new UserEntity();
-            userEntity.setEmployeeHsaId(fakeUser.getEmployeeHsaId());
-            userEntity.setIntygsadminRole(IntygsadminRole.valueOf(fakeUser.getIntygsadminRole()));
+            UserEntity userEntity = userPersistenceService
+                .findByEmployeeHsaId(fakeUser.getEmployeeHsaId()).orElseThrow(
+                    () -> new BadCredentialsException(
+                        "Failed authentication. No IntygsadminUser for employeeHsaId " + fakeUser.getEmployeeHsaId()));
 
-            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null, fakeUser.getName());
+            //userEntity.setIntygsadminRole(IntygsadminRole.valueOf(fakeUser.getIntygsadminRole()));
+            //userEntity.setName(fakeUser.getName());
 
-            return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null);
+
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name()));
+
+            return new UsernamePasswordAuthenticationToken(user, null, authorities);
         } catch (final BadCredentialsException exception) {
             LOG.warn(exception.getMessage());
             throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL002, exception.getMessage(), UUID.randomUUID().toString());

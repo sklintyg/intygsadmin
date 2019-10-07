@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.auth;
 
 import java.io.Serializable;
+import java.util.UUID;
 import lombok.Getter;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -28,18 +29,20 @@ import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 @Getter
 public class IntygsadminUser implements Serializable {
 
+    private UUID id;
     private String employeeHsaId;
     private String name;
     private OAuth2AccessToken token;
     private IntygsadminRole intygsadminRole;
     private AuthenticationMethod authenticationMethod;
 
-    public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OAuth2AccessToken token, String name) {
+    public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OAuth2AccessToken token) {
+        this.id = userEntity.getId();
         this.employeeHsaId = userEntity.getEmployeeHsaId();
         this.intygsadminRole = userEntity.getIntygsadminRole();
         this.authenticationMethod = authenticationMethod;
         this.token = token;
-        this.name = name;
+        this.name = userEntity.getName();
     }
 
 }

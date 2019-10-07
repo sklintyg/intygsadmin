@@ -63,9 +63,9 @@ public class IntygInfoService {
     public Page<IntygInfoListDTO> getIntygInfoList(Pageable pageable) {
         Page<IntygInfoEntity> intygInfoEntities = intygInfoPersistenceService.findAll(pageable);
 
-        List<IntygInfoListDTO> mapBanners = intygInfoMapper.toListDTO(intygInfoEntities.getContent());
+        List<IntygInfoListDTO> mapIntygInfo = intygInfoMapper.toListDTO(intygInfoEntities.getContent());
 
-        return new PageImpl<>(mapBanners, pageable, intygInfoEntities.getTotalElements());
+        return new PageImpl<>(mapIntygInfo, pageable, intygInfoEntities.getTotalElements());
     }
 
     public Optional<IntygInfoDTO> getIntygInfo(String intygId) {

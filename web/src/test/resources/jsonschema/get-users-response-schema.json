@@ -1,0 +1,80 @@
+{
+  "type": "object",
+  "required": [
+    "content",
+    "empty",
+    "first",
+    "last",
+    "pageable",
+    "totalPages",
+    "number",
+    "numberOfElements",
+    "totalElements",
+    "sort",
+    "size"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "employeeHsaId",
+          "intygsadminRole"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "employeeHsaId": {
+            "type": "string"
+          },
+          "intygsadminRole": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "empty": {
+      "type": "boolean"
+    },
+    "first": {
+      "type": "boolean"
+    },
+    "last": {
+      "type": "boolean"
+    },
+    "totalElements": {
+      "type": "integer"
+    },
+    "number": {
+      "type": "integer"
+    },
+    "pageable": {
+      "type": "object"
+    },
+    "size": {
+      "type": "integer"
+    },
+    "sort": {
+      "type": "object"
+    },
+    "totalPages": {
+      "type": "integer"
+    },
+    "numberOfElements": {
+      "type": "integer"
+    }
+  }
+}

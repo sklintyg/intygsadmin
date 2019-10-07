@@ -13,10 +13,8 @@ import StatusText from "./StatusText";
 import AppConstants from "../../AppConstants";
 import {ClearIcon, Create} from '../styles/iaSvgIcons'
 import DisplayDateTime from '../displayDateTime/DisplayDateTime';
-
-const NoWrapTd = styled.td`
-  white-space: nowrap;
-`
+import {NoWrapTd} from "../styles/iaLayout";
+import DisplayDate from "../displayDateTime/DisplayDate";
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -155,7 +153,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
           { bannerList.content &&
             bannerList.content.map((banner) => (
               <tr key={banner.id}>
-                <NoWrapTd>{new Date(banner.createdAt).toLocaleDateString('sv-SE')}</NoWrapTd>
+                <NoWrapTd><DisplayDate date={banner.createdAt} /></NoWrapTd>
                 <td>{AppConstants.service[banner.application]}</td>
                 <td>
                   <DisplayDateTime date={banner.displayFrom} />

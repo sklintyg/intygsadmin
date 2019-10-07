@@ -1,4 +1,4 @@
-let versionInfo
+var versionInfo
 
 $(document).ready(function () {
     versionInfo = $("#versionInfo")

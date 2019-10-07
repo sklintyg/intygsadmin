@@ -104,28 +104,4 @@ När klienten är upplagd hos Inera IDP, så skall följande uppgifter konfigure
 För att en användare skall ges behörighet till tjänsten (via normal inloggning) krävs att användaren
 finns upplagd i databasen med sitt hsa-id samt en tillhörande roll (ADMIN/BASIC).
 
-Detta kan ske direkt via databasen, eller via de user-endpoints som erhålls via den inbyggda management-servern.
-
-Dessa endpoints är enbart åtkomliga via management-serverns port, och kan således inte nås via en extern route.
-
-I alla funktioner nedan skall värden angivna med `<nånting>` ersättas med specifikt värde.
-
-#### Lista användare
-    För att lista alla:
-    $ curl -X GET <host>:<management-port>/actuator/user
-    Exempelvis:
-    $ curl -X GET http://intygsadmin:8081/actuator/user
-    
-    För en enskild användare:
-    $ curl -X GET <host>:<management-port>/actuator/user/<user-hsa-id>
-
-
-#### Lägga till/uppdatera användare
-    $ curl -X POST \
-      <host>:<management-port>/actuator/user \
-      -H 'Content-Type: application/json' \
-      -d '{"employeeHsaId":"<hsa-id>","intygsadminRole":"<roll>"}'
-
-
-#### Ta bort användare
-    $ curl -X DELETE <host>:<management-port>/actuator/user/<user-hsa-id>
+Detta kan ske direkt via databasen, eller via guit i intygsadmin.

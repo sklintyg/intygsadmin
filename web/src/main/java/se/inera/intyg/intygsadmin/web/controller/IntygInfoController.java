@@ -46,9 +46,9 @@ public class IntygInfoController {
     public ResponseEntity<Page<IntygInfoListDTO>> listHistory(
         @PageableDefault(size = 20, sort = "createdAt")
             Pageable pageable) {
-        Page<IntygInfoListDTO> bannerDTOS = intygInfoService.getIntygInfoList(pageable);
+        Page<IntygInfoListDTO> intygInfoList = intygInfoService.getIntygInfoList(pageable);
 
-        return ResponseEntity.ok(bannerDTOS);
+        return ResponseEntity.ok(intygInfoList);
     }
 
     @GetMapping("/{intygId}")
@@ -63,5 +63,3 @@ public class IntygInfoController {
     }
 
 }
-
-    

@@ -1,9 +1,5 @@
-import {
-  GET_USER,
-  GET_USER_FAILURE,
-  GET_USER_SUCCESS,
-} from "../actions/user";
-import { buildClientError } from "./util";
+import {GET_USER, GET_USER_FAILURE, GET_USER_SUCCESS,} from "../actions/user";
+import {buildClientError} from "./util";
 
 const INITIAL_STATE = {
   isLoading: true,
@@ -21,6 +17,7 @@ export default (state = INITIAL_STATE, action) => {
       isLoading: false,
       isAuthenticated: true,
       activeError: null,
+      hsaId: action.payload.employeeHsaId,
       name: action.payload.name,
       userRole: action.payload.intygsadminRole ? action.payload.intygsadminRole : '',
       authoritiesTree: action.payload.authoritiesTree,
@@ -37,3 +34,5 @@ export default (state = INITIAL_STATE, action) => {
     return state;
   }
 }
+
+export const getUserHsaId = (state) => state.user.hsaId

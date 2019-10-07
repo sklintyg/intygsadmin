@@ -1,11 +1,5 @@
-let api;
+import * as util from './utils'
 
-if (process.env.NODE_ENV === 'production' || true) {
-  api = require('./real/userApi');
-} else {
-  api = require('./mock/userApi')
-}
+export const fetchAnvandare = () => util.makeServerRequest('anvandare')
 
-export const fetchAnvandare = () => api.fetchAnvandare();
-
-export const pollSession = () => api.pollSession();
+export const pollSession = () => util.makeServerRequest('public-api/session-stat/ping', { pathComplete: true })

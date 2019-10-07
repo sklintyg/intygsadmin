@@ -1,7 +1,7 @@
 import React, {createRef, useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {compose} from 'recompose'
-import {Button, Form, Input, UncontrolledTooltip} from 'reactstrap'
+import {Button, Form, UncontrolledTooltip} from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
 import IntegratedUnitSearchResult, {IntegratedUnitSearchResultId} from './IntegratedUnitSearchResult.dialog'
 import {IaTypo03} from "../styles/iaTypography"
@@ -11,6 +11,7 @@ import {getErrorMessage, getIntegratedUnit, getIsFetching} from "../../store/red
 import colors from "../styles/iaColors";
 import LoadingSpinner from "../loadingSpinner";
 import {COULD_NOT_FIND_UNIT, validateIntegratedUnit} from "./IntegratedUnitsValidator";
+import HsaInput from "../styles/HsaInput";
 
 const SpinnerWrapper = styled.div`
   position: relative;
@@ -52,10 +53,6 @@ const Container = styled.div`
     }
   }
 `
-
-const searchInput = {
-  width: '250px'
-}
 
 const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit, isFetching, errorMessage }) => {
   const [searchString, setSearchString] = useState('')
@@ -112,15 +109,7 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
         <Form onSubmit={(event) => searchIntegratedUnit(event, searchString)}>
           <FlexDiv>
             <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
-              <Input
-                id={'searchInput'}
-                placeholder='SE1234567890-1X23'
-                value={searchString}
-                onChange={(e) => setSearchString(e.target.value)}
-                innerRef={inputRef}
-                style={searchInput}
-                maxLength="40"
-              />
+              <HsaInput id='searchInput' value={searchString} inputRef={inputRef} onChange={setSearchString} />
             </Container>
             <Button id={'searchBtn'} color={'success'}>
               Sök enhet
