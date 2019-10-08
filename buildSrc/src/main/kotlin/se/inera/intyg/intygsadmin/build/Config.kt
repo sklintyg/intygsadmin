@@ -11,7 +11,7 @@ object Config {
   object Dependencies {
 
     //Project dependencies
-    const val intygPluginVersion = "3.0.6"
+    const val intygPluginVersion = "3.0.8"
 
     //External dependencies
     const val nodePluginVersion = "1.3.1"
