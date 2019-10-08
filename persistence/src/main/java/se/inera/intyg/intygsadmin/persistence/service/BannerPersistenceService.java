@@ -19,8 +19,6 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +30,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
+import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 
 @Service
 @Transactional
@@ -44,10 +43,7 @@ public class BannerPersistenceService {
     }
 
     public Page<BannerEntity> findAll(Pageable pageable) {
-        BooleanBuilder builder = new BooleanBuilder();
-        Predicate predicate = builder.getValue();
-
-        return bannerRepository.findAll(predicate, pageable);
+        return bannerRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
     }
 
     public List<BannerEntity> findActiveAndFuture(LocalDateTime from, Application application) {

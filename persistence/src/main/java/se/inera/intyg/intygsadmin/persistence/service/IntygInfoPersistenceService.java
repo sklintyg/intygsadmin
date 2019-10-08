@@ -19,14 +19,13 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.IntygInfoRepository;
+import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 
 @Service
 @Transactional
@@ -39,10 +38,7 @@ public class IntygInfoPersistenceService {
     }
 
     public Page<IntygInfoEntity> findAll(Pageable pageable) {
-        BooleanBuilder builder = new BooleanBuilder();
-        Predicate predicate = builder.getValue();
-
-        return intygInfoRepository.findAll(predicate, pageable);
+        return intygInfoRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
     }
 
     public IntygInfoEntity create(IntygInfoEntity intygInfoEntity) {
