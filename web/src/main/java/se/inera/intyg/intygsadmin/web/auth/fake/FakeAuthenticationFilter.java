@@ -25,41 +25,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.util.StringUtils;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
-import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
+import se.inera.intyg.intygsadmin.web.auth.filter.BaseAuthenticationFilter;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
-public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class FakeAuthenticationFilter extends BaseAuthenticationFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(FakeAuthenticationFilter.class);
 
-    private UserPersistenceService userPersistenceService;
-
     public FakeAuthenticationFilter(UserPersistenceService userPersistenceService) {
-        super(FAKE_LOGIN_ENDPOINT);
-
-        this.userPersistenceService = userPersistenceService;
+        super(FAKE_LOGIN_ENDPOINT, userPersistenceService);
 
         LOG.error("---- FakeAuthentication enabled. DO NOT USE IN PRODUCTION!!! ----");
-        setAuthenticationManager(new NoopAuthenticationManager());
     }
 
     @Override
@@ -86,20 +74,7 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
                 throw new BadCredentialsException("Failed authentication. No IntygsadminUser for employeeHsaId ");
             }
 
-            UserEntity userEntity = userPersistenceService
-                .findByEmployeeHsaId(fakeUser.getEmployeeHsaId()).orElseThrow(
-                    () -> new BadCredentialsException(
-                        "Failed authentication. No IntygsadminUser for employeeHsaId " + fakeUser.getEmployeeHsaId()));
-
-            //userEntity.setIntygsadminRole(IntygsadminRole.valueOf(fakeUser.getIntygsadminRole()));
-            //userEntity.setName(fakeUser.getName());
-
-            final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, null);
-
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name()));
-
-            return new UsernamePasswordAuthenticationToken(user, null, authorities);
+            return createAuthentication(fakeUser.getEmployeeHsaId(), AuthenticationMethod.FAKE, null);
         } catch (final BadCredentialsException exception) {
             LOG.warn(exception.getMessage());
             throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL002, exception.getMessage(), UUID.randomUUID().toString());
@@ -109,14 +84,4 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
             throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL001, message, UUID.randomUUID().toString());
         }
     }
-
-    private static class NoopAuthenticationManager implements AuthenticationManager {
-
-        @Override
-        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-            throw new UnsupportedOperationException("No authentication should be done with this AuthenticationManager");
-        }
-
-    }
-
 }
