@@ -1,6 +1,8 @@
 #!groovy
 
 node {
+    env.JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+
     def buildVersion = "1.1.0.${BUILD_NUMBER}-nightly"
     def infraVersion = "3.11.0.+"
 
@@ -12,10 +14,6 @@ node {
     }
 
     stage('owasp') {
-        environment {
-            JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
-        }
-
         try {
             shgradle11 "--refresh-dependencies clean dependencyCheckAggregate ${versionFlags}"
         } finally {
@@ -25,10 +23,6 @@ node {
     }
 
     stage('sonarqube') {
-        environment {
-            JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
-        }
-
         shgradle11 "sonarqube ${versionFlags}"
     }
 }
