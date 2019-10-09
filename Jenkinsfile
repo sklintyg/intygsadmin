@@ -3,14 +3,20 @@
 node {
     env.JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
 
-    def buildVersion = "1.1.0.${BUILD_NUMBER}-nightly"
-    def infraVersion = "3.11.0.+"
-
-    def versionFlags = "-DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
+    def buildVersion = ""
+    def infraVersion = "N/A"
+    def versionFlags = ""
 
     stage('checkout') {
         git url: "https://github.com/sklintyg/intygsadmin.git", branch: GIT_BRANCH
         util.run { checkout scm }
+
+        def info = readJSON file: 'build-info.json'
+        echo "${info}"
+        buildVersion = "${info.appVersion}.${BUILD_NUMBER}-nightly"
+        infraVersion = info.infraVersion
+
+        versionFlags = "-DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
     }
 
     stage('owasp') {
@@ -23,6 +29,11 @@ node {
     }
 
     stage('sonarqube') {
-        shgradle11 "sonarqube ${versionFlags}"
+        try {
+            shgradle11 "build -P codeQuality jacocoTestReport sonarqube ${versionFlags}"
+        } finally {
+            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'web/build/reports/jacoco/test/html', \
+            reportFiles: 'index.html', reportName: 'Code coverage'
+        }
     }
 }
