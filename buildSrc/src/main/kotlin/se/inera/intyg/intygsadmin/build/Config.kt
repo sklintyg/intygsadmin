@@ -11,7 +11,7 @@ object Config {
   object Dependencies {
 
     //Project dependencies
-    const val intygPluginVersion = "3.0.6"
+    const val intygPluginVersion = "3.0.8"
 
     //External dependencies
     const val nodePluginVersion = "1.3.1"
@@ -19,7 +19,7 @@ object Config {
     const val npmVersion = "6.10.3"
 
     const val kotlinVersion = "1.3.31"
-    const val springBootVersion = "2.1.7.RELEASE"
+    const val springBootVersion = "2.1.9.RELEASE"
     const val springDependencyManagementVersion = "1.0.8.RELEASE"
     const val springSecurityOauth2Version = "2.3.6.RELEASE"
 

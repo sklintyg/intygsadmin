@@ -1,7 +1,9 @@
 #!groovy
 
 node {
-    def buildVersion = "1.1.0.${BUILD_NUMBER}"
+    env.JAVA_TOOL_OPTIONS = '-Dfile.encoding=UTF-8'
+
+    def buildVersion = "1.1.0.${BUILD_NUMBER}-nightly"
     def infraVersion = "3.11.0.+"
 
     def versionFlags = "-DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
@@ -11,31 +13,16 @@ node {
         util.run { checkout scm }
     }
 
-    stage('build') {
+    stage('owasp') {
         try {
-            shgradle11 "--refresh-dependencies clean build -P client -P codeQuality testReport jacocoTestReport ${versionFlags}"
+            shgradle11 "--refresh-dependencies clean dependencyCheckAggregate ${versionFlags}"
         } finally {
-            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
-                    reportFiles: 'index.html', reportName: 'JUnit results'
+            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports', \
+            reportFiles: 'dependency-check-report.html', reportName: 'OWASP dependency-check'
         }
     }
 
-    stage('tag and upload') {
-        shgradle11 "publish tagRelease ${versionFlags}"
-    }
-
-    stage('propagate') {
-        gitRef = "v${buildVersion}"
-        releaseFlag = "${GIT_BRANCH.startsWith("release")}"
-        build job: "intygsadmin-dintyg-build", wait: false, parameters: [
-                [$class: 'StringParameterValue', name: 'BUILD_VERSION', value: buildVersion],
-                [$class: 'StringParameterValue', name: 'INFRA_VERSION', value: infraVersion],
-                [$class: 'StringParameterValue', name: 'GIT_REF', value: gitRef],
-                [$class: 'StringParameterValue', name: 'RELEASE_FLAG', value: releaseFlag]
-        ]
-    }
-
-    stage('notify') {
-        util.notifySuccess()
+    stage('sonarqube') {
+        shgradle11 "sonarqube ${versionFlags}"
     }
 }

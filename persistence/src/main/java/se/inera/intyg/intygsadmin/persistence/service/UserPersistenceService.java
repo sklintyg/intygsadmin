@@ -19,8 +19,6 @@
 
 package se.inera.intyg.intygsadmin.persistence.service;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import java.util.Optional;
 import java.util.UUID;
 import javax.transaction.Transactional;
@@ -29,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
+import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 
 @Service
 @Transactional
@@ -69,10 +68,7 @@ public class UserPersistenceService {
     }
 
     public Page<UserEntity> findAll(Pageable pageable) {
-        BooleanBuilder builder = new BooleanBuilder();
-        Predicate predicate = builder.getValue();
-
-        return userRepository.findAll(predicate, pageable);
+        return userRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
     }
 
 }
