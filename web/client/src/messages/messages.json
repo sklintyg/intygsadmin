@@ -6,6 +6,23 @@
       "AVVISADE": "avvisade"
     }
   },
+  "user": {
+    "create": {
+      "title": "Lägg till administratör",
+      "name": "Ange administratörens namn",
+      "hsaId": "Ange administratörens HSA-ID",
+      "role": "Välj behörighetsnivå",
+      "save": "Lägg till"
+    },
+    "update": {
+      "title": "Ändra administratörsuppgifter",
+      "name": "Administratörens namn",
+      "hsaId": "Administratörens HSA-ID",
+      "role": "Behörighetsnivå",
+      "save": "Ändra"
+    }
+  },
+
   "intygInfo": {
     "intygsId": {
       "wrongformat": "Ange ett giltigt intygs-ID."
