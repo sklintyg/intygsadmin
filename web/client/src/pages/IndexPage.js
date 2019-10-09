@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { IaTypo01, IaTypo05 } from '../components/styles/iaTypography'
-import { FlexColumnContainer, CustomScrollingContainer, Section, PageContainer } from '../components/styles/iaLayout'
-import IaAlert, { alertType } from '../components/alert/Alert'
+import {IaTypo01, IaTypo05} from '../components/styles/iaTypography'
+import {CustomScrollingContainer, FlexColumnContainer, PageContainer, Section} from '../components/styles/iaLayout'
+import IaAlert, {alertType} from '../components/alert/Alert'
 import LoginOptions from '../components/loginOptions'
 
 const CustomPageContainer = styled(PageContainer)`
@@ -50,8 +50,7 @@ const HomePage = ({ match }) => {
             )}
 
             <IaTypo05 as="p">
-              I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster skapa och hantera driftbanners som informerar
-              Intygstjänsters användare om kommande eller pågående händelser.
+              I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster utföra administrativa uppgifter som rör de olika systemen som hanterar intyg.
             </IaTypo05>
 
             <Section />

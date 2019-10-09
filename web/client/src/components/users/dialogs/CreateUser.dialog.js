@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
 import {compose} from 'recompose'
@@ -13,6 +13,7 @@ import {RadioWrapper} from "../../radioButton";
 import AppConstants from "../../../AppConstants";
 import HsaInput from "../../styles/HsaInput";
 import {getErrorMessageModal} from "../../../store/reducers/users";
+import {getMessage} from "../../../messages/messages";
 
 const StyledBody = styled(ModalBody)`
   
@@ -52,21 +53,19 @@ const initialUser = {
 
 const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, data, errorMessage, clearError }) => {
   const [update, setUpdate] = useState(false)
+  const [messagePrefix, setMessagePrefix] = useState('user.create')
   const [newUser, setNewUser] = useState(initialUser)
 
   useEffect(() => {
     if (data && data.user) {
+      setMessagePrefix('user.update')
       setUpdate(true)
       setNewUser({...data.user})
     } else {
+      setMessagePrefix('user.create')
       setUpdate(false)
     }
   }, [data])
-
-  const previousBanner = useRef()
-  useEffect(() => {
-    previousBanner.current = newUser
-  })
 
   const onChange = (prop) => (value) => {
     setNewUser({ ...newUser, [prop]: value })
@@ -120,24 +119,25 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
 
   return (
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-        <ModalHeader toggle={cancel}>{update ? 'Ändra administratörsuppgifter' : 'Lägg till administratör'}</ModalHeader>
+        <ModalHeader toggle={cancel}> {getMessage(`${messagePrefix}.title`)}</ModalHeader>
         <StyledBody>
           <FormGroup>
-            <Label for='userName'><IaTypo04>Administratörens namn</IaTypo04></Label>
+            <Label for='userName'><IaTypo04>{getMessage(`${messagePrefix}.name`)}</IaTypo04></Label>
             <Input
               id='userName'
               value={newUser.name}
+              size={200}
               onChange={(e) => onChange('name')(e.target.value)}
             />
           </FormGroup>
 
           <FormGroup>
-            <Label for='userHsaId'><IaTypo04>Administratörens HSA-ID</IaTypo04></Label>
+            <Label for='userHsaId'><IaTypo04>{getMessage(`${messagePrefix}.hsaId`)}</IaTypo04></Label>
             <HsaInput id='userHsaId' value={newUser.employeeHsaId} onChange={onChange('employeeHsaId')} />
           </FormGroup>
 
           <FormGroup>
-            <HelpChevron label='Behörighetsnivå'>
+            <HelpChevron label={getMessage(`${messagePrefix}.role`)}>
               <p>Administratörer med basbehörighet kan inte lägga till och hantera administratörer.</p>
               <p>Administratörer med fullständig behörighet kan lägga till och hantera administratörer.</p>
             </HelpChevron>
@@ -165,7 +165,7 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
             onClick={() => {
               send()
             }}>
-            {update ? 'Ändra' : 'Lägg till'}
+            {getMessage(`${messagePrefix}.save`)}
           </Button>
           <Button
             id="closeModal"
