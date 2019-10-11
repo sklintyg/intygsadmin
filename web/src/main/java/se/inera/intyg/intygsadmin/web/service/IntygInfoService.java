@@ -82,7 +82,7 @@ public class IntygInfoService {
             return Optional.empty();
         }
 
-        storeLog(intygId);
+        storeLog(intygId, info.getCareUnitHsaId(), info.getCareGiverHsaId());
 
         events.sort(Comparator.comparing(IntygInfoEvent::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
         info.setEvents(events);
@@ -117,11 +117,13 @@ public class IntygInfoService {
         }
     }
 
-    private void storeLog(String intygId) {
+    private void storeLog(String intygId, String enhetsId, String vardgivarId) {
         IntygInfoEntity intygInfoEntity = new IntygInfoEntity();
         intygInfoEntity.setIntygId(intygId);
         intygInfoEntity.setEmployeeHsaId(userService.getActiveUser().getEmployeeHsaId());
         intygInfoEntity.setEmployeeName(userService.getActiveUser().getName());
+        intygInfoEntity.setEnhetsId(enhetsId);
+        intygInfoEntity.setVardgivarId(vardgivarId);
 
         intygInfoPersistenceService.create(intygInfoEntity);
     }

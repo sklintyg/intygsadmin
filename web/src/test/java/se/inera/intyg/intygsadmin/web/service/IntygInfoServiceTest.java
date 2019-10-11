@@ -44,6 +44,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import se.inera.intyg.infra.intyginfo.dto.IntygInfo;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
@@ -125,7 +126,7 @@ public class IntygInfoServiceTest {
         assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
         assertFalse(intygInfo.isCreatedInWC());
 
-        verify(intygInfoPersistenceService, times(1)).create(any());
+        verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(itIntygInfo));
     }
 
     @Test
@@ -154,7 +155,7 @@ public class IntygInfoServiceTest {
         assertEquals(Source.WEBCERT, intygInfo.getEvents().get(0).getSource());
         assertTrue(intygInfo.isCreatedInWC());
 
-        verify(intygInfoPersistenceService, times(1)).create(any());
+        verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(wcIntygInfo));
     }
 
     @Test
@@ -189,7 +190,7 @@ public class IntygInfoServiceTest {
         assertEquals(Source.WEBCERT, intygInfo.getEvents().get(1).getSource());
         assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
 
-        verify(intygInfoPersistenceService, times(1)).create(any());
+        verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(wcIntygInfo));
     }
 
     @Test
@@ -235,5 +236,16 @@ public class IntygInfoServiceTest {
 
         IntygsadminUser user = new IntygsadminUser(userEntity, null, null);
         when(userService.getActiveUser()).thenReturn(user);
+    }
+
+    private IntygInfoEntity createIntyInfo(IntygInfo intygInfo) {
+        IntygInfoEntity intygInfoEntity = new IntygInfoEntity();
+        intygInfoEntity.setIntygId(intygInfo.getIntygId());
+        intygInfoEntity.setEmployeeHsaId(userService.getActiveUser().getEmployeeHsaId());
+        intygInfoEntity.setEmployeeName(userService.getActiveUser().getName());
+        intygInfoEntity.setEnhetsId(intygInfo.getCareUnitHsaId());
+        intygInfoEntity.setVardgivarId(intygInfo.getCareGiverHsaId());
+
+        return  intygInfoEntity;
     }
 }

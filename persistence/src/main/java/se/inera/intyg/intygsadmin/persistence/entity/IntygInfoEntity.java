@@ -49,4 +49,6 @@ public class IntygInfoEntity {
     private String intygId;
     private String employeeHsaId;
     private String employeeName;
+    private String vardgivarId;
+    private String enhetsId;
 }
