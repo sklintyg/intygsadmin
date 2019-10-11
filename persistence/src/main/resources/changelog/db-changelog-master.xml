@@ -130,4 +130,17 @@
 
   </changeSet>
 
+  <changeSet id="7" author="martin hesslund">
+
+    <addColumn tableName="intyg_info">
+      <column name="vardgivar_id" type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="enhets_id" type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+    </addColumn>
+
+  </changeSet>
+
 </databaseChangeLog>
