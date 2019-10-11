@@ -17,7 +17,7 @@ const UsersActionBar = ({ openModal }) => {
       <Button id="addUserBtn" onClick={addUser} color={'success'}>
         <AddIcon color={IaColors.IA_COLOR_00} /> Lägg till administratör
       </Button>
-      <UncontrolledTooltip placement="auto" target="addUserBtn">
+      <UncontrolledTooltip trigger='hover' placement="auto" target="addUserBtn">
         Öppnar ett dialogfönster där du kan lägga till en ny administratör.
       </UncontrolledTooltip>
     </>

@@ -112,7 +112,7 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
           <Button id={'searchBtn'} color={'success'}>
             Sök intyg
           </Button>
-          <UncontrolledTooltip placement='auto' target='searchBtn' >
+          <UncontrolledTooltip trigger='hover' placement='auto' target='searchBtn' >
             Öppnar ett modalfönster med information om intyget.
           </UncontrolledTooltip>
         </FlexDiv>

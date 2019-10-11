@@ -168,7 +168,7 @@ const IntygEventRow = ({event, fetchIntygInfo}) => {
     return (
       <>
         <Button onClick={openIntyg} size="sm" id={btnId} color="default">Visa intyget</Button>
-        <UncontrolledTooltip placement="auto" target={`${btnId}`}>
+        <UncontrolledTooltip trigger='hover' placement="auto" target={`${btnId}`}>
           Intyg-id: {event.data.intygsId}
         </UncontrolledTooltip>
       </>

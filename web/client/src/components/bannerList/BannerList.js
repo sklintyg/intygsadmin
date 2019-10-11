@@ -174,7 +174,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                     color="primary">
                     <Create /> Ändra
                   </Button>
-                  <UncontrolledTooltip placement="top" target={`changeBtn${banner.id}`}>
+                  <UncontrolledTooltip trigger='hover' placement="top" target={`changeBtn${banner.id}`}>
                     Öppnar ett dialogfönster där du kan ändra driftbannerns innehåll.
                   </UncontrolledTooltip>
                 </td>
@@ -189,7 +189,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                     color="default">
                     <ClearIcon /> Avsluta
                   </Button>
-                  <UncontrolledTooltip placement="top" target={`endBtn${banner.id}`}>
+                  <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${banner.id}`}>
                     Öppnar ett dialogfönster där du kan avsluta driftbannern.
                   </UncontrolledTooltip>
                 </td>

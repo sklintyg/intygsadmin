@@ -19,6 +19,10 @@ const ResultLine = styled.div`
   padding: 20px 0 10px 0;
 `
 
+const ButtonWrapper = styled.div`
+  display: inline-block;
+`
+
 const Wrapper = styled.div`
   & th:last-child {
     width: 1%;
@@ -29,15 +33,43 @@ const DisabledButton = styled(Button)`
   pointer-events: none;
 `
 
+const DisabledChange = ({user}) => (
+  <ButtonWrapper id={`changeBtnDiv${user.id}`}>
+    <DisabledButton className='change-btn' id={`changeBtn${user.id}`} disabled={true} color="primary">
+      <Create /> Ändra
+    </DisabledButton>
+    <UncontrolledTooltip trigger='hover' placement="top" target={`changeBtnDiv${user.id}`}>
+      Du kan inte redigera ditt eget användarkonto.
+    </UncontrolledTooltip>
+  </ButtonWrapper>
+)
+
+const ActiveChange = ({user, openChangeModal}) => (
+  <ButtonWrapper id={`changeBtnDiv${user.id}`}>
+    <Button
+      className='change-btn'
+      id={`changeBtn${user.id}`}
+      onClick={() => {
+        openChangeModal(user)
+      }}
+      color="primary">
+      <Create /> Ändra
+    </Button>
+    <UncontrolledTooltip trigger='hover' placement="top" target={`changeBtnDiv${user.id}`}>
+      Öppnar ett dialogfönster där du kan ändra en administratörs behörighet.
+    </UncontrolledTooltip>
+  </ButtonWrapper>
+)
+
 const DisabledTaBort = ({user}) => (
-  <div id={`endBtnDiv${user.id}`}>
+  <ButtonWrapper id={`endBtnDiv${user.id}`}>
     <DisabledButton className='end-btn' id={`endBtn${user.id}`} disabled={true} color="default">
       <ClearIcon /> Ta bort
     </DisabledButton>
-    <UncontrolledTooltip placement="top" target={`endBtnDiv${user.id}`}>
-      Det måste finnas minst en administratör med fullständig behörighet.
+    <UncontrolledTooltip trigger='hover' placement="top" target={`endBtnDiv${user.id}`}>
+      Du kan inte ta bort ditt eget användarkonto.
     </UncontrolledTooltip>
-  </div>
+  </ButtonWrapper>
 )
 
 const ActiveTaBort = ({user, openRemoveModal}) => (
@@ -47,7 +79,7 @@ const ActiveTaBort = ({user, openRemoveModal}) => (
     }} color="default">
       <ClearIcon /> Ta bort
     </Button>
-    <UncontrolledTooltip placement="top" target={`endBtn${user.id}`}>
+    <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${user.id}`}>
       Öppnar ett dialogfönster där du bekräftar att du vill ta bort vald administratör.
     </UncontrolledTooltip>
   </>
@@ -146,21 +178,9 @@ const UsersList = ({ usersList, errorMessage, openModal, currentUserHsaId, ...ot
             <td className="user-name">{user.name}</td>
             <td>{user.employeeHsaId}</td>
             <td>
-              <Button
-                className='change-btn'
-                id={`changeBtn${user.id}`}
-                disabled={currentUserHsaId === user.employeeHsaId}
-                onClick={() => {
-                  openChangeModal(user)
-                }}
-                color="primary">
-                <Create /> Ändra
-              </Button>
               {
-                currentUserHsaId !== user.employeeHsaId ?
-                <UncontrolledTooltip placement="top" target={`changeBtn${user.id}`}>
-                  Öppnar ett dialogfönster där du kan ändra en administratörs behörighet.
-                </UncontrolledTooltip> : ''
+                currentUserHsaId === user.employeeHsaId ?
+                  <DisabledChange user={user} /> : <ActiveChange user={user} openChangeModal={openChangeModal} />
               }
             </td>
             <td>

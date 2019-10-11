@@ -27,7 +27,7 @@ const TableSortHead = ({ id, currentSortColumn, currentSortDirection, text, sort
     textElm = (
       <>
         <span id={elmId}>{text}</span>
-        <UncontrolledTooltip placement="top" target={elmId}>
+        <UncontrolledTooltip trigger='hover' placement="top" target={elmId}>
           {tooltip}
         </UncontrolledTooltip>
       </>
