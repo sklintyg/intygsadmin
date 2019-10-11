@@ -5,11 +5,11 @@ const searchInput = {
   width: '250px'
 }
 
-const HsaInput = ({id, value, inputRef, onChange}) => {
+const HsaInput = ({id, value, inputRef, onChange, placeholder = 'SE1234567890-1X23'}) => {
   return (
     <Input
       id={id}
-      placeholder='SE1234567890-1X23'
+      placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       innerRef={inputRef}

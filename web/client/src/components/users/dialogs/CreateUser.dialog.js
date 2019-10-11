@@ -126,14 +126,14 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
             <Input
               id='userName'
               value={newUser.name}
-              size={200}
+              maxLength={200}
               onChange={(e) => onChange('name')(e.target.value)}
             />
           </FormGroup>
 
           <FormGroup>
             <Label for='userHsaId'><IaTypo04>{getMessage(`${messagePrefix}.hsaId`)}</IaTypo04></Label>
-            <HsaInput id='userHsaId' value={newUser.employeeHsaId} onChange={onChange('employeeHsaId')} />
+            <HsaInput id='userHsaId' placeholder='Tex 123456789012-1234' value={newUser.employeeHsaId} onChange={onChange('employeeHsaId')} />
           </FormGroup>
 
           <FormGroup>

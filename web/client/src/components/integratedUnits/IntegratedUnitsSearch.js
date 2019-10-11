@@ -114,7 +114,7 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
             <Button id={'searchBtn'} color={'success'}>
               Sök enhet
             </Button>
-            <UncontrolledTooltip placement='auto' target='searchBtn'>
+            <UncontrolledTooltip trigger='hover' placement='auto' target='searchBtn'>
               Öppnar ett modalfönster med information om enheten.
             </UncontrolledTooltip>
           </FlexDiv>
