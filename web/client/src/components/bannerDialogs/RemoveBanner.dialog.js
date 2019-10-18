@@ -30,7 +30,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={handleClose}>
         <ModalHeader toggle={handleClose}>Avsluta driftbanner</ModalHeader>
         <ModalBody>
-          <div>{text}</div>
+          <div dangerouslySetInnerHTML={{ __html: text }}/>
         </ModalBody>
         <ErrorSection>
           {errorActive && (
