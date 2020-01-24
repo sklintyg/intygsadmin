@@ -31,4 +31,6 @@ public interface MonitoringLogService {
     void logUserLogout(String userId, AuthenticationMethod authMethod);
 
     void logUserSessionExpired(String userId, AuthenticationMethod authMethod);
+
+    void logFailedLogin(String exceptionMessage);
 }

@@ -45,6 +45,11 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userId, authMethod);
     }
 
+    @Override
+    public void logFailedLogin(String exceptionMessage) {
+        logEvent(MonitoringEvent.USER_LOGIN_FAIL, exceptionMessage);
+    }
+
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
         LOG.info(buildMessage(logEvent), logMsgArgs);
     }
@@ -58,7 +63,9 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     private enum MonitoringEvent {
         USER_LOGIN("Login user '{}' using scheme '{}'"),
         USER_LOGOUT("Logout user '{}' using scheme '{}'"),
-        USER_SESSION_EXPIRY("Session expired for user '{}' using scheme '{}'");
+        USER_SESSION_EXPIRY("Session expired for user '{}' using scheme '{}'"),
+
+        USER_LOGIN_FAIL("Login failed with message '{}'");
 
         private final String message;
 
