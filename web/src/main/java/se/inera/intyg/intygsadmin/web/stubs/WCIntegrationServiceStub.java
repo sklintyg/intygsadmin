@@ -115,6 +115,7 @@ public class WCIntegrationServiceStub implements WCIntegrationService {
         intygInfo.setCareUnitHsaId("ve1-id");
         intygInfo.setSignedByName("name");
         intygInfo.setSignedByHsaId("hsaId");
+        intygInfo.setTestCertificate(false);
 
         if (!Objects.isNull(intygId2)) {
             intygInfo.getEvents().add(createEvent(date, IntygInfoEventType.IS019, "intygsId", intygId2));

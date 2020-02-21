@@ -69,6 +69,7 @@ public class ITIntegrationStub implements ITIntegrationService {
         intygInfo.setCareUnitHsaId("ve1-id");
         intygInfo.setSignedByName("name");
         intygInfo.setSignedByHsaId("hsaId");
+        intygInfo.setTestCertificate(false);
 
         intygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, date.plusMinutes(1), IntygInfoEventType.IS005));
 

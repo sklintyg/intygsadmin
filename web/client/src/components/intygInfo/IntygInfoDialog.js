@@ -18,7 +18,7 @@ const BodyHeight = styled(ModalBody)`
 
 const RowWrapper = styled.div`
   margin-bottom: 30px;
-  
+
   tr:first-of-type > td {
     border-top: 1px solid #dee2e6
   }
@@ -270,6 +270,11 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
             <tr>
               <TableTH>Utfärdande system</TableTH>
               <TableTD>{intygInfo.createdInWC ? 'Webcert' : 'Annat än Webcert'}</TableTD>
+              <TableTD />
+            </tr>
+            <tr>
+              <TableTH>Valideringsperson</TableTH>
+              <TableTD>{intygInfo.testCertificate ? 'Ja' : 'Nej'}</TableTD>
               <TableTD />
             </tr>
             </tbody>

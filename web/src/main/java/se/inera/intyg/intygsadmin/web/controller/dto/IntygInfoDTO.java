@@ -65,5 +65,7 @@ public class IntygInfoDTO {
     private int administrativaFragorReceived;
     private int administrativaFragorReceivedAnswered;
 
+    private boolean testCertificate;
+
     private List<IntygInfoEvent> events;
 }
