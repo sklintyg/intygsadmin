@@ -74,6 +74,9 @@
     "kompletteringarAnswered": {
       "type": "number"
     },
+    "testCertificate": {
+      "type": "boolean"
+    },
     "events":  {
       "type": "array",
       "items": {
