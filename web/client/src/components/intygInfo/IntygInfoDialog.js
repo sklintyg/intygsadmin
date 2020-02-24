@@ -193,6 +193,13 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
 
   const {intygInfo} = data
 
+  function displayEvent(event) {
+    if (event.type == 'IS005') {
+      return !intygInfo.testCertificate;
+    }
+    return true;
+  }
+
   return (
     <Modal id={'intygInfoDialogId'} isOpen={isOpen} size={'xl'} backdrop={true} toggle={handleClose}>
       <ModalHeader toggle={handleClose}>Intygsinformation för ID: {intygInfo.intygId}</ModalHeader>
@@ -230,7 +237,8 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
             <tbody>
             {
               intygInfo.events &&
-              intygInfo.events.map((row, index) => (<IntygEventRow key={index} event={row} fetchIntygInfo={fetchIntygInfo} />))
+              intygInfo.events.filter((row) => { return displayEvent(row) })
+                              .map((row, index) => (<IntygEventRow key={index} event={row} fetchIntygInfo={fetchIntygInfo} />))
             }
             </tbody>
           </Table>
