@@ -194,7 +194,7 @@ const IntygInfoDialog = ({handleClose, isOpen, data, fetchIntygInfo}) => {
   const {intygInfo} = data
 
   function displayEvent(event) {
-    if (event.type == 'IS005') {
+    if (event.type === 'IS005') {
       return !intygInfo.testCertificate;
     }
     return true;
