@@ -3,5 +3,5 @@
   "infraVersion": "3.12.0.+",
   "buildArgs": "--refresh-dependencies clean build -P client -P codeQuality testReport",
   "tests": [ "restAssuredTest", "cypressTest" ],
-  "uploadArchives": true
+  "uploadArchives": false
 }
