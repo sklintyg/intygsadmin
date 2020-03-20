@@ -3,10 +3,10 @@ app:
 
 server:
   port: 8080
-  use-forward-headers: true
   servlet:
     session:
       timeout: 30m
+  forward-headers-strategy: framework
 
 management:
   server:
