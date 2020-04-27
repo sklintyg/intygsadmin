@@ -27,7 +27,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.session.data.redis.RedisFlushMode;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.CookieSerializer;
-import org.springframework.session.web.http.DefaultCookieSerializer;
 
 @Configuration
 @EnableRedisHttpSession(redisNamespace = "${spring.session.redis.namespace}",
@@ -39,14 +38,12 @@ public class SessionConfig {
 
     @Bean
     public CookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
         /*
         This is needed to make IdP functionality work.
         This will not satisfy all browsers, but it works for IE, Chrome and Edge.
         Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
          */
-        serializer.setSameSite("none");
-        return serializer;
+        return new IneraCookieSerializer();
     }
 
     @Bean
