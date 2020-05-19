@@ -27,10 +27,14 @@ dependencies {
   implementation("org.apache.poi:poi:${Dependencies.apachePoiVersion}")
   implementation("org.apache.poi:poi-ooxml:${Dependencies.apachePoiVersion}")
 
+  implementation("net.javacrumbs.shedlock:shedlock-spring:${Dependencies.shedlockSpringVersion}")
+  implementation("net.javacrumbs.shedlock:shedlock-provider-redis-spring:${Dependencies.shedlockSpringVersion}")
+
   implementation("it.ozimov:embedded-redis:${Dependencies.embeddedRedisVersion}")
   implementation("redis.clients:jedis")
 
   implementation("se.inera.intyg.infra:intyginfo:${project.extra["intygInfraVersion"]}")
+  implementation("se.inera.intyg.infra:testcertificate:${project.extra["intygInfraVersion"]}")
   implementation("se.inera.intyg.infra:integreradeenheter:${project.extra["intygInfraVersion"]}")
   implementation("se.inera.intyg.infra:driftbanner-dto:${project.extra["intygInfraVersion"]}")
   implementation("se.inera.intyg.infra:security-common:${project.extra["intygInfraVersion"]}")

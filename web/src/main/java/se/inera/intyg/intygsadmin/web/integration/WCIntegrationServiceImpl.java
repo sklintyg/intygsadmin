@@ -19,20 +19,26 @@
 
 package se.inera.intyg.intygsadmin.web.integration;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
+import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
 @Profile("!wc-stub")
 @Service
@@ -88,4 +94,18 @@ public class WCIntegrationServiceImpl implements WCIntegrationService {
         }
     }
 
+    @Override
+    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+        final var eraseUrl = webcertUrl + "/internalapi/testCertificate/erase";
+
+        final var headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        final var eraseJSON = new JSONObject();
+        eraseJSON.put("from", from);
+        eraseJSON.put("to", to);
+
+        final var eraseRequest = new HttpEntity<>(eraseJSON, headers);
+        return restTemplate.postForObject(eraseUrl, eraseRequest, TestCertificateEraseResult.class);
+    }
 }

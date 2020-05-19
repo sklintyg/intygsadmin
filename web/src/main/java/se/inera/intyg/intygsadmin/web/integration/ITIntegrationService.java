@@ -19,9 +19,19 @@
 
 package se.inera.intyg.intygsadmin.web.integration;
 
+import java.time.LocalDateTime;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
+import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
 public interface ITIntegrationService {
 
     ItIntygInfo getIntygInfo(String intygId);
+
+    /**
+     * Service for erasing of test certificates.
+     * @param from  Created after from datetime
+     * @param to    Create before to datetime
+     * @return  Result of the erase operation
+     */
+    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
 }

@@ -23,6 +23,7 @@ object Config {
     const val springDependencyManagementVersion = "1.0.9.RELEASE"
     const val springSecurityOauth2Version = "2.3.6.RELEASE"
 
+    const val shedlockSpringVersion = "4.5.0"
     const val embeddedRedisVersion = "0.7.2"
 
     const val mapstructVersion = "1.3.0.Final"
