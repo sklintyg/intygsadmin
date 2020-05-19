@@ -29,6 +29,7 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
+import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
 
 @Profile("it-stub")
@@ -51,6 +52,10 @@ public class ITIntegrationStub implements ITIntegrationService {
         return null;
     }
 
+    @Override
+    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+        return TestCertificateEraseResult.create(0, 0);
+    }
 
     private void addIntyg(String intygId) {
         LocalDateTime date = LocalDateTime.now();

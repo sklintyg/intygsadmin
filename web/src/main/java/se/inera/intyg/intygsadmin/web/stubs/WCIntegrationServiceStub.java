@@ -32,6 +32,7 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
+import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 
 @Profile("wc-stub")
@@ -79,6 +80,11 @@ public class WCIntegrationServiceStub implements WCIntegrationService {
         }
 
         return null;
+    }
+
+    @Override
+    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+        return TestCertificateEraseResult.create(0, 0);
     }
 
     private void addUnit(String unitId) {

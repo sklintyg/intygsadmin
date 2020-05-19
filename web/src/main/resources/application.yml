@@ -54,3 +54,12 @@ webcert:
 
 intygstjansten:
   internalapi: http://localhost:8080/inera-certificate
+
+job:
+  erasetestcertificate:
+    cron: "0 0 6 * * *"
+
+erasetestcertificate:
+  erase:
+    after:
+      day: 31
