@@ -19,40 +19,35 @@
 
 package se.inera.intyg.intygsadmin.web.integration;
 
-import java.time.LocalDateTime;
-import net.minidev.json.JSONObject;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
-@Profile("!it-stub")
+@Profile("!pp-stub")
 @Service
-public class ITIntegrationServiceImpl implements ITIntegrationService {
+public class PPIntegrationServiceImpl implements PPIntegrationService {
 
     private RestTemplate restTemplate;
 
-    @Value("${intygstjansten.internalapi}")
-    private String intygstjanstenUrl;
+    @Value("${privatlakarportal.internalapi}")
+    private String privatlakarportalUrl;
 
     @Autowired
-    public ITIntegrationServiceImpl(RestTemplate restTemplate) {
+    public PPIntegrationServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public ItIntygInfo getIntygInfo(String intygId) {
-        String url = intygstjanstenUrl + "/internalapi/intygInfo/" + intygId;
+    public PrivatePractitioner getPrivatePractitioner(String personOrHsaId) {
+        String url = privatlakarportalUrl + "/internalapi/privatepractitioner?personOrHsaId=" + personOrHsaId;
         try {
-            return restTemplate.getForObject(url, ItIntygInfo.class);
+            return restTemplate.getForObject(url, PrivatePractitioner.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -62,17 +57,14 @@ public class ITIntegrationServiceImpl implements ITIntegrationService {
     }
 
     @Override
-    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        final var eraseUrl = intygstjanstenUrl + "/internalapi/testCertificate/erase";
+    public List<PrivatePractitioner> getAllPrivatePractitioners() {
+        String url = privatlakarportalUrl + "/internalapi/privatepractitioner/all";
 
-        final var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        PrivatePractitioner[] privatePractitionerArray = restTemplate.getForObject(url, PrivatePractitioner[].class);
 
-        final var eraseJSON = new JSONObject();
-        eraseJSON.put("from", from);
-        eraseJSON.put("to", to);
-
-        final var eraseRequest = new HttpEntity<>(eraseJSON, headers);
-        return restTemplate.postForObject(eraseUrl, eraseRequest, TestCertificateEraseResult.class);
+        if (privatePractitionerArray == null) {
+            return List.of();
+        }
+        return List.of(privatePractitionerArray);
     }
 }
