@@ -49,6 +49,12 @@ const MenuBar = ({ userRole }) => {
       text: 'Integrerade enheter',
       enabled: true
     },
+    {
+      id: 'privatePractitioner',
+      to: '/privatePractitioner',
+      text: 'Privatläkare',
+      enabled: true
+    }
   ]
 
   return (

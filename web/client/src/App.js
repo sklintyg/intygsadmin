@@ -3,6 +3,7 @@ import {HashRouter, Switch} from 'react-router-dom'
 import HomePage from './pages/IndexPage'
 import BannerPage from './pages/BannerPage'
 import IntegratedUnitsPage from './pages/IntegratedUnitsPage'
+import PrivatePractitionerPage from './pages/PrivatePractitionerPage'
 import Header from './components/header'
 import {getUser} from './store/actions/user'
 import {connect} from 'react-redux'
@@ -34,6 +35,7 @@ const App = () => {
             <UnsecuredRoute path="/loggedout/:code" component={HomePage} />
             <SecuredRoute path="/banner" component={BannerPage} />
             <SecuredRoute path="/integratedUnits" component={IntegratedUnitsPage} />
+            <SecuredRoute path="/privatePractitioner" component={PrivatePractitionerPage} />
             <SecuredRoute path="/intygInfo" component={IntygInfoPage} />
             <SecuredRoute path="/administratorer" component={UsersPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />

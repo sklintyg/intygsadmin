@@ -7,6 +7,7 @@ import appConfig from './appConfig'
 import bannerList from './bannerList.reducer'
 import banner from './banner'
 import integratedUnits from './integratedUnits'
+import privatePractitioner from './privatePractitioner'
 import intygInfo from './intygInfo'
 import intygInfoList from './intygInfoList'
 import users from './users'
@@ -21,6 +22,7 @@ const appReducer = (history) =>
     bannerList,
     banner,
     integratedUnits,
+    privatePractitioner,
     intygInfo,
     intygInfoList,
     users
