@@ -24,8 +24,19 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 public interface PPIntegrationService {
 
+    /**
+     * Searches Privatlakarportalen for a given PrivatePractitioner
+     *
+     * @param personOrHsaId PNR or HSAid
+     * @return PrivatePractioner or <code>null</code> when not found
+     */
     PrivatePractitioner getPrivatePractitioner(String personOrHsaId);
 
+    /**
+     * Get a list of all registered Private Practitioners in Privatlakarportalen
+     *
+     * @return A list of all PrivatePractitioners from Privatlakarportalen or empty list
+     */
     List<PrivatePractitioner> getAllPrivatePractitioners();
 
 
