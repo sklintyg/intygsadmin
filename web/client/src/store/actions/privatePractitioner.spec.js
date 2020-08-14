@@ -88,7 +88,7 @@ describe('privatePractitioner actions', () => {
 
       const expectedActions = [
         { type: actions.FETCH_PRIVATE_PRACTITIONER_FILE_REQUEST },
-        { type: actions.FETCH_PRACTITIONER_FILE_FAILURE, payload: response },
+        { type: actions.FETCH_PRIVATE_PRACTITIONER_FILE_FAILURE, payload: response },
       ]
 
       return functionToTest(
