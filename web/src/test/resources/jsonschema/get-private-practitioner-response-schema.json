@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "required": [
+    "hsaId",
+    "name",
+    "careproviderName",
+    "email",
+    "registrationDate"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "hsaId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "careproviderName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "registrationDate": {
+      "type": "string"
+    }
+  }
+}

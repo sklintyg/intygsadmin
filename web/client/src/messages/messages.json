@@ -114,6 +114,14 @@
         "message": "Kunde inte hitta någon enhet med detta HSA-id. Kontrollera att du matat in ett korrekt ID."
       }
     },
+    "privatePractitioner": {
+      "unknown": {
+        "message": "Sökningen kunde inte genomföras på grund av ett tekniskt fel. Prova igen om en stund."
+      },
+      "not_found": {
+        "message": "Kunde inte hitta någon privatläkare med detta HSA-id/ personnummer. Kontrollera att du matat in ett korrekt ID."
+      }
+    },
     "intygInfo": {
       "unknown": {
         "message": "Information om intyget kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund."

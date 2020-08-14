@@ -25,9 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -44,17 +42,15 @@ import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 @Service
 public class WCIntegrationServiceImpl implements WCIntegrationService {
 
-    @Bean("wcRestTemplate")
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Autowired
-    @Qualifier("wcRestTemplate")
     private RestTemplate restTemplate;
 
     @Value("${webcert.internalapi}")
     private String webcertUrl;
+
+    @Autowired
+    public WCIntegrationServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
