@@ -3,7 +3,6 @@ import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
 import { compose } from 'recompose'
 import styled from "styled-components";
-import DisplayDateTime from '../displayDateTime/DisplayDateTime';
 import DisplayDate from "../displayDateTime/DisplayDate";
 
 const PrivatePractitionerSearchResult = ({ handleClose, isOpen, data }) => {
