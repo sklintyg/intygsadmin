@@ -52,7 +52,7 @@ const MenuBar = ({ userRole }) => {
     {
       id: 'privatePractitioner',
       to: '/privatePractitioner',
-      text: 'Privatläkare',
+      text: 'Registrerade privatläkare',
       enabled: true
     }
   ]
