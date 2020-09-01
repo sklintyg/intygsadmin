@@ -30,8 +30,6 @@ import se.inera.intyg.intygsadmin.persistence.PersistenceConfig;
 @Import({
     PersistenceConfig.class
 })
-@EnableScheduling
-@EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class IntygsadminApplication {
 
     public static void main(String[] args) {
