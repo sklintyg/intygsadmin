@@ -33,7 +33,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableSchedulerLock(defaultLockAtMostFor = "PT30S")
 public class JobConfig {
 
-    private final static String ENVIRONMENT = "intygsadmin";
+    private static final String ENVIRONMENT = "intygsadmin";
 
     @Autowired
     private JedisConnectionFactory jedisConnectionFactory;
