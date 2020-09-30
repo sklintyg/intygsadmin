@@ -27,7 +27,7 @@ allprojects {
 
   repositories {
     mavenLocal()
-    maven ("https://build-inera.nordicmedtest.se/nexus/repository/public/")
+    maven ("https://nexus.drift.inera.se/repository/it-public/")
     jcenter {
       content {
         // this repository contains everything BUT artifacts with group starting with "se.inera"
@@ -39,10 +39,10 @@ allprojects {
   publishing {
     repositories {
       maven {
-        url = uri("https://build-inera.nordicmedtest.se/nexus/repository/releases/")
+        url = uri("https://nexus.drift.inera.se/repository/maven-releases/")
         credentials {
-          username = System.getProperty("nexusUsername")
-          password = System.getProperty("nexusPassword")
+          username = System.getProperty("ineraNexusUsername")
+          password = System.getProperty("ineraNexusPassword")
         }
       }
     }
