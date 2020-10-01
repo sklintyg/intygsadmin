@@ -8,7 +8,7 @@ Replace `<version>` below with the actual application version.
 
 Fetch the actual version of the tool, the example below runs `wget` to retrieve the package (zip).
 
-    > wget https://build-inera.nordicmedtest.se/nexus/repository/releases/se/inera/intyg/intygsadmin/intygsadmin-liquibase-runner/<version>/intygsadmin-liquibase-runner-<version>.zip
+    > wget https://nexus.drift.inera.se/repository/maven-releases/se/inera/intyg/intygsadmin/intygsadmin-liquibase-runner/<version>/intygsadmin-liquibase-runner-<version>.zip
 
 
 Download the tool to a computer with Java installed and access to the database in question.

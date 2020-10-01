@@ -2,7 +2,7 @@ import se.inera.intyg.intygsadmin.build.Config.Dependencies
 
 pluginManagement {
   repositories {
-    maven("https://build-inera.nordicmedtest.se/nexus/repository/public/")
+    maven("https://nexus.drift.inera.se/repository/it-public/")
     gradlePluginPortal()
   }
   resolutionStrategy {
