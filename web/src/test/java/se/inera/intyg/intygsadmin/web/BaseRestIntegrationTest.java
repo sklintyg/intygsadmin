@@ -47,7 +47,7 @@ public abstract class BaseRestIntegrationTest {
     private static final String SESSION_COOKIE = "SESSION";
 
     protected final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    protected String baseUrl = System.getProperty("integration.tests.baseUrl", "http://localhost:8680");
+    protected String baseUrl = System.getProperty("integration.tests.baseUrl", "http://localhost:8070");
 
     protected static final FakeUser ADMIN_USER = new FakeUser(
         "TSTNMT2321000156-10KK",

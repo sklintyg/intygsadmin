@@ -46,7 +46,7 @@ import se.inera.intyg.intygsadmin.web.rediscache.util.ConnectionStringUtil;
  */
 @Configuration
 @EnableCaching
-@Profile("!dev")
+@Profile("!embedded-redis")
 public class BasicCacheConfiguration {
 
     @Value("${intyg.redis.host}")
@@ -108,7 +108,7 @@ public class BasicCacheConfiguration {
 
     private JedisConnectionFactory sentinelConnectionFactory() {
         RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
-                .master(redisSentinelMasterName);
+            .master(redisSentinelMasterName);
 
         if (Strings.isNullOrEmpty(redisHost) || Strings.isNullOrEmpty(redisPort)) {
             throw new IllegalStateException("Cannot bootstrap RedisSentinelConfiguration, redis.host or redis.port is null or empty");
@@ -118,7 +118,7 @@ public class BasicCacheConfiguration {
 
         if (hosts.size() == 0 || ports.size() == 0 || hosts.size() != ports.size()) {
             throw new IllegalStateException(
-                    "Cannot bootstrap RedisSentinelConfiguration, number of redis.host and/or redis.port was zero or not equal.");
+                "Cannot bootstrap RedisSentinelConfiguration, number of redis.host and/or redis.port was zero or not equal.");
         }
 
         for (int a = 0; a < hosts.size(); a++) {

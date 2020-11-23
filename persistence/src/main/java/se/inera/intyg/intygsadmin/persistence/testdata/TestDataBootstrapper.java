@@ -81,13 +81,16 @@ public class TestDataBootstrapper {
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             for (Resource resource : resources) {
                 try (InputStream jsonUserStream = resource.getInputStream()) {
-                    userEntities.add(objectMapper.readValue(jsonUserStream, UserEntity.class));
+                    var userEntity = objectMapper.readValue(jsonUserStream, UserEntity.class);
+                    if (userRepository.findByEmployeeHsaId(userEntity.getEmployeeHsaId()).isEmpty()) {
+                        userEntities.add(userEntity);
+                    }
                 }
             }
 
             userRepository.saveAll(userEntities);
 
-            LOG.info("Finished: Bootstrap USER data");
+            LOG.info("Finished: Bootstrap USER data. {} entries added", userEntities.size());
         } catch (IOException e) {
             throw new RuntimeException("Failed bootstrapping users");
         }
@@ -111,34 +114,37 @@ public class TestDataBootstrapper {
 
         bannerRepository.saveAll(bannerEntities);
 
-        LOG.info("Finished: Bootstrap BANNER data");
+        LOG.info("Finished: Bootstrap BANNER data. {} entries added", bannerEntities.size());
     }
 
     private void generateBanners(Application application, List<BannerEntity> bannerEntities) {
-        BannerEntity currentEntity = new BannerEntity();
-        currentEntity.setMessage("Current test message " + application);
-        currentEntity.setApplication(application);
-        currentEntity.setPriority(BannerPriority.HOG);
-        currentEntity.setDisplayFrom(randomizePastDate());
-        currentEntity.setDisplayTo(randomizeFutureDate());
+        LocalDateTime now = LocalDateTime.now();
+        if (bannerRepository.countByApplicationEquals(application, now.minusYears(100), now.plusYears(100)) == 0) {
+            BannerEntity currentEntity = new BannerEntity();
+            currentEntity.setMessage("Current test message " + application);
+            currentEntity.setApplication(application);
+            currentEntity.setPriority(BannerPriority.HOG);
+            currentEntity.setDisplayFrom(randomizePastDate());
+            currentEntity.setDisplayTo(randomizeFutureDate());
 
-        BannerEntity futureEntity = new BannerEntity();
-        futureEntity.setMessage("Future test message " + application);
-        futureEntity.setApplication(application);
-        futureEntity.setPriority(BannerPriority.MEDEL);
-        futureEntity.setDisplayFrom(randomizeFutureDate(currentEntity.getDisplayTo()));
-        futureEntity.setDisplayTo(randomizeFutureDate(futureEntity.getDisplayFrom()));
+            BannerEntity futureEntity = new BannerEntity();
+            futureEntity.setMessage("Future test message " + application);
+            futureEntity.setApplication(application);
+            futureEntity.setPriority(BannerPriority.MEDEL);
+            futureEntity.setDisplayFrom(randomizeFutureDate(currentEntity.getDisplayTo()));
+            futureEntity.setDisplayTo(randomizeFutureDate(futureEntity.getDisplayFrom()));
 
-        BannerEntity prevEntity = new BannerEntity();
-        prevEntity.setMessage("Past test message " + application);
-        prevEntity.setApplication(application);
-        prevEntity.setPriority(BannerPriority.LAG);
-        prevEntity.setDisplayTo(randomizePastDate(currentEntity.getDisplayFrom()));
-        prevEntity.setDisplayFrom(randomizePastDate(prevEntity.getDisplayTo()));
+            BannerEntity prevEntity = new BannerEntity();
+            prevEntity.setMessage("Past test message " + application);
+            prevEntity.setApplication(application);
+            prevEntity.setPriority(BannerPriority.LAG);
+            prevEntity.setDisplayTo(randomizePastDate(currentEntity.getDisplayFrom()));
+            prevEntity.setDisplayFrom(randomizePastDate(prevEntity.getDisplayTo()));
 
-        bannerEntities.add(prevEntity);
-        bannerEntities.add(currentEntity);
-        bannerEntities.add(futureEntity);
+            bannerEntities.add(prevEntity);
+            bannerEntities.add(currentEntity);
+            bannerEntities.add(futureEntity);
+        }
     }
 
     private LocalDateTime randomizePastDate() {

@@ -4,6 +4,9 @@ import se.inera.intyg.intygsadmin.build.Config.Dependencies
 import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 
 val buildClient = project.hasProperty("client")
+val devPort = 8070 + System.getProperty("instance", "0").toInt()
+val devPortInternal = 8170 + System.getProperty("instance", "0").toInt()
+val debugPort = 8870 + System.getProperty("instance", "0").toInt()
 
 plugins {
   id("org.springframework.boot")
@@ -123,8 +126,8 @@ tasks {
 
   val restAssuredTest by creating(Test::class) {
     outputs.upToDateWhen { false }
-    systemProperty("integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8680"))
-    systemProperty("integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8681"))
+    systemProperty("integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8070"))
+    systemProperty("integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8170"))
     include("**/*IT*")
   }
 
@@ -143,8 +146,14 @@ tasks {
     delete("client/build")
   }
 
+  bootRun {
+    systemProperty("dev.http.port", devPort)
+    systemProperty("dev.http.port.internal", devPortInternal)
+  }
+
   if (OperatingSystem.current().isWindows) {
     bootRun {
+      //jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8870")
       dependsOn(pathingJar)
 
       doFirst {
@@ -173,5 +182,21 @@ tasks {
     test {
       dependsOn(testReactApp)
     }
+  }
+
+  // Convenience methods so that we can use the same naming conventions
+  val appRunDebug by registering {
+    println("Running in Debug mode")
+    doFirst {
+      bootRun.configure {
+        jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort")
+      }
+    }
+    finalizedBy("bootRun")
+  }
+
+  val appRun by registering {
+    println("Running in normal mode")
+    finalizedBy("bootRun")
   }
 }

@@ -31,7 +31,7 @@ public class BannerEndpointIT extends BaseRestIntegrationTest {
     private static final String BANNER_ACTUATOR_ENDPOINT = "/actuator/banner";
 
     public BannerEndpointIT() {
-        baseUrl = System.getProperty("integration.tests.actuatorUrl", "http://localhost:8681");
+        baseUrl = System.getProperty("integration.tests.actuatorUrl", "http://localhost:8170");
     }
 
     @Test
