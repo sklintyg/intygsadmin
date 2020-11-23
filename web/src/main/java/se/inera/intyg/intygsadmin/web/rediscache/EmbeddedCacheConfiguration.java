@@ -38,7 +38,7 @@ import redis.embedded.RedisServer;
  */
 @Configuration
 @EnableCaching
-@Profile("dev")
+@Profile("embedded-redis")
 public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmbeddedCacheConfiguration.class);
@@ -58,11 +58,11 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
         final AtomicInteger port = new AtomicInteger(Integer.parseInt(redisPort));
 
         redisServer = Stream.generate(port::getAndIncrement)
-                .limit(NUMBER_OF_PORTS_TO_TRY)
-                .map(this::startServer)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Failed to start embedded redis server"));
+            .limit(NUMBER_OF_PORTS_TO_TRY)
+            .map(this::startServer)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Failed to start embedded redis server"));
 
         redisPort = redisServer.ports().get(0).toString();
 
@@ -71,9 +71,9 @@ public class EmbeddedCacheConfiguration extends BasicCacheConfiguration {
 
     private RedisServer startServer(final int port) {
         final RedisServer redisServer = RedisServer.builder()
-                .port(port)
-                .setting("maxmemory 512M")
-                .build();
+            .port(port)
+            .setting("maxmemory 512M")
+            .build();
         try {
             redisServer.start();
             LOG.info("Embedded redis server started and listens on port {}", port);

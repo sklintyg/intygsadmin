@@ -1,14 +1,26 @@
 server:
-  port: 8680
+  port: ${dev.http.port}
 
 management:
   server:
-    port: 8681
+    port: ${dev.http.port.internal}
+
+mysql:
+  service:
+    host: 127.0.0.1
+    port: 3306
+
+database:
+  name: intygsadmin
 
 spring:
-  h2:
-    console:
-      enabled: true
+  datasource:
+    password: intygsadmin
+    username: intygsadmin
+
+intyg:
+  redis:
+    password: redis
   output:
     ansi:
       enabled: ALWAYS

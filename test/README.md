@@ -4,7 +4,7 @@
 
 ##### 1) Kör igång server
 ```sh
-./gradlew bootRun
+./gradlew appRun
 ```
 
 ##### 2) Kör igång front-end
