@@ -1,0 +1,68 @@
+app:
+  name: intygsadmin
+
+server:
+  port: 8070
+  servlet:
+    session:
+      timeout: 30m
+  forward-headers-strategy: framework
+
+management:
+  server:
+    port: 8170
+  endpoints:
+    web:
+      exposure:
+        include: 'health, banner, info, user'
+
+spring:
+  liquibase:
+    change-log: classpath:/changelog/db-changelog-master.xml
+  profiles:
+    active: embedded-redis, caching-enabled, it-stub, wc-stub, pp-stub
+  h2:
+    console:
+      enabled: true
+  session:
+    store-type: redis
+    redis:
+      namespace: "${app.name}:session"
+      flush-mode: immediate
+
+intyg:
+  redis:
+    sentinel:
+      master:
+        name: master
+    password:
+    cache:
+      default_entry_expiry_time_in_seconds: 86400
+    port: 6379
+    host: 127.0.0.1
+
+inera:
+  idp:
+    client-id: intygsadmindev
+    client-secret: f2e71e76-4afa-455e-9b01-9dedead4590b
+    redirect-uri: https://ia.localtest.me/login/inera
+    logout-redirect-uri: https://ia.localtest.me/#/loggedout/m
+    issuer-uri: https://idp.ineradev.org:443/oidc
+
+webcert:
+  internalapi: http://localhost:8120
+
+intygstjansten:
+  internalapi: http://localhost:8180/inera-certificate
+
+privatlakarportal:
+  internalapi: http://localhost:8190
+
+job:
+  erasetestcertificate:
+    cron: "0 0 6 * * *"
+
+erasetestcertificate:
+  erase:
+    after:
+      day: 31
