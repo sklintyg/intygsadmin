@@ -20,7 +20,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: dev, fake, caching-enabled, it-stub, wc-stub, pp-stub
+    active: dummy
   datasource:
     url: jdbc:mysql://${mysql.service.host}:${mysql.service.port}/${database.name}?useSSL=false&serverTimezone=Europe/Stockholm
     password:

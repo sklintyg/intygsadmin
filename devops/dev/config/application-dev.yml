@@ -17,10 +17,10 @@ spring:
   datasource:
     password: intygsadmin
     username: intygsadmin
+  output:
+    ansi:
+      enabled: ALWAYS
 
 intyg:
   redis:
     password: redis
-  output:
-    ansi:
-      enabled: ALWAYS

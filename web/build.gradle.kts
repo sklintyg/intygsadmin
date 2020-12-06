@@ -7,6 +7,7 @@ val buildClient = project.hasProperty("client")
 val devPort = 8070 + System.getProperty("instance", "0").toInt()
 val devPortInternal = 8170 + System.getProperty("instance", "0").toInt()
 val debugPort = 8870 + System.getProperty("instance", "0").toInt()
+val applicationDir = "${rootProject.projectDir}/devops/dev"
 
 plugins {
   id("org.springframework.boot")
@@ -149,11 +150,12 @@ tasks {
   bootRun {
     systemProperty("dev.http.port", devPort)
     systemProperty("dev.http.port.internal", devPortInternal)
+    systemProperty("spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub")
+    systemProperty("spring.config.additional-location", "file:${applicationDir}/config/")
   }
 
   if (OperatingSystem.current().isWindows) {
     bootRun {
-      //jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8870")
       dependsOn(pathingJar)
 
       doFirst {
