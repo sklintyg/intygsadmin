@@ -28,7 +28,7 @@ allprojects {
   repositories {
     mavenLocal()
     maven ("https://nexus.drift.inera.se/repository/it-public/")
-    jcenter {
+    mavenCentral {
       content {
         // this repository contains everything BUT artifacts with group starting with "se.inera"
         excludeGroupByRegex("se\\.inera.*")
