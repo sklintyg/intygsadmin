@@ -1,4 +1,5 @@
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
+import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 
 plugins {
   id("io.spring.dependency-management")
@@ -22,5 +23,5 @@ dependencies {
   annotationProcessor("org.projectlombok:lombok")
 
   runtime("mysql:mysql-connector-java")
-  runtime("com.h2database:h2")
+  runtime("com.h2database:h2:${TestDependencies.h2Version}")
 }
