@@ -21,7 +21,7 @@ allprojects {
 
   apply(plugin = "maven-publish")
   extra.apply {
-    set("intygInfraVersion", System.getProperty("infraVersion", "3.16.2-SNAPSHOT"))
+    set("intygInfraVersion", System.getProperty("infraVersion", "3.17.0-SNAPSHOT"))
     set("errorproneExclude", "true") //FIXME: Errorprone does not support Kotlin and KAPT. Until it does this will exclude the errorprone task for this project
   }
 
