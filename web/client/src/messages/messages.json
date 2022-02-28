@@ -22,7 +22,16 @@
       "save": "Ändra"
     }
   },
-
+  "dataExport": {
+    "create": {
+      "organizationNumber": "Ange vårdgivarens organisationsnummer",
+      "personalNumber": "Ange mottagarens personnummer",
+      "email": "Ange mottagarens e-postadress",
+      "telephoneNUmber": "Ange mottagarens mobilnummer",
+      "exportDate": "Ange datum för export (åååå-mm-dd)",
+      "save": "Skapa export"
+    }
+  },
   "intygInfo": {
     "intygsId": {
       "wrongformat": "Ange ett giltigt intygs-ID."
