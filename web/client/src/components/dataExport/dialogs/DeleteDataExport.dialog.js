@@ -33,13 +33,14 @@ const StyledBody = styled(ModalBody)`
 `
 
 const initialDataExport = {
-  careProviderHsaId: '',
   organizationNumber: '',
-  representativePersonId: '',
-  representativePhoneNumber: '',
+  personalNumber: '',
+  email: '',
+  telephoneNUmber: '',
+  exportDate: '',
 }
 
-const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, errorMessage, clearError }) => {
+const DeleteDataExport = ({ handleClose, isOpen, onComplete, createUser, errorMessage, clearError }) => {
   const [newDataExport, setNewDataExport] = useState(initialDataExport)
 
   const onChange = (prop) => (value) => {
@@ -48,15 +49,12 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
 
   const createSendObject = () => {
     return {
-      careProviderHsaId: newDataExport.careProviderHsaId,
       organizationNumber: newDataExport.organizationNumber,
-      representativePersonId: newDataExport.representativePersonId,
-      representativePhoneNumber: newDataExport.representativePhoneNumber,
     }
   }
 
   const send = () => {
-    const func = createDataExport(createSendObject()) //TODO: Change and create data export
+    const func = createUser(createSendObject()) //TODO: Change and create data export
 
     func
       .then(() => {
@@ -67,13 +65,13 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
   }
 
   const cancel = () => {
-    //clearError()
+    clearError()
     setNewDataExport(initialDataExport)
     handleClose()
   }
 
   const enableSaveBtn = () => {
-    const fields = ['careProviderHsaId', 'organizationNumber', 'representativePersonId', 'representativePhoneNumber']
+    const fields = ['organizationNumber', 'personalNumber', 'email', 'telephoneNUmber', 'exportDate']
 
     let enable = fields.reduce((accumulator, currentValue) => {
       return accumulator && newDataExport[currentValue]
@@ -84,19 +82,8 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
 
   return (
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-      <ModalHeader toggle={cancel}> {getMessage(`dataExport.create.modalHeader`)}</ModalHeader>
+      <ModalHeader toggle={cancel}> {getMessage(`dataExport.create.organizationNumber`)}</ModalHeader>
       <StyledBody>
-        <FormGroup>
-          <Label for="dataExportCareProviderHsaId">
-            <IaTypo04>{getMessage(`dataExport.create.careProviderHsaId`)}</IaTypo04>
-          </Label>
-          <Input
-            id="dataExportCareProviderHsaId"
-            value={newDataExport.careProviderHsaId}
-            maxLength={200}
-            onChange={(e) => onChange('careProviderHsaId')(e.target.value)}
-          />
-        </FormGroup>
         <FormGroup>
           <Label for="dataExportOrganizationNumber">
             <IaTypo04>{getMessage(`dataExport.create.organizationNumber`)}</IaTypo04>
@@ -110,26 +97,45 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
         </FormGroup>
 
         <FormGroup>
-          <Label for="dataExportRepresentativePersonId">
-            <IaTypo04>{getMessage(`dataExport.create.representativePersonId`)}</IaTypo04>
+          <Label for="dataExportPersonalNumber">
+            <IaTypo04>{getMessage(`dataExport.create.personalNumber`)}</IaTypo04>
           </Label>
           <Input
-            id="dataExportRepresentativePersonId"
-            value={newDataExport.representativePersonId}
+            id="dataExportPersonalNumber"
+            value={newDataExport.personalNumber}
             maxLength={200}
-            onChange={(e) => onChange('representativePersonId')(e.target.value)}
+            onChange={(e) => onChange('personalNumber')(e.target.value)}
           />
         </FormGroup>
 
         <FormGroup>
-          <Label for="dataExportRepresentativePhoneNumber">
-            <IaTypo04>{getMessage(`dataExport.create.representativePhoneNumber`)}</IaTypo04>
+          <Label for="dataExportEmail">
+            <IaTypo04>{getMessage(`dataExport.create.email`)}</IaTypo04>
+          </Label>
+          <Input id="dataExportEmail" value={newDataExport.email} maxLength={200} onChange={(e) => onChange('email')(e.target.value)} />
+        </FormGroup>
+
+        <FormGroup>
+          <Label for="dataExportTelephoneNUmber">
+            <IaTypo04>{getMessage(`dataExport.create.telephoneNUmber`)}</IaTypo04>
           </Label>
           <Input
-            id="representativePhoneNumber"
+            id="dataExportTelephoneNUmber"
             value={newDataExport.telephoneNUmber}
             maxLength={200}
-            onChange={(e) => onChange('representativePhoneNumber')(e.target.value)}
+            onChange={(e) => onChange('telephoneNUmber')(e.target.value)}
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label for="dataExportExportDate">
+            <IaTypo04>{getMessage(`dataExport.create.exportDate`)}</IaTypo04>
+          </Label>
+          <Input
+            id="dataExportExportDate"
+            value={newDataExport.exportDate}
+            maxLength={200}
+            onChange={(e) => onChange('exportDate')(e.target.value)}
           />
         </FormGroup>
       </StyledBody>
@@ -169,12 +175,12 @@ const mapStateToProps = (state) => {
   }
 }
 
-export const CreateDataExportId = 'createDataExport'
+export const DeleteDataExportId = 'deleteDataExport'
 
 export default compose(
   connect(
     mapStateToProps,
     { ...actions }
   ),
-  modalContainer(CreateDataExportId)
-)(CreateDataExport)
+  modalContainer(DeleteDataExportId)
+)(DeleteDataExport)

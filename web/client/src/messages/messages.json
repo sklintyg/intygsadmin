@@ -24,11 +24,11 @@
   },
   "dataExport": {
     "create": {
-      "organizationNumber": "Ange vårdgivarens organisationsnummer",
-      "personalNumber": "Ange mottagarens personnummer",
-      "email": "Ange mottagarens e-postadress",
-      "telephoneNUmber": "Ange mottagarens mobilnummer",
-      "exportDate": "Ange datum för export (åååå-mm-dd)",
+      "modalHeader": "Skapa dataexport",
+      "careProviderHsaId": "Ange vårdgivarens HSA-ID",
+      "organizationNumber": "Ange vårdgivarens Organisationsnummer",
+      "representativePersonId": "Ange mottagarens personnummer",
+      "representativePhoneNumber": "Ange mottagarens mobilnummer",
       "save": "Skapa export"
     }
   },

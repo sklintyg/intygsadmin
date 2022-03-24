@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.inera.intyg.intygsadmin.web.mapper;
 
-import React from 'react'
-import IaColors from '../styles/iaColors'
-import { DocIcon } from '../styles/iaSvgIcons'
-import PageHeader from '../styles/PageHeader'
-import DataExportActionBar from './DataExportActionBar'
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
+import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
 
-const DataExportPageHeader = () => {
-  return (
-    <PageHeader
-      header="Dataexport till Säker journalutlämning"
-      subHeader="Här kan du skapa en dataexport som levereras till Säker journalutlämning. Administrerade exporter visas i tabellen."
-      icon={<DocIcon color={IaColors.IA_COLOR_02} />}
-      actionBar={<DataExportActionBar />}
-    />
-  )
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface DataExportMapper {
+
+    DataExportDTO toDTO(DataExportEntity s);
+
+    List<DataExportDTO> toListDTO(List<DataExportEntity> s);
+
+    DataExportEntity toEntity(DataExportDTO s);
+
 }
-
-export default DataExportPageHeader

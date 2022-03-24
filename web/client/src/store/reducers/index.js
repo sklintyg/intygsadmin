@@ -1,6 +1,6 @@
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 import user from './user'
-import {connectRouter} from 'connected-react-router'
+import { connectRouter } from 'connected-react-router'
 import modal from './modal'
 import sessionPoll from './sessionPoll'
 import appConfig from './appConfig'
@@ -11,6 +11,7 @@ import privatePractitioner from './privatePractitioner'
 import intygInfo from './intygInfo'
 import intygInfoList from './intygInfoList'
 import users from './users'
+import dataExport from './dataExport'
 
 const appReducer = (history) =>
   combineReducers({
@@ -25,7 +26,8 @@ const appReducer = (history) =>
     privatePractitioner,
     intygInfo,
     intygInfoList,
-    users
+    users,
+    dataExport,
   })
 
 const reducers = (history) => (state, action) => {

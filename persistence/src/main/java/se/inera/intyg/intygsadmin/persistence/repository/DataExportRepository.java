@@ -16,22 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.inera.intyg.intygsadmin.persistence.repository;
 
-import React from 'react'
-import IaColors from '../styles/iaColors'
-import { DocIcon } from '../styles/iaSvgIcons'
-import PageHeader from '../styles/PageHeader'
-import DataExportActionBar from './DataExportActionBar'
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.stereotype.Repository;
+import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
 
-const DataExportPageHeader = () => {
-  return (
-    <PageHeader
-      header="Dataexport till Säker journalutlämning"
-      subHeader="Här kan du skapa en dataexport som levereras till Säker journalutlämning. Administrerade exporter visas i tabellen."
-      icon={<DocIcon color={IaColors.IA_COLOR_02} />}
-      actionBar={<DataExportActionBar />}
-    />
-  )
+@Repository
+public interface DataExportRepository extends JpaRepository<DataExportEntity, UUID>,
+    QuerydslPredicateExecutor<DataExportEntity> {
+
 }
-
-export default DataExportPageHeader

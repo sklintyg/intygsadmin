@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import React from 'react'
-import IaColors from '../styles/iaColors'
-import { DocIcon } from '../styles/iaSvgIcons'
-import PageHeader from '../styles/PageHeader'
-import DataExportActionBar from './DataExportActionBar'
+import java.time.LocalDateTime;
+import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 
-const DataExportPageHeader = () => {
-  return (
-    <PageHeader
-      header="Dataexport till Säker journalutlämning"
-      subHeader="Här kan du skapa en dataexport som levereras till Säker journalutlämning. Administrerade exporter visas i tabellen."
-      icon={<DocIcon color={IaColors.IA_COLOR_02} />}
-      actionBar={<DataExportActionBar />}
-    />
-  )
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DataExportStatusDTO {
+
+    private LocalDateTime createdAt;
+    private String statusDescription;
+
 }
-
-export default DataExportPageHeader

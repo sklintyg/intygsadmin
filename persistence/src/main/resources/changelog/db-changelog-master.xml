@@ -143,4 +143,37 @@
 
   </changeSet>
 
+  <changeSet id="8" author="Mikael Heglind">
+
+    <createTable tableName="data_export">
+      <column name="id" type="varchar(40)">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="created_at" type="datetime">
+        <constraints nullable="false"/>
+      </column>
+      <column name="status" type="varchar(32)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="administrator_name" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="care_provider_hsa_id" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="organization_number" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="representative_person_id" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="representative_phone_number" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+  </changeSet>
+
+
+
 </databaseChangeLog>
