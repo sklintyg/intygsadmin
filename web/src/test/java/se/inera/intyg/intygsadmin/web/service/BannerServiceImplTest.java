@@ -59,7 +59,7 @@ import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 
 
 @ExtendWith(MockitoExtension.class)
-public class BannerServiceTest {
+public class BannerServiceImplTest {
 
     @Spy
     private BannerMapper bannerMapper = Mappers.getMapper(BannerMapper.class);
@@ -74,7 +74,7 @@ public class BannerServiceTest {
     private BannerValidationService bannerValidationService;
 
     @InjectMocks
-    private BannerService bannerService;
+    private BannerServiceImpl bannerService;
 
     @Test
     public void testGetBannersEmptyResult() {

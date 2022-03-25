@@ -46,6 +46,9 @@ finns upplagd i databasen med sitt hsa-id samt en tillhörande roll (ADMIN/BASIC
 
 Detta kan ske direkt via databasen, eller via guit i intygsadmin.
 
+### Swagger Api Documentation
+URL: https://ia.localtest.me/swagger-ui.html
+
 ## Licens
 Copyright (C) 2021 Inera AB (http://www.inera.se)
 

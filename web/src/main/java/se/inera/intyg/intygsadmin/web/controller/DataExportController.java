@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.intygsadmin.web.controller;
 
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -32,55 +33,58 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportStatusDTO;
-import se.inera.intyg.intygsadmin.web.service.DataExportServiceImpl;
+import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
+import se.inera.intyg.intygsadmin.web.service.IntygAvslutService;
 
 @RestController
 @RequestMapping("/api/dataExport")
 @PreAuthorize("hasRole('FULL')")
 public class DataExportController {
 
-    private final DataExportServiceImpl dataExportService;
+    private final IntygAvslutService intygAvslutService;
     private static final int DEFAULT_PAGE_SIZE = 20;
 
-    public DataExportController(DataExportServiceImpl dataExportService) {
-        this.dataExportService = dataExportService;
+    public DataExportController(IntygAvslutService intygAvslutService) {
+        this.intygAvslutService = intygAvslutService;
     }
 
+    @ApiOperation(value = "List a page of data exports.", notes = "List a page of data exports.")
     @GetMapping
     public ResponseEntity<Page<DataExportDTO>> listDataExports(
         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "createdAt")
             Pageable pageable) {
-        final var dataExports = dataExportService.getDataExports(pageable);
+        final var dataExports = intygAvslutService.getDataExports(pageable);
 
         return ResponseEntity.ok(dataExports);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<DataExportStatusDTO>> listDataExportsStatus(@PathVariable UUID id) {
-        final var dataExportStatuses = dataExportService.getDataExportStatuses(id);
+    @ApiOperation(value = "Get a list of dataExportStatuses for a data export.", notes = "Returns a list of statuses for the id the id")
+    @GetMapping("/{dataExportId}/status")
+    public ResponseEntity<List<DataExportStatusDTO>> listDataExportsStatus(@PathVariable UUID dataExportId) {
+        final var dataExportStatuses = intygAvslutService.getDataExportStatuses(dataExportId);
 
         return ResponseEntity.ok(dataExportStatuses);
     }
 
     @PutMapping
-    public ResponseEntity<DataExportDTO> addDataExport(@RequestBody DataExportDTO dataExportDTO) {
-        final var savedDTO = dataExportService.addDataExport(dataExportDTO);
+    public ResponseEntity<DataExportDTO> createDataExport(@RequestBody CreateDataExportDTO createDataExportDTO) {
+        final var savedDTO = intygAvslutService.createDataExport(createDataExportDTO);
 
         return ResponseEntity.ok(savedDTO);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<DataExportDTO> updateDataExport(@PathVariable UUID id, @RequestBody DataExportDTO dataExportDTO) {
-        dataExportDTO.setId(id);
-        final var savedDTO = dataExportService.updateDataExport(dataExportDTO);
+    @PostMapping("/update")
+    public ResponseEntity<DataExportDTO> updateDataExport(@RequestBody DataExportUpdateDTO dataExportUpdateDTO) {
+        final var savedDTO = intygAvslutService.updateDataExport(dataExportUpdateDTO);
 
         return ResponseEntity.ok(savedDTO);
     }
 
-    /*@DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable UUID id) {
+    /*@DeleteMapping("/{dataExportId}")
+    public ResponseEntity deleteUser(@PathVariable UUID dataExportId) {
         userService.deleteUser(id);
 
         return ResponseEntity.ok().build();

@@ -44,13 +44,13 @@ import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
 import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
 
 @ExtendWith(MockitoExtension.class)
-public class BannerValidationServiceTest {
+public class BannerValidationServiceImplTest {
 
     @Mock
     private BannerPersistenceService bannerPersistenceService;
 
     @InjectMocks
-    private BannerValidationService bannerValidationService;
+    private BannerValidationServiceImpl bannerValidationService;
 
     @Test
     public void testValidation_missingFields() {

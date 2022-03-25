@@ -22,15 +22,22 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
+import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface DataExportMapper {
 
-    DataExportDTO toDTO(DataExportEntity s);
+    DataExportDTO toDTO(DataExportEntity dataExportEntity);
 
-    List<DataExportDTO> toListDTO(List<DataExportEntity> s);
+    List<DataExportDTO> toListDTO(List<DataExportEntity> dataExportEntities);
 
-    DataExportEntity toEntity(DataExportDTO s);
+    DataExportEntity toEntity(DataExportDTO dataExportDTO);
 
+    DataExportEntity toEntity(DataExportUpdateDTO dataExportUpdateDTO);
+
+    DataExportDTO toDTO(CreateDataExportDTO createDataExportDTO);
+
+    DataExportDTO toEntity(CreateDataExportDTO createDataExportDTO);
 }

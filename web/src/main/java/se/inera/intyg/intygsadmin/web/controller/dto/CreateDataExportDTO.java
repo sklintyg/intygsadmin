@@ -23,27 +23,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class DataExportDTO {
-
-    @ApiModelProperty(notes = "Export ID", required = true)
-    private UUID id;
-
-    @ApiModelProperty(notes = "Date when the request was first created", required = true)
-    private LocalDateTime createdAt;
-
-    @ApiModelProperty(notes = "Current status of the export", required = true)
-    private DataExportStatus status;
-
-    @ApiModelProperty(notes = "The name of the administrator who created the request.", required = true)
-    private String administratorName;
+public class CreateDataExportDTO {
 
     @ApiModelProperty(notes = "Care provider ID", required = true)
     private String careProviderHsaId;

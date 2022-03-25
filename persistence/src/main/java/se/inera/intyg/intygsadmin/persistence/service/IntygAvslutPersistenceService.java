@@ -25,23 +25,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
-import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
-import se.inera.intyg.intygsadmin.persistence.repository.DataExportRepository;
-import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
+import se.inera.intyg.intygsadmin.persistence.repository.IntygAvslutRepository;
 import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 
 @Service
 @Transactional
-public class DataExportPersistenceService {
+public class IntygAvslutPersistenceService {
 
-    private final DataExportRepository dataExportRepository;
+    private final IntygAvslutRepository intygAvslutRepository;
 
-    public DataExportPersistenceService(DataExportRepository dataExportRepository) {
-        this.dataExportRepository = dataExportRepository;
+    public IntygAvslutPersistenceService(IntygAvslutRepository intygAvslutRepository) {
+        this.intygAvslutRepository = intygAvslutRepository;
     }
 
-    public Optional<DataExportEntity> findById(UUID id) {
-        return dataExportRepository.findById(id);
+    public Optional<DataExportEntity> findById(UUID exportId) {
+        return intygAvslutRepository.findById(exportId);
     }
 
     /*public void delete(UUID id) {
@@ -49,19 +47,19 @@ public class DataExportPersistenceService {
     }*/
 
     public DataExportEntity add(DataExportEntity dataExportEntity) {
-        return dataExportRepository.save(dataExportEntity);
+        return intygAvslutRepository.save(dataExportEntity);
     }
 
     public DataExportEntity update(DataExportEntity newDataExportEntity) {
-        final var dataExportEntity = dataExportRepository.getOne(newDataExportEntity.getId());
+        final var dataExportEntity = intygAvslutRepository.getOne(newDataExportEntity.getId());
         dataExportEntity.setRepresentativePersonId(newDataExportEntity.getRepresentativePersonId());
         dataExportEntity.setRepresentativePhoneNumber(newDataExportEntity.getRepresentativePhoneNumber());
 
-        return dataExportRepository.save(dataExportEntity);
+        return intygAvslutRepository.save(dataExportEntity);
     }
 
     public Page<DataExportEntity> findAll(Pageable pageable) {
-        return dataExportRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
+        return intygAvslutRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
     }
 
 }

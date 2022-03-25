@@ -34,7 +34,7 @@ import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 
 @ExtendWith(MockitoExtension.class)
-public class TestCertificateServiceTest {
+public class TestCertificateServiceTestImpl {
     @Mock
     private ITIntegrationService itIntegrationService;
 
@@ -42,7 +42,7 @@ public class TestCertificateServiceTest {
     private WCIntegrationService wcIntegrationService;
 
     @InjectMocks
-    private TestCertificateService testCertificateService;
+    private TestCertificateServiceImpl testCertificateService;
 
     @Test
     public void testEraseTestCertificates() {

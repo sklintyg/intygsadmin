@@ -16,16 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.persistence.repository;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+import java.time.LocalDateTime;
 import java.util.UUID;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.stereotype.Repository;
-import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 
-@Repository
-public interface DataExportRepository extends JpaRepository<DataExportEntity, UUID>,
-    QuerydslPredicateExecutor<DataExportEntity> {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DataExportUpdateDTO {
+
+    @ApiModelProperty(notes = "Export ID", required = true)
+    private UUID id;
+
+    @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
+    private String representativePersonId;
+
+    @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
+    private String representativePhoneNumber;
 
 }

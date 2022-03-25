@@ -30,8 +30,6 @@ export const fetchDataExportList = ({ pageIndex, sortColumn, sortDirection }) =>
 
 export const fetchDataExportStatusList = ({ dataExportId }) => {
   return utils.makeServerRequest(
-    utils.buildUrlFromParams('dataExport', {
-      dataExportId: dataExportId,
-    })
+    utils.buildUrlFromParams( `dataExport/${dataExportId}/status`, {})
   )
 }

@@ -16,23 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.service;
+package se.inera.intyg.intygsadmin.persistence.repository;
 
 import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.stereotype.Repository;
+import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
 
-public interface UserService {
+@Repository
+public interface IntygAvslutRepository extends JpaRepository<DataExportEntity, UUID>,
+    QuerydslPredicateExecutor<DataExportEntity> {
 
-    IntygsadminUser getActiveUser();
-
-    Page<UserDTO> getUsers(Pageable pageable);
-
-    void deleteUser(UUID id);
-
-    UserDTO updateUser(UserDTO userDTO);
-
-    UserDTO addUser(UserDTO userDTO);
 }

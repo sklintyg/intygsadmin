@@ -23,16 +23,21 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportStatusDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 
-public interface DataExportService {
+public interface IntygAvslutService {
 
     Page<DataExportDTO> getDataExports(Pageable pageable);
 
-    List<DataExportStatusDTO> getDataExportStatuses(UUID id);
+    List<DataExportStatusDTO> getDataExportStatuses(UUID dataExportDTOId);
 
-    DataExportDTO updateDataExport(DataExportDTO dataExportDTO);
+    //TODO
+    boolean deleteUserData(UUID dataExportDTOId);
 
-    DataExportDTO addDataExport(DataExportDTO dataExportDTO);
+    DataExportDTO updateDataExport(DataExportUpdateDTO dataExportUpdateDTO);
+
+    DataExportDTO createDataExport(CreateDataExportDTO createDataExportDTO);
 }

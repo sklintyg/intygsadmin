@@ -60,7 +60,7 @@ import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
 import se.inera.intyg.intygsadmin.web.mapper.IntygInfoMapper;
 
 @ExtendWith(MockitoExtension.class)
-public class IntygInfoServiceTest {
+public class IntygInfoServiceImplTest {
 
     @Spy
     private IntygInfoMapper intygInfoMapper = Mappers.getMapper(IntygInfoMapper.class);
@@ -73,7 +73,7 @@ public class IntygInfoServiceTest {
     @Mock
     private WCIntegrationService wcIntegrationService;
     @InjectMocks
-    private IntygInfoService intygInfoService;
+    private IntygInfoServiceImpl intygInfoService;
 
     @Test
     public void testGetIntygInfoList() {
