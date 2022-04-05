@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,6 @@ import se.inera.intyg.intygsadmin.persistence.service.IntygAvslutPersistenceServ
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportStatusDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 import se.inera.intyg.intygsadmin.web.mapper.DataExportMapper;
 
 @Service
@@ -42,7 +42,7 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
     private final IntygAvslutPersistenceService intygAvslutPersistenceService;
     private final DataExportMapper dataExportMapper;
     private final UserService userService;
-    private static final Logger LOG = LoggerFactory.getLogger(IntygAvslutService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IntygAvslutServiceImpl.class);
 
     public IntygAvslutServiceImpl(IntygAvslutPersistenceService intygAvslutPersistenceService, DataExportMapper dataExportMapper,
         UserService userService) {
@@ -62,26 +62,26 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
 
     @Override //TODO Implement
     public List<DataExportStatusDTO> getDataExportStatuses(UUID dataExportDTOId) {
-        final var statuses = new ArrayList<DataExportStatusDTO>();
-        statuses.add(new DataExportStatusDTO(LocalDateTime.now().minusDays(1L), DataExportStatus.CREATED.description()));
-        statuses.add(new DataExportStatusDTO(LocalDateTime.now(), DataExportStatus.CREATING_PACKAGE.description()));
-        return statuses;
+        throw new NotImplementedException("Operation not supported");
     }
 
     @Override //TODO Implement
     public boolean deleteUserData(UUID dataExportDTOId) {
-        // TODO Add validation logic
-        LOG.debug("Ta bort användare: {}", dataExportDTOId);
-        return true;
+        throw new NotImplementedException("Operation not supported");
     }
 
     @Override
-    public DataExportDTO updateDataExport(DataExportUpdateDTO dataExportUpdateDTO) {
+    public DataExportDTO updateDataExport(UUID dataExportId, String representativePersonId, String representativePhoneNumber) {
 
         // TODO Add validation logic
         // validateDataExport(dataExportDTO);
 
-        final var updatedDataExport = intygAvslutPersistenceService.update(dataExportMapper.toEntity(dataExportUpdateDTO));
+        DataExportDTO dataExportDTO = new DataExportDTO();
+        dataExportDTO.setId(dataExportId);
+        dataExportDTO.setRepresentativePersonId(representativePersonId);
+        dataExportDTO.setRepresentativePhoneNumber(representativePhoneNumber);
+
+        final var updatedDataExport = intygAvslutPersistenceService.update(dataExportMapper.toEntity(dataExportDTO));
         return dataExportMapper.toDTO(updatedDataExport);
     }
 
@@ -101,6 +101,11 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
         final var createdDataExport = intygAvslutPersistenceService.add(dataExportMapper.toEntity(dataExportDTO));
 
         return dataExportMapper.toDTO(createdDataExport);
+    }
+
+    @Override
+    public boolean deleteExportRequest(UUID dataExportId) {
+        throw new NotImplementedException("Operation not supported");
     }
 
 }

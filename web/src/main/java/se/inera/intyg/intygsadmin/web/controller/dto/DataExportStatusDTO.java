@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +30,10 @@ import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 @AllArgsConstructor
 public class DataExportStatusDTO {
 
-    private LocalDateTime createdAt;
-    private String statusDescription;
+    @ApiModelProperty(notes = "When the status was set")
+    private LocalDateTime date;
+
+    @ApiModelProperty(notes = "Export ID")
+    private DataExportStatus dataExportStatus;
 
 }

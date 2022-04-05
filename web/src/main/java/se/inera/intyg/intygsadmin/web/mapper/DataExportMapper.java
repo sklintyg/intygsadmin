@@ -35,9 +35,5 @@ public interface DataExportMapper {
 
     DataExportEntity toEntity(DataExportDTO dataExportDTO);
 
-    DataExportEntity toEntity(DataExportUpdateDTO dataExportUpdateDTO);
-
-    DataExportDTO toDTO(CreateDataExportDTO createDataExportDTO);
-
     DataExportDTO toEntity(CreateDataExportDTO createDataExportDTO);
 }

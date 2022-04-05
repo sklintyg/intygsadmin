@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
-import modalContainer from '../../modalContainer/modalContainer'
-import { compose } from 'recompose'
-import * as actions from '../../../store/actions/dataExport'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
-import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
-import IaAlert, { alertType } from '../../alert/Alert'
-import { IaTypo04 } from '../../styles/iaTypography'
-import { getErrorMessageModal } from '../../../store/reducers/users'
-import { getMessage } from '../../../messages/messages'
+import React, { useState } from 'react';
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import modalContainer from '../../modalContainer/modalContainer';
+import { compose } from 'recompose';
+import * as actions from '../../../store/actions/dataExport';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout';
+import IaAlert, { alertType } from '../../alert/Alert';
+import { IaTypo04 } from '../../styles/iaTypography';
+import { getErrorMessageModal } from '../../../store/reducers/users';
+import { getMessage } from '../../../messages/messages';
 
 const StyledBody = styled(ModalBody)`
   .form-control {
@@ -30,21 +30,21 @@ const StyledBody = styled(ModalBody)`
   label {
     display: block;
   }
-`
+`;
 
 const initialDataExport = {
   careProviderHsaId: '',
   organizationNumber: '',
   representativePersonId: '',
   representativePhoneNumber: '',
-}
+};
 
 const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, errorMessage, clearError }) => {
-  const [newDataExport, setNewDataExport] = useState(initialDataExport)
+  const [newDataExport, setNewDataExport] = useState(initialDataExport);
 
   const onChange = (prop) => (value) => {
-    setNewDataExport({ ...newDataExport, [prop]: value })
-  }
+    setNewDataExport({ ...newDataExport, [prop]: value });
+  };
 
   const createSendObject = () => {
     return {
@@ -53,34 +53,33 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
       representativePersonId: newDataExport.representativePersonId,
       representativePhoneNumber: newDataExport.representativePhoneNumber,
     }
-  }
+  };
 
   const send = () => {
-    const func = createDataExport(createSendObject()) //TODO: Change and create data export
+    const func = createDataExport(createSendObject());
 
     func
       .then(() => {
-        cancel()
-        onComplete()
+        cancel();
+        onComplete();
       })
-      .catch(() => {})
-  }
+      .catch(() => {});
+  };
 
   const cancel = () => {
-    //clearError()
-    setNewDataExport(initialDataExport)
-    handleClose()
-  }
+    setNewDataExport(initialDataExport);
+    handleClose();
+  };
 
   const enableSaveBtn = () => {
-    const fields = ['careProviderHsaId', 'organizationNumber', 'representativePersonId', 'representativePhoneNumber']
+    const fields = ['careProviderHsaId', 'organizationNumber', 'representativePersonId', 'representativePhoneNumber'];
 
     let enable = fields.reduce((accumulator, currentValue) => {
-      return accumulator && newDataExport[currentValue]
-    }, true)
+      return accumulator && newDataExport[currentValue];
+    }, true);
 
-    return enable
-  }
+    return enable;
+  };
 
   return (
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
@@ -160,16 +159,14 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
         </Button>
       </ModalFooter>
     </Modal>
-  )
+  );
 }
 
 const mapStateToProps = (state) => {
-  return {
-    errorMessage: getErrorMessageModal(state),
-  }
-}
+  return { errorMessage: getErrorMessageModal(state) };
+};
 
-export const CreateDataExportId = 'createDataExport'
+export const CreateDataExportId = 'createDataExport';
 
 export default compose(
   connect(
@@ -177,4 +174,4 @@ export default compose(
     { ...actions }
   ),
   modalContainer(CreateDataExportId)
-)(CreateDataExport)
+)(CreateDataExport);

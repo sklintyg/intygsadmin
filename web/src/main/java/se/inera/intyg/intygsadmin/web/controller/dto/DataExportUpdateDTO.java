@@ -19,20 +19,14 @@
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
 import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DataExportUpdateDTO {
-
-    @ApiModelProperty(notes = "Export ID", required = true)
-    private UUID id;
 
     @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
     private String representativePersonId;

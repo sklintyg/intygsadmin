@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportStatusDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 
 public interface IntygAvslutService {
 
@@ -37,7 +36,9 @@ public interface IntygAvslutService {
     //TODO
     boolean deleteUserData(UUID dataExportDTOId);
 
-    DataExportDTO updateDataExport(DataExportUpdateDTO dataExportUpdateDTO);
-
     DataExportDTO createDataExport(CreateDataExportDTO createDataExportDTO);
+
+    boolean deleteExportRequest(UUID dataExportId);
+
+    DataExportDTO updateDataExport(UUID dataExportId, String representativePersonId, String representativePhoneNumber);
 }

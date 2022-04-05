@@ -22,7 +22,7 @@ package se.inera.intyg.intygsadmin.web.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -32,6 +32,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,7 +49,6 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 import se.inera.intyg.intygsadmin.web.mapper.DataExportMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,7 +64,7 @@ class IntygAvslutServiceImplTest {
     private IntygAvslutServiceImpl intygAvslutService;
 
     @Test
-    void getDataExports() {
+    void testGetDataExports() {
         when(intygAvslutPersistenceService.findAll(any(Pageable.class))).thenReturn(new PageImpl<DataExportEntity>(new ArrayList<>()));
         when(dataExportMapper.toListDTO(any(List.class))).thenReturn(new ArrayList());
 
@@ -75,35 +75,34 @@ class IntygAvslutServiceImplTest {
     }
 
     @Test
-    void getDataExportStatuses() {
-        assertEquals(intygAvslutService.getDataExportStatuses(UUID.randomUUID()).size(), 2);
+    void testGetDataExportStatuses() {
+        assertThrows(NotImplementedException.class, () -> { intygAvslutService.getDataExportStatuses(UUID.randomUUID()); });
     }
 
     @Test
-    void deleteUserData() {
-        assertTrue(intygAvslutService.deleteUserData(UUID.randomUUID()));
+    void testDeleteUserData() {
+        assertThrows(NotImplementedException.class, () -> { intygAvslutService.deleteUserData(UUID.randomUUID()); });
     }
 
     @Test
-    void updateDataExport() {
-        DataExportUpdateDTO dataExportUpdateDTO = new DataExportUpdateDTO();
+    void testUpdateDataExport() {
         DataExportDTO dataExportDTO = new DataExportDTO();
         DataExportEntity dataExportEntityIn = new DataExportEntity();
         DataExportEntity dataExportEntityOut = new DataExportEntity();
 
-        when(dataExportMapper.toEntity(dataExportUpdateDTO)).thenReturn(dataExportEntityIn);
+        when(dataExportMapper.toEntity(any(DataExportDTO.class))).thenReturn(dataExportEntityIn);
         when(intygAvslutPersistenceService.update(dataExportEntityIn)).thenReturn(dataExportEntityOut);
-        when(dataExportMapper.toDTO(dataExportEntityOut)).thenReturn(dataExportDTO);
+        when(dataExportMapper.toDTO(any(DataExportEntity.class))).thenReturn(dataExportDTO);
 
-        assertNotNull(intygAvslutService.updateDataExport(dataExportUpdateDTO));
+        assertNotNull(intygAvslutService.updateDataExport(UUID.randomUUID(), "personnr", "Phone"));
 
-        verify(dataExportMapper).toEntity(dataExportUpdateDTO);
+        verify(dataExportMapper).toEntity(any(DataExportDTO.class));
         verify(intygAvslutPersistenceService).update(dataExportEntityIn);
-        verify(dataExportMapper).toDTO(dataExportEntityOut);
+        verify(dataExportMapper).toDTO(any(DataExportEntity.class));
     }
 
     @Test
-    void createDataExport() {
+    void testCreateDataExport() {
         CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
         DataExportDTO dataExportDTOIn = new DataExportDTO();
         DataExportDTO dataExportDTOOut = new DataExportDTO();
@@ -132,5 +131,11 @@ class IntygAvslutServiceImplTest {
         verify(dataExportMapper).toEntity(dataExportDTOIn);
         verify(intygAvslutPersistenceService).add(dataExportEntityIn);
         verify(dataExportMapper).toDTO(dataExportEntityOut);
+    }
+
+
+    @Test
+    void testDeleteExportRequest() {
+        assertThrows(NotImplementedException.class, () -> { intygAvslutService.deleteExportRequest(UUID.randomUUID()); });
     }
 }
