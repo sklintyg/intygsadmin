@@ -126,7 +126,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.administratorName}</td>
                 <td>{dataExport.id}</td>
                 <td>{dataExport.status}</td>
-                <td>{dataExport.hsaId}</td>
+                <td>{dataExport.careProviderHsaId}</td>
                 <td>{dataExport.organizationNumber}</td>
                 <td>{dataExport.representativePersonId}</td>
                 <td>{dataExport.representativePhoneNumber}</td>
