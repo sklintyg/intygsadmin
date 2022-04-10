@@ -38,7 +38,7 @@ import se.inera.intyg.intygsadmin.web.util.PrivatePractitionerFileWriter;
 @RequestMapping("/api/privatepractitioner")
 public class PrivatePractitionerController {
 
-    private PPIntegrationService ppIntegratedUnitsService;
+    private final PPIntegrationService ppIntegratedUnitsService;
 
     @Autowired
     public PrivatePractitionerController(PPIntegrationService ppIntegratedUnitsService) {
@@ -57,7 +57,7 @@ public class PrivatePractitionerController {
     }
 
     @GetMapping("/file")
-    public ResponseEntity getPrivatePractitionerFile() {
+    public ResponseEntity<byte[]> getPrivatePractitionerFile() {
 
         List<PrivatePractitioner> privatePractitionerList = ppIntegratedUnitsService.getAllPrivatePractitioners();
         if (privatePractitionerList.isEmpty()) {
