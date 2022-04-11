@@ -63,10 +63,10 @@ public class PrivatePractitionerFileWriter {
 
         Cell cell = row.createCell(columnCount++);
         cell.setCellStyle(style);
-        cell.setCellValue("HSA-id");
+        cell.setCellValue("Personnummer");
         cell = row.createCell(columnCount++);
         cell.setCellStyle(style);
-        cell.setCellValue("Personnummer");
+        cell.setCellValue("HSA-id");
         cell = row.createCell(columnCount++);
         cell.setCellStyle(style);
         cell.setCellValue("Namn");
@@ -98,9 +98,9 @@ public class PrivatePractitionerFileWriter {
             privatePractitioner.getRegistrationDate() != null ? formatter.format(privatePractitioner.getRegistrationDate()) : "";
 
         Cell cell = row.createCell(columnCount++);
-        cell.setCellValue(privatePractitioner.getHsaId());
-        cell = row.createCell(columnCount++);
         cell.setCellValue(privatePractitioner.getPersonId());
+        cell = row.createCell(columnCount++);
+        cell.setCellValue(privatePractitioner.getHsaId());
         cell = row.createCell(columnCount++);
         cell.setCellValue(privatePractitioner.getName());
         cell = row.createCell(columnCount++);
