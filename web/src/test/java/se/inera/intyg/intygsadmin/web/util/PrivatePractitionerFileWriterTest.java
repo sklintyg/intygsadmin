@@ -20,7 +20,6 @@ package se.inera.intyg.intygsadmin.web.util;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,13 +29,13 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 public class PrivatePractitionerFileWriterTest {
 
     private List<PrivatePractitioner> createPrivatePractitioners() {
-        return List.of(new PrivatePractitioner("HSAID", "NAME", "CAREPROIVIDER", "EMAIL@EMAIL.COM",
+        return List.of(new PrivatePractitioner("HSAID", "PERSON_ID", "NAME", "CAREPROIVIDER", "EMAIL@EMAIL.COM",
             LocalDateTime.now()));
     }
 
     @Test
     public void testWriteExcel() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new PrivatePractitionerFileWriter().writeExcel(createPrivatePractitioners());
+        final var byteArrayOutputStream = new PrivatePractitionerFileWriter().writeExcel(createPrivatePractitioners());
 
         assertTrue(byteArrayOutputStream.size() > 0);
     }

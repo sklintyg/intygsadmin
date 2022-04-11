@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 public class PrivatePractitioner {
 
     private String hsaId;
+    private String personId;
     private String name;
     private String careproviderName;
     private String email;

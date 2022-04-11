@@ -57,7 +57,7 @@ intygstjansten:
   internalapi: http://localhost:8180/inera-certificate
 
 privatlakarportal:
-  internalapi: http://localhost:8190
+  internalapi: http://localhost:8160
 
 job:
   erasetestcertificate:

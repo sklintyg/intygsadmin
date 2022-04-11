@@ -25,26 +25,24 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 public class PrivatePractitionerFileWriter {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public ByteArrayOutputStream writeExcel(List<PrivatePractitioner> privatePractitionerList) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Privatläkare");
+        final var workbook = new XSSFWorkbook();
+        final var sheet = workbook.createSheet("Privatläkare");
 
         int rowCount = 0;
 
-        Row headerRow = sheet.createRow(rowCount++);
+        final var headerRow = sheet.createRow(rowCount++);
         int lastColumnIndex = writeHeader(headerRow, workbook);
 
         for (PrivatePractitioner privatePractitioner : privatePractitionerList) {
-            Row row = sheet.createRow(rowCount++);
+            final var row = sheet.createRow(rowCount++);
             writePrivatePractitioner(privatePractitioner, row);
         }
 
@@ -59,13 +57,16 @@ public class PrivatePractitionerFileWriter {
     }
 
     private int writeHeader(Row row, XSSFWorkbook workbook) {
-        XSSFCellStyle style = createHeaderStyle(workbook);
+        final var style = createHeaderStyle(workbook);
 
         int columnCount = 0;
 
         Cell cell = row.createCell(columnCount++);
         cell.setCellStyle(style);
         cell.setCellValue("HSA-id");
+        cell = row.createCell(columnCount++);
+        cell.setCellStyle(style);
+        cell.setCellValue("Personnummer");
         cell = row.createCell(columnCount++);
         cell.setCellStyle(style);
         cell.setCellValue("Namn");
@@ -83,8 +84,8 @@ public class PrivatePractitionerFileWriter {
     }
 
     private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
-        XSSFCellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
+        final var style = workbook.createCellStyle();
+        final var font = workbook.createFont();
         font.setBold(true);
         style.setFont(font);
         return style;
@@ -93,11 +94,13 @@ public class PrivatePractitionerFileWriter {
     private void writePrivatePractitioner(PrivatePractitioner privatePractitioner, Row row) {
         int columnCount = 0;
 
-        final String registrationDate =
+        final var registrationDate =
             privatePractitioner.getRegistrationDate() != null ? formatter.format(privatePractitioner.getRegistrationDate()) : "";
 
         Cell cell = row.createCell(columnCount++);
         cell.setCellValue(privatePractitioner.getHsaId());
+        cell = row.createCell(columnCount++);
+        cell.setCellValue(privatePractitioner.getPersonId());
         cell = row.createCell(columnCount++);
         cell.setCellValue(privatePractitioner.getName());
         cell = row.createCell(columnCount++);
