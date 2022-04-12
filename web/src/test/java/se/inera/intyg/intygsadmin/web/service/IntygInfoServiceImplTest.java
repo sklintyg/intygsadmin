@@ -55,8 +55,8 @@ import se.inera.intyg.intygsadmin.persistence.service.IntygInfoPersistenceServic
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
-import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
-import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.mapper.IntygInfoMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,9 +69,9 @@ public class IntygInfoServiceImplTest {
     @Mock
     private UserService userService;
     @Mock
-    private ITIntegrationService itIntegrationService;
+    private ITIntegrationRestService itIntegrationRestService;
     @Mock
-    private WCIntegrationService wcIntegrationService;
+    private WCIntegrationRestService wcIntegrationRestService;
     @InjectMocks
     private IntygInfoServiceImpl intygInfoService;
 
@@ -92,8 +92,8 @@ public class IntygInfoServiceImplTest {
     public void testGetIntygInfoNotFound() {
         String intygId = "intygId";
 
-        when(wcIntegrationService.getIntygInfo(intygId)).thenReturn(null);
-        when(itIntegrationService.getIntygInfo(intygId)).thenReturn(null);
+        when(wcIntegrationRestService.getIntygInfo(intygId)).thenReturn(null);
+        when(itIntegrationRestService.getIntygInfo(intygId)).thenReturn(null);
 
         Optional<IntygInfoDTO> intygInfo = intygInfoService.getIntygInfo(intygId);
 
@@ -112,8 +112,8 @@ public class IntygInfoServiceImplTest {
         itIntygInfo.setIntygType("lisjp");
         itIntygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, LocalDateTime.now(), IntygInfoEventType.IS005));
 
-        when(wcIntegrationService.getIntygInfo(intygId)).thenReturn(null);
-        when(itIntegrationService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
+        when(wcIntegrationRestService.getIntygInfo(intygId)).thenReturn(null);
+        when(itIntegrationRestService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
 
         Optional<IntygInfoDTO> optionalIntygInfo = intygInfoService.getIntygInfo(intygId);
 
@@ -141,8 +141,8 @@ public class IntygInfoServiceImplTest {
         wcIntygInfo.setDraftCreated(LocalDateTime.now());
         wcIntygInfo.getEvents().add(new IntygInfoEvent(Source.WEBCERT, LocalDateTime.now(), IntygInfoEventType.IS001));
 
-        when(wcIntegrationService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
-        when(itIntegrationService.getIntygInfo(intygId)).thenReturn(null);
+        when(wcIntegrationRestService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
+        when(itIntegrationRestService.getIntygInfo(intygId)).thenReturn(null);
 
         Optional<IntygInfoDTO> optionalIntygInfo = intygInfoService.getIntygInfo(intygId);
 
@@ -175,8 +175,8 @@ public class IntygInfoServiceImplTest {
         itIntygInfo.setIntygType("lisjp");
         itIntygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, LocalDateTime.now(), IntygInfoEventType.IS005));
 
-        when(wcIntegrationService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
-        when(itIntegrationService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
+        when(wcIntegrationRestService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
+        when(itIntegrationRestService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
 
         Optional<IntygInfoDTO> optionalIntygInfo = intygInfoService.getIntygInfo(intygId);
 
@@ -210,8 +210,8 @@ public class IntygInfoServiceImplTest {
         itIntygInfo.setIntygType("lisjp");
         itIntygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, LocalDateTime.now(), IntygInfoEventType.IS005));
 
-        when(wcIntegrationService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
-        when(itIntegrationService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
+        when(wcIntegrationRestService.getIntygInfo(intygId)).thenReturn(wcIntygInfo);
+        when(itIntegrationRestService.getIntygInfo(intygId)).thenReturn(itIntygInfo);
 
         Optional<IntygInfoDTO> optionalIntygInfo = intygInfoService.getIntygInfo(intygId);
 

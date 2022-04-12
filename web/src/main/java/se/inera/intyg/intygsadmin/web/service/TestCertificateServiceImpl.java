@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
-import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.jobs.EraseTestCertificateJob;
 
 @Service
@@ -35,10 +35,10 @@ public class TestCertificateServiceImpl implements TestCertificateService {
     private static final Logger LOG = LoggerFactory.getLogger(EraseTestCertificateJob.class);
 
     @Autowired
-    private ITIntegrationService itIntegrationService;
+    private ITIntegrationRestService itIntegrationRestService;
 
     @Autowired
-    private WCIntegrationService wcIntegrationService;
+    private WCIntegrationRestService wcIntegrationRestService;
 
     @Value("${erasetestcertificate.erase.after.day}")
     private int eraseAfterDay;
@@ -82,7 +82,7 @@ public class TestCertificateServiceImpl implements TestCertificateService {
 
     private void eraseTestCertificatesInWC(LocalDateTime from, LocalDateTime to) {
         final var start = System.currentTimeMillis();
-        final var eraseResult = wcIntegrationService.eraseTestCertificates(from, to);
+        final var eraseResult = wcIntegrationRestService.eraseTestCertificates(from, to);
         final var end = System.currentTimeMillis();
         final var duration = end - start;
 
@@ -92,7 +92,7 @@ public class TestCertificateServiceImpl implements TestCertificateService {
 
     private void eraseTestCertificatesInIT(LocalDateTime from, LocalDateTime to) {
         final var start = System.currentTimeMillis();
-        final var eraseResult = itIntegrationService.eraseTestCertificates(from, to);
+        final var eraseResult = itIntegrationRestService.eraseTestCertificates(from, to);
         final var end = System.currentTimeMillis();
         final var duration = end - start;
 

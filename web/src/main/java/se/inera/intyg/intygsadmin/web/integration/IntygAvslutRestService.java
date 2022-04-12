@@ -16,28 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.intygsadmin.web.integration;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
-import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
+import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
-public interface WCIntegrationService {
+public interface IntygAvslutRestService {
 
-    IntegratedUnitDTO getIntegratedUnit(String hsaId);
+    List<DataExportResponse> getDataExports();
 
-    List<IntegratedUnitDTO> getAllIntegratedUnits();
-
-    WcIntygInfo getIntygInfo(String intygId);
-
-    /**
-     * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+    DataExportResponse createDataExport(CreateDataExport createDataExport);
 
 }

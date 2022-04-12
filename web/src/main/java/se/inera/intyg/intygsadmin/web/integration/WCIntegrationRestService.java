@@ -16,24 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.mapper;
+package se.inera.intyg.intygsadmin.web.integration;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
-import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
-import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
+import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
+import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
+import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface DataExportMapper {
+public interface WCIntegrationRestService {
 
-    DataExportDTO toDTO(DataExportEntity dataExportEntity);
+    IntegratedUnitDTO getIntegratedUnit(String hsaId);
 
-    List<DataExportDTO> toListDTO(List<DataExportEntity> dataExportEntities);
+    List<IntegratedUnitDTO> getAllIntegratedUnits();
 
-    DataExportEntity toEntity(DataExportDTO dataExportDTO);
+    WcIntygInfo getIntygInfo(String intygId);
 
-    DataExportDTO toEntity(CreateDataExportDTO createDataExportDTO);
+    /**
+     * Service for erasing of test certificates.
+     * @param from  Created after from datetime
+     * @param to    Create before to datetime
+     * @return  Result of the erase operation
+     */
+    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+
 }

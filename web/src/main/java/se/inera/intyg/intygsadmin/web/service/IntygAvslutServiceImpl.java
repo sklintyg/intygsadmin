@@ -18,94 +18,48 @@
  */
 package se.inera.intyg.intygsadmin.web.service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
-import se.inera.intyg.intygsadmin.persistence.service.IntygAvslutPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportStatusDTO;
-import se.inera.intyg.intygsadmin.web.mapper.DataExportMapper;
+import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
+import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
+import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
 @Service
 public class IntygAvslutServiceImpl implements IntygAvslutService {
 
-    private final IntygAvslutPersistenceService intygAvslutPersistenceService;
-    private final DataExportMapper dataExportMapper;
-    private final UserService userService;
+    private UserService userService;
+    IntygAvslutRestService intygAvslutRestService;
+
     private static final Logger LOG = LoggerFactory.getLogger(IntygAvslutServiceImpl.class);
 
-    public IntygAvslutServiceImpl(IntygAvslutPersistenceService intygAvslutPersistenceService, DataExportMapper dataExportMapper,
-        UserService userService) {
-        this.intygAvslutPersistenceService = intygAvslutPersistenceService;
-        this.dataExportMapper = dataExportMapper;
+    public IntygAvslutServiceImpl(IntygAvslutRestService intygAvslutRestService, UserService userService) {
+        this.intygAvslutRestService = intygAvslutRestService;
         this.userService = userService;
     }
 
     @Override
-    public Page<DataExportDTO> getDataExports(Pageable pageable) {
-        final var dataExportEntities = intygAvslutPersistenceService.findAll(pageable);
-
-        final var mapDataExports = dataExportMapper.toListDTO(dataExportEntities.getContent());
-
-        return new PageImpl<>(mapDataExports, pageable, dataExportEntities.getTotalElements());
-    }
-
-    @Override //TODO Implement
-    public List<DataExportStatusDTO> getDataExportStatuses(UUID dataExportDTOId) {
-        throw new NotImplementedException("Operation not supported");
-    }
-
-    @Override //TODO Implement
-    public boolean deleteUserData(UUID dataExportDTOId) {
-        throw new NotImplementedException("Operation not supported");
+    public Page<DataExportResponse> getDataExports() {
+        //TODO add validation;
+        return new PageImpl<DataExportResponse>(intygAvslutRestService.getDataExports());
     }
 
     @Override
-    public DataExportDTO updateDataExport(UUID dataExportId, String representativePersonId, String representativePhoneNumber) {
+    public DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO) {
 
-        // TODO Add validation logic
-        // validateDataExport(dataExportDTO);
+        CreateDataExport createDataExport = new CreateDataExport();
+        createDataExport.setCreatorName(userService.getActiveUser().getName());
+        createDataExport.setCreatorHSAId(userService.getActiveUser().getEmployeeHsaId());
+        createDataExport.setHsaId(createDataExportDTO.getHsaId());
+        createDataExport.setPersonId(createDataExportDTO.getPersonId());
+        createDataExport.setPhoneNumber(createDataExportDTO.getPhoneNumber());
+        createDataExport.setOrganizationalNumber(createDataExportDTO.getOrganizationNumber());
 
-        DataExportDTO dataExportDTO = new DataExportDTO();
-        dataExportDTO.setId(dataExportId);
-        dataExportDTO.setRepresentativePersonId(representativePersonId);
-        dataExportDTO.setRepresentativePhoneNumber(representativePhoneNumber);
-
-        final var updatedDataExport = intygAvslutPersistenceService.update(dataExportMapper.toEntity(dataExportDTO));
-        return dataExportMapper.toDTO(updatedDataExport);
+        //TODO add validation;
+        return intygAvslutRestService.createDataExport(createDataExport);
     }
-
-    @Override
-    public DataExportDTO createDataExport(CreateDataExportDTO createDataExportDTO) {
-
-        DataExportDTO  dataExportDTO = dataExportMapper.toEntity(createDataExportDTO);
-        //Default values
-        dataExportDTO.setId(null);
-        dataExportDTO.setCreatedAt(LocalDateTime.now());
-        dataExportDTO.setStatus(DataExportStatus.CREATED);
-        dataExportDTO.setAdministratorName(userService.getActiveUser().getName());
-
-        // TODO Add validation logic.
-        // validateDataExport(dataExportDTO);
-
-        final var createdDataExport = intygAvslutPersistenceService.add(dataExportMapper.toEntity(dataExportDTO));
-
-        return dataExportMapper.toDTO(createdDataExport);
-    }
-
-    @Override
-    public boolean deleteExportRequest(UUID dataExportId) {
-        throw new NotImplementedException("Operation not supported");
-    }
-
 }

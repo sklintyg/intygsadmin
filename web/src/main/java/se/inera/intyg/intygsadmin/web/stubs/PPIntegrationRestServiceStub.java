@@ -25,17 +25,17 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.integration.PPIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.PPIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 @Profile("pp-stub")
 @Service
-public class PPIntegrationServiceStub implements PPIntegrationService {
+public class PPIntegrationRestServiceStub implements PPIntegrationRestService {
 
     private Map<String, PrivatePractitioner> ppHsaList = new HashMap<>();
     private Map<String, PrivatePractitioner> ppPnrList = new HashMap<>();
 
-    public PPIntegrationServiceStub() {
+    public PPIntegrationRestServiceStub() {
         for (int i = 0; i < 5; i++) {
             var hsaId = "SE123456-X" + i;
             var pnr = "19121212121" + i; // Will not validate, mbut OK in this context

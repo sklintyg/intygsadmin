@@ -32,11 +32,11 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
-import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 
 @Profile("wc-stub")
 @Service
-public class WCIntegrationServiceStub implements WCIntegrationService {
+public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
 
     private static final String UNIT_ID_1 = "SE4815162344-1A01";
     private static final String UNIT_ID_2 = "SE4815162344-1A02";
@@ -49,7 +49,7 @@ public class WCIntegrationServiceStub implements WCIntegrationService {
     private Map<String, IntegratedUnitDTO> validUnit = new HashMap<>();
     private Map<String, WcIntygInfo> intygInfoMap = new HashMap<>();
 
-    public WCIntegrationServiceStub() {
+    public WCIntegrationRestServiceStub() {
         addUnit(UNIT_ID_1);
         addUnit(UNIT_ID_2);
         addUnit(UNIT_ID_3);

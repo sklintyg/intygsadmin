@@ -21,7 +21,7 @@ package se.inera.intyg.intygsadmin.web.integration;
 import java.util.List;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
-public interface PPIntegrationService {
+public interface PPIntegrationRestService {
 
     /**
      * Searches Privatlakarportalen for a given PrivatePractitioner

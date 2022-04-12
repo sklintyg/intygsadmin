@@ -33,10 +33,10 @@ const StyledBody = styled(ModalBody)`
 `;
 
 const initialDataExport = {
-  careProviderHsaId: '',
+  hsaId: '',
   organizationNumber: '',
-  representativePersonId: '',
-  representativePhoneNumber: '',
+  personId: '',
+  phoneNumber: '',
 };
 
 const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, errorMessage, clearError }) => {
@@ -48,11 +48,11 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
 
   const createSendObject = () => {
     return {
-      careProviderHsaId: newDataExport.careProviderHsaId,
+      hsaId: newDataExport.hsaId,
       organizationNumber: newDataExport.organizationNumber,
-      representativePersonId: newDataExport.representativePersonId,
-      representativePhoneNumber: newDataExport.representativePhoneNumber,
-    }
+      personId: newDataExport.personId,
+      phoneNumber: newDataExport.phoneNumber
+    };
   };
 
   const send = () => {
@@ -72,7 +72,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
   };
 
   const enableSaveBtn = () => {
-    const fields = ['careProviderHsaId', 'organizationNumber', 'representativePersonId', 'representativePhoneNumber'];
+    const fields = ['hsaId', 'organizationNumber', 'personId', 'phoneNumber'];
 
     let enable = fields.reduce((accumulator, currentValue) => {
       return accumulator && newDataExport[currentValue];
@@ -86,14 +86,14 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
       <ModalHeader toggle={cancel}> {getMessage(`dataExport.create.modalHeader`)}</ModalHeader>
       <StyledBody>
         <FormGroup>
-          <Label for="dataExportCareProviderHsaId">
+          <Label for="dataExportCreatorHSAId">
             <IaTypo04>{getMessage(`dataExport.create.careProviderHsaId`)}</IaTypo04>
           </Label>
           <Input
-            id="dataExportCareProviderHsaId"
-            value={newDataExport.careProviderHsaId}
+            id="hsaId"
+            value={newDataExport.hsaId}
             maxLength={200}
-            onChange={(e) => onChange('careProviderHsaId')(e.target.value)}
+            onChange={(e) => onChange('hsaId')(e.target.value)}
           />
         </FormGroup>
         <FormGroup>
@@ -101,7 +101,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
             <IaTypo04>{getMessage(`dataExport.create.organizationNumber`)}</IaTypo04>
           </Label>
           <Input
-            id="dataExportOrganizationNumber"
+            id="organizationNumber"
             value={newDataExport.organizationNumber}
             maxLength={200}
             onChange={(e) => onChange('organizationNumber')(e.target.value)}
@@ -113,22 +113,22 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
             <IaTypo04>{getMessage(`dataExport.create.representativePersonId`)}</IaTypo04>
           </Label>
           <Input
-            id="dataExportRepresentativePersonId"
-            value={newDataExport.representativePersonId}
+            id="personId"
+            value={newDataExport.personId}
             maxLength={200}
-            onChange={(e) => onChange('representativePersonId')(e.target.value)}
+            onChange={(e) => onChange('personId')(e.target.value)}
           />
         </FormGroup>
 
         <FormGroup>
-          <Label for="dataExportRepresentativePhoneNumber">
+          <Label for="dataExportPhoneNumber">
             <IaTypo04>{getMessage(`dataExport.create.representativePhoneNumber`)}</IaTypo04>
           </Label>
           <Input
-            id="representativePhoneNumber"
+            id="phoneNumber"
             value={newDataExport.telephoneNUmber}
             maxLength={200}
-            onChange={(e) => onChange('representativePhoneNumber')(e.target.value)}
+            onChange={(e) => onChange('phoneNumber')(e.target.value)}
           />
         </FormGroup>
       </StyledBody>

@@ -16,21 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.integration;
 
-import java.time.LocalDateTime;
-import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+package se.inera.intyg.intygsadmin.web.integration.model.out;
 
-public interface ITIntegrationService {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    ItIntygInfo getIntygInfo(String intygId);
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateDataExport {
 
-    /**
-     * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+    private String creatorHSAId;
+
+    private String creatorName;
+
+    private String hsaId;
+
+    private String organizationalNumber;
+
+    private String personId;
+
+    private String phoneNumber;
 }

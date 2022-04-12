@@ -17,50 +17,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service;
+package se.inera.intyg.intygsadmin.web.integration;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.UUID;
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
-import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
+import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
-@ExtendWith(MockitoExtension.class)
-class IntygAvslutServiceImplTest {
+class IntygAvslutRestServiceImplTest {
 
     @Mock
-    private IntygAvslutRestService intygAvslutRestService;
+    private RestTemplate restTemplate;
 
     @InjectMocks
-    private IntygAvslutServiceImpl intygAvslutService;
+    private IntygAvslutRestServiceImpl intygAvslutRestService;
 
     @Test
-    void testGetDataExports() {
-        when(intygAvslutRestService.getDataExports()).thenReturn(new ArrayList<>());
+    void getDataExports() {
+        when(restTemplate.getForObject(anyString(), any())).thenReturn(new ArrayList<>());
 
-        assertNotNull(intygAvslutService.getDataExports());
+        assertNotNull(intygAvslutRestService.getDataExports());
 
-        verify(intygAvslutRestService, times(1)).getDataExports();
+        verify(restTemplate, times(1)).getForObject(anyString(), any());
     }
 
+
     @Test
-    void testCreateDataExport() {
-        CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
+    void createDataExport() {
+        CreateDataExport createDataExport = new CreateDataExport();
 
-        when(intygAvslutRestService.createDataExport(any(CreateDataExport.class))).thenReturn(new DataExportResponse());
+        when(restTemplate.postForObject(anyString(), any(CreateDataExportDTO.class), any())).thenReturn(new DataExportResponse());
 
-        assertNotNull(intygAvslutService.createDataExport(createDataExportDTO));
-        verify(intygAvslutRestService, times(1)).createDataExport(any(CreateDataExport.class));
+        assertNotNull(intygAvslutRestService.createDataExport(createDataExport));
+        verify(restTemplate, times(1)).postForObject(anyString(), any(CreateDataExportDTO.class), any());
     }
 }

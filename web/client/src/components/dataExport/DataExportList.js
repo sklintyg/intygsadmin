@@ -69,14 +69,14 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
               currentSortColumn={dataExportList.sortColumn}
               currentSortDirection={dataExportList.sortDirection}
               text="Administratör"
-              sortId="administratorName"
+              sortId="creatorName"
               onSort={handleSort}
             />
             <TableSortHead
               currentSortColumn={dataExportList.sortColumn}
               currentSortDirection={dataExportList.sortDirection}
               text="Dataexport-ID"
-              sortId="id"
+              sortId="terminationId"
               onSort={handleSort}
             />
             <TableSortHead
@@ -121,15 +121,15 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
             dataExportList.content.map((dataExport) => (
               <tr key={dataExport.id}>
                 <td>
-                  <DisplayDateTime date={dataExport.createdAt} />
+                  <DisplayDateTime date={dataExport.created} />
                 </td>
-                <td>{dataExport.administratorName}</td>
-                <td>{dataExport.id}</td>
+                <td>{dataExport.creatorName}</td>
+                <td>{dataExport.terminationId}</td>
                 <td>{dataExport.status}</td>
-                <td>{dataExport.careProviderHsaId}</td>
+                <td>{dataExport.hsaId}</td>
                 <td>{dataExport.organizationNumber}</td>
-                <td>{dataExport.representativePersonId}</td>
-                <td>{dataExport.representativePhoneNumber}</td>
+                <td>{dataExport.personId}</td>
+                <td>{dataExport.phoneNumber}</td>
               </tr>
             ))}
         </tbody>

@@ -3,12 +3,6 @@ import * as utils from './utils';
 
 export const createDataExport = (dataExport) => utils.makeServerPost('dataExport', dataExport);
 
-export const removeDataExport = (dataExportId) => utils.makeServerDelete(`dataExport/${dataExportId}`, {}, { emptyBody: true });
-
-export const editDataExport = (dataExportId, representativePersonId, representativePhoneNumber) => utils.makeServerPut(
-  `\`dataExport/${dataExportId}\``,
-  {representativePersonId: representativePersonId, representativePhoneNumber: representativePhoneNumber}
-);
 
 export const fetchDataExportList = ({ pageIndex, sortColumn, sortDirection }) => {
   if (!pageIndex) {
@@ -30,10 +24,5 @@ export const fetchDataExportList = ({ pageIndex, sortColumn, sortDirection }) =>
       sort: `${sortColumn},${sortDirection}`
     })
   );
-}
+};
 
-export const fetchDataExportStatusList = ({ dataExportId }) => {
-  return utils.makeServerRequest(
-    utils.buildUrlFromParams( `dataExport/${dataExportId}/status`, {})
-  );
-}

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.integration.model.in;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
@@ -31,30 +31,33 @@ import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class DataExportDTO {
+public class DataExportResponse {
 
     @ApiModelProperty(notes = "Export ID", required = true)
-    private UUID id;
+    private UUID terminationId;
 
     @ApiModelProperty(notes = "Date when the request was first created", required = true)
-    private LocalDateTime createdAt;
+    private LocalDateTime created;
 
     @ApiModelProperty(notes = "Current status of the export", required = true)
     private DataExportStatus status;
 
     @ApiModelProperty(notes = "The name of the administrator who created the request.", required = true)
-    private String administratorName;
+    private String creatorName;
+
+    @ApiModelProperty(notes = "The HSAiD of the administrator who created the request.", required = true)
+    private String creatorHSAId;
 
     @ApiModelProperty(notes = "Care provider ID", required = true)
-    private String careProviderHsaId;
+    private String hsaId;
 
     @ApiModelProperty(notes = "Organization ID", required = true)
     private String organizationNumber;
 
     @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
-    private String representativePersonId;
+    private String personId;
 
     @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
-    private String representativePhoneNumber;
+    private String phoneNumber;
 
 }

@@ -35,8 +35,8 @@ import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
 import se.inera.intyg.intygsadmin.persistence.service.IntygInfoPersistenceService;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
-import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
-import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.mapper.IntygInfoMapper;
 
 @Service
@@ -47,16 +47,16 @@ public class IntygInfoServiceImpl implements IntygInfoService {
     private IntygInfoPersistenceService intygInfoPersistenceService;
     private IntygInfoMapper intygInfoMapper;
     private UserService userService;
-    private ITIntegrationService itIntegrationService;
-    private WCIntegrationService wcIntegrationService;
+    private ITIntegrationRestService itIntegrationRestService;
+    private WCIntegrationRestService wcIntegrationRestService;
 
     public IntygInfoServiceImpl(IntygInfoPersistenceService intygInfoPersistenceService, IntygInfoMapper intygInfoMapper,
-        UserService userService, ITIntegrationService itIntegrationService, WCIntegrationService wcIntegrationService) {
+        UserService userService, ITIntegrationRestService itIntegrationRestService, WCIntegrationRestService wcIntegrationRestService) {
         this.intygInfoPersistenceService = intygInfoPersistenceService;
         this.intygInfoMapper = intygInfoMapper;
         this.userService = userService;
-        this.itIntegrationService = itIntegrationService;
-        this.wcIntegrationService = wcIntegrationService;
+        this.itIntegrationRestService = itIntegrationRestService;
+        this.wcIntegrationRestService = wcIntegrationRestService;
     }
 
     public Page<IntygInfoListDTO> getIntygInfoList(Pageable pageable) {
@@ -92,7 +92,7 @@ public class IntygInfoServiceImpl implements IntygInfoService {
     private void getInfoFromIT(String intygId, IntygInfoDTO intygInfo) {
         ItIntygInfo itIntygInfoDTO = null;
         try {
-            itIntygInfoDTO = itIntegrationService.getIntygInfo(intygId);
+            itIntygInfoDTO = itIntegrationRestService.getIntygInfo(intygId);
         } catch (Exception e) {
             LOG.error("Error while querying IT for intyg '" + intygId + "'", e);
         }
@@ -105,7 +105,7 @@ public class IntygInfoServiceImpl implements IntygInfoService {
     private void getInfoFromWC(String intygId, IntygInfoDTO intygInfo, List<IntygInfoEvent> events) {
         WcIntygInfo wcIntygInfoDTO = null;
         try {
-            wcIntygInfoDTO = wcIntegrationService.getIntygInfo(intygId);
+            wcIntygInfoDTO = wcIntegrationRestService.getIntygInfo(intygId);
         } catch (Exception e) {
             LOG.error("Error while querying WC for intyg '" + intygId + "'", e);
         }

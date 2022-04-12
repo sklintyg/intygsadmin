@@ -30,16 +30,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
-import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.util.IntegratedUnitsFileWriter;
 
 @RestController
 @RequestMapping("/api/integratedUnits")
 public class IntegratedUnitsController {
 
-    private WCIntegrationService wcIntegratedUnitsService;
+    private WCIntegrationRestService wcIntegratedUnitsService;
 
-    public IntegratedUnitsController(WCIntegrationService wcIntegratedUnitsService) {
+    public IntegratedUnitsController(WCIntegrationRestService wcIntegratedUnitsService) {
         this.wcIntegratedUnitsService = wcIntegratedUnitsService;
     }
 

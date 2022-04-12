@@ -29,16 +29,16 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
-import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
 
 @Profile("it-stub")
 @Service
-public class ITIntegrationStub implements ITIntegrationService {
+public class ITIntegrationRestServiceStub implements ITIntegrationRestService {
 
     private Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
 
-    public ITIntegrationStub() {
-        addIntyg(WCIntegrationServiceStub.INTYG_ID_1);
+    public ITIntegrationRestServiceStub() {
+        addIntyg(WCIntegrationRestServiceStub.INTYG_ID_1);
         addIntyg("f63c813d-a13a-4b4b-965f-419dfe98fffe"); // Only in IT
     }
 
