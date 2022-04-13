@@ -25,7 +25,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 
 @Data
 @NoArgsConstructor
@@ -40,7 +39,7 @@ public class DataExportResponse {
     private LocalDateTime created;
 
     @ApiModelProperty(notes = "Current status of the export", required = true)
-    private DataExportStatus status;
+    private String status;
 
     @ApiModelProperty(notes = "The name of the administrator who created the request.", required = true)
     private String creatorName;
@@ -52,7 +51,7 @@ public class DataExportResponse {
     private String hsaId;
 
     @ApiModelProperty(notes = "Organization ID", required = true)
-    private String organizationNumber;
+    private String organizationalNumber;
 
     @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
     private String personId;

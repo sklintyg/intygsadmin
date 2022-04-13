@@ -27,18 +27,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.UUID;
-import org.apache.commons.lang3.NotImplementedException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.intygsadmin.persistence.entity.DataExportEntity;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
-import se.inera.intyg.intygsadmin.web.controller.dto.DataExportUpdateDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
 class IntygAvslutRestServiceImplTest {

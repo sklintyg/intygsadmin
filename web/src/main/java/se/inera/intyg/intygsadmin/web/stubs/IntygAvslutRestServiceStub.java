@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.persistence.enums.DataExportStatus;
 import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -41,22 +40,22 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
         DataExportResponse dataExportEntity1 = new DataExportResponse();
         dataExportEntity1.setTerminationId(UUID.randomUUID());
         dataExportEntity1.setCreated(LocalDateTime.now());
-        dataExportEntity1.setStatus(DataExportStatus.CREATED);
+        dataExportEntity1.setStatus("Skapad");
         dataExportEntity1.setCreatorName("Sven Svensson");
         dataExportEntity1.setCreated(LocalDateTime.now());
         dataExportEntity1.setPhoneNumber("08-11111111111");
-        dataExportEntity1.setOrganizationNumber("11111111111111111111111111111111");
+        dataExportEntity1.setOrganizationalNumber("11111111111111111111111111111111");
         dataExportEntity1.setPersonId("0123456789");
         dataExportEntity1.setHsaId("99999999999999999999");
 
         DataExportResponse dataExportEntity2 = new DataExportResponse();
         dataExportEntity2.setTerminationId(UUID.randomUUID());
         dataExportEntity2.setCreated(LocalDateTime.now());
-        dataExportEntity2.setStatus(DataExportStatus.CREATED);
+        dataExportEntity2.setStatus("Skapad");
         dataExportEntity2.setCreatorName("Sten stensson");
         dataExportEntity2.setCreated(LocalDateTime.now());
         dataExportEntity2.setPhoneNumber("08-2222222222");
-        dataExportEntity2.setOrganizationNumber("22222222222222222222222222222222");
+        dataExportEntity2.setOrganizationalNumber("22222222222222222222222222222222");
         dataExportEntity2.setPersonId("9876543210");
         dataExportEntity2.setHsaId("888888888888888888888");
 
@@ -76,12 +75,12 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
 
         dataExportResponse.setTerminationId(UUID.randomUUID());
         dataExportResponse.setCreated(LocalDateTime.now());
-        dataExportResponse.setStatus(DataExportStatus.CREATED);
+        dataExportResponse.setStatus("Skapad");
 
         dataExportResponse.setCreatorName(createDataExpocreateDataExporttDTO.getCreatorName());
         dataExportResponse.setCreatorHSAId(createDataExpocreateDataExporttDTO.getCreatorHSAId());
         dataExportResponse.setHsaId(createDataExpocreateDataExporttDTO.getHsaId());
-        dataExportResponse.setOrganizationNumber(createDataExpocreateDataExporttDTO.getOrganizationalNumber());
+        dataExportResponse.setOrganizationalNumber(createDataExpocreateDataExporttDTO.getOrganizationalNumber());
         dataExportResponse.setPersonId(createDataExpocreateDataExporttDTO.getPersonId());
         dataExportResponse.setPhoneNumber(createDataExpocreateDataExporttDTO.getPhoneNumber());
 

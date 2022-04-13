@@ -97,7 +97,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
               currentSortColumn={dataExportList.sortColumn}
               currentSortDirection={dataExportList.sortDirection}
               text="Organisationsnr"
-              sortId="organizationNumber"
+              sortId="organizationalNumber"
               onSort={handleSort}
             />
             <TableSortHead
@@ -127,7 +127,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.terminationId}</td>
                 <td>{dataExport.status}</td>
                 <td>{dataExport.hsaId}</td>
-                <td>{dataExport.organizationNumber}</td>
+                <td>{dataExport.organizationalNumber}</td>
                 <td>{dataExport.personId}</td>
                 <td>{dataExport.phoneNumber}</td>
               </tr>
