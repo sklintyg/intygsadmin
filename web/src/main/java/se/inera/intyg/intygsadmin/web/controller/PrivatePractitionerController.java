@@ -57,7 +57,7 @@ public class PrivatePractitionerController {
     }
 
     @GetMapping("/file")
-    public ResponseEntity getPrivatePractitionerFile() {
+    public ResponseEntity<byte[]> getPrivatePractitionerFile() {
 
         List<PrivatePractitioner> privatePractitionerList = ppIntegratedUnitsService.getAllPrivatePractitioners();
         if (privatePractitionerList.isEmpty()) {

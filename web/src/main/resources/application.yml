@@ -60,7 +60,7 @@ intygavslut:
   api: http://localhost:18010
 
 privatlakarportal:
-  internalapi: http://localhost:8190
+  internalapi: http://localhost:8160
 
 job:
   erasetestcertificate:

@@ -32,14 +32,16 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 @Service
 public class PPIntegrationRestServiceStub implements PPIntegrationRestService {
 
-    private Map<String, PrivatePractitioner> ppHsaList = new HashMap<>();
-    private Map<String, PrivatePractitioner> ppPnrList = new HashMap<>();
+    private final Map<String, PrivatePractitioner> ppHsaList = new HashMap<>();
+    private final Map<String, PrivatePractitioner> ppPnrList = new HashMap<>();
+
+    private static final int NUMBER_OF_PRIVATE_PRACTITIONERS = 5;
 
     public PPIntegrationRestServiceStub() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < NUMBER_OF_PRIVATE_PRACTITIONERS; i++) {
             var hsaId = "SE123456-X" + i;
             var pnr = "19121212121" + i; // Will not validate, mbut OK in this context
-            var privatePractitioner = new PrivatePractitioner(hsaId, "Förnamn" + i + " Efternamn" + i, "Bolag" + i,
+            var privatePractitioner = new PrivatePractitioner(hsaId, pnr, "Förnamn" + i + " Efternamn" + i, "Bolag" + i,
                 "mail" + i + "@example.com", LocalDateTime
                 .now().minusDays(i));
             ppHsaList.put(hsaId, privatePractitioner);
