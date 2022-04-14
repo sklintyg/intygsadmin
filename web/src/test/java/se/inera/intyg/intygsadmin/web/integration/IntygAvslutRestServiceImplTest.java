@@ -27,14 +27,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
+@ExtendWith(MockitoExtension.class)
 class IntygAvslutRestServiceImplTest {
 
     @Mock
@@ -42,6 +49,11 @@ class IntygAvslutRestServiceImplTest {
 
     @InjectMocks
     private IntygAvslutRestServiceImpl intygAvslutRestService;
+
+    @BeforeEach
+    public void init(){
+        ReflectionTestUtils.setField(intygAvslutRestService,"intygAvslutUrl", "Host");//Set private field
+    }
 
     @Test
     void getDataExports() {
@@ -57,9 +69,9 @@ class IntygAvslutRestServiceImplTest {
     void createDataExport() {
         CreateDataExport createDataExport = new CreateDataExport();
 
-        when(restTemplate.postForObject(anyString(), any(CreateDataExportDTO.class), any())).thenReturn(new DataExportResponse());
+        when(restTemplate.postForObject(anyString(), any(CreateDataExport.class), any())).thenReturn(new DataExportResponse());
 
         assertNotNull(intygAvslutRestService.createDataExport(createDataExport));
-        verify(restTemplate, times(1)).postForObject(anyString(), any(CreateDataExportDTO.class), any());
+        verify(restTemplate, times(1)).postForObject(anyString(), any(CreateDataExport.class), any());
     }
 }

@@ -92,6 +92,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           <Input
             id="hsaId"
             value={newDataExport.hsaId}
+            placeholder={getMessage(`dataExport.create.careProviderHsaIdPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('hsaId')(e.target.value)}
           />
@@ -103,6 +104,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           <Input
             id="organizationNumber"
             value={newDataExport.organizationNumber}
+            placeholder={getMessage(`dataExport.create.organizationNumberPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('organizationNumber')(e.target.value)}
           />
@@ -115,6 +117,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           <Input
             id="personId"
             value={newDataExport.personId}
+            placeholder={getMessage(`dataExport.create.representativePersonIdPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('personId')(e.target.value)}
           />
@@ -127,6 +130,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           <Input
             id="phoneNumber"
             value={newDataExport.telephoneNUmber}
+            placeholder={getMessage(`dataExport.create.representativePhoneNumberPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('phoneNumber')(e.target.value)}
           />
