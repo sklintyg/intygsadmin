@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -28,9 +29,16 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
+import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
@@ -41,6 +49,12 @@ class IntygAvslutServiceImplTest {
 
     @Mock
     private IntygAvslutRestService intygAvslutRestService;
+
+    @Captor
+    ArgumentCaptor<CreateDataExport> createDataExportArgumentCaptor;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private IntygAvslutServiceImpl intygAvslutService;
@@ -56,11 +70,36 @@ class IntygAvslutServiceImplTest {
 
     @Test
     void testCreateDataExport() {
-        CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
 
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName("test");
+        userEntity.setEmployeeHsaId("Nmågot hsa-id");
+        AuthenticationMethod authenticationMethod= AuthenticationMethod.FAKE;
+        OAuth2AccessToken oAuth2AccessToken = new DefaultOAuth2AccessToken("Token");
+        IntygsadminUser intygsadminUser = new IntygsadminUser(userEntity, authenticationMethod, oAuth2AccessToken);
+
+        CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
+        createDataExportDTO.setHsaId("1");
+        createDataExportDTO.setPersonId("2");
+        createDataExportDTO.setPhoneNumber("3");
+        createDataExportDTO.setOrganizationNumber("4");
+
+        when(userService.getActiveUser()).thenReturn(intygsadminUser);
         when(intygAvslutRestService.createDataExport(any(CreateDataExport.class))).thenReturn(new DataExportResponse());
 
         assertNotNull(intygAvslutService.createDataExport(createDataExportDTO));
+
+        verify(userService, times(1)).getActiveUser();
         verify(intygAvslutRestService, times(1)).createDataExport(any(CreateDataExport.class));
+        verify(intygAvslutRestService).createDataExport(createDataExportArgumentCaptor.capture());
+
+        CreateDataExport createdCreateDataExport = createDataExportArgumentCaptor.getValue();
+        assertEquals(createdCreateDataExport.getCreatorName() , userEntity.getName());
+        assertEquals(createdCreateDataExport.getCreatorHSAId() , userEntity.getEmployeeHsaId());
+
+        assertEquals(createDataExportDTO.getHsaId() , createDataExportDTO.getHsaId());
+        assertEquals(createDataExportDTO.getPersonId() , createDataExportDTO.getPersonId());
+        assertEquals(createDataExportDTO.getPhoneNumber() , createDataExportDTO.getPhoneNumber());
+        assertEquals(createDataExportDTO.getOrganizationNumber() , createDataExportDTO.getOrganizationNumber());
     }
 }

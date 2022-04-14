@@ -51,7 +51,7 @@ public class DataExportResponse {
     private String hsaId;
 
     @ApiModelProperty(notes = "Organization ID", required = true)
-    private String organizationalNumber;
+    private String organizationNumber;
 
     @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
     private String personId;

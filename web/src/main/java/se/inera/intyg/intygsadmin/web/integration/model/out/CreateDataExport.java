@@ -34,7 +34,7 @@ public class CreateDataExport {
 
     private String hsaId;
 
-    private String organizationalNumber;
+    private String organizationNumber;
 
     private String personId;
 

@@ -22,8 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
@@ -33,7 +33,8 @@ import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 public class IntygAvslutServiceImpl implements IntygAvslutService {
 
     private UserService userService;
-    IntygAvslutRestService intygAvslutRestService;
+
+    private IntygAvslutRestService intygAvslutRestService;
 
     private static final Logger LOG = LoggerFactory.getLogger(IntygAvslutServiceImpl.class);
 
@@ -50,14 +51,15 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
 
     @Override
     public DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO) {
+        IntygsadminUser intygsadminUser = userService.getActiveUser();
 
         CreateDataExport createDataExport = new CreateDataExport();
-        createDataExport.setCreatorName(userService.getActiveUser().getName());
-        createDataExport.setCreatorHSAId(userService.getActiveUser().getEmployeeHsaId());
+        createDataExport.setCreatorName(intygsadminUser.getName());
+        createDataExport.setCreatorHSAId(intygsadminUser.getEmployeeHsaId());
         createDataExport.setHsaId(createDataExportDTO.getHsaId());
         createDataExport.setPersonId(createDataExportDTO.getPersonId());
         createDataExport.setPhoneNumber(createDataExportDTO.getPhoneNumber());
-        createDataExport.setOrganizationalNumber(createDataExportDTO.getOrganizationNumber());
+        createDataExport.setOrganizationNumber(createDataExportDTO.getOrganizationNumber());
 
         //TODO add validation;
         return intygAvslutRestService.createDataExport(createDataExport);
