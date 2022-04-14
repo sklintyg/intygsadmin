@@ -47,7 +47,7 @@ public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
 
     @Override
     public List<DataExportResponse> getDataExports() {
-        String url = intygAvslutUrl + "api/v1/terminations" ;
+        String url = intygAvslutUrl + "api/v1/terminations";
         try {
             return restTemplate.getForObject(url, List.class);
         } catch (HttpClientErrorException e) {
@@ -58,7 +58,7 @@ public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
 
     @Override
     public DataExportResponse createDataExport(CreateDataExport createDataExport) {
-        String url = intygAvslutUrl + "api/v1/terminations" ;
+        String url = intygAvslutUrl + "api/v1/terminations";
         try {
             return restTemplate.postForObject(url, createDataExport, DataExportResponse.class);
         } catch (HttpClientErrorException e) {
