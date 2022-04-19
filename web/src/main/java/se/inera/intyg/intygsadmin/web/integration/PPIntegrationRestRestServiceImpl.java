@@ -30,7 +30,7 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 @Profile("!pp-stub")
 @Service
-public class PPIntegrationServiceImpl implements PPIntegrationService {
+public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestService {
 
     private RestTemplate restTemplate;
 
@@ -38,7 +38,7 @@ public class PPIntegrationServiceImpl implements PPIntegrationService {
     private String privatlakarportalUrl;
 
     @Autowired
-    public PPIntegrationServiceImpl(RestTemplate restTemplate) {
+    public PPIntegrationRestRestServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 

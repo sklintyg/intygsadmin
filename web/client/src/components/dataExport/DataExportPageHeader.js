@@ -16,23 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.service;
 
-import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
+import React from 'react'
+import IaColors from '../styles/iaColors'
+import { DocIcon } from '../styles/iaSvgIcons'
+import PageHeader from '../styles/PageHeader'
+import DataExportActionBar from './DataExportActionBar'
 
-public interface UserService {
-
-    IntygsadminUser getActiveUser();
-
-    Page<UserDTO> getUsers(Pageable pageable);
-
-    void deleteUser(UUID id);
-
-    UserDTO updateUser(UserDTO userDTO);
-
-    UserDTO addUser(UserDTO userDTO);
+const DataExportPageHeader = () => {
+  return (
+    <PageHeader
+      header="Dataexport till Säker journalutlämning"
+      subHeader="Här kan du skapa en dataexport som levereras till Säker journalutlämning. Administrerade exporter visas i tabellen."
+      icon={<DocIcon color={IaColors.IA_COLOR_02} />}
+      actionBar={<DataExportActionBar />}
+    />
+  )
 }
+
+export default DataExportPageHeader

@@ -54,6 +54,12 @@ const MenuBar = ({ userRole }) => {
       to: '/privatePractitioner',
       text: 'Registrerade privatläkare',
       enabled: true
+    },
+    {
+      id: 'dataExport',
+      to: '/dataExport',
+      text: 'Dataexport',
+      enabled: userRole === 'FULL'
     }
   ]
 

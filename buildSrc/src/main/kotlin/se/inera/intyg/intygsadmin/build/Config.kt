@@ -29,7 +29,9 @@ object Config {
     const val mapstructVersion = "1.3.0.Final"
     const val hibernateJpsVersion = "1.0.2.Final"
     const val commonsIOVersion = "2.6"
-    const val swaggerVersion = "2.9.2"
+    const val swaggerVersion = "3.0.0"
+    const val swaggerUIVersion = "2.8.0"
+    const val swaggerDataVersion = "2.9.2"
     const val commonsLang3Version = "3.9"
     const val apachePoiVersion = "4.1.0"
 

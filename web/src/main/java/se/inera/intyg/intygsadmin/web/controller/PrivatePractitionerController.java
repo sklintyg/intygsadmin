@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.intygsadmin.web.integration.PPIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.PPIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 import se.inera.intyg.intygsadmin.web.util.PrivatePractitionerFileWriter;
 
@@ -38,10 +38,10 @@ import se.inera.intyg.intygsadmin.web.util.PrivatePractitionerFileWriter;
 @RequestMapping("/api/privatepractitioner")
 public class PrivatePractitionerController {
 
-    private final PPIntegrationService ppIntegratedUnitsService;
+    private PPIntegrationRestService ppIntegratedUnitsService;
 
     @Autowired
-    public PrivatePractitionerController(PPIntegrationService ppIntegratedUnitsService) {
+    public PrivatePractitionerController(PPIntegrationRestService ppIntegratedUnitsService) {
         this.ppIntegratedUnitsService = ppIntegratedUnitsService;
     }
 

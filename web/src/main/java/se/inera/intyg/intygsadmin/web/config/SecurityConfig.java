@@ -184,6 +184,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/assets/**").permitAll()
             .antMatchers("/components/**").permitAll()
             .antMatchers("/actuator/**").permitAll()
+            .antMatchers("/swagger-ui.html").permitAll()
+            .antMatchers("/swagger-resources/**").permitAll()
+            .antMatchers("/v2/api-docs").permitAll()//Used by swagger
+            .antMatchers("/webjars/**").permitAll()//Used by swagger
             .antMatchers(API_ANVANDARE).permitAll()
             .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
         // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll();

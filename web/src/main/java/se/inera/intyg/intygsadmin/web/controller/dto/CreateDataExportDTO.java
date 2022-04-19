@@ -16,21 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.integration;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import java.time.LocalDateTime;
-import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public interface ITIntegrationService {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateDataExportDTO {
 
-    ItIntygInfo getIntygInfo(String intygId);
+    @ApiModelProperty(notes = "Care provider ID", required = true)
+    private String hsaId;
 
-    /**
-     * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+    @ApiModelProperty(notes = "Organization ID", required = true)
+    private String organizationNumber;
+
+    @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
+    private String personId;
+
+    @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
+    private String phoneNumber;
+
 }

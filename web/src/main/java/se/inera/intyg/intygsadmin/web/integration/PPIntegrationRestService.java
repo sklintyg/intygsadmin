@@ -18,26 +18,25 @@
  */
 package se.inera.intyg.intygsadmin.web.integration;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
-import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
-public interface WCIntegrationService {
-
-    IntegratedUnitDTO getIntegratedUnit(String hsaId);
-
-    List<IntegratedUnitDTO> getAllIntegratedUnits();
-
-    WcIntygInfo getIntygInfo(String intygId);
+public interface PPIntegrationRestService {
 
     /**
-     * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
+     * Searches Privatlakarportalen for a given PrivatePractitioner
+     *
+     * @param personOrHsaId PNR or HSAid
+     * @return PrivatePractioner or <code>null</code> when not found
      */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+    PrivatePractitioner getPrivatePractitioner(String personOrHsaId);
+
+    /**
+     * Get a list of all registered Private Practitioners in Privatlakarportalen
+     *
+     * @return A list of all PrivatePractitioners from Privatlakarportalen or empty list
+     */
+    List<PrivatePractitioner> getAllPrivatePractitioners();
+
 
 }

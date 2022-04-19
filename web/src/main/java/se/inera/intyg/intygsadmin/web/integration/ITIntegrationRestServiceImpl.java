@@ -19,9 +19,6 @@
 package se.inera.intyg.intygsadmin.web.integration;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,54 +30,28 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
-import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
+import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
-@Profile("!wc-stub")
+@Profile("!it-stub")
 @Service
-public class WCIntegrationServiceImpl implements WCIntegrationService {
+public class ITIntegrationRestServiceImpl implements ITIntegrationRestService {
 
     private RestTemplate restTemplate;
 
-    @Value("${webcert.internalapi}")
-    private String webcertUrl;
+    @Value("${intygstjansten.internalapi}")
+    private String intygstjanstenUrl;
 
     @Autowired
-    public WCIntegrationServiceImpl(RestTemplate restTemplate) {
+    public ITIntegrationRestServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
-    public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
-        String url = webcertUrl + "/internalapi/integratedUnits/" + hsaId;
+    public ItIntygInfo getIntygInfo(String intygId) {
+        String url = intygstjanstenUrl + "/internalapi/intygInfo/" + intygId;
         try {
-            return restTemplate.getForObject(url, IntegratedUnitDTO.class);
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return null;
-        }
-    }
-
-    @Override
-    public List<IntegratedUnitDTO> getAllIntegratedUnits() {
-        String url = webcertUrl + "/internalapi/integratedUnits/all";
-
-        IntegratedUnitDTO[] integratedUnitDTOArray = restTemplate.getForObject(url, IntegratedUnitDTO[].class);
-
-        if (integratedUnitDTOArray == null) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(integratedUnitDTOArray);
-    }
-
-    @Override
-    public WcIntygInfo getIntygInfo(String intygId) {
-        String url = webcertUrl + "/internalapi/intygInfo/" + intygId;
-        try {
-            return restTemplate.getForObject(url, WcIntygInfo.class);
+            return restTemplate.getForObject(url, ItIntygInfo.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -91,7 +62,7 @@ public class WCIntegrationServiceImpl implements WCIntegrationService {
 
     @Override
     public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        final var eraseUrl = webcertUrl + "/internalapi/testCertificate/erase";
+        final var eraseUrl = intygstjanstenUrl + "/internalapi/testCertificate/erase";
 
         final var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

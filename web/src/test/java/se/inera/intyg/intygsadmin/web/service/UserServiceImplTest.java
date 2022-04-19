@@ -57,7 +57,7 @@ import se.inera.intyg.intygsadmin.web.mapper.UserMapper;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     @Spy
     private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
@@ -66,7 +66,7 @@ public class UserServiceTest {
     private UserPersistenceService userPersistenceService;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Test
     @WithMockIntygsadminUser

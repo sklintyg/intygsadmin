@@ -30,50 +30,50 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
-import se.inera.intyg.intygsadmin.web.integration.ITIntegrationService;
-import se.inera.intyg.intygsadmin.web.integration.WCIntegrationService;
+import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 
 @ExtendWith(MockitoExtension.class)
-public class TestCertificateServiceTest {
+public class TestCertificateServiceTestImpl {
     @Mock
-    private ITIntegrationService itIntegrationService;
+    private ITIntegrationRestService itIntegrationRestService;
 
     @Mock
-    private WCIntegrationService wcIntegrationService;
+    private WCIntegrationRestService wcIntegrationRestService;
 
     @InjectMocks
-    private TestCertificateService testCertificateService;
+    private TestCertificateServiceImpl testCertificateService;
 
     @Test
     public void testEraseTestCertificates() {
-        doReturn(TestCertificateEraseResult.create(1, 0 )).when(itIntegrationService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(2, 0 )).when(wcIntegrationService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(1, 0 )).when(itIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(2, 0 )).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
 
         testCertificateService.eraseTestCertificates();
 
-        verify(itIntegrationService, times(1)).eraseTestCertificates(any(), any());
-        verify(wcIntegrationService, times(1)).eraseTestCertificates(any(), any());
+        verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+        verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
     }
 
     @Test
     public void testEraseTestCertificatesFailedWCSuccessIT() {
-        doThrow(new RuntimeException()).when(wcIntegrationService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(1, 0 )).when(itIntegrationService).eraseTestCertificates(any(), any());
+        doThrow(new RuntimeException()).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(1, 0 )).when(itIntegrationRestService).eraseTestCertificates(any(), any());
 
         testCertificateService.eraseTestCertificates();
 
-        verify(itIntegrationService, times(1)).eraseTestCertificates(any(), any());
-        verify(wcIntegrationService, times(1)).eraseTestCertificates(any(), any());
+        verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+        verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
     }
 
     @Test
     public void testEraseTestCertificatesFailedITSuccessWC() {
-        doThrow(new RuntimeException()).when(itIntegrationService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(2, 0 )).when(wcIntegrationService).eraseTestCertificates(any(), any());
+        doThrow(new RuntimeException()).when(itIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(2, 0 )).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
 
         testCertificateService.eraseTestCertificates();
 
-        verify(itIntegrationService, times(1)).eraseTestCertificates(any(), any());
-        verify(wcIntegrationService, times(1)).eraseTestCertificates(any(), any());
+        verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+        verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
     }
 }

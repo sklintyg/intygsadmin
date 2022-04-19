@@ -16,23 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.service;
 
-import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
+package se.inera.intyg.intygsadmin.web.integration;
 
-public interface UserService {
+import java.util.List;
+import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
+import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
-    IntygsadminUser getActiveUser();
+public interface IntygAvslutRestService {
 
-    Page<UserDTO> getUsers(Pageable pageable);
+    List<DataExportResponse> getDataExports();
 
-    void deleteUser(UUID id);
+    DataExportResponse createDataExport(CreateDataExport createDataExport);
 
-    UserDTO updateUser(UserDTO userDTO);
-
-    UserDTO addUser(UserDTO userDTO);
 }

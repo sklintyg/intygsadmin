@@ -22,7 +22,20 @@
       "save": "Ändra"
     }
   },
-
+  "dataExport": {
+    "create": {
+      "modalHeader": "Skapa dataexport",
+      "careProviderHsaId": "Ange vårdgivarens HSA-ID",
+      "careProviderHsaIdPlaceholder": "SE1234567890-1X23",
+      "organizationNumber": "Ange vårdgivarens Organisationsnummer",
+      "organizationNumberPlaceholder": "556559-4230",
+      "representativePersonId": "Ange mottagarens personnummer",
+      "representativePersonIdPlaceholder": "19XXXXXX-XXXX",
+      "representativePhoneNumber": "Ange mottagarens mobilnummer",
+      "representativePhoneNumberPlaceholder": "XXX-XXXXXXX",
+      "save": "Skapa export"
+    }
+  },
   "intygInfo": {
     "intygsId": {
       "wrongformat": "Ange ett giltigt intygs-ID."

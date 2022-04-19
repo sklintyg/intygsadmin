@@ -20,7 +20,7 @@ spring:
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
-    active: embedded-redis, caching-enabled, it-stub, wc-stub, pp-stub
+    active: embedded-redis, caching-enabled, it-stub, wc-stub, pp-stub, ia-stub
   h2:
     console:
       enabled: true

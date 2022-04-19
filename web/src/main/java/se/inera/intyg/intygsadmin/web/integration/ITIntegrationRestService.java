@@ -16,23 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.service;
+package se.inera.intyg.intygsadmin.web.integration;
 
-import java.util.UUID;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
-import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
+import java.time.LocalDateTime;
+import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
+import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
-public interface UserService {
+public interface ITIntegrationRestService {
 
-    IntygsadminUser getActiveUser();
+    ItIntygInfo getIntygInfo(String intygId);
 
-    Page<UserDTO> getUsers(Pageable pageable);
-
-    void deleteUser(UUID id);
-
-    UserDTO updateUser(UserDTO userDTO);
-
-    UserDTO addUser(UserDTO userDTO);
+    /**
+     * Service for erasing of test certificates.
+     * @param from  Created after from datetime
+     * @param to    Create before to datetime
+     * @return  Result of the erase operation
+     */
+    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
 }

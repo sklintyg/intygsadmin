@@ -20,6 +20,7 @@ import SessionPoller from './components/sessionPoller'
 import {fetchAppConfig} from './store/actions/appConfig'
 import IntygInfoPage from "./pages/IntygInfoPage";
 import UsersPage from "./pages/UsersPage";
+import DataExportPage from "./pages/DataExportPage";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
             <SecuredRoute path="/privatePractitioner" component={PrivatePractitionerPage} />
             <SecuredRoute path="/intygInfo" component={IntygInfoPage} />
             <SecuredRoute path="/administratorer" component={UsersPage} />
+            <SecuredRoute path="/dataExport" component={DataExportPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>

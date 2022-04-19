@@ -45,8 +45,8 @@ dependencies {
 
   //api documentation
   implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
-  implementation("io.springfox:springfox-swagger-ui:${Dependencies.swaggerVersion}")
-  implementation("io.springfox:springfox-data-rest:${Dependencies.swaggerVersion}")
+  implementation("io.springfox:springfox-swagger-ui:${Dependencies.swaggerUIVersion}")
+  implementation("io.springfox:springfox-data-rest:${Dependencies.swaggerDataVersion}")
 
   compileOnly("org.projectlombok:lombok")
 
