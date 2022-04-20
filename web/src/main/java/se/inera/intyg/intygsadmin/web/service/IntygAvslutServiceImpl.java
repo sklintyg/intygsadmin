@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.intygsadmin.web.service;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -44,9 +45,9 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
     }
 
     @Override
-    public Page<DataExportResponse> getDataExports() {
+    public List<DataExportResponse> getDataExports() {
         //TODO add validation;
-        return new PageImpl<DataExportResponse>(intygAvslutRestService.getDataExports());
+        return intygAvslutRestService.getDataExports();
     }
 
     @Override

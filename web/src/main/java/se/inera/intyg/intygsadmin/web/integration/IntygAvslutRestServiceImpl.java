@@ -19,6 +19,8 @@
 
 package se.inera.intyg.intygsadmin.web.integration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -49,8 +52,9 @@ public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
     public List<DataExportResponse> getDataExports() {
         String url = intygAvslutUrl + "api/v1/terminations";
         try {
-            return restTemplate.getForObject(url, List.class);
-        } catch (HttpClientErrorException e) {
+            DataExportResponse[] dataExportResponses = restTemplate.getForObject(url, DataExportResponse[].class);
+            return Arrays.asList(dataExportResponses);
+        } catch (RestClientException e) {
             LOG.error(e.getMessage());
             throw e;
         }
@@ -61,7 +65,7 @@ public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
         String url = intygAvslutUrl + "api/v1/terminations";
         try {
             return restTemplate.postForObject(url, createDataExport, DataExportResponse.class);
-        } catch (HttpClientErrorException e) {
+        } catch (RestClientException e) {
             LOG.error(e.getMessage());
             throw e;
         }

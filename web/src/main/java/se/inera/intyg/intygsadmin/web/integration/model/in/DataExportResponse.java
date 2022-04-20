@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.intygsadmin.web.integration.model.in;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -35,6 +36,8 @@ public class DataExportResponse {
     @ApiModelProperty(notes = "Export ID", required = true)
     private UUID terminationId;
 
+    //JSON formating for JAVA 8 types
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(notes = "Date when the request was first created", required = true)
     private LocalDateTime created;
 
