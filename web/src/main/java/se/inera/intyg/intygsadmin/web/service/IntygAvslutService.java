@@ -19,14 +19,13 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 
 public interface IntygAvslutService {
 
-    Page<DataExportResponse> getDataExports();
+    List<DataExportResponse> getDataExports();
 
     DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO);
 

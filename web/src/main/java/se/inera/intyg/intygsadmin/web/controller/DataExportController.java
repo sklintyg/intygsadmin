@@ -20,7 +20,10 @@ package se.inera.intyg.intygsadmin.web.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.Comparator;
+import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +64,10 @@ public class DataExportController {
         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "createdAt")
             Pageable pageable) {
         //TODO implement sort (Pageable is not is not used.)
-        final Page<DataExportResponse> dataExports = intygAvslutService.getDataExports();
-
-        return ResponseEntity.ok(dataExports);
+        List<DataExportResponse> dataExports = intygAvslutService.getDataExports();
+        dataExports.sort((Comparator.comparing(DataExportResponse::getCreated).reversed()));
+        Page<DataExportResponse> dataExportResponses = new PageImpl<DataExportResponse>(dataExports);
+        return ResponseEntity.ok(dataExportResponses);
     }
 
     /**

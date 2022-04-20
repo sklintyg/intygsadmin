@@ -1,5 +1,4 @@
 import React from 'react';
-import ListPagination from '../styles/ListPagination';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/dataExport';
@@ -10,14 +9,6 @@ import { getIsFetching } from '../../store/reducers/dataExport';
 import CreateDataExport from '../dataExport/dialogs/CreateDataExport.dialog';
 
 const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
-  const handlePageChange = (pageNumber) => {
-    fetchList(pageNumber);
-  };
-
-  const fetchList = (pageIndex) => {
-    const pageIndexZeroBased = pageIndex - 1;
-    fetchDataExportList({ pageIndex: pageIndexZeroBased });
-  };
 
   const onActionComplete = () => {
     fetchDataExportList();
@@ -27,7 +18,6 @@ const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
     <>
       <CreateDataExport onComplete={onActionComplete} />
       <DataExportList />
-      <ListPagination list={dataExportList} handlePageChange={handlePageChange} />
       {isFetching && !dataExportList.length && <LoadingSpinner loading={isFetching} message={'Hämtar data exporter'} />}
     </>
   );
