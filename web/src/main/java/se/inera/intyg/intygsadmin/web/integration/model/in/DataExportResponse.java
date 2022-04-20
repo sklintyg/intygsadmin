@@ -37,7 +37,7 @@ public class DataExportResponse {
     private UUID terminationId;
 
     //JSON formating for JAVA 8 types
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(notes = "Date when the request was first created", required = true)
     private LocalDateTime created;
 
