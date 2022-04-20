@@ -57,7 +57,8 @@ class IntygAvslutRestServiceImplTest {
 
     @Test
     void getDataExports() {
-        when(restTemplate.getForObject(anyString(), any())).thenReturn(new ArrayList<>());
+        DataExportResponse[] dataExportResponses = new DataExportResponse[1];
+        when(restTemplate.getForObject(anyString(), any())).thenReturn(dataExportResponses);
 
         assertNotNull(intygAvslutRestService.getDataExports());
 
