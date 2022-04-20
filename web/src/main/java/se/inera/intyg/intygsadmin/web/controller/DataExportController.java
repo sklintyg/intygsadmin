@@ -67,7 +67,7 @@ public class DataExportController {
             Pageable pageable) {
 
         List<DataExportResponse> dataExports = intygAvslutService.getDataExports();
-        switch (pageable.getSort().get().findFirst().get().getProperty()){
+        switch (pageable.getSort().get().findFirst().get().getProperty()) {
             case "creatorName":
                 dataExports.sort((Comparator.comparing(DataExportResponse::getCreatorName)));
                 break;
@@ -93,7 +93,7 @@ public class DataExportController {
                 dataExports.sort((Comparator.comparing(DataExportResponse::getCreated)));
         }
 
-        if(pageable.getSort().get().findFirst().get().isDescending()){
+        if (pageable.getSort().get().findFirst().get().isDescending()) {
             Collections.reverse(dataExports);
         }
 
