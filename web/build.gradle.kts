@@ -150,7 +150,7 @@ tasks {
   bootRun {
     systemProperty("dev.http.port", devPort)
     systemProperty("dev.http.port.internal", devPortInternal)
-    systemProperty("spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub")
+    systemProperty("spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub, ts-stub")
     systemProperty("spring.config.additional-location", "file:${applicationDir}/config/")
   }
 

@@ -25,7 +25,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -38,13 +37,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
-import se.inera.intyg.intygsadmin.web.service.IntygAvslutService;
+import se.inera.intyg.intygsadmin.web.service.TerminationService;
 
 @ExtendWith(MockitoExtension.class)
 class DataExportControllerTest {
 
     @Mock
-    private IntygAvslutService intygAvslutService;
+    private TerminationService terminationService;
 
     @InjectMocks
     private DataExportController dataExportController;
@@ -57,20 +56,20 @@ class DataExportControllerTest {
     void listDataExports(String collumnName) {
         Sort sort = Sort.by(Direction.DESC, collumnName);
         when(pageable.getSort()).thenReturn(sort);
-        when(intygAvslutService.getDataExports()).thenReturn(new ArrayList<>());
+        when(terminationService.getDataExports()).thenReturn(new ArrayList<>());
 
         assertNotNull(dataExportController.listDataExports(pageable));
 
-        verify(intygAvslutService, times(1)).getDataExports();
+        verify(terminationService, times(1)).getDataExports();
     }
 
     @Test
     void createDataExport() {
         CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
-        when(intygAvslutService.createDataExport(createDataExportDTO)).thenReturn(new DataExportResponse());
+        when(terminationService.createDataExport(createDataExportDTO)).thenReturn(new DataExportResponse());
 
         assertNotNull(dataExportController.createDataExport(createDataExportDTO));
 
-        verify(intygAvslutService, times(1)).createDataExport(createDataExportDTO);
+        verify(terminationService, times(1)).createDataExport(createDataExportDTO);
     }
 }

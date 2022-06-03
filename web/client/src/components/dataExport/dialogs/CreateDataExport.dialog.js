@@ -8,8 +8,8 @@ import styled from 'styled-components';
 import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout';
 import IaAlert, { alertType } from '../../alert/Alert';
 import { IaTypo04 } from '../../styles/iaTypography';
-import { getErrorMessageModal } from '../../../store/reducers/users';
 import { getMessage } from '../../../messages/messages';
+import {getErrorMessageCreateDataExport} from "../../../store/reducers/dataExport";
 
 const StyledBody = styled(ModalBody)`
   .form-control {
@@ -55,7 +55,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
     };
   };
 
-  const send = () => {
+  const sendCreateDataExport = () => {
     const func = createDataExport(createSendObject());
 
     func
@@ -137,9 +137,11 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
         </FormGroup>
       </StyledBody>
       <ErrorSection>
-        {errorMessage && (
+        {errorMessage !== null && (
           <ErrorWrapper>
-            <IaAlert type={alertType.ERROR}>{errorMessage}</IaAlert>
+            <IaAlert type={alertType.ERROR}>
+              Dataexporten kunde inte skapas på grund av ett tekniskt fel. Prova igen om en stund.
+            </IaAlert>
           </ErrorWrapper>
         )}
       </ErrorSection>
@@ -149,7 +151,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           disabled={!enableSaveBtn()}
           color={'primary'}
           onClick={() => {
-            send()
+            sendCreateDataExport()
           }}>
           {getMessage(`dataExport.create.save`)}
         </Button>
@@ -167,7 +169,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
 }
 
 const mapStateToProps = (state) => {
-  return { errorMessage: getErrorMessageModal(state) };
+  return { errorMessage: getErrorMessageCreateDataExport(state) };
 };
 
 export const CreateDataExportId = 'createDataExport';

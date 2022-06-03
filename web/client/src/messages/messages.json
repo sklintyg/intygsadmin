@@ -34,6 +34,14 @@
       "representativePhoneNumber": "Ange mottagarens mobilnummer",
       "representativePhoneNumberPlaceholder": "XXX-XXXXXXX",
       "save": "Skapa export"
+    },
+    "erase": {
+      "modalHeader": "Radera intyg samt privatläkarkonto",
+      "careProviderHsaId": "Vårdgivarens HSA-ID",
+      "organizationNumber": "Vårdgivarens Organisationsnummer",
+      "representativePersonId": "Mottagarens personnummer",
+      "representativePhoneNumber": "Mottagarens mobilnummer",
+      "delete": "Radera"
     }
   },
   "intygInfo": {

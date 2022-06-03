@@ -31,13 +31,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
-import se.inera.intyg.intygsadmin.web.service.IntygAvslutService;
+import se.inera.intyg.intygsadmin.web.service.TerminationService;
 
 @RestController
 @RequestMapping("/api/dataExport")
@@ -48,11 +50,11 @@ import se.inera.intyg.intygsadmin.web.service.IntygAvslutService;
 )
 public class DataExportController {
 
-    private final IntygAvslutService intygAvslutService;
+    private final TerminationService terminationService;
     private static final int DEFAULT_PAGE_SIZE = 20;
 
-    public DataExportController(IntygAvslutService intygAvslutService) {
-        this.intygAvslutService = intygAvslutService;
+    public DataExportController(TerminationService terminationService) {
+        this.terminationService = terminationService;
     }
 
     /**
@@ -66,7 +68,7 @@ public class DataExportController {
         @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC)
             Pageable pageable) {
 
-        List<DataExportResponse> dataExports = intygAvslutService.getDataExports();
+        List<DataExportResponse> dataExports = terminationService.getDataExports();
         switch (pageable.getSort().get().findFirst().get().getProperty()) {
             case "creatorName":
                 dataExports.sort((Comparator.comparing(DataExportResponse::getCreatorName)));
@@ -102,16 +104,29 @@ public class DataExportController {
     }
 
     /**
-     * Update the information regarding a data export.
+     * Create a data export.
      * @param createDataExportDTO
      * @return
      */
     @ApiOperation(value = "Create the data export", notes = "Returns the data export that was saved.")
     @PostMapping
     public ResponseEntity<DataExportResponse> createDataExport(@RequestBody CreateDataExportDTO createDataExportDTO) {
-        final DataExportResponse savedDTO = intygAvslutService.createDataExport(createDataExportDTO);
+        final DataExportResponse savedDTO = terminationService.createDataExport(createDataExportDTO);
 
         return ResponseEntity.ok(savedDTO);
+    }
+
+    /**
+     * Erase the information regarding a data export.
+     * @param terminationId
+     * @return
+     */
+    @ApiOperation(value = "Erase all data tied to a data export", notes = "Returns the status of the export")
+    @PostMapping("/{terminationId}/erase")
+    public ResponseEntity<String> eraseDataExport(@PathVariable("terminationId") String terminationId) {
+        final String status = terminationService.erase(terminationId);
+
+        return ResponseEntity.ok(status);
     }
 }
 

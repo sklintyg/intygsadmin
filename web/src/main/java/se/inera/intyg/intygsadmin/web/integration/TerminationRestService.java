@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service;
+package se.inera.intyg.intygsadmin.web.integration;
 
 import java.util.List;
-import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
+import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
-public interface IntygAvslutService {
+public interface TerminationRestService {
 
     List<DataExportResponse> getDataExports();
 
-    DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO);
+    DataExportResponse createDataExport(CreateDataExport createDataExport);
 
+    String erase(String terminationId);
 }

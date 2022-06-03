@@ -7,6 +7,7 @@ import DataExportList from './DataExportList';
 import LoadingSpinner from '../loadingSpinner';
 import { getIsFetching } from '../../store/reducers/dataExport';
 import CreateDataExport from '../dataExport/dialogs/CreateDataExport.dialog';
+import EraseDataExport from '../dataExport/dialogs/EraseDataExport.dialog';
 
 const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
 
@@ -17,6 +18,7 @@ const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
   return (
     <>
       <CreateDataExport onComplete={onActionComplete} />
+      <EraseDataExport onComplete={onActionComplete} />
       <DataExportList />
       {isFetching && !dataExportList.length && <LoadingSpinner loading={isFetching} message={'Hämtar data exporter'} />}
     </>

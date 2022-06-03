@@ -6,6 +6,10 @@ export const CREATE_DATA_EXPORT_REQUEST = 'CREATE_DATA_EXPORT_REQUEST';
 export const CREATE_DATA_EXPORT_SUCCESS = 'CREATE_DATA_EXPORT_SUCCESS';
 export const CREATE_DATA_EXPORT_FAILURE = 'CREATE_DATA_EXPORT_FAILURE';
 
+export const ERASE_DATA_EXPORT_REQUEST = 'ERASE_DATA_EXPORT_REQUEST';
+export const ERASE_DATA_EXPORT_SUCCESS = 'ERASE_DATA_EXPORT_SUCCESS';
+export const ERASE_DATA_EXPORT_FAILURE = 'ERASE_DATA_EXPORT_FAILURE';
+
 export const FETCH_DATA_EXPORT_LIST_REQUEST = 'FETCH_DATA_EXPORT_LIST_REQUEST';
 export const FETCH_DATA_EXPORT_LIST_SUCCESS = 'FETCH_DATA_EXPORT_LIST_SUCCESS';
 export const FETCH_DATA_EXPORT_LIST_FAILURE = 'FETCH_DATA_EXPORT_LIST_FAILURE';
@@ -43,7 +47,7 @@ export const fetchDataExportList = (request) => (dispatch, getState) => {
       return Promise.reject();
     }
   );
-}
+};
 
 export const createDataExport = (dataExport) => (dispatch, getState) => {
   if (getIsFetching(getState())) {
@@ -56,15 +60,39 @@ export const createDataExport = (dataExport) => (dispatch, getState) => {
     (response) => {
       return dispatch({
         type: CREATE_DATA_EXPORT_SUCCESS,
-        response: response
+        response: response,
       });
     },
     (errorResponse) => {
       dispatch({
         type: CREATE_DATA_EXPORT_FAILURE,
+        payload: errorResponse,
+      });
+      return Promise.reject();
+    }
+  );
+};
+
+export const eraseDataExport = (terminationId) => (dispatch, getState) => {
+  if (getIsFetching(getState())) {
+    return Promise.resolve();
+  }
+
+  dispatch({ type: ERASE_DATA_EXPORT_REQUEST });
+
+  return api.eraseDataExport(terminationId).then(
+    (response) => {
+      return dispatch({
+        type: ERASE_DATA_EXPORT_SUCCESS,
+        response: response
+      });
+    },
+    (errorResponse) => {
+      dispatch({
+        type: ERASE_DATA_EXPORT_FAILURE,
         payload: errorResponse
       });
       return Promise.reject();
     }
   );
-}
+};

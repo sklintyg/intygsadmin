@@ -31,24 +31,24 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
-@Profile("!ia-stub")
+@Profile("!ts-stub")
 @Service
-public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
+public class TerminationRestServiceImpl implements TerminationRestService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IntygAvslutRestServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TerminationRestServiceImpl.class);
 
     private RestTemplate restTemplate;
 
-    @Value("${intygavslut.api}")
-    private String intygAvslutUrl;
+    @Value("${terminationservice.api}")
+    private String terminationServiceUrl;
 
-    public IntygAvslutRestServiceImpl(RestTemplate restTemplate) {
+    public TerminationRestServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     @Override
     public List<DataExportResponse> getDataExports() {
-        String url = intygAvslutUrl + "api/v1/terminations";
+        String url = terminationServiceUrl + "api/v1/terminations";
         try {
             DataExportResponse[] dataExportResponses = restTemplate.getForObject(url, DataExportResponse[].class);
             return Arrays.asList(dataExportResponses);
@@ -60,7 +60,7 @@ public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
 
     @Override
     public DataExportResponse createDataExport(CreateDataExport createDataExport) {
-        String url = intygAvslutUrl + "api/v1/terminations";
+        String url = terminationServiceUrl + "api/v1/terminations";
         try {
             return restTemplate.postForObject(url, createDataExport, DataExportResponse.class);
         } catch (RestClientException e) {
@@ -69,4 +69,14 @@ public class IntygAvslutRestServiceImpl implements IntygAvslutRestService {
         }
     }
 
+    @Override
+    public String erase(String terminationId) {
+        String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/erase";
+        try {
+            return restTemplate.postForObject(url, null, String.class);
+        } catch (RestClientException e) {
+            LOG.error(e.getMessage());
+            throw e;
+        }
+    }
 }
