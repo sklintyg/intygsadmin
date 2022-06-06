@@ -86,6 +86,9 @@ public class DataExportController {
             case "representativePersonId":
                 dataExports.sort((Comparator.comparing(DataExportResponse::getPersonId)));
                 break;
+            case "representativeEmailAddress":
+                dataExports.sort((Comparator.comparing(DataExportResponse::getEmailAddress)));
+                break;
             case "representativePhoneNumber":
                 dataExports.sort((Comparator.comparing(DataExportResponse::getPhoneNumber)));
                 break;

@@ -110,6 +110,13 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
             <TableSortHead
               currentSortColumn={dataExportList.sortColumn}
               currentSortDirection={dataExportList.sortDirection}
+              text="Epostadress"
+              sortId="representativeEmailAddress"
+              onSort={handleSort}
+            />
+            <TableSortHead
+              currentSortColumn={dataExportList.sortColumn}
+              currentSortDirection={dataExportList.sortDirection}
               text="Mobilnummer"
               sortId="representativePhoneNumber"
               onSort={handleSort}
@@ -129,6 +136,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.hsaId}</td>
                 <td>{dataExport.organizationNumber}</td>
                 <td>{dataExport.personId}</td>
+                <td>{dataExport.emailAddress}</td>
                 <td>{dataExport.phoneNumber}</td>
               </tr>
             ))}

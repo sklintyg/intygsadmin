@@ -21,8 +21,6 @@ package se.inera.intyg.intygsadmin.web.service;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
@@ -60,6 +58,7 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
         createDataExport.setHsaId(createDataExportDTO.getHsaId());
         createDataExport.setPersonId(createDataExportDTO.getPersonId());
         createDataExport.setPhoneNumber(createDataExportDTO.getPhoneNumber());
+        createDataExport.setEmailAddress(createDataExportDTO.getEmailAddress());
         createDataExport.setOrganizationNumber(createDataExportDTO.getOrganizationNumber());
 
         //TODO add validation;

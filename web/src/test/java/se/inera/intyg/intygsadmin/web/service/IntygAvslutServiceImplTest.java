@@ -82,7 +82,8 @@ class IntygAvslutServiceImplTest {
         createDataExportDTO.setHsaId("1");
         createDataExportDTO.setPersonId("2");
         createDataExportDTO.setPhoneNumber("3");
-        createDataExportDTO.setOrganizationNumber("4");
+        createDataExportDTO.setEmailAddress("4");
+        createDataExportDTO.setOrganizationNumber("5");
 
         when(userService.getActiveUser()).thenReturn(intygsadminUser);
         when(intygAvslutRestService.createDataExport(any(CreateDataExport.class))).thenReturn(new DataExportResponse());
@@ -100,6 +101,7 @@ class IntygAvslutServiceImplTest {
         assertEquals(createDataExportDTO.getHsaId() , createDataExportDTO.getHsaId());
         assertEquals(createDataExportDTO.getPersonId() , createDataExportDTO.getPersonId());
         assertEquals(createDataExportDTO.getPhoneNumber() , createDataExportDTO.getPhoneNumber());
+        assertEquals(createDataExportDTO.getEmailAddress() , createDataExportDTO.getEmailAddress());
         assertEquals(createDataExportDTO.getOrganizationNumber() , createDataExportDTO.getOrganizationNumber());
     }
 }

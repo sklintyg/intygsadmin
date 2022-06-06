@@ -59,6 +59,9 @@ public class DataExportResponse {
     @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
     private String personId;
 
+    @ApiModelProperty(notes = "Email address for the receiving person", required = true)
+    private String emailAddress;
+
     @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
     private String phoneNumber;
 

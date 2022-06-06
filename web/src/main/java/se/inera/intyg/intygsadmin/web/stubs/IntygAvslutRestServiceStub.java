@@ -44,6 +44,7 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
         dataExportEntity1.setCreatorName("Sven Svensson");
         dataExportEntity1.setCreated(LocalDateTime.now());
         dataExportEntity1.setPhoneNumber("08-11111111111");
+        dataExportEntity1.setEmailAddress("sven@svensson.se");
         dataExportEntity1.setOrganizationNumber("11111111111111111111111111111111");
         dataExportEntity1.setPersonId("0123456789");
         dataExportEntity1.setHsaId("99999999999999999999");
@@ -55,6 +56,7 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
         dataExportEntity2.setCreatorName("Sten stensson");
         dataExportEntity2.setCreated(LocalDateTime.now());
         dataExportEntity2.setPhoneNumber("08-2222222222");
+        dataExportEntity2.setEmailAddress("sten@stensson.se");
         dataExportEntity2.setOrganizationNumber("22222222222222222222222222222222");
         dataExportEntity2.setPersonId("9876543210");
         dataExportEntity2.setHsaId("888888888888888888888");
@@ -83,6 +85,7 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
         dataExportResponse.setOrganizationNumber(createDataExpocreateDataExporttDTO.getOrganizationNumber());
         dataExportResponse.setPersonId(createDataExpocreateDataExporttDTO.getPersonId());
         dataExportResponse.setPhoneNumber(createDataExpocreateDataExporttDTO.getPhoneNumber());
+        dataExportResponse.setEmailAddress(createDataExpocreateDataExporttDTO.getEmailAddress());
 
         list.add(dataExportResponse);
 

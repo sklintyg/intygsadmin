@@ -36,6 +36,7 @@ const initialDataExport = {
   hsaId: '',
   organizationNumber: '',
   personId: '',
+  emailAddress: '',
   phoneNumber: '',
 };
 
@@ -51,6 +52,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
       hsaId: newDataExport.hsaId,
       organizationNumber: newDataExport.organizationNumber,
       personId: newDataExport.personId,
+      emailAddress: newDataExport.emailAddress,
       phoneNumber: newDataExport.phoneNumber
     };
   };
@@ -123,6 +125,17 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           />
         </FormGroup>
 
+        <FormGroup>
+          <Label for="dataExportEmailAddress">
+            <IaTypo04>{getMessage(`dataExport.create.representativeEmailAddress`)}</IaTypo04>
+          </Label>
+          <Input
+            id="emailAddress"
+            value={newDataExport.emailAddress}
+            maxLength={200}
+            onChange={(e) => onChange('emailAddress')(e.target.value)}
+          />
+        </FormGroup>
         <FormGroup>
           <Label for="dataExportPhoneNumber">
             <IaTypo04>{getMessage(`dataExport.create.representativePhoneNumber`)}</IaTypo04>
