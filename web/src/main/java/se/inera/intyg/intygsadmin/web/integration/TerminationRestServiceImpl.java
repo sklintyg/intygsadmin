@@ -70,7 +70,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
     }
 
     @Override
-    public String erase(String terminationId) {
+    public String eraseDataExport(String terminationId) {
         String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/erase";
         try {
             return restTemplate.postForObject(url, null, String.class);

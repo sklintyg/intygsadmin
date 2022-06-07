@@ -41,8 +41,8 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
     }
   }
 
-  const openDeleteModal = (terminationId, hsaId, organizationNumber) => {
-    openModal(EraseDataExportId, { terminationId, hsaId, organizationNumber })
+  const openDeleteModal = (terminationId, hsaId, organizationNumber, personId, phoneNumber) => {
+    openModal(EraseDataExportId, { terminationId, hsaId, organizationNumber, personId, phoneNumber })
   };
 
   const handleSort = (newSortColumn) => {
@@ -143,7 +143,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                     id={`endBtn${dataExport.terminationId}`}
                     disabled={dataExport.status !== 'Kvitterad'}
                     onClick={() => {
-                      openDeleteModal(dataExport.terminationId, dataExport.creatorName, dataExport.hsaId, dataExport.organizationNumber)
+                      openDeleteModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)
                     }}
                     color="default">
                     <ClearIcon /> Avsluta

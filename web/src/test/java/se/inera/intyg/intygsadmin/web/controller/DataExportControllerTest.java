@@ -72,4 +72,17 @@ class DataExportControllerTest {
 
         verify(terminationService, times(1)).createDataExport(createDataExportDTO);
     }
+
+
+    @Test
+    void eraseDataExport() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Avslutad";
+        when(terminationService.eraseDataExport(terminationId)).thenReturn(responseStatus);
+
+        assertNotNull(dataExportController.eraseDataExport(terminationId));
+
+        verify(terminationService, times(1)).eraseDataExport(terminationId);
+    }
+
 }

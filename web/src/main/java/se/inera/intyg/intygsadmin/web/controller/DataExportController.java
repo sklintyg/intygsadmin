@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
@@ -124,7 +123,7 @@ public class DataExportController {
     @ApiOperation(value = "Erase all data tied to a data export", notes = "Returns the status of the export")
     @PostMapping("/{terminationId}/erase")
     public ResponseEntity<String> eraseDataExport(@PathVariable("terminationId") String terminationId) {
-        final String status = terminationService.erase(terminationId);
+        final String status = terminationService.eraseDataExport(terminationId);
 
         return ResponseEntity.ok(status);
     }

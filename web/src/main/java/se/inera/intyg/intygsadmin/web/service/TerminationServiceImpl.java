@@ -65,7 +65,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     @Override
-    public String erase(String terminationId) {
-        return terminationRestService.erase(terminationId);
+    public String eraseDataExport(String terminationId) {
+        return terminationRestService.eraseDataExport(terminationId);
     }
 }

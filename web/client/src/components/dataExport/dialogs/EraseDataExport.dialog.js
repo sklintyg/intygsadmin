@@ -52,11 +52,17 @@ const EraseDataExport = ({ handleClose, isOpen, onComplete, eraseDataExport, err
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
       <ModalHeader toggle={cancel}> {getMessage(`dataExport.erase.modalHeader`)}</ModalHeader>
       <StyledBody>
-        Observera! Säkerställ med mottagaren av dataexporten att den mottagit både exporten och kryptonyckeln innan intygen raderas.
+        <p>
+          Observera! Säkerställ med mottagaren av dataexporten att den mottagit både exporten och kryptonyckeln innan intygen raderas.
 
-        Raderade intyg kan ej återskapas.
+          Raderade intyg kan ej återskapas.
 
-        Sker raderingen av intyg för en privatläkare raderas även privatläkarkontot.
+          Sker raderingen av intyg för en privatläkare raderas även privatläkarkontot.
+        </p>
+        <div>{getMessage(`dataExport.erase.careProviderHsaId`, data)}</div>
+        <div>{getMessage(`dataExport.erase.organizationNumber`, data)}</div>
+        <div>{getMessage(`dataExport.erase.representativePersonId`, data)}</div>
+        <div>{getMessage(`dataExport.erase.representativePhoneNumber`, data)}</div>
       </StyledBody>
       <ErrorSection>
         {errorMessage !== null && (

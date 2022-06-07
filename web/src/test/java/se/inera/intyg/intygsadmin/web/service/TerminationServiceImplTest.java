@@ -102,4 +102,15 @@ class TerminationServiceImplTest {
         assertEquals(createDataExportDTO.getPhoneNumber() , createDataExportDTO.getPhoneNumber());
         assertEquals(createDataExportDTO.getOrganizationNumber() , createDataExportDTO.getOrganizationNumber());
     }
+
+    @Test
+    void testErase() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Avslutad";
+        when(terminationRestService.eraseDataExport(terminationId)).thenReturn(responseStatus);
+
+        assertNotNull(terminationService.eraseDataExport(terminationId));
+
+        verify(terminationRestService, times(1)).eraseDataExport(terminationId);
+    }
 }

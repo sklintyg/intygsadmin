@@ -37,10 +37,10 @@
     },
     "erase": {
       "modalHeader": "Radera intyg samt privatläkarkonto",
-      "careProviderHsaId": "Vårdgivarens HSA-ID",
-      "organizationNumber": "Vårdgivarens Organisationsnummer",
-      "representativePersonId": "Mottagarens personnummer",
-      "representativePhoneNumber": "Mottagarens mobilnummer",
+      "careProviderHsaId": "Vårdgivarens HSA-ID: {hsaId}",
+      "organizationNumber": "Organisationsnummer: {organizationNumber}",
+      "representativePersonId": "Mottagarens personnummer: {personId}",
+      "representativePhoneNumber": "Mottagarens mobilnummer: {phoneNumber}",
       "delete": "Radera"
     }
   },

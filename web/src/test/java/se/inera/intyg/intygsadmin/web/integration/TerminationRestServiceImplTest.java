@@ -71,4 +71,15 @@ class TerminationRestServiceImplTest {
         assertNotNull(terminationRestService.createDataExport(createDataExport));
         verify(restTemplate, times(1)).postForObject(anyString(), any(CreateDataExport.class), any());
     }
+
+    @Test
+    void eraseDataExport() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Avslutad";
+        when(restTemplate.postForObject(anyString(), any(), any())).thenReturn(responseStatus);
+
+        assertNotNull(terminationRestService.eraseDataExport(terminationId));
+
+        verify(restTemplate, times(1)).postForObject(anyString(), any(), any());
+    }
 }

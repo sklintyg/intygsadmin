@@ -90,7 +90,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
     }
 
     @Override
-    public String erase(String terminationId) {
+    public String eraseDataExport(String terminationId) {
         return "Data borttaget";
     }
 
