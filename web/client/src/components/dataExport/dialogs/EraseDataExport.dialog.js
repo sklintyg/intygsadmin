@@ -68,7 +68,7 @@ const EraseDataExport = ({ handleClose, isOpen, onComplete, eraseDataExport, err
         {errorMessage !== null && (
           <ErrorWrapper>
             <IaAlert type={alertType.ERROR}>
-              Dataexporten kunde inte tas bort på grund av ett tekniskt fel. Prova igen om en stund.
+              Kunde inte radera på grund av ett tekniskt fel. Prova igen om en stund.
             </IaAlert>
           </ErrorWrapper>
         )}

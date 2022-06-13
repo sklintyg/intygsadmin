@@ -140,7 +140,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
         {errorMessage !== null && (
           <ErrorWrapper>
             <IaAlert type={alertType.ERROR}>
-              Dataexporten kunde inte skapas på grund av ett tekniskt fel. Prova igen om en stund.
+              Kunde inte skapa en dataexport på grund av tekniskt fel. Prova igen om en stund.
             </IaAlert>
           </ErrorWrapper>
         )}

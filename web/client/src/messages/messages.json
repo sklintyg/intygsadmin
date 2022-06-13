@@ -41,7 +41,7 @@
       "organizationNumber": "Organisationsnummer: {organizationNumber}",
       "representativePersonId": "Mottagarens personnummer: {personId}",
       "representativePhoneNumber": "Mottagarens mobilnummer: {phoneNumber}",
-      "delete": "Radera"
+      "delete": "Avsluta"
     }
   },
   "intygInfo": {

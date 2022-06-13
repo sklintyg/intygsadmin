@@ -26,7 +26,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
   if (errorMessage !== null) {
     return (
       <ResultLine>
-        <IaAlert type={alertType.ERROR}>Kan inte hämta befintliga exporter. Testa igen om en stund.</IaAlert>
+        <IaAlert type={alertType.ERROR}>Information om de senaste dataexporterna kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund.</IaAlert>
       </ResultLine>
     );
   }
