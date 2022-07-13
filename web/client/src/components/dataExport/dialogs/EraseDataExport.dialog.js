@@ -1,4 +1,4 @@
-import React , { useState }  from 'react';
+import React from 'react';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import modalContainer from '../../modalContainer/modalContainer';
 import { compose } from 'recompose';
