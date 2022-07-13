@@ -40,15 +40,15 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
-import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
+import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
 @ExtendWith(MockitoExtension.class)
-class IntygAvslutServiceImplTest {
+class TerminationServiceImplTest {
 
     @Mock
-    private IntygAvslutRestService intygAvslutRestService;
+    private TerminationRestService terminationRestService;
 
     @Captor
     ArgumentCaptor<CreateDataExport> createDataExportArgumentCaptor;
@@ -57,15 +57,15 @@ class IntygAvslutServiceImplTest {
     private UserService userService;
 
     @InjectMocks
-    private IntygAvslutServiceImpl intygAvslutService;
+    private TerminationServiceImpl terminationService;
 
     @Test
     void testGetDataExports() {
-        when(intygAvslutRestService.getDataExports()).thenReturn(new ArrayList<>());
+        when(terminationRestService.getDataExports()).thenReturn(new ArrayList<>());
 
-        assertNotNull(intygAvslutService.getDataExports());
+        assertNotNull(terminationService.getDataExports());
 
-        verify(intygAvslutRestService, times(1)).getDataExports();
+        verify(terminationRestService, times(1)).getDataExports();
     }
 
     @Test
@@ -85,13 +85,13 @@ class IntygAvslutServiceImplTest {
         createDataExportDTO.setOrganizationNumber("4");
 
         when(userService.getActiveUser()).thenReturn(intygsadminUser);
-        when(intygAvslutRestService.createDataExport(any(CreateDataExport.class))).thenReturn(new DataExportResponse());
+        when(terminationRestService.createDataExport(any(CreateDataExport.class))).thenReturn(new DataExportResponse());
 
-        assertNotNull(intygAvslutService.createDataExport(createDataExportDTO));
+        assertNotNull(terminationService.createDataExport(createDataExportDTO));
 
         verify(userService, times(1)).getActiveUser();
-        verify(intygAvslutRestService, times(1)).createDataExport(any(CreateDataExport.class));
-        verify(intygAvslutRestService).createDataExport(createDataExportArgumentCaptor.capture());
+        verify(terminationRestService, times(1)).createDataExport(any(CreateDataExport.class));
+        verify(terminationRestService).createDataExport(createDataExportArgumentCaptor.capture());
 
         CreateDataExport createdCreateDataExport = createDataExportArgumentCaptor.getValue();
         assertEquals(createdCreateDataExport.getCreatorName() , userEntity.getName());
@@ -101,5 +101,16 @@ class IntygAvslutServiceImplTest {
         assertEquals(createDataExportDTO.getPersonId() , createDataExportDTO.getPersonId());
         assertEquals(createDataExportDTO.getPhoneNumber() , createDataExportDTO.getPhoneNumber());
         assertEquals(createDataExportDTO.getOrganizationNumber() , createDataExportDTO.getOrganizationNumber());
+    }
+
+    @Test
+    void testErase() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Avslutad";
+        when(terminationRestService.eraseDataExport(terminationId)).thenReturn(responseStatus);
+
+        assertNotNull(terminationService.eraseDataExport(terminationId));
+
+        verify(terminationRestService, times(1)).eraseDataExport(terminationId);
     }
 }

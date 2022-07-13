@@ -21,33 +21,31 @@ package se.inera.intyg.intygsadmin.web.service;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
-import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
+import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
 @Service
-public class IntygAvslutServiceImpl implements IntygAvslutService {
+public class TerminationServiceImpl implements TerminationService {
 
     private UserService userService;
 
-    private IntygAvslutRestService intygAvslutRestService;
+    private TerminationRestService terminationRestService;
 
-    private static final Logger LOG = LoggerFactory.getLogger(IntygAvslutServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TerminationServiceImpl.class);
 
-    public IntygAvslutServiceImpl(IntygAvslutRestService intygAvslutRestService, UserService userService) {
-        this.intygAvslutRestService = intygAvslutRestService;
+    public TerminationServiceImpl(TerminationRestService terminationRestService, UserService userService) {
+        this.terminationRestService = terminationRestService;
         this.userService = userService;
     }
 
     @Override
     public List<DataExportResponse> getDataExports() {
         //TODO add validation;
-        return intygAvslutRestService.getDataExports();
+        return terminationRestService.getDataExports();
     }
 
     @Override
@@ -63,6 +61,11 @@ public class IntygAvslutServiceImpl implements IntygAvslutService {
         createDataExport.setOrganizationNumber(createDataExportDTO.getOrganizationNumber());
 
         //TODO add validation;
-        return intygAvslutRestService.createDataExport(createDataExport);
+        return terminationRestService.createDataExport(createDataExport);
+    }
+
+    @Override
+    public String eraseDataExport(String terminationId) {
+        return terminationRestService.eraseDataExport(terminationId);
     }
 }

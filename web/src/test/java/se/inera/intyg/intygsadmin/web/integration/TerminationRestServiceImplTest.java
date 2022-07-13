@@ -26,9 +26,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,22 +34,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
-import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
 @ExtendWith(MockitoExtension.class)
-class IntygAvslutRestServiceImplTest {
+class TerminationRestServiceImplTest {
 
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private IntygAvslutRestServiceImpl intygAvslutRestService;
+    private TerminationRestServiceImpl terminationRestService;
 
     @BeforeEach
     public void init(){
-        ReflectionTestUtils.setField(intygAvslutRestService,"intygAvslutUrl", "Host");//Set private field
+        ReflectionTestUtils.setField(terminationRestService,"terminationServiceUrl", "Host");//Set private field
     }
 
     @Test
@@ -60,7 +56,7 @@ class IntygAvslutRestServiceImplTest {
         DataExportResponse[] dataExportResponses = new DataExportResponse[1];
         when(restTemplate.getForObject(anyString(), any())).thenReturn(dataExportResponses);
 
-        assertNotNull(intygAvslutRestService.getDataExports());
+        assertNotNull(terminationRestService.getDataExports());
 
         verify(restTemplate, times(1)).getForObject(anyString(), any());
     }
@@ -72,7 +68,18 @@ class IntygAvslutRestServiceImplTest {
 
         when(restTemplate.postForObject(anyString(), any(CreateDataExport.class), any())).thenReturn(new DataExportResponse());
 
-        assertNotNull(intygAvslutRestService.createDataExport(createDataExport));
+        assertNotNull(terminationRestService.createDataExport(createDataExport));
         verify(restTemplate, times(1)).postForObject(anyString(), any(CreateDataExport.class), any());
+    }
+
+    @Test
+    void eraseDataExport() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Avslutad";
+        when(restTemplate.postForObject(anyString(), any(), any())).thenReturn(responseStatus);
+
+        assertNotNull(terminationRestService.eraseDataExport(terminationId));
+
+        verify(restTemplate, times(1)).postForObject(anyString(), any(), any());
     }
 }

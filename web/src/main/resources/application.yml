@@ -56,7 +56,7 @@ webcert:
 intygstjansten:
   internalapi: http://localhost:8180/inera-certificate
 
-intygavslut:
+terminationservice:
   api: http://localhost:18010
 
 privatlakarportal:
