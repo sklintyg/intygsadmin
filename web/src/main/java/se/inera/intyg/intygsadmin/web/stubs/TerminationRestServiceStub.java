@@ -24,17 +24,17 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.integration.IntygAvslutRestService;
+import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
-@Profile("ia-stub")
+@Profile("ts-stub")
 @Service
-public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
+public class TerminationRestServiceStub implements TerminationRestService {
 
     private List list;
 
-    public IntygAvslutRestServiceStub() {
+    public TerminationRestServiceStub() {
         list = new ArrayList<DataExportResponse>();
 
         DataExportResponse dataExportEntity1 = new DataExportResponse();
@@ -52,7 +52,7 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
         DataExportResponse dataExportEntity2 = new DataExportResponse();
         dataExportEntity2.setTerminationId(UUID.randomUUID());
         dataExportEntity2.setCreated(LocalDateTime.now());
-        dataExportEntity2.setStatus("Skapad");
+        dataExportEntity2.setStatus("Kvitterad");
         dataExportEntity2.setCreatorName("Sten stensson");
         dataExportEntity2.setCreated(LocalDateTime.now());
         dataExportEntity2.setPhoneNumber("08-2222222222");
@@ -90,6 +90,11 @@ public class IntygAvslutRestServiceStub implements IntygAvslutRestService {
         list.add(dataExportResponse);
 
         return dataExportResponse;
+    }
+
+    @Override
+    public String eraseDataExport(String terminationId) {
+        return "Data borttaget";
     }
 
 }

@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { compose, lifecycle } from 'recompose';
 import styled from 'styled-components';
 import TableSortHead from '../styles/TableSortHead';
-import { Table } from 'reactstrap';
+import {Button, Table, UncontrolledTooltip} from 'reactstrap';
 import * as actions from '../../store/actions/dataExport';
 import * as modalActions from '../../store/actions/modal';
 import IaAlert, { alertType } from '../alert/Alert';
-import { getErrorMessage, getIsFetching, getDataExportList } from '../../store/reducers/dataExport';
+import { getErrorMessageFetchDataExportList, getIsFetching, getDataExportList } from '../../store/reducers/dataExport';
 import DisplayDateTime from '../displayDateTime/DisplayDateTime';
+import {ClearIcon} from "../styles/iaSvgIcons";
+import { EraseDataExportId } from './dialogs/EraseDataExport.dialog';
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -28,10 +30,10 @@ const Wrapper = styled.div`
 `;
 
 const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps }) => {
-  if (errorMessage) {
+  if (errorMessage !== null) {
     return (
       <ResultLine>
-        <IaAlert type={alertType.ERROR}>{errorMessage}</IaAlert>
+        <IaAlert type={alertType.ERROR}>Information om de senaste dataexporterna kunde inte visas på grund av ett tekniskt fel. Prova igen om en stund.</IaAlert>
       </ResultLine>
     );
   }
@@ -45,6 +47,10 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
       );
     }
   }
+
+  const openDeleteModal = (terminationId, hsaId, organizationNumber, personId, phoneNumber) => {
+    openModal(EraseDataExportId, { terminationId, hsaId, organizationNumber, personId, phoneNumber })
+  };
 
   const handleSort = (newSortColumn) => {
     let { sortColumn, sortDirection } = dataExportList;
@@ -128,12 +134,13 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
               sortId="representativePhoneNumber"
               onSort={handleSort}
             />
+            <th />
           </tr>
         </thead>
         <tbody>
           {dataExportList.content &&
             dataExportList.content.map((dataExport, index) => (
-              <tr key={dataExport.id}>
+              <tr key={dataExport.terminationId}>
                 <td>
                   <DisplayDateTime date={dataExport.created} />
                 </td>
@@ -145,6 +152,21 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.personId}</td>
                 <td id={"emailAddress-" + index} className={"emailAddress"} title={dataExport.emailAddress}>{dataExport.emailAddress}</td>
                 <td>{dataExport.phoneNumber}</td>
+                <td>
+                  <Button
+                    className='end-btn'
+                    id={`endBtn${dataExport.terminationId}`}
+                    disabled={dataExport.status !== 'Kvitterad'}
+                    onClick={() => {
+                      openDeleteModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)
+                    }}
+                    color="default">
+                    <ClearIcon /> Avsluta
+                  </Button>
+                  <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${dataExport.terminationId}`}>
+                    Öppnar ett dialogfönster där du kan radera all data kring ett avslut.
+                  </UncontrolledTooltip>
+                </td>
               </tr>
             ))}
         </tbody>
@@ -167,7 +189,7 @@ const mapStateToProps = (state) => {
   return {
     dataExportList: getDataExportList(state),
     isFetching: getIsFetching(state),
-    errorMessage: getErrorMessage(state),
+    errorMessage: getErrorMessageFetchDataExportList(state),
   };
 };
 

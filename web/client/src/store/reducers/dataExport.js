@@ -32,7 +32,7 @@ const dataExportList = (state = DataExportListDefaultState, action) => {
     default:
       return state;
   }
-}
+};
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
@@ -44,14 +44,14 @@ const isFetching = (state = false, action) => {
     default:
       return state;
   }
-}
+};
 
-const errorMessage = (state = null, action) => {
+const errorMessageCreateDataExport = (state = null, action) => {
   switch (action.type) {
     case ActionConstants.CREATE_DATA_EXPORT_FAILURE:
       return {
         code: action.payload.error.errorCode,
-        error: buildClientError(action.payload, 'error.dataExport').message,
+        error: buildClientError(action.payload, 'error.dataExport').message
       }
     case ActionConstants.CREATE_DATA_EXPORT_REQUEST:
     case ActionConstants.CREATE_DATA_EXPORT_SUCCESS:
@@ -59,19 +59,57 @@ const errorMessage = (state = null, action) => {
     default:
       return state;
   }
-}
+};
+
+const errorMessageEraseDataExport = (state = null, action) => {
+  switch (action.type) {
+
+  case ActionConstants.ERASE_DATA_EXPORT_FAILURE:
+    return {
+      code: action.payload.error.errorCode,
+      error: buildClientError(action.payload, 'error.dataExport').message
+    }
+  case ActionConstants.ERASE_DATA_EXPORT_REQUEST:
+  case ActionConstants.ERASE_DATA_EXPORT_SUCCESS:
+    return null;
+  default:
+    return state;
+  }
+};
+
+const errorMessageFetchDataExportList = (state = null, action) => {
+  switch (action.type) {
+
+  case ActionConstants.FETCH_DATA_EXPORT_LIST_FAILURE:
+    return {
+      code: action.payload.error.errorCode,
+      error: buildClientError(action.payload, 'error.dataExport').message
+    }
+  case ActionConstants.FETCH_DATA_EXPORT_LIST_REQUEST:
+  case ActionConstants.FETCH_DATA_EXPORT_LIST_SUCCESS:
+    return null;
+  default:
+    return state;
+  }
+};
 
 export default combineReducers({
   dataExportList,
   isFetching,
-  errorMessage
+  errorMessageCreateDataExport,
+  errorMessageEraseDataExport,
+  errorMessageFetchDataExportList
 });
 
 // Selectors
 
 export const getIsFetching = (state) => state.dataExport.isFetching;
 
-export const getErrorMessage = (state) => state.dataExport.errorMessage;
+export const getErrorMessageCreateDataExport = (state) => state.dataExport.errorMessageCreateDataExport;
+
+export const getErrorMessageEraseDataExport = (state) => state.dataExport.errorMessageEraseDataExport;
+
+export const getErrorMessageFetchDataExportList = (state) => state.dataExport.errorMessageFetchDataExportList;
 
 export const getDataExportList = (state) => state.dataExport.dataExportList;
 
@@ -80,5 +118,5 @@ export const getSortOrder = (state) => {
     sortColumn: state.dataExport.dataExportList.sortColumn,
     sortDirection: state.dataExport.dataExportList.sortDirection,
   };
-}
+};
 
