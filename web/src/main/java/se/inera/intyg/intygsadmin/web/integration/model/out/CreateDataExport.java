@@ -38,5 +38,7 @@ public class CreateDataExport {
 
     private String personId;
 
+    private String emailAddress;
+
     private String phoneNumber;
 }

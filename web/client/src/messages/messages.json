@@ -31,6 +31,7 @@
       "organizationNumberPlaceholder": "556559-4230",
       "representativePersonId": "Ange mottagarens personnummer",
       "representativePersonIdPlaceholder": "19XXXXXX-XXXX",
+      "representativeEmailAddress": "Ange mottagarens e-postadress",
       "representativePhoneNumber": "Ange mottagarens mobilnummer",
       "representativePhoneNumberPlaceholder": "XXX-XXXXXXX",
       "save": "Skapa export"

@@ -52,7 +52,7 @@ class DataExportControllerTest {
     private Pageable pageable;
 
     @ParameterizedTest
-    @ValueSource(strings = {"createdAt", "creatorName", "terminationId", "status", "careProviderHsaId", "organizationNumber", "representativePersonId", "representativePhoneNumber"})
+    @ValueSource(strings = {"createdAt", "creatorName", "terminationId", "status", "careProviderHsaId", "organizationNumber", "representativePersonId", "representativeEmailAddress", "representativePhoneNumber"})
     void listDataExports(String collumnName) {
         Sort sort = Sort.by(Direction.DESC, collumnName);
         when(pageable.getSort()).thenReturn(sort);

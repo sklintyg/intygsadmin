@@ -58,6 +58,7 @@ public class TerminationServiceImpl implements TerminationService {
         createDataExport.setHsaId(createDataExportDTO.getHsaId());
         createDataExport.setPersonId(createDataExportDTO.getPersonId());
         createDataExport.setPhoneNumber(createDataExportDTO.getPhoneNumber());
+        createDataExport.setEmailAddress(createDataExportDTO.getEmailAddress());
         createDataExport.setOrganizationNumber(createDataExportDTO.getOrganizationNumber());
 
         //TODO add validation;

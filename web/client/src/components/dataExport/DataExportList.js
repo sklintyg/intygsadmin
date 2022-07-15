@@ -20,6 +20,13 @@ const Wrapper = styled.div`
   & th:last-child {
     width: 1%;
   }
+
+  .emailAddress {
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps }) => {
@@ -116,6 +123,13 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
             <TableSortHead
               currentSortColumn={dataExportList.sortColumn}
               currentSortDirection={dataExportList.sortDirection}
+              text="Epostadress"
+              sortId="representativeEmailAddress"
+              onSort={handleSort}
+            />
+            <TableSortHead
+              currentSortColumn={dataExportList.sortColumn}
+              currentSortDirection={dataExportList.sortDirection}
               text="Mobilnummer"
               sortId="representativePhoneNumber"
               onSort={handleSort}
@@ -125,7 +139,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
         </thead>
         <tbody>
           {dataExportList.content &&
-            dataExportList.content.map((dataExport) => (
+            dataExportList.content.map((dataExport, index) => (
               <tr key={dataExport.terminationId}>
                 <td>
                   <DisplayDateTime date={dataExport.created} />
@@ -136,6 +150,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.hsaId}</td>
                 <td>{dataExport.organizationNumber}</td>
                 <td>{dataExport.personId}</td>
+                <td id={"emailAddress-" + index} className={"emailAddress"} title={dataExport.emailAddress}>{dataExport.emailAddress}</td>
                 <td>{dataExport.phoneNumber}</td>
                 <td>
                   <Button
