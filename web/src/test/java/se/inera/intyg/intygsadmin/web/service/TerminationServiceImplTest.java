@@ -19,21 +19,35 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -59,13 +73,112 @@ class TerminationServiceImplTest {
     @InjectMocks
     private TerminationServiceImpl terminationService;
 
-    @Test
-    void testGetDataExports() {
-        when(terminationRestService.getDataExports()).thenReturn(new ArrayList<>());
+    private static final UUID TERMINATION_ID_1 = UUID.fromString("f2b3c63b-dcb8-408a-b68f-1d88d779131e");
+    private static final UUID TERMINATION_ID_2 = UUID.fromString("ddaba575-096e-4020-8b72-6bc3506faf02");
+    private static final UUID TERMINATION_ID_3 = UUID.fromString("ec1b9858-cbb9-4a38-b996-49776037aeb5");
 
-        assertNotNull(terminationService.getDataExports());
+    @Nested
+    class GetTerminationsTest {
 
-        verify(terminationRestService, times(1)).getDataExports();
+        private final DataExportResponse termination1 = create(parse("2022-07-17T22:47:11"), TERMINATION_ID_1, "Örjan Varg");
+        private final DataExportResponse termination2 = create(parse("2022-07-12T12:22:13"), TERMINATION_ID_2, "Anders Räv");
+        private final DataExportResponse termination3 = create(parse("2022-07-17T16:26:12"), TERMINATION_ID_3, "Åke Vessla");
+        private final List<DataExportResponse> terminations = List.of(termination1, termination2, termination3);
+
+        @BeforeEach
+        public void init() {
+            when(terminationRestService.getDataExports()).thenReturn(terminations);
+        }
+
+        @Test
+        public void shouldHandlePagingOfFetchedTerminations() {
+            final var pageable1 = PageRequest.of(0, 2, Sort.by(Direction.DESC, "createdAt"));
+            final var pageable2 = PageRequest.of(1, 2, Sort.by(Direction.DESC, "createdAt"));
+            when(terminationRestService.getDataExports()).thenReturn(terminations);
+
+            final var page1 = terminationService.getDataExports(pageable1);
+            final var page2 = terminationService.getDataExports(pageable2);
+
+            assertAll(
+                () -> assertIterableEquals(List.of(termination1, termination3), page1.getContent()),
+                () -> assertIterableEquals(List.of(termination2), page2.getContent()),
+                () -> assertTrue(page1.hasNext()),
+                () -> assertFalse(page2.hasNext())
+            );
+        }
+
+        @Test
+        public void shouldHandleEmptyTerminationsList() {
+            final var terminationsEmpty = Collections.<DataExportResponse>emptyList();
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "createdAt"));
+            when(terminationRestService.getDataExports()).thenReturn(terminationsEmpty);
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertAll(
+                () -> verify(terminationRestService, times(1)).getDataExports(),
+                () -> assertNotNull(page),
+                () -> assertEquals(0, page.getContent().size())
+            );
+        }
+
+        @Test
+        public void shouldHandleDescendingSort() {
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "createdAt"));
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertIterableEquals(List.of(termination1, termination3, termination2), page.getContent());
+        }
+
+        @Test
+        public void shouldHandleAscendingSort() {
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "createdAt"));
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertIterableEquals(List.of(termination2, termination3, termination1), page.getContent());
+        }
+
+        @Test
+        public void shouldHandleSwedishCharsInDescendingSort() {
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "creatorName"));
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertIterableEquals(List.of(termination1, termination3, termination2), page.getContent());
+        }
+
+        @Test
+        public void shouldHandleSwedishCharsInAscendingSort() {
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "creatorName"));
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertIterableEquals(List.of(termination2, termination3, termination1), page.getContent());
+        }
+
+        @Test
+        public void shouldSortByCreatedDescendingWhenPrimarySortColumnWithEqualValues() {
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "status"));
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertIterableEquals(List.of(termination1, termination3, termination2), page.getContent());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"createdAt", "creatorName", "terminationId", "status", "careProviderHsaId", "organizationNumber",
+            "representativePersonId", "representativeEmailAddress", "representativePhoneNumber"})
+        void shouldHandleSortForAllColumns(String columnName) {
+            final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, columnName));
+
+            final var page = terminationService.getDataExports(pageable);
+
+            assertNotNull(page);
+            verify(terminationRestService, times(1)).getDataExports();
+            assertIterableEquals(List.of(termination1, termination3, termination2), page.getContent());
+        }
     }
 
     @Test
@@ -114,5 +227,24 @@ class TerminationServiceImplTest {
         assertNotNull(terminationService.eraseDataExport(terminationId));
 
         verify(terminationRestService, times(1)).eraseDataExport(terminationId);
+    }
+
+    private DataExportResponse create(LocalDateTime time, UUID id, String creator) {
+        final var names = creator.split(" ");
+        final var termination = new DataExportResponse();
+        termination.setTerminationId(id);
+        termination.setCreated(time);
+        termination.setStatus("Notifiering skickad");
+        termination.setCreatorName(creator);
+        termination.setPhoneNumber("031-21222324");
+        termination.setEmailAddress(names[0] + "@" + names[1] + ".se");
+        termination.setOrganizationNumber("1123456-1234");
+        termination.setPersonId("191212121212");
+        termination.setHsaId("SE23100000076-45R");
+        return termination;
+    }
+
+    private LocalDateTime parse(String time) {
+        return LocalDateTime.parse(time);
     }
 }

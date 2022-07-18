@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.integration;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminationRestServiceImpl.class);
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${terminationservice.api}")
     private String terminationServiceUrl;
@@ -51,9 +52,9 @@ public class TerminationRestServiceImpl implements TerminationRestService {
         String url = terminationServiceUrl + "api/v1/terminations";
         try {
             DataExportResponse[] dataExportResponses = restTemplate.getForObject(url, DataExportResponse[].class);
-            return Arrays.asList(dataExportResponses);
-        } catch (RestClientException e) {
-            LOG.error(e.getMessage());
+            return Arrays.asList(Objects.requireNonNull(dataExportResponses));
+        } catch (RestClientException | NullPointerException e) {
+            LOG.error("Failure fetching terminations from cts.", e);
             throw e;
         }
     }
