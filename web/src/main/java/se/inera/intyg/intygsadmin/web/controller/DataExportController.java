@@ -20,11 +20,7 @@ package se.inera.intyg.intygsadmin.web.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -50,7 +46,6 @@ import se.inera.intyg.intygsadmin.web.service.TerminationService;
 public class DataExportController {
 
     private final TerminationService terminationService;
-    private static final int DEFAULT_PAGE_SIZE = 20;
 
     public DataExportController(TerminationService terminationService) {
         this.terminationService = terminationService;
@@ -58,51 +53,15 @@ public class DataExportController {
 
     /**
      * List a page of data exports.
-     * @param pageable
-     * @return
+     * @param pageable with page number, page size and sort parameters.
+     * @return ResponseEntity carrying a Page of terminations for display.
      */
     @ApiOperation(value = "List a page of data exports.", notes = "List a page of data exports.")
     @GetMapping
     public ResponseEntity<Page<DataExportResponse>> listDataExports(
-        @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "createdAt", direction = Direction.DESC)
-            Pageable pageable) {
+        @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
 
-        List<DataExportResponse> dataExports = terminationService.getDataExports();
-        switch (pageable.getSort().get().findFirst().get().getProperty()) {
-            case "creatorName":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getCreatorName)));
-                break;
-            case "terminationId":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getTerminationId)));
-                break;
-            case "status":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getStatus)));
-                break;
-            case "careProviderHsaId":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getHsaId)));
-                break;
-            case "organizationNumber":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getOrganizationNumber)));
-                break;
-            case "representativePersonId":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getPersonId)));
-                break;
-            case "representativeEmailAddress":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getEmailAddress)));
-                break;
-            case "representativePhoneNumber":
-                dataExports.sort((Comparator.comparing(DataExportResponse::getPhoneNumber)));
-                break;
-            default:
-                dataExports.sort((Comparator.comparing(DataExportResponse::getCreated)));
-        }
-
-        if (pageable.getSort().get().findFirst().get().isDescending()) {
-            Collections.reverse(dataExports);
-        }
-
-        Page<DataExportResponse> dataExportResponses = new PageImpl<DataExportResponse>(dataExports);
-        return ResponseEntity.ok(dataExportResponses);
+        return ResponseEntity.ok(terminationService.getDataExports(pageable));
     }
 
     /**

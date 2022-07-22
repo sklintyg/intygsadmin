@@ -24,17 +24,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.service.TerminationService;
@@ -48,19 +46,15 @@ class DataExportControllerTest {
     @InjectMocks
     private DataExportController dataExportController;
 
-    @Mock
-    private Pageable pageable;
-
-    @ParameterizedTest
-    @ValueSource(strings = {"createdAt", "creatorName", "terminationId", "status", "careProviderHsaId", "organizationNumber", "representativePersonId", "representativeEmailAddress", "representativePhoneNumber"})
-    void listDataExports(String collumnName) {
-        Sort sort = Sort.by(Direction.DESC, collumnName);
-        when(pageable.getSort()).thenReturn(sort);
-        when(terminationService.getDataExports()).thenReturn(new ArrayList<>());
+    @Test
+    void listDataExports() {
+        final var pageable = PageRequest.of(0, 10, Sort.unsorted());
+        final var page = new PageImpl<DataExportResponse>(Collections.emptyList(), pageable, 0);
+        when(terminationService.getDataExports(pageable)).thenReturn(page);
 
         assertNotNull(dataExportController.listDataExports(pageable));
 
-        verify(terminationService, times(1)).getDataExports();
+        verify(terminationService, times(1)).getDataExports(pageable);
     }
 
     @Test

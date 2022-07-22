@@ -8,8 +8,18 @@ import LoadingSpinner from '../loadingSpinner';
 import { getIsFetching } from '../../store/reducers/dataExport';
 import CreateDataExport from '../dataExport/dialogs/CreateDataExport.dialog';
 import EraseDataExport from '../dataExport/dialogs/EraseDataExport.dialog';
+import ListPagination from "../styles/ListPagination";
 
 const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
+
+  const handlePageChange = (pageNumber) => {
+    fetchList(pageNumber)
+  }
+
+  const fetchList = (pageIndex) => {
+    const pageIndexZeroBased = pageIndex - 1
+    fetchDataExportList({pageIndex: pageIndexZeroBased});
+  }
 
   const onActionComplete = () => {
     fetchDataExportList();
@@ -20,6 +30,7 @@ const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
       <CreateDataExport onComplete={onActionComplete} />
       <EraseDataExport onComplete={onActionComplete} />
       <DataExportList />
+      <ListPagination list={dataExportList} handlePageChange={handlePageChange} />
       {isFetching && !dataExportList.length && <LoadingSpinner loading={isFetching} message={'Hämtar data exporter'} />}
     </>
   );

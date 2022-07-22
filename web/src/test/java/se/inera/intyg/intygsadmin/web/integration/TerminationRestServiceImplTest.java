@@ -19,7 +19,8 @@
 
 package se.inera.intyg.intygsadmin.web.integration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
@@ -33,6 +34,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -48,7 +50,7 @@ class TerminationRestServiceImplTest {
 
     @BeforeEach
     public void init(){
-        ReflectionTestUtils.setField(terminationRestService,"terminationServiceUrl", "Host");//Set private field
+        ReflectionTestUtils.setField(terminationRestService,"terminationServiceUrl", "Host");
     }
 
     @Test
@@ -61,6 +63,19 @@ class TerminationRestServiceImplTest {
         verify(restTemplate, times(1)).getForObject(anyString(), any());
     }
 
+    @Test
+    void shouldThrowWhenRestClientFailure() {
+        when(restTemplate.getForObject(anyString(), any())).thenThrow(new RestClientException("RestClientException"));
+
+        assertThrows(RestClientException.class, () -> terminationRestService.getDataExports());
+    }
+
+    @Test
+    void shouldThrowWhenFetchedTerminationsAreNull() {
+        when(restTemplate.getForObject(anyString(), any())).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> terminationRestService.getDataExports());
+    }
 
     @Test
     void createDataExport() {

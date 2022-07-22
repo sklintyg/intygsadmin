@@ -18,11 +18,19 @@
  */
 package se.inera.intyg.intygsadmin.web.service;
 
+import java.text.Collator;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
@@ -31,28 +39,42 @@ import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 @Service
 public class TerminationServiceImpl implements TerminationService {
 
-    private UserService userService;
-
-    private TerminationRestService terminationRestService;
-
     private static final Logger LOG = LoggerFactory.getLogger(TerminationServiceImpl.class);
+    private static final Collator SORT_SWEDISH = Collator.getInstance(new Locale("sv", "SE"));
+
+    private final UserService userService;
+    private final TerminationRestService terminationRestService;
 
     public TerminationServiceImpl(TerminationRestService terminationRestService, UserService userService) {
         this.terminationRestService = terminationRestService;
         this.userService = userService;
+        SORT_SWEDISH.setStrength(Collator.PRIMARY);
     }
 
     @Override
-    public List<DataExportResponse> getDataExports() {
-        //TODO add validation;
-        return terminationRestService.getDataExports();
+    public Page<DataExportResponse> getDataExports(Pageable pageable) {
+        final var terminations = terminationRestService.getDataExports();
+
+        final var sortColumn = pageable.getSort().get().findFirst().orElseThrow().getProperty();
+        final var direction = pageable.getSort().get().findFirst().orElseThrow().getDirection();
+        final var sortedTerminations = sort(terminations, sortColumn, direction);
+
+        final var pageNumber = pageable.getPageNumber();
+        final var size = pageable.getPageSize();
+        final var offset = pageNumber * size;
+        final var lastItem = Math.min(offset + size, terminations.size());
+        final var page = sortedTerminations.subList(offset, lastItem);
+        LOG.info("Returning page {} containing terminations {} to {} of totally {} terminations.", pageNumber + 1, offset + 1, lastItem,
+            terminations.size());
+
+        return new PageImpl<>(page, pageable, terminations.size());
     }
 
     @Override
     public DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO) {
-        IntygsadminUser intygsadminUser = userService.getActiveUser();
+        final var intygsadminUser = userService.getActiveUser();
 
-        CreateDataExport createDataExport = new CreateDataExport();
+        final var createDataExport = new CreateDataExport();
         createDataExport.setCreatorName(intygsadminUser.getName());
         createDataExport.setCreatorHSAId(intygsadminUser.getEmployeeHsaId());
         createDataExport.setHsaId(createDataExportDTO.getHsaId());
@@ -61,12 +83,53 @@ public class TerminationServiceImpl implements TerminationService {
         createDataExport.setEmailAddress(createDataExportDTO.getEmailAddress());
         createDataExport.setOrganizationNumber(createDataExportDTO.getOrganizationNumber());
 
-        //TODO add validation;
         return terminationRestService.createDataExport(createDataExport);
     }
 
     @Override
     public String eraseDataExport(String terminationId) {
         return terminationRestService.eraseDataExport(terminationId);
+    }
+
+    private List<DataExportResponse> sort(List<DataExportResponse> terminations, String sortColumn, Direction direction) {
+        return terminations.stream()
+            .sorted(getComparator(sortColumn, direction))
+            .collect(Collectors.toList());
+    }
+
+    private Comparator<DataExportResponse> getComparator(String sortColumn, Direction direction) {
+        if ("createdAt".equals(sortColumn)) {
+            return Comparator.comparing(getKeyExtractor(sortColumn), getKeyComparator(direction));
+        }
+
+        return Comparator.comparing(getKeyExtractor(sortColumn), getKeyComparator(direction))
+            .thenComparing(DataExportResponse::getCreated, Comparator.reverseOrder());
+    }
+
+    private Comparator<Object> getKeyComparator(Direction direction) {
+        return direction == Direction.DESC ? SORT_SWEDISH.reversed() : SORT_SWEDISH;
+    }
+
+    private Function<DataExportResponse, String> getKeyExtractor(String sortColumn) {
+        switch (sortColumn) {
+            case "creatorName":
+                return DataExportResponse::getCreatorName;
+            case "status":
+                return DataExportResponse::getStatus;
+            case "careProviderHsaId":
+                return DataExportResponse::getHsaId;
+            case "organizationNumber":
+                return DataExportResponse::getOrganizationNumber;
+            case "representativeEmailAddress":
+                return DataExportResponse::getEmailAddress;
+            case "representativePhoneNumber":
+                return DataExportResponse::getPhoneNumber;
+            case "representativePersonId":
+                return DataExportResponse::getPersonId;
+            case "terminationId":
+                return t -> t.getTerminationId().toString();
+            default:
+                return t -> t.getCreated().toString();
+        }
     }
 }
