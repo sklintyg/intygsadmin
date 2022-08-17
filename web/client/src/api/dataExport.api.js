@@ -5,6 +5,8 @@ export const createDataExport = (dataExport) => utils.makeServerPost('dataExport
 
 export const eraseDataExport = (terminationId) => utils.makeServerPost(`dataExport/${terminationId}/erase`, {}, {emptyBody: true});
 
+export const resendDataExportKey = (terminationId) => utils.makeServerPost(`dataExport/${terminationId}/resendkey`, {}, {emptyBody: true});
+
 
 export const fetchDataExportList = ({ pageIndex, sortColumn, sortDirection }) => {
   if (!pageIndex) {

@@ -47,6 +47,10 @@ public class TerminationRestServiceImpl implements TerminationRestService {
         this.restTemplate = restTemplate;
     }
 
+    /**
+     * Get all data exports
+     * @return
+     */
     @Override
     public List<DataExportResponse> getDataExports() {
         String url = terminationServiceUrl + "api/v1/terminations";
@@ -59,6 +63,11 @@ public class TerminationRestServiceImpl implements TerminationRestService {
         }
     }
 
+    /**
+     * Create a data export
+     * @param createDataExport
+     * @return
+     */
     @Override
     public DataExportResponse createDataExport(CreateDataExport createDataExport) {
         String url = terminationServiceUrl + "api/v1/terminations";
@@ -70,9 +79,25 @@ public class TerminationRestServiceImpl implements TerminationRestService {
         }
     }
 
+    /**
+     * Trigger the deletion of all data tied to a data export.
+     * @param terminationId
+     * @return
+     */
     @Override
     public String eraseDataExport(String terminationId) {
         String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/erase";
+        try {
+            return restTemplate.postForObject(url, null, String.class);
+        } catch (RestClientException e) {
+            LOG.error(e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public String resendDataExportKey(String terminationId) {
+        String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/resendpassword";
         try {
             return restTemplate.postForObject(url, null, String.class);
         } catch (RestClientException e) {

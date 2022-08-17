@@ -43,6 +43,15 @@
       "representativePersonId": "Mottagarens personnummer: {personId}",
       "representativePhoneNumber": "Mottagarens mobilnummer: {phoneNumber}",
       "delete": "Avsluta"
+    },
+    "resend": {
+      "modalHeader": "Skicka kryptonyckel på nytt",
+      "careProviderHsaId": "Vårdgivarens HSA-ID: {hsaId}",
+      "organizationNumber": "Organisationsnummer: {organizationNumber}",
+      "representativePersonId": "Mottagarens personnummer: {personId}",
+      "representativePhoneNumber": "Mottagarens mobilnummer: {phoneNumber}",
+      "send": "Skicka",
+      "abort": "Avbryt"
     }
   },
   "intygInfo": {

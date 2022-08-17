@@ -9,8 +9,9 @@ import * as modalActions from '../../store/actions/modal';
 import IaAlert, { alertType } from '../alert/Alert';
 import { getErrorMessageFetchDataExportList, getIsFetching, getDataExportList } from '../../store/reducers/dataExport';
 import DisplayDateTime from '../displayDateTime/DisplayDateTime';
-import {ClearIcon} from "../styles/iaSvgIcons";
+import {ClearIcon, LoadIcon} from "../styles/iaSvgIcons";
 import { EraseDataExportId } from './dialogs/EraseDataExport.dialog';
+import { ResendDataExportKeyId } from './dialogs/ResendDataExportKey.dialog';
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -48,8 +49,12 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
     }
   }
 
-  const openDeleteModal = (terminationId, hsaId, organizationNumber, personId, phoneNumber) => {
+  const openEraseModal = (terminationId, hsaId, organizationNumber, personId, phoneNumber) => {
     openModal(EraseDataExportId, { terminationId, hsaId, organizationNumber, personId, phoneNumber })
+  };
+
+  const openResendKeyModal = (terminationId, hsaId, organizationNumber, personId, phoneNumber) => {
+    openModal(ResendDataExportKeyId, { terminationId, hsaId, organizationNumber, personId, phoneNumber })
   };
 
   const handleSort = (newSortColumn) => {
@@ -146,7 +151,14 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 </td>
                 <td>{dataExport.creatorName}</td>
                 <td>{dataExport.terminationId}</td>
-                <td>{dataExport.status}</td>
+                <td>
+                  {dataExport.status}
+                  <LoadIcon
+                    onClick={() => {
+                      openResendKeyModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)}}
+                    visibility={dataExport.status === 'Kryptonyckel skickad' || dataExport.status === 'Kryptonyckel skickad igen' ? "visible" : "hidden"}
+                />
+                </td>
                 <td>{dataExport.hsaId}</td>
                 <td>{dataExport.organizationNumber}</td>
                 <td>{dataExport.personId}</td>
@@ -158,7 +170,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                     id={`endBtn${dataExport.terminationId}`}
                     disabled={dataExport.status !== 'Kvitterad'}
                     onClick={() => {
-                      openDeleteModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)
+                      openEraseModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)
                     }}
                     color="default">
                     <ClearIcon /> Avsluta

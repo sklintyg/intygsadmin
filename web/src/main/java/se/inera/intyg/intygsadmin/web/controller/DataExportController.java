@@ -89,5 +89,13 @@ public class DataExportController {
 
         return ResponseEntity.ok(status);
     }
+
+    @ApiOperation(value = "Erase all data tied to a data export", notes = "Returns the status of the export")
+    @PostMapping("/{terminationId}/resendkey")
+    public ResponseEntity<String> resendDataExportKey(@PathVariable("terminationId") String terminationId) {
+        final String status = terminationService.resendDataExportKey(terminationId);
+
+        return ResponseEntity.ok(status);
+    }
 }
 

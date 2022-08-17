@@ -51,6 +51,11 @@ public class TerminationServiceImpl implements TerminationService {
         SORT_SWEDISH.setStrength(Collator.PRIMARY);
     }
 
+    /**
+     * Return data exports
+     * @param pageable Page object that contains page number and sort order.
+     * @return
+     */
     @Override
     public Page<DataExportResponse> getDataExports(Pageable pageable) {
         final var terminations = terminationRestService.getDataExports();
@@ -70,6 +75,11 @@ public class TerminationServiceImpl implements TerminationService {
         return new PageImpl<>(page, pageable, terminations.size());
     }
 
+    /**
+     * Create a data export as a first step to erase the customers data.
+     * @param createDataExportDTO
+     * @return
+     */
     @Override
     public DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO) {
         final var intygsadminUser = userService.getActiveUser();
@@ -86,17 +96,40 @@ public class TerminationServiceImpl implements TerminationService {
         return terminationRestService.createDataExport(createDataExport);
     }
 
+    /**
+     * Delete the request and not the actual customer data.
+     * @param terminationId
+     * @return
+     */
     @Override
     public String eraseDataExport(String terminationId) {
         return terminationRestService.eraseDataExport(terminationId);
     }
 
+    @Override
+    public String resendDataExportKey(String terminationId) {
+        return terminationRestService.resendDataExportKey(terminationId);
+    }
+
+    /**
+     * Sort terminations
+     * @param terminations
+     * @param sortColumn
+     * @param direction
+     * @return
+     */
     private List<DataExportResponse> sort(List<DataExportResponse> terminations, String sortColumn, Direction direction) {
         return terminations.stream()
             .sorted(getComparator(sortColumn, direction))
             .collect(Collectors.toList());
     }
 
+    /**
+     * Determine what comparator to use
+     * @param sortColumn
+     * @param direction
+     * @return
+     */
     private Comparator<DataExportResponse> getComparator(String sortColumn, Direction direction) {
         if ("createdAt".equals(sortColumn)) {
             return Comparator.comparing(getKeyExtractor(sortColumn), getKeyComparator(direction));
@@ -106,10 +139,20 @@ public class TerminationServiceImpl implements TerminationService {
             .thenComparing(DataExportResponse::getCreated, Comparator.reverseOrder());
     }
 
+    /**
+     * Check direktion to sert
+     * @param direction
+     * @return
+     */
     private Comparator<Object> getKeyComparator(Direction direction) {
         return direction == Direction.DESC ? SORT_SWEDISH.reversed() : SORT_SWEDISH;
     }
 
+    /**
+     * Get what field to sort on
+     * @param sortColumn
+     * @return
+     */
     private Function<DataExportResponse, String> getKeyExtractor(String sortColumn) {
         switch (sortColumn) {
             case "creatorName":
