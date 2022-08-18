@@ -53,9 +53,6 @@ const ResendDataExportKey = ({ handleClose, isOpen, onComplete, resendDataExport
       <ModalHeader toggle={cancel}> {getMessage(`dataExport.resend.modalHeader`)}</ModalHeader>
       <StyledBody>
         <p>Här kan du skicka ny kryptonyckel till mottagaren.</p>
-        <div>{getMessage(`dataExport.resend.careProviderHsaId`, data)}</div>
-        <div>{getMessage(`dataExport.resend.organizationNumber`, data)}</div>
-        <div>{getMessage(`dataExport.resend.representativePersonId`, data)}</div>
         <div>{getMessage(`dataExport.resend.representativePhoneNumber`, data)}</div>
       </StyledBody>
       <ErrorSection>
