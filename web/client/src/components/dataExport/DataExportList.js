@@ -139,7 +139,10 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
               sortId="representativePhoneNumber"
               onSort={handleSort}
             />
-            <th />
+            {dataExportList.content.map((dataExport) => (
+              dataExport.status === 'Kryptonyckel skickad' &&
+              <th />
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -164,21 +167,20 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.personId}</td>
                 <td id={"emailAddress-" + index} className={"emailAddress"} title={dataExport.emailAddress}>{dataExport.emailAddress}</td>
                 <td>{dataExport.phoneNumber}</td>
-                <td>
-                  <Button
-                    className='end-btn'
-                    id={`endBtn${dataExport.terminationId}`}
-                    disabled={dataExport.status !== 'Kvitterad'}
-                    onClick={() => {
-                      openEraseModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)
-                    }}
-                    color="default">
-                    <ClearIcon /> Avsluta
-                  </Button>
-                  <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${dataExport.terminationId}`}>
-                    Öppnar ett dialogfönster där du kan radera all data kring ett avslut.
-                  </UncontrolledTooltip>
-                </td>
+                {dataExport.status === 'Kryptonyckel skickad' &&
+                  <td>
+                    <Button className='end-btn' id={`endBtn${dataExport.terminationId}`}
+                      onClick={() => {
+                        openEraseModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId,
+                        dataExport.phoneNumber)
+                      }} color="default">
+                      <ClearIcon /> Avsluta
+                    </Button>
+                    <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${dataExport.terminationId}`}>
+                      Öppnar ett dialogfönster där du kan radera all data kring ett avslut.
+                    </UncontrolledTooltip>
+                  </td>
+                }
               </tr>
             ))}
         </tbody>
