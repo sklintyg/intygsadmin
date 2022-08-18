@@ -95,6 +95,11 @@ public class TerminationRestServiceImpl implements TerminationRestService {
         }
     }
 
+    /**
+     * Trigger a resend of the kryptokey for the provided termination
+     * @param terminationId
+     * @return
+     */
     @Override
     public String resendDataExportKey(String terminationId) {
         String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/resendpassword";

@@ -106,6 +106,11 @@ public class TerminationServiceImpl implements TerminationService {
         return terminationRestService.eraseDataExport(terminationId);
     }
 
+    /**
+     * Trigger a resend of the kryptokey for the provided termination
+     * @param terminationId
+     * @return
+     */
     @Override
     public String resendDataExportKey(String terminationId) {
         return terminationRestService.resendDataExportKey(terminationId);
@@ -140,7 +145,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Check direktion to sert
+     * Check direction to sort
      * @param direction
      * @return
      */
