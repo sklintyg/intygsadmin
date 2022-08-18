@@ -97,4 +97,16 @@ class TerminationRestServiceImplTest {
 
         verify(restTemplate, times(1)).postForObject(anyString(), any(), any());
     }
+
+    @Test
+    void resendDataExportKey() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Kryptonyckel skickad igen";
+        when(restTemplate.postForObject(anyString(), any(), any())).thenReturn(responseStatus);
+
+        assertNotNull(terminationRestService.resendDataExportKey(terminationId));
+
+        verify(restTemplate, times(1)).postForObject(anyString(), any(), any());
+
+    }
 }

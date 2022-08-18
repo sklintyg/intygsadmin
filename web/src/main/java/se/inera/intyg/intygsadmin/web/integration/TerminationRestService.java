@@ -30,4 +30,6 @@ public interface TerminationRestService {
     DataExportResponse createDataExport(CreateDataExport createDataExport);
 
     String eraseDataExport(String terminationId);
+
+    String resendDataExportKey(String terminationId);
 }

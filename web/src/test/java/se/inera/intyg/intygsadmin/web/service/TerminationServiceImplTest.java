@@ -65,7 +65,7 @@ class TerminationServiceImplTest {
     private TerminationRestService terminationRestService;
 
     @Captor
-    ArgumentCaptor<CreateDataExport> createDataExportArgumentCaptor;
+    private ArgumentCaptor<CreateDataExport> createDataExportArgumentCaptor;
 
     @Mock
     private UserService userService;
@@ -246,5 +246,16 @@ class TerminationServiceImplTest {
 
     private LocalDateTime parse(String time) {
         return LocalDateTime.parse(time);
+    }
+
+    @Test
+    void resendDataExportKey() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Kryptonyckel skickad igen";
+        when(terminationRestService.resendDataExportKey(terminationId)).thenReturn(responseStatus);
+
+        assertNotNull(terminationService.resendDataExportKey(terminationId));
+
+        verify(terminationRestService, times(1)).resendDataExportKey(terminationId);
     }
 }

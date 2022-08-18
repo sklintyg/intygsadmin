@@ -79,4 +79,15 @@ class DataExportControllerTest {
         verify(terminationService, times(1)).eraseDataExport(terminationId);
     }
 
+    @Test
+    void resendDataExportKey() {
+        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+        String responseStatus = "Kryptonyckel skickad igen";
+        when(terminationService.resendDataExportKey(terminationId)).thenReturn(responseStatus);
+
+        assertNotNull(dataExportController.resendDataExportKey(terminationId));
+
+        verify(terminationService, times(1)).resendDataExportKey(terminationId);
+    }
+
 }
