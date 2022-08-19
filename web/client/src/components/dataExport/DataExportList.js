@@ -9,9 +9,10 @@ import * as modalActions from '../../store/actions/modal';
 import IaAlert, { alertType } from '../alert/Alert';
 import { getErrorMessageFetchDataExportList, getIsFetching, getDataExportList } from '../../store/reducers/dataExport';
 import DisplayDateTime from '../displayDateTime/DisplayDateTime';
-import {ClearIcon, LoadIcon} from "../styles/iaSvgIcons";
+import {ClearIcon, LoadIcon, Create as CreateIcon} from "../styles/iaSvgIcons";
 import { EraseDataExportId } from './dialogs/EraseDataExport.dialog';
 import { ResendDataExportKeyId } from './dialogs/ResendDataExportKey.dialog';
+import { UpdateDataExportId } from "./dialogs/UpdateDataExport.dialog";
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -53,9 +54,22 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
     openModal(EraseDataExportId, { terminationId, hsaId, organizationNumber, personId, phoneNumber })
   };
 
+  const openUpdateModal = (dataExport) => {
+    openModal(UpdateDataExportId, { dataExport })
+  };
+
   const openResendKeyModal = (terminationId, hsaId, organizationNumber, personId, phoneNumber) => {
     openModal(ResendDataExportKeyId, { terminationId, hsaId, organizationNumber, personId, phoneNumber })
   };
+
+  const updateAvailable = (status) => {
+    return status === 'Skapad' || status === 'Hämtar intyg' || status === 'Intyg hämtade' || status === 'Intygstexter hämtade' ||
+      status === 'Uppladdat' || status === 'Notifiering skickad' || status === 'Påminnelse skickad'
+  }
+
+  const eraseAvailable = (status) => {
+    return status === 'Kryptonyckel skickad' || status === "Kryptonyckel skickad igen"
+  }
 
   const handleSort = (newSortColumn) => {
     let { sortColumn, sortDirection } = dataExportList;
@@ -139,10 +153,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
               sortId="representativePhoneNumber"
               onSort={handleSort}
             />
-            {dataExportList.content.map((dataExport) => (
-              dataExport.status === 'Kryptonyckel skickad' &&
-              <th />
-            ))}
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -167,19 +178,36 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                 <td>{dataExport.personId}</td>
                 <td id={"emailAddress-" + index} className={"emailAddress"} title={dataExport.emailAddress}>{dataExport.emailAddress}</td>
                 <td>{dataExport.phoneNumber}</td>
-                {dataExport.status === 'Kryptonyckel skickad' &&
+                {updateAvailable(dataExport.status) &&
+                  <td>
+                    <Button className='change-btn'
+                            id={`changeBtn${dataExport.terminationId}`}
+                            onClick={() => {
+                              openUpdateModal(dataExport)
+                            }} color="primary">
+                      <CreateIcon /> Ändra
+                    </Button>
+                    <UncontrolledTooltip trigger='hover' placement="top" target={`changeBtn${dataExport.terminationId}`}>
+                      Öppnar modal där du kan ändra informationen som registrerats i skapa export-modalen.
+                    </UncontrolledTooltip>
+                  </td>
+                }
+                {eraseAvailable(dataExport.status) &&
                   <td>
                     <Button className='end-btn' id={`endBtn${dataExport.terminationId}`}
                       onClick={() => {
                         openEraseModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId,
                         dataExport.phoneNumber)
-                      }} color="default">
+                      }} color="primary">
                       <ClearIcon /> Avsluta
                     </Button>
                     <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${dataExport.terminationId}`}>
                       Öppnar ett dialogfönster där du kan radera all data kring ett avslut.
                     </UncontrolledTooltip>
                   </td>
+                }
+                {!updateAvailable(dataExport.status) && !eraseAvailable(dataExport.status) &&
+                  <td />
                 }
               </tr>
             ))}

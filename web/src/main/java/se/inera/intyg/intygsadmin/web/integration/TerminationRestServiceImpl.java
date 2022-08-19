@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
@@ -48,8 +49,8 @@ public class TerminationRestServiceImpl implements TerminationRestService {
     }
 
     /**
-     * Get all data exports
-     * @return
+     * Get all data exports.
+     * @return List of available data exports.
      */
     @Override
     public List<DataExportResponse> getDataExports() {
@@ -64,9 +65,9 @@ public class TerminationRestServiceImpl implements TerminationRestService {
     }
 
     /**
-     * Create a data export
-     * @param createDataExport
-     * @return
+     * Create a data export.
+     * @param createDataExport Information for the creation of a new termination.
+     * @return The created data export.
      */
     @Override
     public DataExportResponse createDataExport(CreateDataExport createDataExport) {
@@ -81,7 +82,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
 
     /**
      * Trigger the deletion of all data tied to a data export.
-     * @param terminationId
+     * @param terminationId Termination id of the termination to be deleted.
      * @return
      */
     @Override
@@ -96,8 +97,27 @@ public class TerminationRestServiceImpl implements TerminationRestService {
     }
 
     /**
-     * Trigger a resend of the kryptokey for the provided termination
-     * @param terminationId
+     * Trigger update of a data export.
+     * @param terminationId Id of the termination to be updated.
+     * @param updateDataExportDTO Information for the update.
+     * @return The updated data export.
+     */
+    @Override
+    public DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO updateDataExportDTO) {
+        String url = terminationServiceUrl + "api/v1/terminations/" + terminationId;
+        try {
+            final var dataExportResponse =  restTemplate.postForObject(url, updateDataExportDTO, DataExportResponse.class);
+            LOG.info("Successfully updated termination {}", terminationId);
+            return dataExportResponse;
+        } catch (RestClientException e) {
+            LOG.error("Failure updating termination.", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Trigger a resend of the kryptokey for the provided termination.
+     * @param terminationId Id of termination for which crypto key should be re-sent.
      * @return
      */
     @Override

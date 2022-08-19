@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,6 +55,7 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -76,6 +78,12 @@ class TerminationServiceImplTest {
     private static final UUID TERMINATION_ID_1 = UUID.fromString("f2b3c63b-dcb8-408a-b68f-1d88d779131e");
     private static final UUID TERMINATION_ID_2 = UUID.fromString("ddaba575-096e-4020-8b72-6bc3506faf02");
     private static final UUID TERMINATION_ID_3 = UUID.fromString("ec1b9858-cbb9-4a38-b996-49776037aeb5");
+
+    private static final String TERMINATION_ID = "f2b3c63b-dcb8-408a-b68f-1d88d779131e";
+    private static final String HSA_ID = "SE2325000098-TEST";
+    private static final String PERSON_ID = "19121212-1212";
+    private static final String EMAIL_ADDRESS = "email@address.se";
+    private static final String PHONE_NUMBER = "070-12345678";
 
     @Nested
     class GetTerminationsTest {
@@ -219,6 +227,24 @@ class TerminationServiceImplTest {
     }
 
     @Test
+    void shouldCallRestServiceWithProperUpdateInformation() {
+        final var dataExportResponse = createDataExportResponse();
+
+        final var updateExportCaptor = ArgumentCaptor.forClass(UpdateDataExportDTO.class);
+        when(terminationRestService.updateDataExport(eq(TERMINATION_ID), any(UpdateDataExportDTO.class))).thenReturn(dataExportResponse);
+
+        assertNotNull(terminationService.updateDataExport(dataExportResponse));
+
+        verify(terminationRestService, times(1)).updateDataExport(eq(TERMINATION_ID), updateExportCaptor.capture());
+        assertAll (
+            () -> assertEquals(HSA_ID, updateExportCaptor.getValue().getHsaId()),
+            () -> assertEquals(PERSON_ID, updateExportCaptor.getValue().getPersonId()),
+            () -> assertEquals(EMAIL_ADDRESS, updateExportCaptor.getValue().getEmailAddress()),
+            () -> assertEquals(PHONE_NUMBER, updateExportCaptor.getValue().getPhoneNumber())
+        );
+    }
+
+    @Test
     void testErase() {
         String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
         String responseStatus = "Avslutad";
@@ -257,5 +283,15 @@ class TerminationServiceImplTest {
         assertNotNull(terminationService.resendDataExportKey(terminationId));
 
         verify(terminationRestService, times(1)).resendDataExportKey(terminationId);
+    }
+
+    private DataExportResponse createDataExportResponse() {
+        final var dataExportResponse = new DataExportResponse();
+        dataExportResponse.setTerminationId(TERMINATION_ID_1);
+        dataExportResponse.setHsaId(HSA_ID);
+        dataExportResponse.setPersonId(PERSON_ID);
+        dataExportResponse.setEmailAddress(EMAIL_ADDRESS);
+        dataExportResponse.setPhoneNumber(PHONE_NUMBER);
+        return dataExportResponse;
     }
 }

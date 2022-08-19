@@ -52,6 +52,10 @@
       "representativePhoneNumber": "Mottagarens mobilnummer: {phoneNumber}",
       "send": "Skicka",
       "abort": "Avbryt"
+    },
+    "update": {
+      "modalHeader": "Ändra dataexport",
+      "change": "Ändra"
     }
   },
   "intygInfo": {

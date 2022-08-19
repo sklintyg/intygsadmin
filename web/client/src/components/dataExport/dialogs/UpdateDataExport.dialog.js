@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import React, {useEffect, useState} from 'react';
+import {Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import modalContainer from '../../modalContainer/modalContainer';
-import { compose } from 'recompose';
+import {compose} from 'recompose';
 import * as actions from '../../../store/actions/dataExport';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import styled from 'styled-components';
-import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout';
-import IaAlert, { alertType } from '../../alert/Alert';
-import { IaTypo04 } from '../../styles/iaTypography';
-import { getMessage } from '../../../messages/messages';
-import {getErrorMessageCreateDataExport} from "../../../store/reducers/dataExport";
+import {ErrorSection, ErrorWrapper} from '../../styles/iaLayout';
+import IaAlert, {alertType} from '../../alert/Alert';
+import {IaTypo04} from '../../styles/iaTypography';
+import {getMessage} from '../../../messages/messages';
+import {getErrorMessageUpdateDataExport} from "../../../store/reducers/dataExport";
 
 const StyledBody = styled(ModalBody)`
   .form-control {
@@ -18,6 +18,12 @@ const StyledBody = styled(ModalBody)`
 
   .form-group {
     margin-bottom: 15px;
+  }
+
+  input[type=text]:disabled {
+      color: #6A6A6A;
+      background-color: #F2F2F2;
+      cursor: not-allowed;
   }
 
   h5 {
@@ -32,68 +38,68 @@ const StyledBody = styled(ModalBody)`
   }
 `;
 
-const initialDataExport = {
-  hsaId: '',
-  organizationNumber: '',
-  personId: '',
-  emailAddress: '',
-  phoneNumber: '',
-};
+const defaultDataExport =  {
+   terminationId : '',
+   created : '',
+   status : '',
+   creatorName : '',
+   creatorHSAId : '',
+   hsaId : '',
+   organizationNumber : '',
+   personId :  '',
+   emailAddress : '',
+   phoneNumber : ''
+}
 
-const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, errorMessage, clearError }) => {
-  const [newDataExport, setNewDataExport] = useState(initialDataExport);
+const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, errorMessage, data }) => {
+
+  const originalDataExport = data ? data.dataExport : defaultDataExport
+  const [updatedDataExport, setUpdatedDataExport] = useState(originalDataExport);
+
+  useEffect(() => {
+    if (data && (updatedDataExport.terminationId !== originalDataExport.terminationId ||
+      updatedDataExport.status !== originalDataExport.status)) {
+      setUpdatedDataExport({...originalDataExport})
+    }
+  }, [originalDataExport, updatedDataExport, data])
 
   const onChange = (prop) => (value) => {
-    setNewDataExport({ ...newDataExport, [prop]: value });
+    setUpdatedDataExport({ ...updatedDataExport, [prop]: value });
   };
 
-  const createSendObject = () => {
-    return {
-      hsaId: newDataExport.hsaId,
-      organizationNumber: newDataExport.organizationNumber,
-      personId: newDataExport.personId,
-      emailAddress: newDataExport.emailAddress,
-      phoneNumber: newDataExport.phoneNumber
-    };
-  };
-
-  const sendCreateDataExport = () => {
-    const func = createDataExport(createSendObject());
-
-    func
-      .then(() => {
-        cancel();
-        onComplete();
-      })
-      .catch(() => {});
+  const sendUpdatedDataExport = () => {
+    updateDataExport(updatedDataExport).then(() => {
+      cancel();
+      onComplete();
+    })
+    .catch(() => {})
   };
 
   const cancel = () => {
-    setNewDataExport(initialDataExport);
     handleClose();
   };
 
-  const enableSaveBtn = () => {
-    const fields = ['hsaId', 'organizationNumber', 'personId', 'emailAddress', 'phoneNumber'];
-
-    let enable = fields.reduce((accumulator, currentValue) => {
-      return accumulator && newDataExport[currentValue];
-    }, true);
-
-    return enable;
+  const enableUpdateBtn = () => {
+    const fields = ['hsaId', 'personId', 'emailAddress', 'phoneNumber']
+    return fields.reduce((accumulator, currentValue) => {
+      return accumulator || (updatedDataExport[currentValue] !== originalDataExport[currentValue])
+    }, false)
   };
 
   return (
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-      <ModalHeader toggle={cancel}> {getMessage(`dataExport.create.modalHeader`)}</ModalHeader>
+      <ModalHeader toggle={cancel}> {getMessage(`dataExport.update.modalHeader`)}</ModalHeader>
       <StyledBody>
+        <p>Här kan du ändra uppgifter i dataexporten.
+        Endast uppgifter som kan ändras är redigerbara.
+        Mejl och sms kommer att på nytt skickas ut till mottagaren (organisationsrepresentanten).</p>
         <FormGroup>
           <Label for="dataExportCreatorHSAId">
             <IaTypo04>{getMessage(`dataExport.create.careProviderHsaId`)}</IaTypo04>
           </Label>
           <Input
             id="hsaId"
-            value={newDataExport.hsaId}
+            value={updatedDataExport.hsaId}
             placeholder={getMessage(`dataExport.create.careProviderHsaIdPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('hsaId')(e.target.value)}
@@ -105,33 +111,32 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           </Label>
           <Input
             id="organizationNumber"
-            value={newDataExport.organizationNumber}
+            disabled={true}
+            value={updatedDataExport.organizationNumber}
             placeholder={getMessage(`dataExport.create.organizationNumberPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('organizationNumber')(e.target.value)}
           />
         </FormGroup>
-
         <FormGroup>
           <Label for="dataExportRepresentativePersonId">
             <IaTypo04>{getMessage(`dataExport.create.representativePersonId`)}</IaTypo04>
           </Label>
           <Input
             id="personId"
-            value={newDataExport.personId}
+            value={updatedDataExport.personId}
             placeholder={getMessage(`dataExport.create.representativePersonIdPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('personId')(e.target.value)}
           />
         </FormGroup>
-
         <FormGroup>
           <Label for="dataExportEmailAddress">
             <IaTypo04>{getMessage(`dataExport.create.representativeEmailAddress`)}</IaTypo04>
           </Label>
           <Input
             id="emailAddress"
-            value={newDataExport.emailAddress}
+            value={updatedDataExport.emailAddress}
             maxLength={200}
             onChange={(e) => onChange('emailAddress')(e.target.value)}
           />
@@ -142,7 +147,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           </Label>
           <Input
             id="phoneNumber"
-            value={newDataExport.telephoneNUmber}
+            value={updatedDataExport.phoneNumber}
             placeholder={getMessage(`dataExport.create.representativePhoneNumberPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('phoneNumber')(e.target.value)}
@@ -153,20 +158,20 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
         {errorMessage !== null && (
           <ErrorWrapper>
             <IaAlert type={alertType.ERROR}>
-              Kunde inte skapa en dataexport på grund av tekniskt fel. Prova igen om en stund.
+              Kunde inte ändra dataexporten på grund av tekniskt fel. Prova igen om en stund.
             </IaAlert>
           </ErrorWrapper>
         )}
       </ErrorSection>
       <ModalFooter className="no-border">
         <Button
-          id="saveDataExport"
-          disabled={!enableSaveBtn()}
+          id="updateDataExport"
+          disabled={!enableUpdateBtn()}
           color={'primary'}
           onClick={() => {
-            sendCreateDataExport()
+            sendUpdatedDataExport()
           }}>
-          {getMessage(`dataExport.create.save`)}
+          {getMessage(`dataExport.update.change`)}
         </Button>
         <Button
           id="closeModal"
@@ -182,15 +187,17 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
 }
 
 const mapStateToProps = (state) => {
-  return { errorMessage: getErrorMessageCreateDataExport(state) };
+  return {
+    errorMessage: getErrorMessageUpdateDataExport(state)
+  };
 };
 
-export const CreateDataExportId = 'createDataExport';
+export const UpdateDataExportId = 'changeDataExport';
 
 export default compose(
   connect(
     mapStateToProps,
     { ...actions }
   ),
-  modalContainer(CreateDataExportId)
-)(CreateDataExport);
+  modalContainer(UpdateDataExportId),
+)(UpdateDataExport);

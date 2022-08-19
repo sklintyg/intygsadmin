@@ -61,6 +61,21 @@ const errorMessageCreateDataExport = (state = null, action) => {
   }
 };
 
+const errorMessageUpdateDataExport = (state = null, action) => {
+  switch (action.type) {
+  case ActionConstants.UPDATE_DATA_EXPORT_FAILURE:
+    return {
+      code: action.payload.error.errorCode,
+      error: buildClientError(action.payload, 'error.dataExport').message
+    }
+  case ActionConstants.UPDATE_DATA_EXPORT_REQUEST:
+  case ActionConstants.UPDATE_DATA_EXPORT_SUCCESS:
+    return null;
+  default:
+    return state;
+  }
+};
+
 const errorMessageEraseDataExport = (state = null, action) => {
   switch (action.type) {
 
@@ -112,6 +127,7 @@ export default combineReducers({
   dataExportList,
   isFetching,
   errorMessageCreateDataExport,
+  errorMessageUpdateDataExport,
   errorMessageEraseDataExport,
   errorMessageResendDataExportKey,
   errorMessageFetchDataExportList
@@ -122,6 +138,8 @@ export default combineReducers({
 export const getIsFetching = (state) => state.dataExport.isFetching;
 
 export const getErrorMessageCreateDataExport = (state) => state.dataExport.errorMessageCreateDataExport;
+
+export const getErrorMessageUpdateDataExport = (state) => state.dataExport.errorMessageUpdateDataExport;
 
 export const getErrorMessageEraseDataExport = (state) => state.dataExport.errorMessageEraseDataExport;
 
@@ -137,4 +155,3 @@ export const getSortOrder = (state) => {
     sortDirection: state.dataExport.dataExportList.sortDirection,
   };
 };
-
