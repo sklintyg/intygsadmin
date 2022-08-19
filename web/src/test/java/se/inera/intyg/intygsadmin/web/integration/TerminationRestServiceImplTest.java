@@ -23,10 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +38,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
@@ -85,6 +88,28 @@ class TerminationRestServiceImplTest {
 
         assertNotNull(terminationRestService.createDataExport(createDataExport));
         verify(restTemplate, times(1)).postForObject(anyString(), any(CreateDataExport.class), any());
+    }
+
+    @Test
+    void shouldUpdateDataExport() {
+        final var dataExportResponse = new DataExportResponse();
+        final var updateDataExportDTO = new UpdateDataExportDTO();
+        final var terminationId = UUID.randomUUID().toString();
+
+        when(restTemplate.postForObject(anyString(), eq(updateDataExportDTO), any())).thenReturn(dataExportResponse);
+
+        assertNotNull(terminationRestService.updateDataExport(terminationId, updateDataExportDTO));
+        verify(restTemplate, times(1)).postForObject(anyString(), eq(updateDataExportDTO), any());
+    }
+
+    @Test
+    void shouldThrowExceptionOnUpdateDataExportFailure() {
+        final var updateDataExportDTO = new UpdateDataExportDTO();
+        final var terminationId = UUID.randomUUID().toString();
+
+        when(restTemplate.postForObject(anyString(), eq(updateDataExportDTO), any())).thenThrow(new RestClientException(""));
+
+        assertThrows(RestClientException.class, () -> terminationRestService.updateDataExport(terminationId, updateDataExportDTO));
     }
 
     @Test

@@ -32,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -52,7 +53,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Return data exports
+     * Return data exports.
      * @param pageable Page object that contains page number and sort order.
      * @return
      */
@@ -107,7 +108,23 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Trigger a resend of the kryptokey for the provided termination
+     * Update data export.
+     * @param dataExportResponse Update information from update form.
+     * @return The updated termination.
+     */
+    @Override
+    public DataExportResponse updateDataExport(DataExportResponse dataExportResponse) {
+        final var updateDataExportDTO = new UpdateDataExportDTO();
+        updateDataExportDTO.setHsaId(dataExportResponse.getHsaId());
+        updateDataExportDTO.setPersonId(dataExportResponse.getPersonId());
+        updateDataExportDTO.setEmailAddress(dataExportResponse.getEmailAddress());
+        updateDataExportDTO.setPhoneNumber(dataExportResponse.getPhoneNumber());
+
+        return terminationRestService.updateDataExport(dataExportResponse.getTerminationId().toString(), updateDataExportDTO);
+    }
+
+    /**
+     * Trigger a resend of the kryptokey for the provided termination.
      * @param terminationId
      * @return
      */
@@ -117,7 +134,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Sort terminations
+     * Sort terminations.
      * @param terminations
      * @param sortColumn
      * @param direction
@@ -130,7 +147,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Determine what comparator to use
+     * Determine what comparator to use.
      * @param sortColumn
      * @param direction
      * @return
@@ -145,7 +162,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Check direction to sort
+     * Check direction to sort.
      * @param direction
      * @return
      */
@@ -154,7 +171,7 @@ public class TerminationServiceImpl implements TerminationService {
     }
 
     /**
-     * Get what field to sort on
+     * Get what field to sort on.
      * @param sortColumn
      * @return
      */

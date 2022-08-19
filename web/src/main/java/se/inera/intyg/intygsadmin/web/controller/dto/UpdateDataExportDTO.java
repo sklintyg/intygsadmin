@@ -16,23 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-package se.inera.intyg.intygsadmin.web.integration;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
-import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
-import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateDataExportDTO {
 
-public interface TerminationRestService {
+    @ApiModelProperty(notes = "Care provider ID", required = true)
+    private String hsaId;
 
-    List<DataExportResponse> getDataExports();
+    @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
+    private String personId;
 
-    DataExportResponse createDataExport(CreateDataExport createDataExport);
+    @ApiModelProperty(notes = "Email address for the receiving person", required = true)
+    private String emailAddress;
 
-    DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO dataExportResponse);
+    @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
+    private String phoneNumber;
 
-    String eraseDataExport(String terminationId);
-
-    String resendDataExportKey(String terminationId);
 }

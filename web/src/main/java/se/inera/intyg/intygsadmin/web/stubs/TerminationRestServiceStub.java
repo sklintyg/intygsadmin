@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.TerminationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -35,6 +36,98 @@ public class TerminationRestServiceStub implements TerminationRestService {
     private final List<DataExportResponse> list = new ArrayList<>();
 
     public TerminationRestServiceStub() {
+        createStubData();
+    }
+
+    @Override
+    public List<DataExportResponse> getDataExports() {
+        return list;
+    }
+
+    @Override
+    public DataExportResponse createDataExport(CreateDataExport createDataExporttDTO) {
+        final var dataExportResponse = new DataExportResponse();
+        dataExportResponse.setTerminationId(UUID.randomUUID());
+        dataExportResponse.setCreated(LocalDateTime.now());
+        dataExportResponse.setStatus("Skapad");
+        dataExportResponse.setCreatorName(createDataExporttDTO.getCreatorName());
+        dataExportResponse.setCreatorHSAId(createDataExporttDTO.getCreatorHSAId());
+        dataExportResponse.setHsaId(createDataExporttDTO.getHsaId());
+        dataExportResponse.setOrganizationNumber(createDataExporttDTO.getOrganizationNumber());
+        dataExportResponse.setPersonId(createDataExporttDTO.getPersonId());
+        dataExportResponse.setPhoneNumber(createDataExporttDTO.getPhoneNumber());
+        dataExportResponse.setEmailAddress(createDataExporttDTO.getEmailAddress());
+
+        list.add(dataExportResponse);
+
+        return dataExportResponse;
+    }
+
+    @Override
+    public DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO updateDataExportDTO) {
+        final var dataExport = getDataExport(terminationId);
+
+        if (!updateDataExportDTO.getPhoneNumber().equals(dataExport.getPhoneNumber())) {
+            dataExport.setPhoneNumber(updateDataExportDTO.getPhoneNumber());
+
+            if (requiresReNotification(dataExport.getStatus())) {
+                dataExport.setStatus("Uppladdat");
+            }
+        }
+
+        if (!updateDataExportDTO.getEmailAddress().equals(dataExport.getEmailAddress())) {
+            dataExport.setEmailAddress(updateDataExportDTO.getEmailAddress());
+
+            if (requiresReNotification(dataExport.getStatus())) {
+                dataExport.setStatus("Uppladdat");
+            }
+        }
+
+        if (!updateDataExportDTO.getPersonId().equals((dataExport.getPersonId()))) {
+            dataExport.setPersonId(updateDataExportDTO.getPersonId());
+
+            if (requiresPackageReExport(dataExport.getStatus())) {
+                dataExport.setStatus("Intygstexter hämtade");
+            }
+        }
+
+        if (!updateDataExportDTO.getHsaId().equals(dataExport.getHsaId())) {
+            dataExport.setHsaId(updateDataExportDTO.getHsaId());
+            dataExport.setStatus("Skapad");
+        }
+
+        return dataExport;
+    }
+
+    @Override
+    public String eraseDataExport(String terminationId) {
+        final var dataExport = getDataExport(terminationId);
+        dataExport.setStatus("Starta radering");
+        return "Data borttaget";
+    }
+
+    @Override
+    public String resendDataExportKey(String terminationId) {
+        final var dataExport = getDataExport(terminationId);
+        dataExport.setStatus("Kryptonyckel skickad igen");
+        return "Lösenord skickat";
+    }
+
+    private DataExportResponse getDataExport(String terminationId) {
+        return list.stream()
+            .filter(item -> item.getTerminationId().toString().equals(terminationId))
+            .findFirst().orElseThrow();
+    }
+
+    private boolean requiresReNotification(String status) {
+        return "Notifiering skickad".equals(status) || "Påminnelse skickad".equals(status);
+    }
+
+    private boolean requiresPackageReExport(String status) {
+        return "Uppladdat".equals(status) || "Notifiering skickad".equals(status) || "Påminnelse skickad".equals(status);
+    }
+
+    private void createStubData() {
         final var dataExportEntity1 = new DataExportResponse();
         dataExportEntity1.setTerminationId(UUID.randomUUID());
         dataExportEntity1.setCreated(LocalDateTime.now());
@@ -70,7 +163,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity4 = new DataExportResponse();
         dataExportEntity4.setTerminationId(UUID.randomUUID());
-        dataExportEntity4.setCreated(LocalDateTime.now().minusMinutes(3L));
+        dataExportEntity4.setCreated(LocalDateTime.now().minusHours(1L).minusMinutes(1L));
         dataExportEntity4.setStatus("Intygstexter hämtade");
         dataExportEntity4.setCreatorName("Hugo Nilsson");
         dataExportEntity4.setPhoneNumber("08-4444444444");
@@ -81,7 +174,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity5 = new DataExportResponse();
         dataExportEntity5.setTerminationId(UUID.randomUUID());
-        dataExportEntity5.setCreated(LocalDateTime.now().minusMinutes(4L));
+        dataExportEntity5.setCreated(LocalDateTime.now().minusHours(1L).minusMinutes(2L));
         dataExportEntity5.setStatus("Uppladdat");
         dataExportEntity5.setCreatorName("Lucas Eriksson");
         dataExportEntity5.setPhoneNumber("08-555555555");
@@ -92,7 +185,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity6 = new DataExportResponse();
         dataExportEntity6.setTerminationId(UUID.randomUUID());
-        dataExportEntity6.setCreated(LocalDateTime.now().minusMinutes(5L));
+        dataExportEntity6.setCreated(LocalDateTime.now().minusHours(2L).minusMinutes(1L));
         dataExportEntity6.setStatus("Notifiering skickad");
         dataExportEntity6.setCreatorName("Adam Larsson");
         dataExportEntity6.setPhoneNumber("08-6666666666");
@@ -103,7 +196,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity7 = new DataExportResponse();
         dataExportEntity7.setTerminationId(UUID.randomUUID());
-        dataExportEntity7.setCreated(LocalDateTime.now().minusMinutes(6L));
+        dataExportEntity7.setCreated(LocalDateTime.now().minusHours(2L).minusMinutes(2L));
         dataExportEntity7.setStatus("Påminnelse skickad");
         dataExportEntity7.setCreatorName("Alice Olsson");
         dataExportEntity7.setPhoneNumber("08-77777777");
@@ -114,7 +207,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity8 = new DataExportResponse();
         dataExportEntity8.setTerminationId(UUID.randomUUID());
-        dataExportEntity8.setCreated(LocalDateTime.now().minusMinutes(7L));
+        dataExportEntity8.setCreated(LocalDateTime.now().minusDays(1L).minusHours(1L).minusMinutes(1L));
         dataExportEntity8.setStatus("Kvitterad");
         dataExportEntity8.setCreatorName("Maja Persson");
         dataExportEntity8.setPhoneNumber("08-888888888");
@@ -125,8 +218,8 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity9 = new DataExportResponse();
         dataExportEntity9.setTerminationId(UUID.randomUUID());
-        dataExportEntity9.setCreated(LocalDateTime.now().minusMinutes(8L));
-        dataExportEntity9.setStatus("Lösenord skickat");
+        dataExportEntity9.setCreated(LocalDateTime.now().minusDays(1L).minusHours(1L).minusMinutes(2L));
+        dataExportEntity9.setStatus("Kryptonyckel skickad");
         dataExportEntity9.setCreatorName("Vera Svensson");
         dataExportEntity9.setPhoneNumber("08-999999999");
         dataExportEntity9.setEmailAddress("Vera@Svensson.se");
@@ -136,8 +229,8 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity10 = new DataExportResponse();
         dataExportEntity10.setTerminationId(UUID.randomUUID());
-        dataExportEntity10.setCreated(LocalDateTime.now().minusMinutes(9L));
-        dataExportEntity10.setStatus("Starta radering");
+        dataExportEntity10.setCreated(LocalDateTime.now().minusDays(1L).minusHours(2L).minusMinutes(2L));
+        dataExportEntity10.setStatus("Kryptonyckel skickad igen");
         dataExportEntity10.setCreatorName("Alma Gustafsson");
         dataExportEntity10.setPhoneNumber("08-1000000000");
         dataExportEntity10.setEmailAddress("Alma@Gustafsson.se");
@@ -147,8 +240,8 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity11 = new DataExportResponse();
         dataExportEntity11.setTerminationId(UUID.randomUUID());
-        dataExportEntity11.setCreated(LocalDateTime.now().minusMinutes(10L));
-        dataExportEntity11.setStatus("Radering pågår");
+        dataExportEntity11.setCreated(LocalDateTime.now().minusDays(2L).minusHours(1L).minusMinutes(1L));
+        dataExportEntity11.setStatus("Starta radering");
         dataExportEntity11.setCreatorName("Selma Stensson");
         dataExportEntity11.setPhoneNumber("08-110000000");
         dataExportEntity11.setEmailAddress("Selma@Stensson.se");
@@ -158,7 +251,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity12 = new DataExportResponse();
         dataExportEntity12.setTerminationId(UUID.randomUUID());
-        dataExportEntity12.setCreated(LocalDateTime.now().minusMinutes(11L));
+        dataExportEntity12.setCreated(LocalDateTime.now().minusDays(2L).minusHours(1L).minusMinutes(2L));
         dataExportEntity12.setStatus("Radering pågår");
         dataExportEntity12.setCreatorName("Elsa pettersson");
         dataExportEntity12.setPhoneNumber("08-12000000000");
@@ -169,7 +262,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity13 = new DataExportResponse();
         dataExportEntity13.setTerminationId(UUID.randomUUID());
-        dataExportEntity13.setCreated(LocalDateTime.now().minusMinutes(12L));
+        dataExportEntity13.setCreated(LocalDateTime.now().minusDays(2L).minusHours(2L).minusMinutes(1L));
         dataExportEntity13.setStatus("Radering avbruten");
         dataExportEntity13.setCreatorName("Lilly Stensson");
         dataExportEntity13.setPhoneNumber("08-1300000000");
@@ -180,7 +273,7 @@ public class TerminationRestServiceStub implements TerminationRestService {
 
         final var dataExportEntity14 = new DataExportResponse();
         dataExportEntity14.setTerminationId(UUID.randomUUID());
-        dataExportEntity14.setCreated(LocalDateTime.now().minusMinutes(13L));
+        dataExportEntity14.setCreated(LocalDateTime.now().minusDays(2L).minusHours(2L).minusMinutes(2L));
         dataExportEntity14.setStatus("Radering utförd");
         dataExportEntity14.setCreatorName("Frans Fransson");
         dataExportEntity14.setPhoneNumber("08-140000000");
@@ -204,39 +297,4 @@ public class TerminationRestServiceStub implements TerminationRestService {
         list.add(dataExportEntity13);
         list.add(dataExportEntity14);
     }
-
-    @Override
-    public List<DataExportResponse> getDataExports() {
-        return list;
-    }
-
-    @Override
-    public DataExportResponse createDataExport(CreateDataExport createDataExporttDTO) {
-        final var dataExportResponse = new DataExportResponse();
-        dataExportResponse.setTerminationId(UUID.randomUUID());
-        dataExportResponse.setCreated(LocalDateTime.now());
-        dataExportResponse.setStatus("Skapad");
-        dataExportResponse.setCreatorName(createDataExporttDTO.getCreatorName());
-        dataExportResponse.setCreatorHSAId(createDataExporttDTO.getCreatorHSAId());
-        dataExportResponse.setHsaId(createDataExporttDTO.getHsaId());
-        dataExportResponse.setOrganizationNumber(createDataExporttDTO.getOrganizationNumber());
-        dataExportResponse.setPersonId(createDataExporttDTO.getPersonId());
-        dataExportResponse.setPhoneNumber(createDataExporttDTO.getPhoneNumber());
-        dataExportResponse.setEmailAddress(createDataExporttDTO.getEmailAddress());
-
-        list.add(dataExportResponse);
-
-        return dataExportResponse;
-    }
-
-    @Override
-    public String eraseDataExport(String terminationId) {
-        return "Data borttaget";
-    }
-
-    @Override
-    public String resendDataExportKey(String terminationId) {
-        return "Lösenord skickat";
-    }
-
 }

@@ -30,6 +30,8 @@ public interface TerminationService {
 
     DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO);
 
+    DataExportResponse updateDataExport(DataExportResponse dataExportResponse);
+
     String eraseDataExport(String terminationId);
 
     String resendDataExportKey(String terminationId);

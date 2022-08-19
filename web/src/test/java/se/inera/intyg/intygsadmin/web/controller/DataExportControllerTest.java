@@ -67,6 +67,16 @@ class DataExportControllerTest {
         verify(terminationService, times(1)).createDataExport(createDataExportDTO);
     }
 
+    @Test
+    void changeDataExport() {
+        final var dataExportResponse = new DataExportResponse();
+        when(terminationService.updateDataExport(dataExportResponse)).thenReturn(dataExportResponse);
+
+        assertNotNull(dataExportController.updateDataExport(dataExportResponse));
+
+        verify(terminationService, times(1)).updateDataExport(dataExportResponse);
+    }
+
 
     @Test
     void eraseDataExport() {

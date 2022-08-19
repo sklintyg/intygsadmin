@@ -6,6 +6,10 @@ export const CREATE_DATA_EXPORT_REQUEST = 'CREATE_DATA_EXPORT_REQUEST';
 export const CREATE_DATA_EXPORT_SUCCESS = 'CREATE_DATA_EXPORT_SUCCESS';
 export const CREATE_DATA_EXPORT_FAILURE = 'CREATE_DATA_EXPORT_FAILURE';
 
+export const UPDATE_DATA_EXPORT_REQUEST = 'CHANGE_DATA_EXPORT_REQUEST';
+export const UPDATE_DATA_EXPORT_SUCCESS = 'CHANGE_DATA_EXPORT_SUCCESS';
+export const UPDATE_DATA_EXPORT_FAILURE = 'CHANGE_DATA_EXPORT_FAILURE';
+
 export const ERASE_DATA_EXPORT_REQUEST = 'ERASE_DATA_EXPORT_REQUEST';
 export const ERASE_DATA_EXPORT_SUCCESS = 'ERASE_DATA_EXPORT_SUCCESS';
 export const ERASE_DATA_EXPORT_FAILURE = 'ERASE_DATA_EXPORT_FAILURE';
@@ -95,6 +99,30 @@ export const eraseDataExport = (terminationId) => (dispatch, getState) => {
       dispatch({
         type: ERASE_DATA_EXPORT_FAILURE,
         payload: errorResponse
+      });
+      return Promise.reject();
+    }
+  );
+};
+
+export const updateDataExport = (terminationId, dataExport) => (dispatch, getState) => {
+  if (getIsFetching(getState())) {
+    return Promise.resolve();
+  }
+
+  dispatch({ type: UPDATE_DATA_EXPORT_REQUEST });
+
+  return api.updateDataExport(terminationId, dataExport).then(
+    (response) => {
+      return dispatch({
+        type: UPDATE_DATA_EXPORT_SUCCESS,
+        response: response,
+      });
+    },
+    (errorResponse) => {
+      dispatch({
+        type: UPDATE_DATA_EXPORT_FAILURE,
+        payload: errorResponse,
       });
       return Promise.reject();
     }

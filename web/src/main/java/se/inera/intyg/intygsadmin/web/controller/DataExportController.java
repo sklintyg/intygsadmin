@@ -78,6 +78,18 @@ public class DataExportController {
     }
 
     /**
+     * Update a data export.
+     * @param dataExportResponse Object containing the updates to be introduced.
+     * @return ResponseEntity holding the updated object.
+     */
+    @ApiOperation(value = "Update a data export", notes = "Returns the data export that was updated.")
+    @PostMapping("/update")
+    public ResponseEntity<DataExportResponse> updateDataExport(@RequestBody DataExportResponse dataExportResponse) {
+        final var updatedDataExport = terminationService.updateDataExport(dataExportResponse);
+        return ResponseEntity.ok(updatedDataExport);
+    }
+
+    /**
      * Erase the information regarding a data export.
      * @param terminationId
      * @return
