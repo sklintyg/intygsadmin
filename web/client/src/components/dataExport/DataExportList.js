@@ -171,7 +171,12 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                     onClick={() => {
                       openResendKeyModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId, dataExport.phoneNumber)}}
                     visibility={dataExport.status === 'Kryptonyckel skickad' || dataExport.status === 'Kryptonyckel skickad igen' ? "visible" : "hidden"}
+                    id={`resendKey${dataExport.terminationId}`}
+                    cursor={'pointer'}
                 />
+                  <UncontrolledTooltip trigger='hover' placement="top" target={`resendKey${dataExport.terminationId}`}>
+                    Öppnar modal där du kan göra nytt utskick av om kryptonyckel.
+                  </UncontrolledTooltip>
                 </td>
                 <td>{dataExport.hsaId}</td>
                 <td>{dataExport.organizationNumber}</td>
