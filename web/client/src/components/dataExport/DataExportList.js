@@ -175,7 +175,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                     cursor={'pointer'}
                 />
                   <UncontrolledTooltip trigger='hover' placement="top" target={`resendKey${dataExport.terminationId}`}>
-                    Öppnar modal där du kan göra nytt utskick av om kryptonyckel.
+                    Öppnar modal där du kan göra nytt utskick av kryptonyckel.
                   </UncontrolledTooltip>
                 </td>
                 <td>{dataExport.hsaId}</td>
