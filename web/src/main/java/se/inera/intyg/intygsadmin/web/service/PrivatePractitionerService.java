@@ -16,23 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.integration;
 
-import java.time.LocalDateTime;
-import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+package se.inera.intyg.intygsadmin.web.service;
 
-public interface ITIntegrationRestService {
+import org.springframework.http.ResponseEntity;
+import se.inera.intyg.intygsadmin.web.controller.dto.PrivatePractitionerDTO;
 
-    ItIntygInfo getIntygInfo(String intygId);
+public interface PrivatePractitionerService {
 
-    /**
-     * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+    ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(String personOrHsaId);
 
-    Integer getCertificateCount(String hsaId);
+    ResponseEntity<byte[]> getPrivatePractitionerFile();
+
 }

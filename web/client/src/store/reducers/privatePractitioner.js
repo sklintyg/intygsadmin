@@ -37,6 +37,18 @@ const errorMessage = (state = null, action) => {
   }
 }
 
+const errorMessageUnregisterPrivatePractitioner = (state = null, action) => {
+  switch (action.type) {
+  case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_FAILURE:
+    return buildClientError(action.payload, 'error.privatePractitioner.unregister').message
+  case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_REQUEST:
+  case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_SUCCESS:
+    return null;
+  default:
+    return state;
+  }
+};
+
 const isFetchingPrivatePractitionerFile = (state = false, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_PRIVATE_PRACTITIONER_FILE_REQUEST:
@@ -66,7 +78,8 @@ export default combineReducers({
   isFetching,
   errorMessage,
   isFetchingPrivatePractitionerFile,
-  errorMessagePrivatePractitionerFile
+  errorMessagePrivatePractitionerFile,
+  errorMessageUnregisterPrivatePractitioner
 })
 
 export const getPrivatePractitioner = (state) => state.privatePractitioner.privatePractitioner
@@ -78,3 +91,5 @@ export const getErrorMessage = (state) => state.privatePractitioner.errorMessage
 export const getIsFetchingPrivatePractitionerFile = (state) => state.privatePractitioner.isFetchingPrivatePractitionerFile
 
 export const getErrorMessagePrivatePractitionerFile = (state) => state.privatePractitioner.errorMessagePrivatePractitionerFile
+
+export const getErrorMessageUnregisterPrivatePractitioner = (state) => state.privatePractitioner.errorMessageUnregisterPrivatePractitioner

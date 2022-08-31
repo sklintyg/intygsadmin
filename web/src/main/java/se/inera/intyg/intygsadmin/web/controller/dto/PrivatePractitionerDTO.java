@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.integration;
+
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
 import java.time.LocalDateTime;
-import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
-import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public interface ITIntegrationRestService {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PrivatePractitionerDTO {
 
-    ItIntygInfo getIntygInfo(String intygId);
-
-    /**
-     * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
-
-    Integer getCertificateCount(String hsaId);
+    private String hsaId;
+    private String personId;
+    private String name;
+    private String careproviderName;
+    private String email;
+    private LocalDateTime registrationDate;
+    private String hasCertificates;
 }

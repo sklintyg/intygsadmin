@@ -66,4 +66,15 @@ public class PrivatePractitionerControllerIT extends BaseRestIntegrationTest {
             .contentType(is(MediaType.APPLICATION_OCTET_STREAM.toString()));
     }
 
+    @Test
+    public void testUnregisterPrivatePractitionerOk() {
+        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+
+        final String hsaId = "SE123456-X3";
+
+        given()
+            .when().delete(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + hsaId)
+            .then().statusCode(OK);
+    }
+
 }
