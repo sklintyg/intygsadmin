@@ -75,7 +75,7 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
     @Override
     public void unregisterPrivatePractitioner(String hsaId) {
         try {
-            String url = "/internalapi/privatepractitioner/erase/ " + hsaId;
+            String url = privatlakarportalUrl + "/internalapi/privatepractitioner/erase/" + hsaId;
             restTemplate.delete(url);
         } catch (RestClientException e) {
             LOG.error("Failure unregistering private practitioner {}.", hsaId, e);
