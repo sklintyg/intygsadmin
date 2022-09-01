@@ -20,22 +20,21 @@
 package se.inera.intyg.intygsadmin.web.service;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.PPIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
@@ -67,12 +66,12 @@ class PrivatePractitionerServiceImplTest {
     public class testGetPrivatePractitioner {
 
         @Test
-        public void shouldReturnNotFoundWhenNoPrivatePractitioner() {
+        public void shouldReturnNullWhenNoPrivatePractitioner() {
             when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(null);
 
             final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
 
-            assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+            assertNull(response);
         }
 
         @Test
@@ -82,10 +81,7 @@ class PrivatePractitionerServiceImplTest {
 
             final var response = privatePractitionerService.getPrivatePractitioner(PERSON_ID);
 
-            assertAll(
-                () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(NO, Objects.requireNonNull(response.getBody()).getHasCertificates())
-            );
+            assertEquals(NO, response.getHasCertificates());
         }
 
         @Test
@@ -95,10 +91,7 @@ class PrivatePractitionerServiceImplTest {
 
             final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
 
-            assertAll(
-                () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(YES, Objects.requireNonNull(response.getBody()).getHasCertificates())
-            );
+            assertEquals(YES, response.getHasCertificates());
         }
 
         @Test
@@ -108,10 +101,7 @@ class PrivatePractitionerServiceImplTest {
 
             final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
 
-            assertAll(
-                () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-                () -> assertEquals(COUNT_FAILURE_MESSAGE, Objects.requireNonNull(response.getBody()).getHasCertificates())
-            );
+            assertEquals(COUNT_FAILURE_MESSAGE, response.getHasCertificates());
         }
 
         @Test
@@ -121,15 +111,13 @@ class PrivatePractitionerServiceImplTest {
 
             final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
 
-            final var dto = Objects.requireNonNull(response.getBody());
-
             assertAll(
-                () -> assertEquals(HSA_ID, dto.getHsaId()),
-                () -> assertEquals(PERSON_ID, dto.getPersonId()),
-                () -> assertEquals(EMAIL, dto.getEmail()),
-                () -> assertEquals(NAME, dto.getName()),
-                () -> assertEquals(CARE_PROVIDER_NAME, dto.getCareproviderName()),
-                () -> assertEquals(REGISTRATION_DATE, dto.getRegistrationDate())
+                () -> assertEquals(HSA_ID, response.getHsaId()),
+                () -> assertEquals(PERSON_ID, response.getPersonId()),
+                () -> assertEquals(EMAIL, response.getEmail()),
+                () -> assertEquals(NAME, response.getName()),
+                () -> assertEquals(CARE_PROVIDER_NAME, response.getCareproviderName()),
+                () -> assertEquals(REGISTRATION_DATE, response.getRegistrationDate())
             );
         }
     }
@@ -138,26 +126,22 @@ class PrivatePractitionerServiceImplTest {
     public class testGetPrivatePractitionerFile {
 
         @Test
-        public void shouldReturnNoContentIfListEmptyList() {
+        public void shouldReturnNullIfListEmptyList() {
             when(ppIntegrationRestService.getAllPrivatePractitioners()).thenReturn(Collections.emptyList());
 
-            final var response = privatePractitionerService.getPrivatePractitionerFile();
+            final var response = assertDoesNotThrow(() -> privatePractitionerService.getPrivatePractitionerFile());
 
-            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertNull(response);
         }
 
         @Test
-        public void shouldAddContentDispositionHeaderToResponse() {
+        public void shouldReturnByteArrayOfPrivatePractitonerFile() {
             final var privatePractitionerList = List.of(getPrivatePractitioner());
             when(ppIntegrationRestService.getAllPrivatePractitioners()).thenReturn(privatePractitionerList);
 
-            final var response = privatePractitionerService.getPrivatePractitionerFile();
+            final var response = assertDoesNotThrow(() -> privatePractitionerService.getPrivatePractitionerFile());
 
-            assertAll(
-                () -> assertTrue(response.getHeaders().containsKey(HttpHeaders.CONTENT_DISPOSITION)),
-                () -> assertTrue(Objects.requireNonNull(
-                    response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).contains("attachment; filename=privatlakare.xlsx"))
-            );
+            assertNotNull(response);
         }
     }
 

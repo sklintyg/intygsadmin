@@ -21,12 +21,7 @@ package se.inera.intyg.intygsadmin.web.service;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.controller.dto.PrivatePractitionerDTO;
 import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
@@ -50,11 +45,11 @@ public class PrivatePractitionerServiceImpl implements PrivatePractitionerServic
     private static final String COUNT_FAILURE_MESSAGE = "Uppgift om utfärdade intyg kunde inte hämtas. Prova igen om en stund.";
 
     @Override
-    public ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(String personOrHsaId) {
+    public PrivatePractitionerDTO getPrivatePractitioner(String personOrHsaId) {
         final var privatePractitioner = ppIntegrationRestService.getPrivatePractitioner(personOrHsaId);
 
         if (privatePractitioner == null) {
-            return ResponseEntity.notFound().build();
+            return null;
         }
 
         final var certificateCount = itIntegrationRestService.getCertificateCount(privatePractitioner.getHsaId());
@@ -63,30 +58,19 @@ public class PrivatePractitionerServiceImpl implements PrivatePractitionerServic
         copyProperties(privatePractitioner, privatePractitionerDTO);
         privatePractitionerDTO.setHasCertificates(hasCertificates);
 
-        return ResponseEntity.ok(privatePractitionerDTO);
+        return privatePractitionerDTO;
     }
 
     @Override
-    public ResponseEntity<byte[]> getPrivatePractitionerFile() {
+    public byte[] getPrivatePractitionerFile() throws IOException {
         final var privatePractitionerList = ppIntegrationRestService.getAllPrivatePractitioners();
+
         if (privatePractitionerList.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return null;
         }
 
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-            byteArrayOutputStream = new PrivatePractitionerFileWriter().writeExcel(privatePractitionerList);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-        final var header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=privatlakare.xlsx");
-
-        return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .headers(header)
-            .body(byteArrayOutputStream.toByteArray());
+        final var output = new PrivatePractitionerFileWriter().writeExcel(privatePractitionerList);
+        return output.toByteArray();
     }
 
     private String getHasCertificates(Integer certificateCount) {

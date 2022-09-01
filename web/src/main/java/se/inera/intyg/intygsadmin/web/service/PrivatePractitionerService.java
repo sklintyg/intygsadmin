@@ -19,13 +19,13 @@
 
 package se.inera.intyg.intygsadmin.web.service;
 
-import org.springframework.http.ResponseEntity;
+import java.io.IOException;
 import se.inera.intyg.intygsadmin.web.controller.dto.PrivatePractitionerDTO;
 
 public interface PrivatePractitionerService {
 
-    ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(String personOrHsaId);
+    PrivatePractitionerDTO getPrivatePractitioner(String personOrHsaId);
 
-    ResponseEntity<byte[]> getPrivatePractitionerFile();
+    byte[] getPrivatePractitionerFile() throws IOException;
 
 }

@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.intygsadmin.web.controller;
 
+import java.io.IOException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,18 +47,39 @@ public class PrivatePractitionerController {
 
     @GetMapping("/{personOrHsaId}")
     public ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(@PathVariable String personOrHsaId) {
-        return privatePractitionerService.getPrivatePractitioner(personOrHsaId);
+        final var privatePractitonerDTO = privatePractitionerService.getPrivatePractitioner(personOrHsaId);
+        return privatePractitonerDTO != null ? ResponseEntity.ok(privatePractitonerDTO) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/file")
     public ResponseEntity<byte[]> getPrivatePractitionerFile() {
-        return privatePractitionerService.getPrivatePractitionerFile();
+        try {
+            final var privatePractitionerFile = privatePractitionerService.getPrivatePractitionerFile();
+
+            if (privatePractitionerFile == null) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .headers(getHttpHeaders())
+                .body(privatePractitionerFile);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/{hsaId}")
     public ResponseEntity<String> unregisterPrivatePractitioner(@PathVariable String hsaId) {
         ppIntegrationRestService.unregisterPrivatePractitioner(hsaId);
         return ResponseEntity.ok().build();
+    }
+
+    private HttpHeaders getHttpHeaders() {
+        final var header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=privatlakare.xlsx");
+        return header;
     }
 
 }
