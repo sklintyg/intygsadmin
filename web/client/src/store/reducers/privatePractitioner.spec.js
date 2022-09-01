@@ -8,7 +8,8 @@ describe('private practitioner reducer', () => {
     isFetching: false,
     errorMessage: null,
     isFetchingPrivatePractitionerFile: false,
-    errorMessagePrivatePractitionerFile: null
+    errorMessagePrivatePractitionerFile: null,
+    errorMessageUnregisterPrivatePractitioner: null
   }
 
   let store
@@ -32,7 +33,8 @@ describe('private practitioner reducer', () => {
         name: 'namn',
         careproviderName: 'bolag',
         email: 'email',
-        registrationDate: '2019-04-27 11:11:19'
+        registrationDate: '2019-04-27 11:11:19',
+        hasCertificates: 'Nej'
       }
     }
 
@@ -45,7 +47,8 @@ describe('private practitioner reducer', () => {
         name: 'namn',
         careproviderName: 'bolag',
         email: 'email',
-        registrationDate: '2019-04-27 11:11:19'
+        registrationDate: '2019-04-27 11:11:19',
+        hasCertificates: 'Nej'
       }
     }
 
