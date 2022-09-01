@@ -18,66 +18,68 @@
  */
 package se.inera.intyg.intygsadmin.web.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.controller.dto.PrivatePractitionerDTO;
 import se.inera.intyg.intygsadmin.web.integration.PPIntegrationRestService;
-import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
-import se.inera.intyg.intygsadmin.web.util.PrivatePractitionerFileWriter;
+import se.inera.intyg.intygsadmin.web.service.PrivatePractitionerService;
 
 @RestController
 @RequestMapping("/api/privatepractitioner")
 public class PrivatePractitionerController {
 
-    private PPIntegrationRestService ppIntegratedUnitsService;
+    private final PPIntegrationRestService ppIntegrationRestService;
+    private final PrivatePractitionerService privatePractitionerService;
 
-    @Autowired
-    public PrivatePractitionerController(PPIntegrationRestService ppIntegratedUnitsService) {
-        this.ppIntegratedUnitsService = ppIntegratedUnitsService;
+    public PrivatePractitionerController(PPIntegrationRestService ppIntegrationRestService,
+        PrivatePractitionerService privatePractitionerService) {
+        this.ppIntegrationRestService = ppIntegrationRestService;
+        this.privatePractitionerService = privatePractitionerService;
     }
 
     @GetMapping("/{personOrHsaId}")
-    public ResponseEntity<PrivatePractitioner> getPrivatePractitioner(@PathVariable String personOrHsaId) {
-
-        PrivatePractitioner privatePractitioner = ppIntegratedUnitsService.getPrivatePractitioner(personOrHsaId);
-        if (privatePractitioner == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(privatePractitioner);
+    public ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(@PathVariable String personOrHsaId) {
+        final var privatePractitonerDTO = privatePractitionerService.getPrivatePractitioner(personOrHsaId);
+        return privatePractitonerDTO != null ? ResponseEntity.ok(privatePractitonerDTO) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/file")
     public ResponseEntity<byte[]> getPrivatePractitionerFile() {
-
-        List<PrivatePractitioner> privatePractitionerList = ppIntegratedUnitsService.getAllPrivatePractitioners();
-        if (privatePractitionerList.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        ByteArrayOutputStream byteArrayOutputStream;
         try {
-            byteArrayOutputStream = new PrivatePractitionerFileWriter().writeExcel(privatePractitionerList);
+            final var privatePractitionerFile = privatePractitionerService.getPrivatePractitionerFile();
+
+            if (privatePractitionerFile == null) {
+                return ResponseEntity.noContent().build();
+            }
+
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .headers(getHttpHeaders())
+                .body(privatePractitionerFile);
+
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
 
-        HttpHeaders header = new HttpHeaders();
+    @DeleteMapping("/{hsaId}")
+    public ResponseEntity<String> unregisterPrivatePractitioner(@PathVariable String hsaId) {
+        ppIntegrationRestService.unregisterPrivatePractitioner(hsaId);
+        return ResponseEntity.ok().build();
+    }
+
+    private HttpHeaders getHttpHeaders() {
+        final var header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=privatlakare.xlsx");
-
-        return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .headers(header)
-            .body(byteArrayOutputStream.toByteArray());
+        return header;
     }
 
 }

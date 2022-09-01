@@ -20,6 +20,8 @@ package se.inera.intyg.intygsadmin.web.integration;
 
 import java.time.LocalDateTime;
 import net.minidev.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -29,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
@@ -37,7 +40,9 @@ import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 @Service
 public class ITIntegrationRestServiceImpl implements ITIntegrationRestService {
 
-    private RestTemplate restTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(ITIntegrationRestServiceImpl.class);
+
+    private final RestTemplate restTemplate;
 
     @Value("${intygstjansten.internalapi}")
     private String intygstjanstenUrl;
@@ -73,5 +78,16 @@ public class ITIntegrationRestServiceImpl implements ITIntegrationRestService {
 
         final var eraseRequest = new HttpEntity<>(eraseJSON, headers);
         return restTemplate.postForObject(eraseUrl, eraseRequest, TestCertificateEraseResult.class);
+    }
+
+    @Override
+    public Integer getCertificateCount(String hsaId) {
+        try {
+            final var url = intygstjanstenUrl + "/internalapi/intygInfo/" + hsaId + "/count";
+            return restTemplate.getForObject(url, Integer.class);
+        } catch (RestClientException e) {
+            LOG.error("Failure fetching certificate count for private practitioner {}.", hsaId, e);
+            return null;
+        }
     }
 }

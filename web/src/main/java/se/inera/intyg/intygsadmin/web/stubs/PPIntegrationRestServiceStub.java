@@ -40,10 +40,9 @@ public class PPIntegrationRestServiceStub implements PPIntegrationRestService {
     public PPIntegrationRestServiceStub() {
         for (int i = 0; i < NUMBER_OF_PRIVATE_PRACTITIONERS; i++) {
             var hsaId = "SE123456-X" + i;
-            var pnr = "19121212121" + i; // Will not validate, mbut OK in this context
+            var pnr = "19121212121" + i; // Will not validate, but OK in this context
             var privatePractitioner = new PrivatePractitioner(hsaId, pnr, "Förnamn" + i + " Efternamn" + i, "Bolag" + i,
-                "mail" + i + "@example.com", LocalDateTime
-                .now().minusDays(i));
+                "mail" + i + "@example.com", LocalDateTime.now().minusDays(i));
             ppHsaList.put(hsaId, privatePractitioner);
             ppPnrList.put(pnr, privatePractitioner);
         }
@@ -62,5 +61,14 @@ public class PPIntegrationRestServiceStub implements PPIntegrationRestService {
     @Override
     public List<PrivatePractitioner> getAllPrivatePractitioners() {
         return new ArrayList<>(ppHsaList.values());
+    }
+
+    @Override
+    public void unregisterPrivatePractitioner(String hsaId) {
+        final var privatePractitioner = ppHsaList.get(hsaId);
+        if (privatePractitioner != null) {
+            ppPnrList.remove(privatePractitioner.getPersonId());
+            ppHsaList.remove(hsaId);
+        }
     }
 }

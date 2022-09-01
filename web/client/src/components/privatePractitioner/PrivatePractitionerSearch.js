@@ -88,7 +88,8 @@ const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privat
         name: privatePractitioner.name,
         careproviderName: privatePractitioner.careproviderName,
         email: privatePractitioner.email,
-        registrationDate: privatePractitioner.registrationDate
+        registrationDate: privatePractitioner.registrationDate,
+        hasCertificates: privatePractitioner.hasCertificates
       }
       openModal(PrivatePractitionerSearchResultId, {text})
       setSearchString('')

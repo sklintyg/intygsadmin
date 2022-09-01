@@ -19,12 +19,15 @@
 package se.inera.intyg.intygsadmin.web.integration;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
@@ -32,7 +35,9 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 @Service
 public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestService {
 
-    private RestTemplate restTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(PPIntegrationRestRestServiceImpl.class);
+
+    private final RestTemplate restTemplate;
 
     @Value("${privatlakarportal.internalapi}")
     private String privatlakarportalUrl;
@@ -65,5 +70,16 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
             return List.of();
         }
         return List.of(privatePractitionerArray);
+    }
+
+    @Override
+    public void unregisterPrivatePractitioner(String hsaId) {
+        try {
+            String url = privatlakarportalUrl + "/internalapi/privatepractitioner/erase/" + hsaId;
+            restTemplate.delete(url);
+        } catch (RestClientException e) {
+            LOG.error("Failure unregistering private practitioner {}.", hsaId, e);
+            throw e;
+        }
     }
 }

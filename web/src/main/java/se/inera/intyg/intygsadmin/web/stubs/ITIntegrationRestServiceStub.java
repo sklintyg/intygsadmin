@@ -35,7 +35,7 @@ import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
 @Service
 public class ITIntegrationRestServiceStub implements ITIntegrationRestService {
 
-    private Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
+    private final Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
 
     public ITIntegrationRestServiceStub() {
         addIntyg(WCIntegrationRestServiceStub.INTYG_ID_1);
@@ -54,6 +54,16 @@ public class ITIntegrationRestServiceStub implements ITIntegrationRestService {
     @Override
     public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
         return TestCertificateEraseResult.create(0, 0);
+    }
+
+    @Override
+    public Integer getCertificateCount(String hsaId) {
+        try {
+            final var number = Integer.parseInt(hsaId.substring(hsaId.length() - 1));
+            return number == 4 ? null : number;
+        } catch (NumberFormatException e) {
+            return 55;
+        }
     }
 
     private void addIntyg(String intygId) {

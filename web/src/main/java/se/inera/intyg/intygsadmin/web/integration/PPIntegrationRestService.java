@@ -38,5 +38,11 @@ public interface PPIntegrationRestService {
      */
     List<PrivatePractitioner> getAllPrivatePractitioners();
 
+    /**
+     * Unregister private practitioner.
+     *
+     * @param hsaId Private practitioner HSA-ID.
+     */
+    void unregisterPrivatePractitioner(String hsaId);
 
 }
