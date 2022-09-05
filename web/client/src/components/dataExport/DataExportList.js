@@ -204,7 +204,7 @@ const DataExportList = ({ dataExportList, errorMessage, openModal, ...otherProps
                         openEraseModal(dataExport.terminationId, dataExport.hsaId, dataExport.organizationNumber, dataExport.personId,
                         dataExport.phoneNumber)
                       }} color="primary">
-                      <ClearIcon /> Avsluta
+                      <ClearIcon /> Radera
                     </Button>
                     <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${dataExport.terminationId}`}>
                       Öppnar ett dialogfönster där du kan radera all data kring ett avslut.

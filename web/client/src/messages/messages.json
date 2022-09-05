@@ -42,7 +42,7 @@
       "organizationNumber": "Organisationsnummer: {organizationNumber}",
       "representativePersonId": "Mottagarens personnummer: {personId}",
       "representativePhoneNumber": "Mottagarens mobilnummer: {phoneNumber}",
-      "delete": "Avsluta"
+      "delete": "Radera"
     },
     "resend": {
       "modalHeader": "Skicka kryptonyckel på nytt",
