@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.rediscache;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Objects;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,17 +35,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import redis.embedded.RedisServer;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class BasicRedisCacheConfigurationTest {
+
     @Autowired
     private CacheManager cacheManager;
 
     private Cache testCache;
-
-    @Autowired
-    private RedisServer redisServer;
 
     @BeforeEach
     public void init() {
@@ -56,16 +55,14 @@ public class BasicRedisCacheConfigurationTest {
         if (testCache != null) {
             testCache.clear();
         }
-
-        redisServer.stop();
     }
 
     @Test
     public void testCache() {
         IntStream.range(0, 100).forEach(i ->  testCache.put("key" + i, "value" + i));
-        IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, testCache.get("key" + i).get()));
+        IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, Objects.requireNonNull(testCache.get("key" + i)).get()));
 
-        Object o = testCache.get("key1").get();
+        Object o = Objects.requireNonNull(testCache.get("key1")).get();
         assertEquals("value1", o);
     }
 }

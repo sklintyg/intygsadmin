@@ -29,7 +29,6 @@ import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVAN
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -38,11 +37,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -69,16 +68,15 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImp
 @EnableWebSecurity
 @EnableConfigurationProperties(value = {IdpProperties.class})
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
-    private OIDCProviderMetadata ineraOIDCProviderMetadata;
-    private OAuth2RestTemplate restTemplate;
-    private UserPersistenceService userPersistenceService;
-    private IdpProperties idpProperties;
+    private final OIDCProviderMetadata ineraOIDCProviderMetadata;
+    private final OAuth2RestTemplate restTemplate;
+    private final UserPersistenceService userPersistenceService;
+    private final IdpProperties idpProperties;
 
-    private List<String> profiles;
+    private final List<String> profiles;
 
-    @Autowired
     public SecurityConfig(OIDCProviderMetadata ineraOIDCProviderMetadata, OAuth2RestTemplate restTemplate,
         UserPersistenceService userPersistenceService, IdpProperties idpProperties, Environment environment) {
         this.ineraOIDCProviderMetadata = ineraOIDCProviderMetadata;
@@ -159,38 +157,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
         // All static client resources could be completely ignored by Spring Security.
         // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
         // will stop IE from loading fonts properly.
-        web.ignoring().antMatchers("/static/**");
+        return (web) -> web.ignoring().antMatchers("/static/**");
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-
-        // These should always be permitted
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers("/").permitAll()
-            .antMatchers("/version.html").permitAll()
-            .antMatchers("/public-api/version").permitAll()
-            .antMatchers("/version-assets/**").permitAll()
-            .antMatchers("/favicon*").permitAll()
-            .antMatchers("/index.html").permitAll()
-            .antMatchers("/images/**").permitAll()
-            .antMatchers("/app/**").permitAll()
-            .antMatchers("/assets/**").permitAll()
-            .antMatchers("/components/**").permitAll()
-            .antMatchers("/actuator/**").permitAll()
-            .antMatchers("/swagger-ui.html").permitAll()
-            .antMatchers("/swagger-resources/**").permitAll()
-            .antMatchers("/v2/api-docs").permitAll()//Used by swagger
-            .antMatchers("/webjars/**").permitAll()//Used by swagger
-            .antMatchers(API_ANVANDARE).permitAll()
-            .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
-        // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll();
+                .antMatchers("/").permitAll()
+                .antMatchers("/version.html").permitAll()
+                .antMatchers("/public-api/version").permitAll()
+                .antMatchers("/version-assets/**").permitAll()
+                .antMatchers("/favicon*").permitAll()
+                .antMatchers("/index.html").permitAll()
+                .antMatchers("/images/**").permitAll()
+                .antMatchers("/app/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/components/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
+                .antMatchers(API_ANVANDARE).permitAll()
+                .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
+                // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll()
 
         if (profiles.contains(FAKE_PROFILE)) {
             addFakeLogin(http);
@@ -198,13 +190,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             denyFakeLogin(http);
         }
 
+        configureOpenApi(http);
         configureOidc(http);
-
         http.csrf().disable();
+
+        return http.build();
+    }
+
+    private void configureOpenApi(HttpSecurity http) throws Exception {
+        if (profiles.contains("dev")) {
+            http
+                .authorizeRequests()
+                    .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+        }
     }
 
     private void configureOidc(HttpSecurity http) throws Exception {
-
         // @formatter:off
         http
             .authorizeRequests()
@@ -226,7 +227,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .clearAuthentication(true)
             .and()
             .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
-
         // @formatter:on
 
     }

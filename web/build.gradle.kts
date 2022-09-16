@@ -1,7 +1,6 @@
 import com.moowork.gradle.node.npm.NpmTask
 import org.gradle.internal.os.OperatingSystem
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
-import se.inera.intyg.intygsadmin.build.Config.TestDependencies
 
 val buildClient = project.hasProperty("client")
 val devPort = 8070 + System.getProperty("instance", "0").toInt()
@@ -11,7 +10,7 @@ val applicationDir = "${rootProject.projectDir}/devops/dev"
 
 plugins {
   id("org.springframework.boot")
-  id("com.moowork.node")
+  id("nebula.node")
 }
 
 dependencies {
@@ -43,21 +42,20 @@ dependencies {
   implementation("se.inera.intyg.infra:driftbanner-dto:${project.extra["intygInfraVersion"]}")
   implementation("se.inera.intyg.infra:security-common:${project.extra["intygInfraVersion"]}")
 
-  //api documentation
-  implementation("io.springfox:springfox-swagger2:${Dependencies.swaggerVersion}")
-  implementation("io.springfox:springfox-swagger-ui:${Dependencies.swaggerUIVersion}")
-  implementation("io.springfox:springfox-data-rest:${Dependencies.swaggerDataVersion}")
+  implementation("org.springdoc:springdoc-openapi-ui:${Dependencies.springDocVersion}")
+  implementation("org.springdoc:springdoc-openapi-data-rest:${Dependencies.springDocVersion}")
 
   compileOnly("org.projectlombok:lombok")
 
-  annotationProcessor("org.mapstruct:mapstruct-processor:${Dependencies.mapstructVersion}")
   annotationProcessor("org.projectlombok:lombok")
+  annotationProcessor("org.mapstruct:mapstruct-processor:${Dependencies.mapstructVersion}")
+  testAnnotationProcessor("org.mapstruct:mapstruct-processor:${Dependencies.mapstructVersion}")
 
   testImplementation("commons-io:commons-io:${Dependencies.commonsIOVersion}")
-  testImplementation("io.rest-assured:rest-assured:${TestDependencies.restAssuredVersion}")
-  testImplementation("io.rest-assured:json-schema-validator:${TestDependencies.restAssuredVersion}")
-  testImplementation("io.rest-assured:json-path:${TestDependencies.restAssuredVersion}")
-  testImplementation("io.rest-assured:xml-path:${TestDependencies.restAssuredVersion}")
+  testImplementation("io.rest-assured:rest-assured")
+  testImplementation("io.rest-assured:json-schema-validator")
+  testImplementation("io.rest-assured:json-path")
+  testImplementation("io.rest-assured:xml-path")
 }
 
 node {

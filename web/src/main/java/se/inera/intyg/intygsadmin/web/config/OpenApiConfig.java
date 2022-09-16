@@ -16,28 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.controller.dto;
+package se.inera.intyg.intygsadmin.web.config;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class UpdateDataExportDTO {
 
-    @Schema(name = "Care provider ID", required = true)
-    private String hsaId;
+@Profile("dev")
+@Configuration
+public class OpenApiConfig {
 
-    @Schema(name = "Personal id of the receiving person", required = true)
-    private String personId;
-
-    @Schema(name = "Email address for the receiving person", required = true)
-    private String emailAddress;
-
-    @Schema(name = "Phone number to the receiving person", required = true)
-    private String phoneNumber;
-
+    @Bean
+    public OpenAPI intygsadminOpenAPI() {
+        return new OpenAPI()
+            .info(new Info().title("Intygsadmin API")
+                .description("Intygsadmin är en del av Inera Intygstjänster")
+            );
+    }
 }

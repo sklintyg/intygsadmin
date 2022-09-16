@@ -25,6 +25,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -54,7 +55,7 @@ public class RequestErrorController implements ErrorController {
     private static final String IA_CLIENT_ROOTPATH = "/#/";
     public static final String IA_CLIENT_EXIT_BOOT_PATH = IA_CLIENT_ROOTPATH + "exit/";
     private static final Logger LOG = LoggerFactory.getLogger(RequestErrorController.class);
-    private ErrorAttributes errorAttributes = new DefaultErrorAttributes(true);
+    private final ErrorAttributes errorAttributes = new DefaultErrorAttributes();
 
     /**
      * Intercept errors forwarded by a spring security AuthenticationFailureHandler.
@@ -76,7 +77,7 @@ public class RequestErrorController implements ErrorController {
         String redirectView = "redirect:" + IA_CLIENT_EXIT_BOOT_PATH + apiErrorResponse.getErrorCode() + "/" + apiErrorResponse.getLogId();
 
         LOG.error(String.format("(Page) Spring Security error intercepted: %s, %s - responding with: %s",
-            errorContext, apiErrorResponse.toString(), redirectView), error);
+            errorContext, apiErrorResponse, redirectView), error);
         return new ModelAndView(redirectView);
     }
 
@@ -114,7 +115,7 @@ public class RequestErrorController implements ErrorController {
      */
     @RequestMapping(path = IA_ERROR_CONTROLLER_PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity handleErrorAsJsonResponse(WebRequest webRequest, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleErrorAsJsonResponse(WebRequest webRequest, HttpServletRequest request) {
         final HttpStatus httpStatus = getDispatcherErrorStatusCode(request);
         final String errorContext = getErrorContext(webRequest);
         final Throwable error = this.errorAttributes.getError(webRequest);
@@ -125,24 +126,19 @@ public class RequestErrorController implements ErrorController {
             apiErrorResponse = fromHttpStatus(httpStatus);
         }
         LOG.error(String.format(
-            "(REST) Request error intercepted: %s - responding with: %s", errorContext, apiErrorResponse.toString()), error);
+            "(REST) Request error intercepted: %s - responding with: %s", errorContext, apiErrorResponse), error);
         return new ResponseEntity<>(apiErrorResponse, httpStatus);
     }
 
-    @Override
-    public String getErrorPath() {
-        return IA_ERROR_CONTROLLER_PATH;
-    }
-
     private String getErrorContext(WebRequest webRequest) {
-        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(webRequest, false);
+        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(webRequest, ErrorAttributeOptions.defaults());
         return Arrays.toString(attributes.entrySet().toArray());
     }
 
     private HttpStatus getDispatcherErrorStatusCode(HttpServletRequest request) {
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
-        return (status != null) ? HttpStatus.valueOf(Integer.valueOf(status.toString())) : HttpStatus.INTERNAL_SERVER_ERROR;
+        return (status != null) ? HttpStatus.valueOf(Integer.parseInt(status.toString())) : HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     private ApiErrorResponse fromException(Throwable error) {

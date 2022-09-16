@@ -65,9 +65,9 @@ subprojects {
   }
 
   dependencyManagement {
+    val springBootVersion: String by extra
     imports {
-      mavenBom("org.springframework.boot:spring-boot-dependencies:${Dependencies.springBootVersion}")
-      mavenBom("org.junit:junit-bom:${TestDependencies.junit5Version}")
+      mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
     }
   }
 
@@ -87,8 +87,8 @@ subprojects {
       exclude(module = "junit")
     }
     testImplementation("io.github.benas:random-beans:${TestDependencies.randomBeansVersion}")
-    testImplementation("org.mockito:mockito-core:${TestDependencies.mockitoCoreVersion}")
-    testImplementation("org.mockito:mockito-junit-jupiter:${TestDependencies.mockitoCoreVersion}")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.springframework.security:spring-security-test")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

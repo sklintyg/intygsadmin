@@ -35,9 +35,11 @@ import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
 )
 public interface IntygInfoMapper {
 
-    void updateInfoFromIT(ItIntygInfo s, @MappingTarget IntygInfoDTO target);
+    void updateIntygInfoFromIT(ItIntygInfo s, @MappingTarget IntygInfoDTO target);
 
-    void updateInfoFromWC(WcIntygInfo s, @MappingTarget IntygInfoDTO target);
+    void updateIntygInfoFromWC(WcIntygInfo s, @MappingTarget IntygInfoDTO target);
 
     List<IntygInfoListDTO> toListDTO(List<IntygInfoEntity> s);
+
+    IntygInfoListDTO map(IntygInfoEntity value);
 }
