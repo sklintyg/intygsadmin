@@ -20,6 +20,7 @@ package se.inera.intyg.intygsadmin.web.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -29,11 +30,18 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class OpenApiConfig {
 
+    private final BuildProperties buildProperties;
+
+    public OpenApiConfig(BuildProperties buildProperties) {
+        this.buildProperties = buildProperties;
+    }
+
     @Bean
     public OpenAPI intygsadminOpenAPI() {
         return new OpenAPI()
             .info(new Info().title("Intygsadmin API")
                 .description("Intygsadmin är en del av Inera Intygstjänster")
+                .version(buildProperties.getVersion())
             );
     }
 }
