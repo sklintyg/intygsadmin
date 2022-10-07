@@ -74,6 +74,11 @@ springBoot {
 
 tasks {
 
+  named<Jar>("jar") {
+    enabled = false
+    archiveClassifier.set("")
+  }
+
   val buildReactApp by creating(NpmTask::class) {
     dependsOn(npmInstall)
 
