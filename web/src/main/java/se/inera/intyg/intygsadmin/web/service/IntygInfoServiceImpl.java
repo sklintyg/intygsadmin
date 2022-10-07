@@ -44,11 +44,11 @@ public class IntygInfoServiceImpl implements IntygInfoService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IntygInfoServiceImpl.class);
 
-    private IntygInfoPersistenceService intygInfoPersistenceService;
-    private IntygInfoMapper intygInfoMapper;
-    private UserService userService;
-    private ITIntegrationRestService itIntegrationRestService;
-    private WCIntegrationRestService wcIntegrationRestService;
+    private final IntygInfoPersistenceService intygInfoPersistenceService;
+    private final IntygInfoMapper intygInfoMapper;
+    private final UserService userService;
+    private final ITIntegrationRestService itIntegrationRestService;
+    private final WCIntegrationRestService wcIntegrationRestService;
 
     public IntygInfoServiceImpl(IntygInfoPersistenceService intygInfoPersistenceService, IntygInfoMapper intygInfoMapper,
         UserService userService, ITIntegrationRestService itIntegrationRestService, WCIntegrationRestService wcIntegrationRestService) {
@@ -98,7 +98,7 @@ public class IntygInfoServiceImpl implements IntygInfoService {
         }
 
         if (itIntygInfoDTO != null) {
-            intygInfoMapper.updateInfoFromIT(itIntygInfoDTO, intygInfo);
+            intygInfoMapper.updateIntygInfoFromIT(itIntygInfoDTO, intygInfo);
         }
     }
 
@@ -111,7 +111,7 @@ public class IntygInfoServiceImpl implements IntygInfoService {
         }
 
         if (wcIntygInfoDTO != null) {
-            intygInfoMapper.updateInfoFromWC(wcIntygInfoDTO, intygInfo);
+            intygInfoMapper.updateIntygInfoFromWC(wcIntygInfoDTO, intygInfo);
             events.addAll(intygInfo.getEvents());
         }
     }

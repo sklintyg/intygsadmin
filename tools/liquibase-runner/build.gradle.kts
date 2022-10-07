@@ -1,11 +1,16 @@
+import se.inera.intyg.intygsadmin.build.Config.Dependencies
+
 plugins {
   application
 }
 
+apply<io.spring.gradle.dependencymanagement.DependencyManagementPlugin>()
+
 tasks {
   startScripts {
-    mainClassName = "liquibase.integration.commandline.Main --driver=com.mysql.cj.jdbc.Driver --changeLogFile=changelog/db-changelog-master.xml"
-    defaultJvmOpts = listOf("-Dfile.encoding=utf8")
+    mainClassName = "liquibase.integration.commandline.LiquibaseCommandLine --driver=com.mysql.cj.jdbc.Driver " +
+        "--changeLogFile=changelog/db-changelog-master.xml"
+    defaultJvmOpts = listOf("-Dfile.encoding=utf8", "-Dliquibase.headless=true")
   }
 }
 
@@ -13,11 +18,14 @@ sonarqube {
   setSkipProject(true)
 }
 
-dependencies {
-  runtime(project(":${rootProject.name}-persistence"))
+val liquibaseVersion = dependencyManagement.managedVersions["org.liquibase:liquibase-core"]
 
-  runtime("mysql:mysql-connector-java")
-  runtime("org.liquibase:liquibase-core")
+dependencies {
+  implementation("info.picocli:picocli:${Dependencies.picocliVersion}")
+  runtimeOnly("mysql:mysql-connector-java")
+  runtimeOnly("org.liquibase:liquibase-core")
+  runtimeOnly("org.liquibase.ext:liquibase-hibernate5:$liquibaseVersion")
+  runtimeOnly(project(":${rootProject.name}-persistence"))
 }
 
 val liquibaseRunnerFileTar = file("$buildDir/distributions/${rootProject.name}-liquibase-runner-${rootProject.version}.tar")

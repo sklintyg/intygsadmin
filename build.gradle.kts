@@ -21,7 +21,7 @@ allprojects {
 
   apply(plugin = "maven-publish")
   extra.apply {
-    set("intygInfraVersion", System.getProperty("infraVersion", "3.17.2-SNAPSHOT"))
+    set("intygInfraVersion", System.getProperty("infraVersion", "3.18.0-SNAPSHOT"))
     set("errorproneExclude", "true") //FIXME: Errorprone does not support Kotlin and KAPT. Until it does this will exclude the errorprone task for this project
   }
 
@@ -65,9 +65,9 @@ subprojects {
   }
 
   dependencyManagement {
+    val springBootVersion: String by extra
     imports {
-      mavenBom("org.springframework.boot:spring-boot-dependencies:${Dependencies.springBootVersion}")
-      mavenBom("org.junit:junit-bom:${TestDependencies.junit5Version}")
+      mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
     }
   }
 
@@ -77,7 +77,7 @@ subprojects {
     compileOnly("net.jcip:jcip-annotations:${Dependencies.jcipAnnotationsVersion}")
     compileOnly("com.github.spotbugs:spotbugs-annotations:${Dependencies.spotbugsAnnotationsVersion}")
 
-    implementation("org.apache.commons:commons-lang3:${Dependencies.commonsLang3Version}")
+    implementation("org.apache.commons:commons-lang3")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
       exclude(module = "junit")
@@ -87,8 +87,8 @@ subprojects {
       exclude(module = "junit")
     }
     testImplementation("io.github.benas:random-beans:${TestDependencies.randomBeansVersion}")
-    testImplementation("org.mockito:mockito-core:${TestDependencies.mockitoCoreVersion}")
-    testImplementation("org.mockito:mockito-junit-jupiter:${TestDependencies.mockitoCoreVersion}")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.springframework.security:spring-security-test")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")

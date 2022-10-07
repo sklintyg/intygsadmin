@@ -20,7 +20,6 @@ package se.inera.intyg.intygsadmin.persistence.testdata;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
@@ -51,9 +50,10 @@ public class TestDataBootstrapper {
 
     public static final int DAY_SPAN = 10;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Random RANDOM = new Random();
 
-    private BannerRepository bannerRepository;
-    private UserRepository userRepository;
+    private final BannerRepository bannerRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public TestDataBootstrapper(BannerRepository bannerRepository, UserRepository userRepository) {
@@ -67,8 +67,6 @@ public class TestDataBootstrapper {
         bootstrapUsers();
     }
 
-    // Needed to due bug in Spotbugs. https://github.com/spotbugs/spotbugs/issues/756
-    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
     private void bootstrapUsers() {
 
         try {
@@ -151,7 +149,7 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizePastDate(LocalDateTime fromDate) {
-        return fromDate.minusDays(new Random().nextInt(DAY_SPAN + 1) + 1);
+        return fromDate.minusDays(RANDOM.nextInt(DAY_SPAN + 1) + 1);
     }
 
     private LocalDateTime randomizeFutureDate() {
@@ -159,6 +157,6 @@ public class TestDataBootstrapper {
     }
 
     private LocalDateTime randomizeFutureDate(LocalDateTime fromDate) {
-        return fromDate.plusDays(new Random().nextInt(DAY_SPAN + 1) + 1);
+        return fromDate.plusDays(RANDOM.nextInt(DAY_SPAN + 1) + 1);
     }
 }

@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.intygsadmin.web.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -39,8 +39,8 @@ import se.inera.intyg.intygsadmin.web.service.TerminationService;
 @RestController
 @RequestMapping("/api/dataExport")
 @PreAuthorize("hasRole('FULL')")
-@Api(
-    value = "Data export service",
+@Tag(
+    name = "Data export service",
     description = "The export service API that is used for exporting and removing all data tied to a Care Provider and Organization."
 )
 public class DataExportController {
@@ -56,7 +56,7 @@ public class DataExportController {
      * @param pageable with page number, page size and sort parameters.
      * @return ResponseEntity carrying a Page of terminations for display.
      */
-    @ApiOperation(value = "List a page of data exports.", notes = "List a page of data exports.")
+    @Operation(summary = "List a page of data exports.", description = "List a page of data exports.")
     @GetMapping
     public ResponseEntity<Page<DataExportResponse>> listDataExports(
         @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
@@ -69,7 +69,7 @@ public class DataExportController {
      * @param createDataExportDTO
      * @return
      */
-    @ApiOperation(value = "Create the data export", notes = "Returns the data export that was saved.")
+    @Operation(summary = "Create the data export", description = "Returns the data export that was saved.")
     @PostMapping
     public ResponseEntity<DataExportResponse> createDataExport(@RequestBody CreateDataExportDTO createDataExportDTO) {
         final DataExportResponse savedDTO = terminationService.createDataExport(createDataExportDTO);
@@ -82,7 +82,7 @@ public class DataExportController {
      * @param dataExportResponse Object containing the updates to be introduced.
      * @return ResponseEntity holding the updated object.
      */
-    @ApiOperation(value = "Update a data export", notes = "Returns the data export that was updated.")
+    @Operation(summary = "Update a data export", description = "Returns the data export that was updated.")
     @PostMapping("/update")
     public ResponseEntity<DataExportResponse> updateDataExport(@RequestBody DataExportResponse dataExportResponse) {
         final var updatedDataExport = terminationService.updateDataExport(dataExportResponse);
@@ -94,7 +94,7 @@ public class DataExportController {
      * @param terminationId
      * @return
      */
-    @ApiOperation(value = "Erase all data tied to a data export", notes = "Returns the status of the export")
+    @Operation(summary = "Erase all data tied to a data export", description = "Returns the status of the export")
     @PostMapping("/{terminationId}/erase")
     public ResponseEntity<String> eraseDataExport(@PathVariable("terminationId") String terminationId) {
         final String status = terminationService.eraseDataExport(terminationId);
@@ -102,7 +102,7 @@ public class DataExportController {
         return ResponseEntity.ok(status);
     }
 
-    @ApiOperation(value = "Erase all data tied to a data export", notes = "Returns the status of the export")
+    @Operation(summary = "Erase all data tied to a data export", description = "Returns the status of the export")
     @PostMapping("/{terminationId}/resendkey")
     public ResponseEntity<String> resendDataExportKey(@PathVariable("terminationId") String terminationId) {
         final String status = terminationService.resendDataExportKey(terminationId);

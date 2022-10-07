@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,16 +28,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateDataExportDTO {
 
-    @ApiModelProperty(notes = "Care provider ID", required = true)
+    @Schema(name = "Care provider ID", required = true)
     private String hsaId;
 
-    @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
+    @Schema(name = "Personal id of the receiving person", required = true)
     private String personId;
 
-    @ApiModelProperty(notes = "Email address for the receiving person", required = true)
+    @Schema(name = "Email address for the receiving person", required = true)
     private String emailAddress;
 
-    @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
+    @Schema(name = "Phone number to the receiving person", required = true)
     private String phoneNumber;
 
 }

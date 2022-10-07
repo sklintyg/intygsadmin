@@ -19,7 +19,7 @@
 package se.inera.intyg.intygsadmin.web.integration.model.in;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -33,36 +33,36 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class DataExportResponse {
 
-    @ApiModelProperty(notes = "Export ID", required = true)
+    @Schema(name = "Export ID", required = true)
     private UUID terminationId;
 
     //JSON formating for JAVA 8 types
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(notes = "Date when the request was first created", required = true)
+    @Schema(name = "Date when the request was first created", required = true)
     private LocalDateTime created;
 
-    @ApiModelProperty(notes = "Current status of the export", required = true)
+    @Schema(name = "Current status of the export", required = true)
     private String status;
 
-    @ApiModelProperty(notes = "The name of the administrator who created the request.", required = true)
+    @Schema(name = "The name of the administrator who created the request.", required = true)
     private String creatorName;
 
-    @ApiModelProperty(notes = "The HSAiD of the administrator who created the request.", required = true)
+    @Schema(name = "The HSAiD of the administrator who created the request.", required = true)
     private String creatorHSAId;
 
-    @ApiModelProperty(notes = "Care provider ID", required = true)
+    @Schema(name = "Care provider ID", required = true)
     private String hsaId;
 
-    @ApiModelProperty(notes = "Organization ID", required = true)
+    @Schema(name = "Organization ID", required = true)
     private String organizationNumber;
 
-    @ApiModelProperty(notes = "Personal id of the receiving person", required = true)
+    @Schema(name = "Personal id of the receiving person", required = true)
     private String personId;
 
-    @ApiModelProperty(notes = "Email address for the receiving person", required = true)
+    @Schema(name = "Email address for the receiving person", required = true)
     private String emailAddress;
 
-    @ApiModelProperty(notes = "Phone number to the receiving person", required = true)
+    @Schema(name = "Phone number to the receiving person", required = true)
     private String phoneNumber;
 
 }

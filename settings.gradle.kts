@@ -1,26 +1,30 @@
-import se.inera.intyg.intygsadmin.build.Config.Dependencies
-
 pluginManagement {
   repositories {
     maven("https://nexus.drift.inera.se/repository/it-public/")
     gradlePluginPortal()
   }
   resolutionStrategy {
+    val kotlinVersion: String by extra
+    val springBootVersion: String by extra
+    val nebulaNodePluginVersion: String by extra
+    val intygGradlePluginVersion: String by extra
+    val dependencyManagementPluginVersion: String by extra
+
     eachPlugin {
       if (requested.id.id.startsWith("org.jetbrains.kotlin.")) {
-        useVersion(Dependencies.kotlinVersion)
+        useVersion(kotlinVersion)
       }
       if (requested.id.id.startsWith("se.inera.intyg.plugin.common")) {
-        useVersion(Dependencies.intygPluginVersion)
+        useVersion(intygGradlePluginVersion)
       }
       if (requested.id.id.startsWith("io.spring.dependency-management")) {
-        useVersion(Dependencies.springDependencyManagementVersion)
+        useVersion(dependencyManagementPluginVersion)
       }
       if (requested.id.id.startsWith("org.springframework.boot")) {
-        useVersion(Dependencies.springBootVersion)
+        useVersion(springBootVersion)
       }
-      if (requested.id.id.startsWith("com.moowork.node")) {
-        useVersion(Dependencies.nodePluginVersion)
+      if (requested.id.id.startsWith("nebula.node")) {
+        useVersion(nebulaNodePluginVersion)
       }
     }
   }

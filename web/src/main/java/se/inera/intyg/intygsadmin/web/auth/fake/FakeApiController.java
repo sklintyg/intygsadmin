@@ -45,8 +45,6 @@ public class FakeApiController {
 
     private List<FakeUser> fakeUsers;
 
-    // Needed to due bug in Spotbugs. https://github.com/spotbugs/spotbugs/issues/756
-    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
     @PostConstruct
     public void init() throws IOException {
 

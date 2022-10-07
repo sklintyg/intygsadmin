@@ -7,6 +7,8 @@ server:
     session:
       timeout: 30m
   forward-headers-strategy: framework
+  error:
+    path: "/error"
 
 management:
   server:
@@ -70,3 +72,8 @@ erasetestcertificate:
   erase:
     after:
       day: 31
+
+springdoc:
+  packagesToScan: se.inera.intyg.intygsadmin.web.controller
+  swagger-ui:
+    operationsSorter: alpha

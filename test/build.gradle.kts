@@ -2,7 +2,7 @@ import com.moowork.gradle.node.task.NodeTask
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
 
 plugins {
-  id("com.moowork.node")
+  id("nebula.node")
 }
 
 node {
