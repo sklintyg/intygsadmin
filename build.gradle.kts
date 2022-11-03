@@ -108,6 +108,16 @@ subprojects {
   }
 }
 
+gradle.taskGraph.whenReady {
+  var runningRestassuredTest = false
+  project("intygsadmin-web") { runningRestassuredTest = gradle.taskGraph.hasTask(tasks["restAssuredTest"]) }
+
+  if (runningRestassuredTest) {
+    project("intygsadmin-web") { tasks["test"].enabled = false }
+    project("intygsadmin-persistence") { tasks["test"].enabled = false }
+  }
+}
+
 tasks {
   register<TagReleaseTask>("tagRelease")
 }
