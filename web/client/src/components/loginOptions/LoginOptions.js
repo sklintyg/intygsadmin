@@ -16,7 +16,7 @@ const LoginOptions = ({ settings, isFetching, errorMessage }) => {
           <Spinner size="sm" color="secondary" /> Hämtar konfiguration...{' '}
         </span>
       )}
-      {!isFetching && !errorMessage && <IaButton4 onClick={doLogin(settings.loginUrl)} label="Logga in med SITHS-kort" />}
+      {!isFetching && !errorMessage && <IaButton4 onClick={doLogin(settings.loginUrl)} label="Logga in med SITHS" />}
       {errorMessage && (
         <IaAlert type={alertType.ERROR}>
           {' '}
