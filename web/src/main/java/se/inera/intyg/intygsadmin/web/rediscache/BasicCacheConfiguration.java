@@ -19,9 +19,11 @@
 package se.inera.intyg.intygsadmin.web.rediscache;
 
 import com.google.common.base.Strings;
+import java.time.Duration;
 import java.util.List;
-import java.util.stream.Stream;
 import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -32,8 +34,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -48,6 +52,8 @@ import se.inera.intyg.intygsadmin.web.rediscache.util.ConnectionStringUtil;
 @Profile("!embedded-redis")
 public class BasicCacheConfiguration {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BasicCacheConfiguration.class);
+
     @Value("${intyg.redis.host}")
     protected String redisHost;
     @Value("${intyg.redis.port}")
@@ -58,6 +64,15 @@ public class BasicCacheConfiguration {
     protected int defaultEntryExpiry;
     @Value("${intyg.redis.sentinel.master.name}")
     protected String redisSentinelMasterName;
+
+    @Value("${redis.cluster.nodes:}")
+    private String redisClusterNodes;
+    @Value("${redis.cluster.password:}")
+    private String redisClusterPassword;
+    @Value("${redis.cluster.max.redirects:3}")
+    private Integer redisClusterMaxRedirects;
+    @Value("${redis.cluster.read.timeout:PT1M}")
+    private String redisClusterReadTimeout;
 
     @Resource
     private Environment environment;
@@ -72,12 +87,15 @@ public class BasicCacheConfiguration {
      */
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (Stream.of(activeProfiles).noneMatch("redis-sentinel"::equalsIgnoreCase)) {
-            return plainConnectionFactory();
-        } else {
+        final var activeProfiles = List.of(environment.getActiveProfiles());
+        if (activeProfiles.contains("redis-cluster")) {
+            return clusterConnectionFactory();
+        }
+        if (activeProfiles.contains("redis-sentinel")) {
             return sentinelConnectionFactory();
         }
+
+        return plainConnectionFactory();
     }
 
     @Bean
@@ -95,6 +113,7 @@ public class BasicCacheConfiguration {
     }
 
     private JedisConnectionFactory plainConnectionFactory() {
+        LOG.info("Using redis standalone configuration.");
         RedisStandaloneConfiguration standaloneConfiguration = new RedisStandaloneConfiguration();
         standaloneConfiguration.setHostName(redisHost);
         standaloneConfiguration.setPort(Integer.parseInt(redisPort));
@@ -106,6 +125,7 @@ public class BasicCacheConfiguration {
     }
 
     private JedisConnectionFactory sentinelConnectionFactory() {
+        LOG.info("Detected spring profile 'redis-sentinel', using redis sentinel configuration.");
         RedisSentinelConfiguration sentinelConfig = new RedisSentinelConfiguration()
             .master(redisSentinelMasterName);
 
@@ -125,5 +145,17 @@ public class BasicCacheConfiguration {
         }
 
         return new JedisConnectionFactory(sentinelConfig);
+    }
+
+    private JedisConnectionFactory clusterConnectionFactory() {
+        LOG.info("Detected spring profile 'redis-cluster', using redis cluster configuration.");
+        final var clusterConfig = new RedisClusterConfiguration(ConnectionStringUtil.parsePropertyString(redisClusterNodes));
+        clusterConfig.setMaxRedirects(redisClusterMaxRedirects);
+        clusterConfig.setPassword(redisClusterPassword);
+
+        final var clientConfig = JedisClientConfiguration.builder()
+            .readTimeout(Duration.parse(redisClusterReadTimeout)).build();
+
+        return new JedisConnectionFactory(clusterConfig, clientConfig);
     }
 }
