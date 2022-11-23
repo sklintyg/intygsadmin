@@ -66,13 +66,13 @@ public class BasicCacheConfiguration {
     protected String redisSentinelMasterName;
 
     @Value("${redis.cluster.nodes:}")
-    String redisClusterNodes;
+    private String redisClusterNodes;
     @Value("${redis.cluster.password:}")
-    String redisClusterPassword;
+    private String redisClusterPassword;
     @Value("${redis.cluster.max.redirects:3}")
-    Integer redisClusterMaxRedirects;
+    private Integer redisClusterMaxRedirects;
     @Value("${redis.cluster.read.timeout:PT1M}")
-    String redisClusterReadTimeout;
+    private String redisClusterReadTimeout;
 
     @Resource
     private Environment environment;
