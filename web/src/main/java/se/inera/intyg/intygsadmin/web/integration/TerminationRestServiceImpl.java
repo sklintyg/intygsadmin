@@ -54,7 +54,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public List<DataExportResponse> getDataExports() {
-        String url = terminationServiceUrl + "api/v1/terminations";
+        String url = terminationServiceUrl + "/api/v1/terminations";
         try {
             DataExportResponse[] dataExportResponses = restTemplate.getForObject(url, DataExportResponse[].class);
             return Arrays.asList(Objects.requireNonNull(dataExportResponses));
@@ -71,7 +71,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public DataExportResponse createDataExport(CreateDataExport createDataExport) {
-        String url = terminationServiceUrl + "api/v1/terminations";
+        String url = terminationServiceUrl + "/api/v1/terminations";
         try {
             return restTemplate.postForObject(url, createDataExport, DataExportResponse.class);
         } catch (RestClientException e) {
@@ -87,7 +87,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public String eraseDataExport(String terminationId) {
-        String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/erase";
+        String url = terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/erase";
         try {
             return restTemplate.postForObject(url, null, String.class);
         } catch (RestClientException e) {
@@ -104,7 +104,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO updateDataExportDTO) {
-        String url = terminationServiceUrl + "api/v1/terminations/" + terminationId;
+        String url = terminationServiceUrl + "/api/v1/terminations/" + terminationId;
         try {
             final var dataExportResponse =  restTemplate.postForObject(url, updateDataExportDTO, DataExportResponse.class);
             LOG.info("Successfully updated termination {}", terminationId);
@@ -122,7 +122,7 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public String resendDataExportKey(String terminationId) {
-        String url = terminationServiceUrl + "api/v1/terminations/" + terminationId + "/resendpassword";
+        String url = terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/resendpassword";
         try {
             return restTemplate.postForObject(url, null, String.class);
         } catch (RestClientException e) {
