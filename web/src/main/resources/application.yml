@@ -24,7 +24,7 @@ spring:
   profiles:
     active: dummy
   datasource:
-    url: jdbc:mysql://${mysql.service.host}:${mysql.service.port}/${database.name}?useSSL=false&serverTimezone=Europe/Stockholm
+    url: jdbc:mysql://${mysql.service.host}:${mysql.service.port}/${database.name}?useSSL=false&serverTimezone=Europe/Stockholm&allowPublicKeyRetrieval=true
     password:
     username:
   session:
