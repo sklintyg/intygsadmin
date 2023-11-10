@@ -2,7 +2,7 @@ import com.moowork.gradle.node.task.NodeTask
 import se.inera.intyg.intygsadmin.build.Config.Dependencies
 
 plugins {
-  id("nebula.node")
+  id("com.netflix.nebula.node")
 }
 
 node {
@@ -22,10 +22,7 @@ tasks {
     dependsOn("npmInstall")
 
     val baseUrl = System.getProperty("baseUrl", "http://localhost:8070")
-
     setScript(file("scripts/run.js"))
-
     setArgs(listOf("baseUrl=$baseUrl"))
   }
 }
-

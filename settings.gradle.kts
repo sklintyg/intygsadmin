@@ -4,6 +4,7 @@ pluginManagement {
     maven("https://nexus.drift.inera.se/repository/it-public/")
     gradlePluginPortal()
   }
+
   resolutionStrategy {
     val kotlinVersion: String by extra
     val springBootVersion: String by extra
@@ -24,7 +25,7 @@ pluginManagement {
       if (requested.id.id.startsWith("org.springframework.boot")) {
         useVersion(springBootVersion)
       }
-      if (requested.id.id.startsWith("nebula.node")) {
+      if (requested.id.id.startsWith("com.netflix.nebula.node")) {
         useVersion(nebulaNodePluginVersion)
       }
     }
