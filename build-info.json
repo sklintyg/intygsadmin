@@ -1,6 +1,6 @@
 {
-  "appVersion": "1.9.1",
-  "infraVersion": "3.20.0.+",
+  "appVersion": "1.10.0",
+  "infraVersion": "3.21.0.+",
   "buildArgs": "--refresh-dependencies clean build -P client -P codeQuality testReport",
   "tests": [
     "restAssuredTest",
