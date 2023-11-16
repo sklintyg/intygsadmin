@@ -119,19 +119,19 @@ tasks {
             ?.let { zipTree(it).matching { include("/spotbugs/**", "/git_hooks/**") } })
   }
 
-  val applyGitHooks by registering(Copy::class) {
+  val applyGitHooks by registering {
     dependsOn(unzipBuildTools)
-    val repository = findGitRepository(project.rootProject.projectDir)
-    val gitHooksDir = "${rootProject.layout.buildDirectory.get().asFile}/build-tools/git_hooks"
-    val commitMsg = file("${gitHooksDir}/commit-msg")
-    val preCommit = file("${gitHooksDir}/pre-commit")
-    val toDir = Paths.get(repository.directory.path, "hooks")
+    doLast {
+      val repository = findGitRepository(project.rootProject.projectDir)
+      val gitHooksDir = "${rootProject.layout.buildDirectory.get().asFile}/build-tools/git_hooks"
+      val commitMsg = file("${gitHooksDir}/commit-msg")
+      val preCommit = file("${gitHooksDir}/pre-commit")
+      val toDir = Paths.get(repository.directory.path, "hooks")
 
-    if (!Files.exists(toDir)) {
-      Files.createDirectory(toDir)
+      if (!Files.exists(toDir)) { Files.createDirectory(toDir) }
+      copyFile(commitMsg, toDir)
+      copyFile(preCommit, toDir)
     }
-    copyFile(commitMsg, toDir)
-    copyFile(preCommit, toDir)
   }
 
   compileJava { dependsOn(applyGitHooks) }
