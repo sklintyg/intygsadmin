@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -54,8 +54,8 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Return data exports.
+     *
      * @param pageable Page object that contains page number and sort order.
-     * @return
      */
     @Override
     public Page<DataExportResponse> getDataExports(Pageable pageable) {
@@ -78,8 +78,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Create a data export as a first step to erase the customers data.
-     * @param createDataExportDTO
-     * @return
      */
     @Override
     public DataExportResponse createDataExport(CreateDataExportDTO createDataExportDTO) {
@@ -99,8 +97,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Delete the request and not the actual customer data.
-     * @param terminationId
-     * @return
      */
     @Override
     public String eraseDataExport(String terminationId) {
@@ -109,6 +105,7 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Update data export.
+     *
      * @param dataExportResponse Update information from update form.
      * @return The updated termination.
      */
@@ -125,8 +122,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Trigger a resend of the kryptokey for the provided termination.
-     * @param terminationId
-     * @return
      */
     @Override
     public String resendDataExportKey(String terminationId) {
@@ -135,10 +130,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Sort terminations.
-     * @param terminations
-     * @param sortColumn
-     * @param direction
-     * @return
      */
     private List<DataExportResponse> sort(List<DataExportResponse> terminations, String sortColumn, Direction direction) {
         return terminations.stream()
@@ -148,9 +139,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Determine what comparator to use.
-     * @param sortColumn
-     * @param direction
-     * @return
      */
     private Comparator<DataExportResponse> getComparator(String sortColumn, Direction direction) {
         if ("createdAt".equals(sortColumn)) {
@@ -163,8 +151,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Check direction to sort.
-     * @param direction
-     * @return
      */
     private Comparator<Object> getKeyComparator(Direction direction) {
         return direction == Direction.DESC ? SORT_SWEDISH.reversed() : SORT_SWEDISH;
@@ -172,8 +158,6 @@ public class TerminationServiceImpl implements TerminationService {
 
     /**
      * Get what field to sort on.
-     * @param sortColumn
-     * @return
      */
     private Function<DataExportResponse, String> getKeyExtractor(String sortColumn) {
         switch (sortColumn) {

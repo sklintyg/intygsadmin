@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -53,6 +53,7 @@ public class DataExportController {
 
     /**
      * List a page of data exports.
+     *
      * @param pageable with page number, page size and sort parameters.
      * @return ResponseEntity carrying a Page of terminations for display.
      */
@@ -66,8 +67,6 @@ public class DataExportController {
 
     /**
      * Create a data export.
-     * @param createDataExportDTO
-     * @return
      */
     @Operation(summary = "Create the data export", description = "Returns the data export that was saved.")
     @PostMapping
@@ -79,6 +78,7 @@ public class DataExportController {
 
     /**
      * Update a data export.
+     *
      * @param dataExportResponse Object containing the updates to be introduced.
      * @return ResponseEntity holding the updated object.
      */
@@ -91,8 +91,6 @@ public class DataExportController {
 
     /**
      * Erase the information regarding a data export.
-     * @param terminationId
-     * @return
      */
     @Operation(summary = "Erase all data tied to a data export", description = "Returns the status of the export")
     @PostMapping("/{terminationId}/erase")

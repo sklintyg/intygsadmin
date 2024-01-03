@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -194,7 +194,7 @@ class TerminationServiceImplTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setName("test");
         userEntity.setEmployeeHsaId("Nmågot hsa-id");
-        AuthenticationMethod authenticationMethod= AuthenticationMethod.FAKE;
+        AuthenticationMethod authenticationMethod = AuthenticationMethod.FAKE;
         OAuth2AccessToken oAuth2AccessToken = new DefaultOAuth2AccessToken("Token");
         IntygsadminUser intygsadminUser = new IntygsadminUser(userEntity, authenticationMethod, oAuth2AccessToken);
 
@@ -215,14 +215,14 @@ class TerminationServiceImplTest {
         verify(terminationRestService).createDataExport(createDataExportArgumentCaptor.capture());
 
         CreateDataExport createdCreateDataExport = createDataExportArgumentCaptor.getValue();
-        assertEquals(createdCreateDataExport.getCreatorName() , userEntity.getName());
-        assertEquals(createdCreateDataExport.getCreatorHSAId() , userEntity.getEmployeeHsaId());
+        assertEquals(createdCreateDataExport.getCreatorName(), userEntity.getName());
+        assertEquals(createdCreateDataExport.getCreatorHSAId(), userEntity.getEmployeeHsaId());
 
-        assertEquals(createDataExportDTO.getHsaId() , createDataExportDTO.getHsaId());
-        assertEquals(createDataExportDTO.getPersonId() , createDataExportDTO.getPersonId());
-        assertEquals(createDataExportDTO.getPhoneNumber() , createDataExportDTO.getPhoneNumber());
-        assertEquals(createDataExportDTO.getEmailAddress() , createDataExportDTO.getEmailAddress());
-        assertEquals(createDataExportDTO.getOrganizationNumber() , createDataExportDTO.getOrganizationNumber());
+        assertEquals(createDataExportDTO.getHsaId(), createDataExportDTO.getHsaId());
+        assertEquals(createDataExportDTO.getPersonId(), createDataExportDTO.getPersonId());
+        assertEquals(createDataExportDTO.getPhoneNumber(), createDataExportDTO.getPhoneNumber());
+        assertEquals(createDataExportDTO.getEmailAddress(), createDataExportDTO.getEmailAddress());
+        assertEquals(createDataExportDTO.getOrganizationNumber(), createDataExportDTO.getOrganizationNumber());
     }
 
     @Test
@@ -235,7 +235,7 @@ class TerminationServiceImplTest {
         assertNotNull(terminationService.updateDataExport(dataExportResponse));
 
         verify(terminationRestService, times(1)).updateDataExport(eq(TERMINATION_ID), updateExportCaptor.capture());
-        assertAll (
+        assertAll(
             () -> assertEquals(HSA_ID, updateExportCaptor.getValue().getHsaId()),
             () -> assertEquals(PERSON_ID, updateExportCaptor.getValue().getPersonId()),
             () -> assertEquals(EMAIL_ADDRESS, updateExportCaptor.getValue().getEmailAddress()),

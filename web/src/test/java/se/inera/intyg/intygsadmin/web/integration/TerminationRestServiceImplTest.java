@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -51,8 +51,8 @@ class TerminationRestServiceImplTest {
     private TerminationRestServiceImpl terminationRestService;
 
     @BeforeEach
-    public void init(){
-        ReflectionTestUtils.setField(terminationRestService,"terminationServiceUrl", "Host");
+    public void init() {
+        ReflectionTestUtils.setField(terminationRestService, "terminationServiceUrl", "Host");
     }
 
     @Test

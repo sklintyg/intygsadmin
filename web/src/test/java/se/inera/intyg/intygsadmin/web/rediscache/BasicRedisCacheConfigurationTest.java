@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -59,7 +59,7 @@ public class BasicRedisCacheConfigurationTest {
 
     @Test
     public void testCache() {
-        IntStream.range(0, 100).forEach(i ->  testCache.put("key" + i, "value" + i));
+        IntStream.range(0, 100).forEach(i -> testCache.put("key" + i, "value" + i));
         IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, Objects.requireNonNull(testCache.get("key" + i)).get()));
 
         Object o = Objects.requireNonNull(testCache.get("key1")).get();

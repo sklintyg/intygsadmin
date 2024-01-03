@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -169,20 +169,20 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/version.html").permitAll()
-                .antMatchers("/public-api/version").permitAll()
-                .antMatchers("/version-assets/**").permitAll()
-                .antMatchers("/favicon*").permitAll()
-                .antMatchers("/index.html").permitAll()
-                .antMatchers("/images/**").permitAll()
-                .antMatchers("/app/**").permitAll()
-                .antMatchers("/assets/**").permitAll()
-                .antMatchers("/components/**").permitAll()
-                .antMatchers("/actuator/**").permitAll()
-                .antMatchers(API_ANVANDARE).permitAll()
-                .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
-                // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll()
+            .antMatchers("/").permitAll()
+            .antMatchers("/version.html").permitAll()
+            .antMatchers("/public-api/version").permitAll()
+            .antMatchers("/version-assets/**").permitAll()
+            .antMatchers("/favicon*").permitAll()
+            .antMatchers("/index.html").permitAll()
+            .antMatchers("/images/**").permitAll()
+            .antMatchers("/app/**").permitAll()
+            .antMatchers("/assets/**").permitAll()
+            .antMatchers("/components/**").permitAll()
+            .antMatchers("/actuator/**").permitAll()
+            .antMatchers(API_ANVANDARE).permitAll()
+            .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
+        // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll()
 
         if (profiles.contains(FAKE_PROFILE)) {
             addFakeLogin(http);
@@ -201,7 +201,7 @@ public class SecurityConfig {
         if (profiles.contains("dev")) {
             http
                 .authorizeRequests()
-                    .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
         }
     }
 
