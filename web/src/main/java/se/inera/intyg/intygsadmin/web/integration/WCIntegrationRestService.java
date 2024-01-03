@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,9 +34,10 @@ public interface WCIntegrationRestService {
 
     /**
      * Service for erasing of test certificates.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
-     * @return  Result of the erase operation
+     *
+     * @param from Created after from datetime
+     * @param to Create before to datetime
+     * @return Result of the erase operation
      */
     TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -52,7 +52,8 @@ public class TestCertificateServiceImpl implements TestCertificateService {
 
     /**
      * Erase test certificates that is older than specified number of days.
-     * @param eraseAfterDays    Number of days old.
+     *
+     * @param eraseAfterDays Number of days old.
      */
     public void eraseTestCertificates(int eraseAfterDays) {
         final var to = LocalDateTime.now().minusDays(eraseAfterDays);
@@ -61,8 +62,9 @@ public class TestCertificateServiceImpl implements TestCertificateService {
 
     /**
      * Erase test certificates that was created within a specified datetime range.
-     * @param from  Created after from datetime
-     * @param to    Create before to datetime
+     *
+     * @param from Created after from datetime
+     * @param to Create before to datetime
      */
     public void eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
         LOG.info("Erase test certificates from {} to {}", from, to);

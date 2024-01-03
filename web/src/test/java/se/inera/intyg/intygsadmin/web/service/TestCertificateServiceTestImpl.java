@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,6 +35,7 @@ import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 
 @ExtendWith(MockitoExtension.class)
 public class TestCertificateServiceTestImpl {
+
     @Mock
     private ITIntegrationRestService itIntegrationRestService;
 
@@ -46,8 +47,8 @@ public class TestCertificateServiceTestImpl {
 
     @Test
     public void testEraseTestCertificates() {
-        doReturn(TestCertificateEraseResult.create(1, 0 )).when(itIntegrationRestService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(2, 0 )).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(1, 0)).when(itIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(2, 0)).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
 
         testCertificateService.eraseTestCertificates();
 
@@ -58,7 +59,7 @@ public class TestCertificateServiceTestImpl {
     @Test
     public void testEraseTestCertificatesFailedWCSuccessIT() {
         doThrow(new RuntimeException()).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(1, 0 )).when(itIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(1, 0)).when(itIntegrationRestService).eraseTestCertificates(any(), any());
 
         testCertificateService.eraseTestCertificates();
 
@@ -69,7 +70,7 @@ public class TestCertificateServiceTestImpl {
     @Test
     public void testEraseTestCertificatesFailedITSuccessWC() {
         doThrow(new RuntimeException()).when(itIntegrationRestService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(2, 0 )).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
+        doReturn(TestCertificateEraseResult.create(2, 0)).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
 
         testCertificateService.eraseTestCertificates();
 
