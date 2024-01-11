@@ -23,34 +23,41 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForTimePeriodIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class SendStatusServiceImplTest {
+class SendStatusForTimePeriodServiceImplTest {
 
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
     @InjectMocks
-    private SendStatusServiceImpl sendStatusServiceImpl;
+    private SendStatusForTimePeriodServiceImpl sendStatusForTimePeriodServiceImpl;
 
     @Test
-    void sendStatus() {
+    void sendStatusForTimePeriod() {
 
-        final var request = SendStatusIntegrationRequestDTO.create("statusId");
+        final var request = SendStatusForTimePeriodIntegrationRequestDTO.create(
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            NotificationStatusEnum.FAILURE,
+            LocalDateTime.now()
+        );
 
-        when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class))).thenReturn(
+        when(wcIntegrationRestService.sendStatusForTimePeriod(any(SendStatusForTimePeriodIntegrationRequestDTO.class))).thenReturn(
             SendStatusIntegrationResponseDTO.create(1));
 
-        final var response = sendStatusServiceImpl.send(request.getStatusId());
+        final var response = sendStatusForTimePeriodServiceImpl.send(request);
 
         assertEquals(1, response);
 
     }
+
 }

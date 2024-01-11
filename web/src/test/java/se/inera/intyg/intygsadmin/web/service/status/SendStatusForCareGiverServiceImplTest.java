@@ -23,32 +23,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class SendStatusServiceImplTest {
+class SendStatusForCareGiverServiceImplTest {
 
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
     @InjectMocks
-    private SendStatusServiceImpl sendStatusServiceImpl;
+    private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
 
     @Test
-    void sendStatus() {
+    void sendStatusForCareGiver() {
 
-        final var request = SendStatusIntegrationRequestDTO.create("statusId");
+        final var request = SendStatusForCareGiverIntegrationRequestDTO.create(
+            "careGiverId",
+            LocalDateTime.now(),
+            LocalDateTime.now(),
+            NotificationStatusEnum.FAILURE,
+            LocalDateTime.now()
+        );
 
-        when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class))).thenReturn(
+        when(wcIntegrationRestService.sendStatusForCareGiver(any(SendStatusForCareGiverIntegrationRequestDTO.class))).thenReturn(
             SendStatusIntegrationResponseDTO.create(1));
 
-        final var response = sendStatusServiceImpl.send(request.getStatusId());
+        final var response = sendStatusForCareGiverServiceImpl.send("careGiverId", request);
 
         assertEquals(1, response);
 

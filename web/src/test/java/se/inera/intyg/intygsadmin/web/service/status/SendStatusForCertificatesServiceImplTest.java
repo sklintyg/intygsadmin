@@ -23,34 +23,41 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 @ExtendWith(MockitoExtension.class)
-class SendStatusServiceImplTest {
+class SendStatusForCertificatesServiceImplTest {
 
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
     @InjectMocks
-    private SendStatusServiceImpl sendStatusServiceImpl;
+    private SendStatusForCertificatesServiceImpl sendStatusForCertificatesServiceImpl;
 
     @Test
-    void sendStatus() {
+    void sendStatusForCertificates() {
 
-        final var request = SendStatusIntegrationRequestDTO.create("statusId");
+        final var request = SendStatusForCertificatesIntegrationRequestDTO.create(
+            List.of("certificateId1", "certificateId2"),
+            NotificationStatusEnum.FAILURE,
+            LocalDateTime.now()
+        );
 
-        when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class))).thenReturn(
+        when(wcIntegrationRestService.sendStatusForCertificates(any(SendStatusForCertificatesIntegrationRequestDTO.class))).thenReturn(
             SendStatusIntegrationResponseDTO.create(1));
 
-        final var response = sendStatusServiceImpl.send(request.getStatusId());
+        final var response = sendStatusForCertificatesServiceImpl.send(request);
 
         assertEquals(1, response);
 
     }
 }
+
