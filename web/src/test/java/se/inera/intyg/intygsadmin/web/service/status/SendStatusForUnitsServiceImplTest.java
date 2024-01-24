@@ -43,13 +43,13 @@ class SendStatusForUnitsServiceImplTest {
     private SendStatusForUnitsServiceImpl sendStatusForUnitsServiceImpl;
 
     @Test
-    void sendStatusForUnits() {
+    void shouldSendStatusForUnits() {
 
         final var request = SendStatusForUnitsIntegrationRequestDTO.create(
             List.of("unitId1", "unitId2"),
             LocalDateTime.now(),
             LocalDateTime.now(),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 

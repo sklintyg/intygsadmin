@@ -28,11 +28,11 @@ public class SendStatusForUnitsIntegrationRequestDTO {
     private List<String> unitIds;
     private LocalDateTime start;
     private LocalDateTime end;
-    private NotificationStatusEnum status;
+    private List<NotificationStatusEnum> status;
     private LocalDateTime activationTime;
 
     public static SendStatusForUnitsIntegrationRequestDTO create(List<String> unitIds, LocalDateTime start, LocalDateTime end,
-        NotificationStatusEnum status,
+        List<NotificationStatusEnum> status,
         LocalDateTime activationTime) {
         final var response = new SendStatusForUnitsIntegrationRequestDTO();
 
@@ -57,7 +57,7 @@ public class SendStatusForUnitsIntegrationRequestDTO {
         return end;
     }
 
-    public NotificationStatusEnum getStatus() {
+    public List<NotificationStatusEnum> getStatus() {
         return status;
     }
 

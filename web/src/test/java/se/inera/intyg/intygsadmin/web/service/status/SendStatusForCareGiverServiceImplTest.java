@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,13 +43,13 @@ class SendStatusForCareGiverServiceImplTest {
     private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
 
     @Test
-    void sendStatusForCareGiver() {
+    void shouldSendStatusForCareGiver() {
 
         final var request = SendStatusForCareGiverIntegrationRequestDTO.create(
             "careGiverId",
             LocalDateTime.now(),
             LocalDateTime.now(),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 

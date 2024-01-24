@@ -64,17 +64,17 @@ class StatusControllerTest {
     private StatusController statusController;
 
     @Test
-    void sendStatus() {
+    void shouldSendStatus() {
         final var sendStatusResponse = SendStatusResponseDTO.create(1);
         when(sendStatusService.send(STATUS_ID)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatus(STATUS_ID).getCount());
     }
 
     @Test
-    void setSendStatusForCertificates() {
+    void shouldSetSendStatusForCertificates() {
         final var request = SendStatusForCertificatesIntegrationRequestDTO.create(
             List.of("certificateId1", "certificateId2"),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 
@@ -84,12 +84,12 @@ class StatusControllerTest {
     }
 
     @Test
-    void setSendStatusForUnits() {
+    void shouldSetSendStatusForUnits() {
         final var request = SendStatusForUnitsIntegrationRequestDTO.create(
             List.of("unitId1", "unitId2"),
             LocalDateTime.now(),
             LocalDateTime.now(),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 
@@ -99,12 +99,12 @@ class StatusControllerTest {
     }
 
     @Test
-    void setSendStatusForCareGiver() {
+    void shouldSetSendStatusForCareGiver() {
         final var request = SendStatusForCareGiverIntegrationRequestDTO.create(
             "careGiverId",
             LocalDateTime.now(),
             LocalDateTime.now(),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 
@@ -114,11 +114,11 @@ class StatusControllerTest {
     }
 
     @Test
-    void setSendStatusForTimePeriod() {
+    void shouldSetSendStatusForTimePeriod() {
         final var request = SendStatusForTimePeriodIntegrationRequestDTO.create(
             LocalDateTime.now(),
             LocalDateTime.now(),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 

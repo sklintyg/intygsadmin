@@ -124,12 +124,16 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request) {
+    public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO req) {
         String url = webcertUrl + "/internalapi/notification/certificates";
+
+        final var request = SendStatusForCertificatesIntegrationRequestDTO.create(
+            req.getCertificateIds(),
+            req.getStatus(),
+            req.getActivationTime());
+
         try {
-            return restTemplate.postForObject(url,
-                SendStatusForCertificatesIntegrationRequestDTO.create(request.getCertificateIds(), request.getStatus(),
-                    request.getActivationTime()), SendStatusIntegrationResponseDTO.class);
+            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -139,12 +143,18 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request) {
+    public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO req) {
         String url = webcertUrl + "/internalapi/notification/units";
+
+        final var request = SendStatusForUnitsIntegrationRequestDTO.create(
+            req.getUnitIds(),
+            req.getStart(),
+            req.getEnd(),
+            req.getStatus(),
+            req.getActivationTime());
+
         try {
-            return restTemplate.postForObject(url,
-                SendStatusForUnitsIntegrationRequestDTO.create(request.getUnitIds(), request.getStart(), request.getEnd(),
-                    request.getStatus(), request.getActivationTime()), SendStatusIntegrationResponseDTO.class);
+            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -154,12 +164,18 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
-        String url = webcertUrl + "/internalapi/notification/careGiver" + request.getCareGiverId();
+    public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO req) {
+        String url = webcertUrl + "/internalapi/notification/careGiver/" + req.getCareGiverId();
+
+        final var request = SendStatusForCareGiverIntegrationRequestDTO.create(
+            req.getCareGiverId(),
+            req.getStart(),
+            req.getEnd(),
+            req.getStatus(),
+            req.getActivationTime());
+
         try {
-            return restTemplate.postForObject(url,
-                SendStatusForCareGiverIntegrationRequestDTO.create(request.getCareGiverId(), request.getStart(), request.getEnd(),
-                    request.getStatus(), request.getActivationTime()), SendStatusIntegrationResponseDTO.class);
+            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -169,12 +185,17 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO sendStatusForTimePeriod(SendStatusForTimePeriodIntegrationRequestDTO request) {
+    public SendStatusIntegrationResponseDTO sendStatusForTimePeriod(SendStatusForTimePeriodIntegrationRequestDTO req) {
         String url = webcertUrl + "/internalapi/notification/timeperiod";
+
+        final var request = SendStatusForTimePeriodIntegrationRequestDTO.create(
+            req.getStart(),
+            req.getEnd(),
+            req.getStatus(),
+            req.getActivationTime());
+
         try {
-            return restTemplate.postForObject(url,
-                SendStatusForTimePeriodIntegrationRequestDTO.create(request.getStart(), request.getEnd(), request.getStatus(),
-                    request.getActivationTime()), SendStatusIntegrationResponseDTO.class);
+            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;

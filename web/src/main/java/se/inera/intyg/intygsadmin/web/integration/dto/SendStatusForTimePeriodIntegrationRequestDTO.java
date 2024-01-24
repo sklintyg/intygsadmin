@@ -20,17 +20,18 @@
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
 public class SendStatusForTimePeriodIntegrationRequestDTO {
 
     private LocalDateTime start;
     private LocalDateTime end;
-    private NotificationStatusEnum status;
+    private List<NotificationStatusEnum> status;
     private LocalDateTime activationTime;
 
-    public static SendStatusForTimePeriodIntegrationRequestDTO create(LocalDateTime start, LocalDateTime end, NotificationStatusEnum status,
-        LocalDateTime activationTime) {
+    public static SendStatusForTimePeriodIntegrationRequestDTO create(LocalDateTime start, LocalDateTime end,
+        List<NotificationStatusEnum> status, LocalDateTime activationTime) {
         final var response = new SendStatusForTimePeriodIntegrationRequestDTO();
 
         response.start = start;
@@ -49,7 +50,7 @@ public class SendStatusForTimePeriodIntegrationRequestDTO {
         return end;
     }
 
-    public NotificationStatusEnum getStatus() {
+    public List<NotificationStatusEnum> getStatus() {
         return status;
     }
 

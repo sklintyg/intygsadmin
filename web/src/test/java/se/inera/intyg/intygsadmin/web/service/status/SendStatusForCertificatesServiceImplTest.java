@@ -43,11 +43,11 @@ class SendStatusForCertificatesServiceImplTest {
     private SendStatusForCertificatesServiceImpl sendStatusForCertificatesServiceImpl;
 
     @Test
-    void sendStatusForCertificates() {
+    void shouldSendStatusForCertificates() {
 
         final var request = SendStatusForCertificatesIntegrationRequestDTO.create(
             List.of("certificateId1", "certificateId2"),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 

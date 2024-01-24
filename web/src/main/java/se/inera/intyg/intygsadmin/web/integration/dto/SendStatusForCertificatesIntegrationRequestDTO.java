@@ -26,10 +26,10 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 public class SendStatusForCertificatesIntegrationRequestDTO {
 
     private List<String> certificateIds;
-    private NotificationStatusEnum status;
+    private List<NotificationStatusEnum> status;
     private LocalDateTime activationTime;
 
-    public static SendStatusForCertificatesIntegrationRequestDTO create(List<String> certificateIds, NotificationStatusEnum status,
+    public static SendStatusForCertificatesIntegrationRequestDTO create(List<String> certificateIds, List<NotificationStatusEnum> status,
         LocalDateTime activationTime) {
         final var response = new SendStatusForCertificatesIntegrationRequestDTO();
 
@@ -44,7 +44,7 @@ public class SendStatusForCertificatesIntegrationRequestDTO {
         return certificateIds;
     }
 
-    public NotificationStatusEnum getStatus() {
+    public List<NotificationStatusEnum> getStatus() {
         return status;
     }
 

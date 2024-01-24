@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,12 +43,12 @@ class SendStatusForTimePeriodServiceImplTest {
     private SendStatusForTimePeriodServiceImpl sendStatusForTimePeriodServiceImpl;
 
     @Test
-    void sendStatusForTimePeriod() {
+    void shouldSendStatusForTimePeriod() {
 
         final var request = SendStatusForTimePeriodIntegrationRequestDTO.create(
             LocalDateTime.now(),
             LocalDateTime.now(),
-            NotificationStatusEnum.FAILURE,
+            List.of(NotificationStatusEnum.FAILURE),
             LocalDateTime.now()
         );
 

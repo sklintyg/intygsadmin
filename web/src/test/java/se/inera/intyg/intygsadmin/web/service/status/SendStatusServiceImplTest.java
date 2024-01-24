@@ -41,7 +41,7 @@ class SendStatusServiceImplTest {
     private SendStatusServiceImpl sendStatusServiceImpl;
 
     @Test
-    void sendStatus() {
+    void shouldSendStatus() {
 
         final var request = SendStatusIntegrationRequestDTO.create("statusId");
 
