@@ -1,0 +1,19 @@
+pluginManagement {
+  repositories {
+    mavenLocal()
+    maven { url "https://nexus.drift.inera.se/repository/it-public/" }
+    gradlePluginPortal()
+  }
+}
+
+rootProject.name = "intygsadmin"
+
+include ":intygsadmin-persistence"
+include ":intygsadmin-web"
+include ":intygsadmin-test"
+include ":intygsadmin-liquibase-runner"
+
+project(':intygsadmin-persistence').projectDir = "$rootDir/persistence" as File
+project(':intygsadmin-web').projectDir = "$rootDir/web" as File
+project(':intygsadmin-test').projectDir = "$rootDir/test" as File
+project(':intygsadmin-liquibase-runner').projectDir = "$rootDir/tools/liquibase-runner" as File

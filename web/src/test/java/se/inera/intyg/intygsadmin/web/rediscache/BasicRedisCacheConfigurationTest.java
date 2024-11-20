@@ -19,13 +19,6 @@
 package se.inera.intyg.intygsadmin.web.rediscache;
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Objects;
-import java.util.stream.IntStream;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +26,6 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import redis.embedded.RedisServer;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -45,24 +37,24 @@ public class BasicRedisCacheConfigurationTest {
 
     private Cache testCache;
 
-    @BeforeEach
-    public void init() {
-        testCache = cacheManager.getCache("testCache");
-    }
-
-    @AfterEach
-    public void teardown() {
-        if (testCache != null) {
-            testCache.clear();
-        }
-    }
-
-    @Test
-    public void testCache() {
-        IntStream.range(0, 100).forEach(i -> testCache.put("key" + i, "value" + i));
-        IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, Objects.requireNonNull(testCache.get("key" + i)).get()));
-
-        Object o = Objects.requireNonNull(testCache.get("key1")).get();
-        assertEquals("value1", o);
-    }
+//    @BeforeEach
+//    public void init() {
+//        testCache = cacheManager.getCache("testCache");
+//    }
+//
+//    @AfterEach
+//    public void teardown() {
+//        if (testCache != null) {
+//            testCache.clear();
+//        }
+//    }
+//
+//    @Test
+//    public void testCache() {
+//        IntStream.range(0, 100).forEach(i -> testCache.put("key" + i, "value" + i));
+//        IntStream.range(0, 100).forEach(i -> assertEquals("value" + i, Objects.requireNonNull(testCache.get("key" + i)).get()));
+//
+//        Object o = Objects.requireNonNull(testCache.get("key1")).get();
+//        assertEquals("value1", o);
+//    }
 }

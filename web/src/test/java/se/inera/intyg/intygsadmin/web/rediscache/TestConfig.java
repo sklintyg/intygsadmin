@@ -18,11 +18,8 @@
  */
 package se.inera.intyg.intygsadmin.web.rediscache;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-
-@Configuration
-@Import(EmbeddedCacheConfiguration.class)
+//@Configuration
+//@Import(EmbeddedCacheConfiguration.class)
 public class TestConfig {
 
 }

@@ -3,44 +3,11 @@ plugins {
     id "com.netflix.nebula.node"
 }
 
-dependencies {
-    implementation project(":intygsadmin-persistence")
-
-    implementation "se.inera.intyg.infra:driftbanner-dto:${infraVersion}"
-    implementation "se.inera.intyg.infra:integreradeenheter:${infraVersion}"
-    implementation "se.inera.intyg.infra:intyginfo:${infraVersion}"
-    implementation "se.inera.intyg.infra:security-common:${infraVersion}"
-    implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
-
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
-
-    implementation "com.querydsl:querydsl-core"
-    implementation "it.ozimov:embedded-redis:${embeddedRedisVersion}"
-    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
-    implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-    implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    implementation "org.springdoc:springdoc-openapi-data-rest:${springDocVersion}"
-    implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
-    implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth2Version}"
-    implementation "org.springframework.session:spring-session-data-redis"
-    implementation "redis.clients:jedis")
-
-    compileOnly("org.projectlombok:lombok")
-
-    annotationProcessor("org.projectlombok:lombok")
-    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-    testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-
-    testImplementation("commons-io:commons-io:${commonsIOVersion}")
-    testImplementation("io.rest-assured:json-path")
-    testImplementation("io.rest-assured:json-schema-validator")
-    testImplementation("io.rest-assured:rest-assured")
-    testImplementation("io.rest-assured:xml-path")
-}
+def applicationDir = "${rootProject.projectDir}/devops/dev"
+def buildClient = project.hasProperty("client")
+def devPort = 8070 + System.getProperty("instance", "0")
+def devPortInternal = 8170 + System.getProperty("instance", "0")
+def debugPort = 8870 + System.getProperty("instance", "0")
 
 node {
     version = "${nodeVersion}"
@@ -52,7 +19,9 @@ node {
     nodeModulesDir = file("${project.projectDir}/client")
 }
 
-springBoot { buildInfo() }
+springBoot {
+    buildInfo()
+}
 
 tasks {
     tasks.named("jar") {
@@ -60,118 +29,158 @@ tasks {
         archiveClassifier.set("")
     }
 
-    val buildReactApp by creating(NpmTask::class) {
-        dependsOn(npmInstall)
-        setEnvironment(["CI", true])
-        setArgs(listOf("run", "build"))
+    tasks.register('buildReactApp', NpmTask) {
+        dependsOn npmInstall
+        environment = ["CI": true]
+        args = ["run", "build"]
     }
 
-    val startReactApp by creating(NpmTask::class) {
-        dependsOn(npmInstall)
-        setEnvironment(mapOf("CI" to true))
-        setArgs(listOf("run", "start"))
+    tasks.register('testReactApp', NpmTask) {
+        dependsOn npmInstall
+        environment = ["CI": true]
+        args = ["run", "test", "--", "--coverage"]
     }
 
-    val testReactApp by creating(NpmTask::class) {
-        dependsOn(npmInstall)
-        setEnvironment(mapOf("CI" to true))
-        setArgs(listOf("run", "test", "--", "--coverage"))
+    tasks.register('copyReactbuild', Copy) {
+        dependsOn buildReactApp
+        from "client/build/"
+        into "${project.layout.buildDirectory.get().asFile}/resources/main/static"
     }
 
-    val copyReactbuild by creating(Copy::class) {
-        dependsOn(buildReactApp)
-        from("client/build/")
-        into("${project.layout.buildDirectory.get().asFile}/resources/main/static")
+    tasks.register('restAssuredTest', Test) {
+        outputs.upToDateWhen { false }
+        systemProperty "integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8070")
+        systemProperty "integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8170")
+        include "**/*IT*"
     }
 
-    val runtimeOnlyExtended = configurations.create("runtimeOnlyExtended")
-            .extendsFrom(configurations.runtimeOnly.get())
+    def runtimeOnlyExtended = configurations.create("runtimeOnlyExtended").extendsFrom(configurations.runtimeOnly)
 
-    val pathingJar by creating(Jar::class) {
-        dependsOn(runtimeOnlyExtended)
+    tasks.register('pathingJar', Jar) {
+        dependsOn runtimeOnlyExtended
         archiveAppendix.set("pathing")
 
         doFirst {
             manifest {
-                val mainClass = "se.inera.intyg.intygsadmin.web.IntygsadminApplication"
-                val classpath = configurations.runtimeClasspath.get().files
-                        .map { it.toURI().toURL().toString().replaceFirst("file:/", "/") }
-                        .joinToString(separator = " ")
-                attributes["Class-Path"] = classpath
-                attributes["Main-Class"] = mainClass
+                def mainClass = mainClassName
+                def classpath = configurations.runtimeClasspath.files
+                        .collect { it.toURI().toURL().toString().replaceFirst("file:/", "/") }
+                        .join(" ")
+                attributes(
+                        "Class-Path": classpath,
+                        "Main-Class": mainClass
+                )
             }
         }
     }
 
-    val restAssuredTest by creating(Test::class) {
-        outputs.upToDateWhen { false }
-        systemProperty("integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8070"))
-        systemProperty("integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8170"))
-        include("**/*IT*")
-    }
-
     clean {
-        delete("client/build")
+        delete "client/build"
     }
 
     bootJar {
         manifest {
-            attributes("Main-Class" to "org.springframework.boot.loader.PropertiesLauncher")
-            attributes("Start-Class" to "se.inera.intyg.intygsadmin.web.IntygsadminApplication")
+            attributes(
+                    "Main-Class": "org.springframework.boot.loader.PropertiesLauncher",
+                    "Start-Class": "se.inera.intyg.intygsadmin.web.IntygsadminApplication"
+            )
         }
     }
 
     bootRun {
-        systemProperty("dev.http.port", devPort)
-        systemProperty("dev.http.port.internal", devPortInternal)
-        systemProperty("spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub, ts-stub")
-        systemProperty("spring.config.additional-location", "file:${applicationDir}/config/")
+        enabled = true
+        systemProperty "dev.http.port", devPort
+        systemProperty "dev.http.port.internal", devPortInternal
+        systemProperty "spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub, ts-stub"
+        systemProperty "spring.config.additional-location", "file:${applicationDir}/config/"
     }
 
     test {
         exclude("**/*IT*")
+        dependsOn testReactApp
     }
 
-    bootRunMainClassName { dependsOn(copyReactbuild) }
-    bootRun { dependsOn(copyReactbuild) }
-    test { dependsOn(testReactApp) }
+    bootRunMainClassName {
+        dependsOn copyReactbuild
+    }
 
-    if (OperatingSystem.current().isWindows) {
+    if (System.getProperty("os.arch").contains("Windows")) {
         bootRun {
-            dependsOn(pathingJar)
+            dependsOn pathingJar
 
             doFirst {
                 classpath = files(
                         "${project.projectDir}/build/classes/java/main",
                         "${project.projectDir}/src/main/resources",
                         "${project.projectDir}/build/resources/main",
-                        pathingJar.archiveFile)
+                        pathingJar.archiveFile
+                )
             }
         }
     }
 
     if (buildClient) {
         bootJar {
-            dependsOn(buildReactApp)
+            dependsOn buildReactApp
             from("client/build/") {
-                into("static")
+                into "static"
             }
         }
     }
 
-    // Convenience methods so that we can use the same naming conventions
-    val appRunDebug by registering {
-        println("Running in Debug mode")
-        doFirst {
-            bootRun.configure {
-                jvmArgs = listOf("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort")
-            }
+    def appRunDebug = tasks.register('appRunDebug') {
+        doLast { println 'Running in Debug mode' }
+        bootRun {
+            jvmArgs = [
+                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort"
+            ]
         }
-        finalizedBy("bootRun")
     }
 
-    val appRun by registering {
-        println("Running in normal mode")
-        finalizedBy("bootRun")
+    def appRun = tasks.register('appRun') {
+        doLast { println 'Running in normal mode' }
+        bootRun {}
+    }
+
+    appRunDebug.configure { finalizedBy bootRun }
+    appRun.configure { finalizedBy bootRun }
+    compileJava.options.encoding = 'UTF-8'
+
+    dependencies {
+        implementation project(":intygsadmin-persistence")
+
+        implementation "se.inera.intyg.infra:driftbanner-dto:${infraVersion}"
+        implementation "se.inera.intyg.infra:integreradeenheter:${infraVersion}"
+        implementation "se.inera.intyg.infra:intyginfo:${infraVersion}"
+        implementation "se.inera.intyg.infra:security-common:${infraVersion}"
+        implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
+
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+        implementation "org.springframework.boot:spring-boot-starter-actuator"
+        implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+
+        implementation "com.querydsl:querydsl-core"
+        implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
+        implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
+        implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
+        implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+        implementation "org.springdoc:springdoc-openapi-data-rest:${springDocVersion}"
+        implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
+        implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth2Version}"
+        implementation "org.springframework.session:spring-session-data-redis"
+        implementation "redis.clients:jedis"
+
+        compileOnly("org.projectlombok:lombok")
+
+        annotationProcessor("org.projectlombok:lombok")
+        annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+        testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+
+        testImplementation("commons-io:commons-io:${commonsIOVersion}")
+        testImplementation("io.rest-assured:json-path")
+        testImplementation("io.rest-assured:json-schema-validator")
+        testImplementation("io.rest-assured:rest-assured")
+        testImplementation("io.rest-assured:xml-path")
     }
 }
