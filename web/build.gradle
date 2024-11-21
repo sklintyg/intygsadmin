@@ -1,7 +1,4 @@
-plugins {
-    id "org.springframework.boot"
-    id "com.netflix.nebula.node"
-}
+apply plugin:  "org.springframework.boot"
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
 def buildClient = project.hasProperty("client")

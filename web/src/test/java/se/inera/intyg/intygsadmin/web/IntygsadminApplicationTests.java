@@ -18,25 +18,17 @@
  */
 package se.inera.intyg.intygsadmin.web;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class IntygsadminApplicationTests {
+@ExtendWith(SpringExtension.class)
+class IntygsadminApplicationTests {
 
-//    @Autowired
-//    private RedisServer redisServer;
+    //@Test
+      void contextLoads() {
+    }
 
-//    @Test
-//    public void contextLoads() {
-//    }
-//
-//    // Stopping the redis server initiated by test configLoads prevents exception
-//    // otherwise thrown in BasicRedisCacheConfigurationTest.testCache.
-//    @AfterEach
-//    public void shutDown() {
-//        redisServer.stop();
-//    }
 }

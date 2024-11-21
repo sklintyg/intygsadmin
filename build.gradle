@@ -12,13 +12,13 @@ ext {
     infraVersion = System.properties['infraVersion'] ?: '3.21.0-SNAPSHOT'
     apachePoiVersion = "5.2.4"
     commonsIOVersion = "2.17.0"
+    guavaVersion = "33.3.1-jre"
     mapstructVersion = "1.5.5.Final"
     picocliVersion = "4.7.6"
     shedlockSpringVersion = "4.46.0"
     springDocVersion = "1.7.0"
     springSecurityOauth2Version = "2.5.2.RELEASE"
     randomBeansVersion = "3.9.0"
-    guavaVersion = "33.3.1-jre"
 
     nodeVersion = "12.22.12"
     npmVersion = "6.14.16"
@@ -39,6 +39,7 @@ allprojects {
     apply plugin: 'war'
     apply plugin: "application"
 
+    mainClassName = 'se.inera.intyg.intygsadmin.web.IntygsadminApplication'
     group = 'se.inera.intyg.intygsadmin'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
     sourceCompatibility = 11
@@ -113,5 +114,3 @@ reporting {
         dependencies { testReportAggregation project(":${subprojectName}") }
     }
 }
-
-mainClassName = 'se.inera.intyg.intygsadmin.web.IntygsadminApplication'
