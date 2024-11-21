@@ -23,14 +23,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.session.data.redis.RedisFlushMode;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.CookieSerializer;
 import se.inera.intyg.infra.security.common.cookie.IneraCookieSerializer;
 
 @Configuration
-@EnableRedisHttpSession(redisNamespace = "${spring.session.redis.namespace}",
-    redisFlushMode = RedisFlushMode.IMMEDIATE)
+@EnableRedisHttpSession(redisNamespace = "${spring.session.redis.namespace}")
 public class SessionConfig {
 
     @Autowired

@@ -22,9 +22,9 @@ import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.SUCCESSFUL_LOGOUT_REDIRECT_URL;
 
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;

@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.intygsadmin.web.controller;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.error.ErrorAttributeOptions;

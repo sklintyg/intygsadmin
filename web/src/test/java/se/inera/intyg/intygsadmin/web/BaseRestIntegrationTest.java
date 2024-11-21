@@ -29,7 +29,7 @@ import io.restassured.RestAssured;
 import io.restassured.config.SessionConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.http.HttpStatus;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;

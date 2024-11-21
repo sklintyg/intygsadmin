@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.intygsadmin.persistence.service;
 
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

@@ -97,10 +97,6 @@ tasks {
         dependsOn testReactApp
     }
 
-    bootRunMainClassName {
-        dependsOn copyReactbuild
-    }
-
     if (System.getProperty("os.arch").contains("Windows")) {
         bootRun {
             dependsOn pathingJar
@@ -158,6 +154,8 @@ tasks {
         implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
         implementation "com.querydsl:querydsl-core"
+        implementation "jakarta.servlet:jakarta.servlet-api"
+        implementation "jakarta.annotation:jakarta.annotation-api"
         implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
         implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
         implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
@@ -169,6 +167,7 @@ tasks {
         implementation "redis.clients:jedis"
 
         compileOnly("org.projectlombok:lombok")
+        annotationProcessor "jakarta.servlet:jakarta.servlet-api"
 
         annotationProcessor("org.projectlombok:lombok")
         annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
