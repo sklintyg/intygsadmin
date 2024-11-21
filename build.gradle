@@ -42,8 +42,8 @@ allprojects {
     mainClassName = 'se.inera.intyg.intygsadmin.web.IntygsadminApplication'
     group = 'se.inera.intyg.intygsadmin'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    sourceCompatibility = 21
+    targetCompatibility = 21
 
     dependencyManagement {
         imports {
@@ -110,7 +110,8 @@ dependencyCheck {
 }
 
 reporting {
-    subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
-        dependencies { testReportAggregation project(":${subprojectName}") }
+    dependencies {
+        testReportAggregation project(':intygsadmin-web')
+        testReportAggregation project(':intygsadmin-persistence')
     }
 }

@@ -2,9 +2,9 @@ apply plugin:  "org.springframework.boot"
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
 def buildClient = project.hasProperty("client")
-def devPort = 8070 + System.getProperty("instance", "0")
-def devPortInternal = 8170 + System.getProperty("instance", "0")
-def debugPort = 8870 + System.getProperty("instance", "0")
+def devPort = 8070
+def devPortInternal = 8170
+def debugPort = 8870
 
 node {
     version = "${nodeVersion}"
