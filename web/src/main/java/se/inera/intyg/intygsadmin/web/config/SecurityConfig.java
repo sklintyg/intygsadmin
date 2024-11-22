@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.intygsadmin.web.config;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
 import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
@@ -39,6 +40,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.web.SecurityFilterChain;
@@ -49,6 +52,9 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
@@ -162,27 +168,36 @@ public class SecurityConfig {
         // All static client resources could be completely ignored by Spring Security.
         // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
         // will stop IE from loading fonts properly.
-        return (web) -> web.ignoring().antMatchers("/static/**");
+        return (web) -> web.ignoring().requestMatchers(antMatcher("/static/**"));
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-            .antMatchers("/").permitAll()
-            .antMatchers("/version.html").permitAll()
-            .antMatchers("/public-api/version").permitAll()
-            .antMatchers("/version-assets/**").permitAll()
-            .antMatchers("/favicon*").permitAll()
-            .antMatchers("/index.html").permitAll()
-            .antMatchers("/images/**").permitAll()
-            .antMatchers("/app/**").permitAll()
-            .antMatchers("/assets/**").permitAll()
-            .antMatchers("/components/**").permitAll()
-            .antMatchers("/actuator/**").permitAll()
-            .antMatchers(API_ANVANDARE).permitAll()
-            .antMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll();
-        // .antMatchers(SESSION_STAT_REQUEST_MAPPING + "/**").permitAll()
+            .authorizeHttpRequests((auth) -> auth
+                .requestMatchers(antMatcher("/")).permitAll()
+                .requestMatchers(antMatcher("/version.html")).permitAll()
+                .requestMatchers(antMatcher("/public-api/version")).permitAll()
+                .requestMatchers(antMatcher("/version-assets/**")).permitAll()
+                .requestMatchers(antMatcher("/favicon*")).permitAll()
+                .requestMatchers(antMatcher("/index.html")).permitAll()
+                .requestMatchers(antMatcher("/images/**")).permitAll()
+                .requestMatchers(antMatcher("/app/**")).permitAll()
+                .requestMatchers(antMatcher("/assets/**")).permitAll()
+                .requestMatchers(antMatcher("/components/**")).permitAll()
+                .requestMatchers(antMatcher("/actuator/**")).permitAll()
+                .requestMatchers(antMatcher(API_ANVANDARE)).permitAll()
+                .requestMatchers(antMatcher(PUBLIC_API_REQUEST_MAPPING + "/**")).permitAll()
+                .anyRequest().fullyAuthenticated()
+            )
+            .requestCache(cacheConfigurer -> cacheConfigurer
+                .requestCache(new HttpSessionRequestCache()
+                )
+            )
+            .csrf(AbstractHttpConfigurer::disable);
+
+
+
 
         if (profiles.contains(FAKE_PROFILE)) {
             addFakeLogin(http);
@@ -200,24 +215,37 @@ public class SecurityConfig {
     private void configureOpenApi(HttpSecurity http) throws Exception {
         if (profiles.contains("dev")) {
             http
-                .authorizeRequests()
-                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
+                .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(antMatcher("/swagger-ui.html")).permitAll()
+                    .requestMatchers(antMatcher("/swagger-ui/**")).permitAll()
+                    .requestMatchers(antMatcher("/v3/api-docs/**")).permitAll()
+                );
         }
     }
 
     private void configureOidc(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-            .authorizeRequests()
-            .antMatchers("/**")
-            .fullyAuthenticated()
-            .and()
-            .exceptionHandling()
-            .defaultAuthenticationEntryPointFor(
-                new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()),
-                new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL))
-            .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
-            .and()
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(antMatcher("/**")).fullyAuthenticated()
+            )
+            .exceptionHandling(exceptionHandler -> exceptionHandler
+                .defaultAuthenticationEntryPointFor(
+                    new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()),
+                    new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL)
+                )
+                .defaultAuthenticationEntryPointFor(
+                    new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE
+                )
+
+            )
+            .sessionManagement(sessionConfigurer -> sessionConfigurer
+                .sessionAuthenticationStrategy(registerSessionAuthenticationStrategy())
+            )
+            .logout(logoutSuccessHandlerConfigurer -> logoutSuccessHandlerConfigurer
+                .logoutSuccessHandler(logoutSuccessHandler())
+            )
+
             .addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
             .addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
             .logout()
@@ -225,33 +253,31 @@ public class SecurityConfig {
             .logoutUrl(AuthenticationConstansts.LOGOUT_URL)
             .logoutSuccessHandler(logoutSuccessHandler())
             .clearAuthentication(true)
-            .and()
-            .sessionManagement().sessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
+
         // @formatter:on
 
     }
 
     private void denyFakeLogin(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-            .antMatchers(FAKE_LOGIN_URL).denyAll()
-            .antMatchers("/welcome-assets/**").denyAll()
-            .antMatchers("/h2-console/**").denyAll()
-            .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").denyAll();
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(antMatcher(FAKE_LOGIN_URL)).denyAll()
+                .requestMatchers(antMatcher("/welcome-assets/**")).denyAll()
+                .requestMatchers(antMatcher("/h2-console/**")).denyAll()
+                .requestMatchers(antMatcher(FAKE_API_REQUEST_MAPPING + "/**")).denyAll()
+            );
     }
 
     private void addFakeLogin(HttpSecurity http) throws Exception {
-        http.headers().frameOptions().sameOrigin();
-
         http
-            .authorizeRequests()
-            .antMatchers(FAKE_LOGIN_URL).permitAll()
-            .antMatchers("/welcome-assets/**").permitAll()
-            .antMatchers("/h2-console/**").permitAll()
-            .antMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll();
-
-        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(antMatcher(FAKE_LOGIN_URL)).permitAll()
+                .requestMatchers(antMatcher("/welcome-assets/**")).permitAll()
+                .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                .requestMatchers(antMatcher(FAKE_API_REQUEST_MAPPING + "/**")).permitAll()
+            )
+            .headers(headersConfigurer -> headersConfigurer
+                    .frameOptions(FrameOptionsConfig::sameOrigin))
             .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
-
     }
 }
