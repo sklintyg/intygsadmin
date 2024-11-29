@@ -22,6 +22,7 @@ import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,8 +33,10 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.controller.dto.FakeLoginDTO;
 
 @Profile(FAKE_PROFILE)
 @RestController
@@ -64,5 +67,15 @@ public class FakeApiController {
     public ResponseEntity<List<FakeUser>> getFakeUsers() {
 
         return ResponseEntity.ok(fakeUsers);
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void login(HttpServletRequest request, FakeLoginDTO fakeLoginDTO) {
+        //fakeLoginService.login(fakeLoginDTO, request);
+    }
+
+    @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void logout(HttpServletRequest request) {
+        //fakeLoginService.logout(request.getSession(false));
     }
 }

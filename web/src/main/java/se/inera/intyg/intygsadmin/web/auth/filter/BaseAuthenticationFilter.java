@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.intygsadmin.web.auth.filter;
-
+/*
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +34,7 @@ import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 
-/*public abstract class BaseAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public abstract class BaseAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     protected UserPersistenceService userPersistenceService;
 

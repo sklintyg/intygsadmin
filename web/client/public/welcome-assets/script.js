@@ -1,6 +1,9 @@
+// import {fakeLogin} from "../../api/userApi";
+
 var fakeUsers = [];
 var fakeUsersMap = {};
 var jsonSelect;
+
 
 var validProperties = [
   'employeeHsaId',
@@ -65,6 +68,7 @@ function _stringify(fakeUser) {
 }
 
 function updateUserContext(newSelected) {
+
   if (newSelected === undefined) {
     return;
   }
@@ -76,6 +80,20 @@ function updateUserContext(newSelected) {
 
     var loginJson = _stringify(login);
 
-    $("#userJsonDisplay").val(loginJson);
+    $.getJSON('/fake-api/login', loginJson)
+    .then(
+      function(response) {
+        fakeUsers = response;
+        updateUserList();
+      },
+      function(data, status) {
+        console.log('error ' + status);
+      }
+    );
+
+
+    //var user = fakeLogin(loginJson);
+
+    // $("#userJsonDisplay").val(loginJson);
   }
 }

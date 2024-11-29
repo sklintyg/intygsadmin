@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.intygsadmin.web.config;
-
+/*
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.util.Arrays;
@@ -36,7 +36,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 
-/*@Configuration
+@Configuration
 @EnableOAuth2Client
 @EnableConfigurationProperties(value = {IdpProperties.class})
 public class OidcConfig {

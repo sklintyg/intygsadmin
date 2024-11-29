@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.intygsadmin.web.auth.filter;
-
+/*
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,7 +32,8 @@ import org.springframework.security.oauth2.client.resource.UserRedirectRequiredE
  * It adds functionality of specifying individual claims in the authentications request
  * according to the specification https://openid.net/specs/openid-connect-core-1_0.html
  */
-/*public class IndividualClaimsOuth2ContextFilter extends OAuth2ClientContextFilter {
+/*
+public class IndividualClaimsOuth2ContextFilter extends OAuth2ClientContextFilter {
 
     private List<String> specificClaims;
 

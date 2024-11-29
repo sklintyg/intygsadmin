@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.intygsadmin.web.auth.filter;
-
+/*
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
@@ -42,7 +42,7 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
-/*public class IneraOidcFilter extends BaseAuthenticationFilter {
+public class IneraOidcFilter extends BaseAuthenticationFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(IneraOidcFilter.class);
 
