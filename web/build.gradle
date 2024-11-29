@@ -1,10 +1,11 @@
-apply plugin:  "org.springframework.boot"
+apply plugin: "org.springframework.boot"
+apply plugin: "com.netflix.nebula.node"
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
-def buildClient = project.hasProperty("client")
-def devPort = 8070
-def devPortInternal = 8170
-def debugPort = 8870
+def instance = System.properties['instance'] ?: '0'
+def devPort = 8070 + (instance as Integer)
+def devPortInternal = 8170 + (instance as Integer)
+def debugPort = 8870 + (instance as Integer)
 
 node {
     version = "${nodeVersion}"
@@ -16,167 +17,158 @@ node {
     nodeModulesDir = file("${project.projectDir}/client")
 }
 
-springBoot {
-    buildInfo()
+springBoot { buildInfo() }
+
+tasks.named("jar") {
+    enabled = false
+    archiveClassifier.set("")
+    dependsOn buildReactApp
 }
 
-tasks {
-    tasks.named("jar") {
-        enabled = false
-        archiveClassifier.set("")
-    }
+tasks.named('startScripts') {
+    dependsOn bootJar
+}
 
-    tasks.register('buildReactApp', NpmTask) {
-        dependsOn npmInstall
-        environment = ["CI": true]
-        args = ["run", "build"]
-    }
+tasks.register('buildReactApp', NpmTask) {
+    dependsOn npmInstall
+    environment = ["CI": true]
+    args = ["run", "build"]
+}
 
-    tasks.register('testReactApp', NpmTask) {
-        dependsOn npmInstall
-        environment = ["CI": true]
-        args = ["run", "test", "--", "--coverage"]
-    }
+tasks.register('startReactApp', NpmTask) {
+    dependsOn npmInstall
+    environment = ["CI": true]
+    args = ["run", "start"]
+}
 
-    tasks.register('copyReactbuild', Copy) {
-        dependsOn buildReactApp
-        from "client/build/"
-        into "${project.layout.buildDirectory.get().asFile}/resources/main/static"
-    }
+tasks.register('testReactApp', NpmTask) {
+    dependsOn npmInstall
+    environment = ["CI": true]
+    args = ["run", "test", "--", "--coverage"]
+}
 
-    tasks.register('restAssuredTest', Test) {
-        outputs.upToDateWhen { false }
-        systemProperty "integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8070")
-        systemProperty "integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8170")
-        include "**/*IT*"
-    }
+tasks.register('copyReactbuild', Copy) {
+    dependsOn buildReactApp
+    from "client/build"
+    into "${project.layout.buildDirectory.get().asFile}/resources/main/static"
+}
 
-    def runtimeOnlyExtended = configurations.create("runtimeOnlyExtended").extendsFrom(configurations.runtimeOnly)
+tasks.register('restAssuredTest', Test) {
+    outputs.upToDateWhen { false }
+    systemProperty "integration.tests.baseUrl", System.getProperty("baseUrl", "http://localhost:8070")
+    systemProperty "integration.tests.actuatorUrl", System.getProperty("actuatorUrl", "http://localhost:8170")
+    include "**/*IT*"
+}
 
-    tasks.register('pathingJar', Jar) {
-        dependsOn runtimeOnlyExtended
-        archiveAppendix.set("pathing")
-
-        doFirst {
-            manifest {
-                def mainClass = mainClassName
-                def classpath = configurations.runtimeClasspath.files
-                        .collect { it.toURI().toURL().toString().replaceFirst("file:/", "/") }
-                        .join(" ")
-                attributes(
-                        "Class-Path": classpath,
-                        "Main-Class": mainClass
-                )
-            }
-        }
-    }
-
-    clean {
-        delete "client/build"
-    }
-
-    bootJar {
-        manifest {
-            attributes(
-                    "Main-Class": "org.springframework.boot.loader.PropertiesLauncher",
-                    "Start-Class": "se.inera.intyg.intygsadmin.web.IntygsadminApplication"
-            )
-        }
-    }
-
-    bootRun {
-        enabled = true
-        systemProperty "dev.http.port", devPort
-        systemProperty "dev.http.port.internal", devPortInternal
-        systemProperty "spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub, ts-stub"
-        systemProperty "spring.config.additional-location", "file:${applicationDir}/config/"
-    }
-
-    test {
-        exclude("**/*IT*")
-        dependsOn testReactApp
-    }
-
-    if (System.getProperty("os.arch").contains("Windows")) {
-        bootRun {
-            dependsOn pathingJar
-
-            doFirst {
-                classpath = files(
-                        "${project.projectDir}/build/classes/java/main",
-                        "${project.projectDir}/src/main/resources",
-                        "${project.projectDir}/build/resources/main",
-                        pathingJar.archiveFile
-                )
-            }
-        }
-    }
-
-    if (buildClient) {
-        bootJar {
-            dependsOn buildReactApp
-            from("client/build/") {
-                into "static"
-            }
-        }
-    }
-
-    def appRunDebug = tasks.register('appRunDebug') {
-        doLast { println 'Running in Debug mode' }
-        bootRun {
+tasks.register('appRunDebug') {
+    println 'Running in Debug mode'
+    doFirst {
+        bootRun.configure {
             jvmArgs = [
                     "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort"
             ]
         }
     }
+    finalizedBy("bootRun")
+}
 
-    def appRun = tasks.register('appRun') {
-        doLast { println 'Running in normal mode' }
-        bootRun {}
+tasks.register('appRun') {
+    println 'Running in normal mode'
+    finalizedBy("bootRun")
+}
+
+clean {
+    delete "client/build"
+}
+
+bootJar {
+    dependsOn copyReactbuild
+    manifest {
+        attributes(
+                "Main-Class": "org.springframework.boot.loader.PropertiesLauncher",
+                "Start-Class": "se.inera.intyg.intygsadmin.web.IntygsadminApplication"
+        )
     }
+}
 
-    appRunDebug.configure { finalizedBy bootRun }
-    appRun.configure { finalizedBy bootRun }
-    compileJava.options.encoding = 'UTF-8'
+bootRun {
+    systemProperty "dev.http.port", devPort
+    systemProperty "dev.http.port.internal", devPortInternal
+    systemProperty "spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub, ts-stub"
+    systemProperty "spring.config.additional-location", "file:${applicationDir}/config/"
+}
 
-    dependencies {
-        implementation project(":intygsadmin-persistence")
+test {
+    exclude("**/*IT*")
+}
 
-        implementation "se.inera.intyg.infra:driftbanner-dto:${infraVersion}"
-        implementation "se.inera.intyg.infra:integreradeenheter:${infraVersion}"
-        implementation "se.inera.intyg.infra:intyginfo:${infraVersion}"
-        implementation "se.inera.intyg.infra:security-common:${infraVersion}"
-        implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
+def runtimeOnlyExtended = configurations.create("runtimeOnlyExtended").extendsFrom(configurations.runtimeOnly)
+tasks.register('pathingJar', Jar) {
+    dependsOn runtimeOnlyExtended
+    archiveAppendix.set("pathing")
 
-        implementation "org.springframework.boot:spring-boot-starter-web"
-        implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-        implementation "org.springframework.boot:spring-boot-starter-actuator"
-        implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
-
-        implementation "com.querydsl:querydsl-core"
-        implementation "jakarta.servlet:jakarta.servlet-api"
-        implementation "jakarta.annotation:jakarta.annotation-api"
-        implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
-        implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-        implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
-        implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-        implementation "org.springdoc:springdoc-openapi-data-rest:${springDocVersion}"
-        implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
-        implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth2Version}"
-        implementation "org.springframework.session:spring-session-data-redis"
-        implementation "redis.clients:jedis"
-
-        compileOnly("org.projectlombok:lombok")
-        annotationProcessor "jakarta.servlet:jakarta.servlet-api"
-
-        annotationProcessor("org.projectlombok:lombok")
-        annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-        testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-
-        testImplementation("commons-io:commons-io:${commonsIOVersion}")
-        testImplementation("io.rest-assured:json-path")
-        testImplementation("io.rest-assured:json-schema-validator")
-        testImplementation("io.rest-assured:rest-assured")
-        testImplementation("io.rest-assured:xml-path")
+    doFirst {
+        manifest {
+            def mainClass = mainClassName
+            def classpath = configurations.runtimeClasspath.files.collect {
+                it.toURI().toURL().toString().replaceFirst("file:/", "/")
+            }.join(" ")
+            attributes("Class-Path": classpath, "Main-Class": mainClass)
+        }
     }
+}
+
+if (System.getProperty("os.name").contains("Windows")) {
+    bootRun {
+        dependsOn pathingJar
+        doFirst {
+            classpath = files(
+                    "${project.projectDir}/build/classes/java/main",
+                    "${project.projectDir}/src/main/resources",
+                    "${project.projectDir}/build/resources/main",
+                    pathingJar.archiveFile
+            )
+        }
+    }
+}
+
+dependencies {
+    implementation project(":intygsadmin-persistence")
+
+    implementation "se.inera.intyg.infra:driftbanner-dto:${infraVersion}"
+    implementation "se.inera.intyg.infra:integreradeenheter:${infraVersion}"
+    implementation "se.inera.intyg.infra:intyginfo:${infraVersion}"
+    implementation "se.inera.intyg.infra:security-common:${infraVersion}"
+    implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
+
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+
+    implementation "com.querydsl:querydsl-core"
+    implementation "jakarta.servlet:jakarta.servlet-api"
+    implementation "jakarta.annotation:jakarta.annotation-api"
+    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
+    implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
+    implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.springdoc:springdoc-openapi-data-rest:${springDocVersion}"
+    implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
+    //implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth2Version}"
+    implementation "org.springframework.session:spring-session-data-redis"
+    implementation "redis.clients:jedis"
+
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor "jakarta.servlet:jakarta.servlet-api"
+
+    annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+
+    testImplementation("commons-io:commons-io:${commonsIOVersion}")
+    testImplementation("io.rest-assured:json-path")
+    testImplementation("io.rest-assured:json-schema-validator")
+    testImplementation("io.rest-assured:rest-assured")
+    testImplementation("io.rest-assured:xml-path")
 }

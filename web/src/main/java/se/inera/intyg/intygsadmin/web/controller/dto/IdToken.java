@@ -16,19 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+@Data
+@NoArgsConstructor
+public class IdToken {
 
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
+  // CHECKSTYLE:OFF MemberName
+  private String employeeHsaId = null;
+  private String given_name = null;
+  private String family_name = null;
+  //CHECKSTYLE:ON MemberName
 
-    private final String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
 }

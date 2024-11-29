@@ -46,8 +46,8 @@ intyg:
 
 inera:
   idp:
-    client-id: intygsadmindev
-    client-secret: f2e71e76-4afa-455e-9b01-9dedead4590b
+    client-id: ia.localtest.me
+    client-secret: a27149c3-a3d1-47cb-bcc2-c31dd5d89c1c
     redirect-uri: https://ia.localtest.me/login/inera
     logout-redirect-uri: https://ia.localtest.me/#/loggedout/m
     issuer-uri: https://idp.ineratest.org:443/oidc

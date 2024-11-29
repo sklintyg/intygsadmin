@@ -32,12 +32,10 @@ ext {
 
 allprojects {
     apply plugin: "io.spring.dependency-management"
-    apply plugin: "com.netflix.nebula.node"
-    apply plugin: 'java-library'
-    apply plugin: 'idea'
-    apply plugin: 'jacoco'
-    apply plugin: 'war'
     apply plugin: "application"
+    apply plugin: 'java'
+    apply plugin: "idea"
+    apply plugin: 'jacoco'
 
     mainClassName = 'se.inera.intyg.intygsadmin.web.IntygsadminApplication'
     group = 'se.inera.intyg.intygsadmin'
@@ -76,6 +74,7 @@ allprojects {
         mavenCentral()
     }
 }
+
 
 jacocoTestReport {
     dependsOn test

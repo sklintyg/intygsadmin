@@ -16,19 +16,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
+package se.inera.intyg.intygsadmin.web.auth;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
 
-@Getter
-@RequiredArgsConstructor
-public class UserResponseDTO {
+@Component
+@Slf4j
+public class CustomAuthenticationEntrypoint implements AuthenticationEntryPoint {
 
-    private final String logoutUrl = LOGOUT_URL;
-    private final String employeeHsaId;
-    private final String intygsadminRole;
-    private final String name;
+
+  @Override
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+
+    //throw new IaServiceException(IaErrorCode.NOT_FOUND);
+  }
+
+
 }

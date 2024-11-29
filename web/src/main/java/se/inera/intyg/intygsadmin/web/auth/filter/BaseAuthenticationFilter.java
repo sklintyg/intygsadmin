@@ -26,6 +26,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -33,7 +34,7 @@ import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 
-public abstract class BaseAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+/*public abstract class BaseAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     protected UserPersistenceService userPersistenceService;
 
@@ -45,7 +46,7 @@ public abstract class BaseAuthenticationFilter extends AbstractAuthenticationPro
     }
 
     protected UsernamePasswordAuthenticationToken createAuthentication(String hsaId, AuthenticationMethod authenticationMethod,
-        OAuth2AccessToken accessToken) {
+        OAuth2AuthenticationToken accessToken) {
         // CHECKSTYLE:OFF Indentation
         UserEntity userEntity = userPersistenceService
             .findByEmployeeHsaId(hsaId).orElseThrow(
@@ -69,4 +70,4 @@ public abstract class BaseAuthenticationFilter extends AbstractAuthenticationPro
         }
 
     }
-}
+}*/

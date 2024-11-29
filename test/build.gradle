@@ -1,5 +1,7 @@
 import com.moowork.gradle.node.task.NodeTask
 
+apply plugin: "com.netflix.nebula.node"
+
 node {
   version = "${nodeVersion}"
   download = true

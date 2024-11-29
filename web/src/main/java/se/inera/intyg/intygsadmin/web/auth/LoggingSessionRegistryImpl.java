@@ -35,8 +35,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
 
     @Override
     public void registerNewSession(String sessionId, Object principal) {
-        if (principal instanceof IntygsadminUser) {
-            IntygsadminUser user = (IntygsadminUser) principal;
+        if (principal instanceof IntygsadminUser user) {
             monitoringService.logUserLogin(user.getEmployeeHsaId(), user.getAuthenticationMethod());
         }
         super.registerNewSession(sessionId, principal);

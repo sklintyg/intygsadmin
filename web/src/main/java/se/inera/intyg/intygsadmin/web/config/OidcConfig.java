@@ -27,14 +27,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 
-@Configuration
+/*@Configuration
 @EnableOAuth2Client
 @EnableConfigurationProperties(value = {IdpProperties.class})
 public class OidcConfig {
@@ -45,6 +47,8 @@ public class OidcConfig {
     public OidcConfig(IdpProperties idpProperties) {
         this.idpProperties = idpProperties;
     }
+
+
 
     @Bean
     public OAuth2ProtectedResourceDetails ineraOpenId(OIDCProviderMetadata ineraOIDCProviderMetadata) {
@@ -84,4 +88,4 @@ public class OidcConfig {
                 e);
         }
     }
-}
+}*/

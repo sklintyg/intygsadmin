@@ -54,11 +54,8 @@ public class IntygInfoController {
     public ResponseEntity<IntygInfoDTO> getIntygInfo(@PathVariable String intygId) {
 
         Optional<IntygInfoDTO> intygInfoDTO = intygInfoService.getIntygInfo(intygId);
-        if (!intygInfoDTO.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        return intygInfoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
-        return ResponseEntity.ok(intygInfoDTO.get());
     }
 
 }

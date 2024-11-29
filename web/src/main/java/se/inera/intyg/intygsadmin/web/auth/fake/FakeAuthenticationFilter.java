@@ -35,10 +35,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.StringUtils;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
-import se.inera.intyg.intygsadmin.web.auth.filter.BaseAuthenticationFilter;
+//import se.inera.intyg.intygsadmin.web.auth.filter.BaseAuthenticationFilter;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
+/*
 public class FakeAuthenticationFilter extends BaseAuthenticationFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(FakeAuthenticationFilter.class);
@@ -84,3 +85,4 @@ public class FakeAuthenticationFilter extends BaseAuthenticationFilter {
         }
     }
 }
+*/

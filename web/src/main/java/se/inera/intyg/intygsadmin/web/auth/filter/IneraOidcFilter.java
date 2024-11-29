@@ -34,6 +34,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
@@ -41,7 +42,7 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.exception.IaAuthenticationException;
 import se.inera.intyg.intygsadmin.web.exception.IaErrorCode;
 
-public class IneraOidcFilter extends BaseAuthenticationFilter {
+/*public class IneraOidcFilter extends BaseAuthenticationFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(IneraOidcFilter.class);
 
@@ -66,7 +67,7 @@ public class IneraOidcFilter extends BaseAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException {
 
-        OAuth2AccessToken accessToken;
+        OAuth2AuthenticationToken accessToken;
         try {
             accessToken = restTemplate.getAccessToken();
         } catch (final OAuth2Exception e) {
@@ -89,4 +90,4 @@ public class IneraOidcFilter extends BaseAuthenticationFilter {
             throw new IaAuthenticationException(IaErrorCode.LOGIN_FEL001, exception.getMessage(), UUID.randomUUID().toString());
         }
     }
-}
+}*/
