@@ -61,12 +61,12 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
         // Get existing session - if any
         HttpSession session = request.getSession(false);
 
-        // Is it a request that should'nt prolong the expiration?
+        // Is it a request that should not prolong the expiration?
         boolean isSessionStatusRequest = request.getRequestURI().contains(getSessionStatusUri);
         if (session != null) {
             Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
 
-            // Set an request attribute that other parties further down the request chaing can use.
+            // Set a request attribute that other parties further down the request chaing can use.
             Long msUntilExpire = updateTimeLeft(request, session);
 
             if (msUntilExpire <= 0) {

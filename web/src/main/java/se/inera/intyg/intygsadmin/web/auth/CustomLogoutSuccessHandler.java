@@ -22,75 +22,65 @@ package se.inera.intyg.intygsadmin.web.auth;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.SUCCESSFUL_LOGOUT_REDIRECT_URL;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
+import se.inera.intyg.intygsadmin.web.service.FakeLoginService;
 
 @Component
 public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccessHandler {
 
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
+    private final ClientRegistrationRepository clientRegistrationRepository;
+    private final FakeLoginService fakeLoginService;
 
-    public CustomLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
+    public CustomLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository, FakeLoginService fakeLoginService) {
         super(clientRegistrationRepository);
+        this.clientRegistrationRepository = clientRegistrationRepository;
+        this.fakeLoginService = fakeLoginService;
     }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-        throws IOException, ServletException {
+        throws IOException {
 
-        boolean isRedirected = false;
-        if (authentication != null) {
-            final Object principal = authentication.getPrincipal();
-            if (principal instanceof IntygsadminUser intygsadminUser) {
-
-                if (AuthenticationMethod.OIDC.equals(intygsadminUser.getAuthenticationMethod())) {
-                    final var tokens = intygsadminUser.getToken();
-                    if (tokens != null) {
-                        final String idToken = intygsadminUser.getToken().getTokenValue();
-
-                        if (StringUtils.hasText(idToken)) {
-                            /*
-                             * If we have an ID_TOKEN we use this to end the sso session at the IdP/OP.
-                             * This will work in the most cases and the user will end up back in the application,
-                             * but in rare cases, when the ID_TOKEN is no longer present in the IdP/OP, then the
-                             * end user will instead get a "logged out" page from the IdP.
-                             */
-
-                            UriComponentsBuilder uriBuilder = UriComponentsBuilder
-                                .fromUriString(clientRegistrationRepository.findByRegistrationId("siths").getProviderDetails()
-                                    .getConfigurationMetadata().get("end_session_endpoint").toString())
-                                //.fromUri(ineraOIDCProviderMetadata.getEndSessionEndpointURI())
-                                .queryParam("id_token_hint", idToken)
-                                .queryParam("post_logout_redirect_uri", "https://ia.localtest.me/#/loggedout/m");
-                                //.queryParam("post_logout_redirect_uri", idpProperties.getLogoutRedirectUri().toString());
-
-                            isRedirected = true;
-                            getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
-
-                        }
-                    }
-                } else {
-                    // FAKE login and the user will end up back at the welcome.html page
-
-                    isRedirected = true;
-                    getRedirectStrategy().sendRedirect(request, response, FAKE_LOGIN_URL);
-                }
-            }
-        }
-        if (!isRedirected) {
-            // Just send the user to the loggedOut url
+        if (authentication == null || !(authentication.getPrincipal() instanceof IntygsadminUser intygsadminUser)) {
             getRedirectStrategy().sendRedirect(request, response, SUCCESSFUL_LOGOUT_REDIRECT_URL);
+            return;
         }
+
+        if (!AuthenticationMethod.OIDC.equals(intygsadminUser.getAuthenticationMethod())) {
+            fakeLoginService.logout(request.getSession(false));
+            getRedirectStrategy().sendRedirect(request, response, FAKE_LOGIN_URL);
+            return;
+        }
+
+        logoutSithsUser(request, response, intygsadminUser);
+    }
+
+    private void logoutSithsUser(HttpServletRequest request, HttpServletResponse response, IntygsadminUser user) throws IOException {
+        final var oidcIdToken = user.getToken();
+
+        if (oidcIdToken == null || !StringUtils.hasText(oidcIdToken.getTokenValue())) {
+            getRedirectStrategy().sendRedirect(request, response, SUCCESSFUL_LOGOUT_REDIRECT_URL);
+            return;
+        }
+
+        final var idToken = user.getToken().getTokenValue();
+        final var clientRegistration = clientRegistrationRepository.findByRegistrationId("siths");
+        final var idpEndSessionEndpoint = clientRegistration.getProviderDetails().getConfigurationMetadata()
+            .get("end_session_endpoint").toString();
+
+        final var uriBuilder = UriComponentsBuilder.fromUriString(idpEndSessionEndpoint)
+            .queryParam("id_token_hint", idToken)
+            .queryParam("post_logout_redirect_uri", "https://ia.localtest.me/#/loggedout/m");
+
+        getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
+
     }
 }

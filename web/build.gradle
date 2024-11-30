@@ -3,6 +3,7 @@ apply plugin: "com.netflix.nebula.node"
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
 def instance = System.properties['instance'] ?: '0'
+def buildClient = project.hasProperty("client")
 def devPort = 8070 + (instance as Integer)
 def devPortInternal = 8170 + (instance as Integer)
 def debugPort = 8870 + (instance as Integer)
@@ -22,7 +23,6 @@ springBoot { buildInfo() }
 tasks.named("jar") {
     enabled = false
     archiveClassifier.set("")
-    dependsOn buildReactApp
 }
 
 tasks.named('startScripts') {
@@ -77,12 +77,22 @@ tasks.register('appRun') {
     finalizedBy("bootRun")
 }
 
+if (buildClient) {
+
+    tasks.named('jar') {
+        dependsOn buildReactApp
+    }
+
+    tasks.named('bootJar') {
+        dependsOn copyReactbuild
+    }
+}
+
 clean {
     delete "client/build"
 }
 
 bootJar {
-    dependsOn copyReactbuild
     manifest {
         attributes(
                 "Main-Class": "org.springframework.boot.loader.PropertiesLauncher",
@@ -155,7 +165,6 @@ dependencies {
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "org.springdoc:springdoc-openapi-data-rest:${springDocVersion}"
     implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
-    //implementation "org.springframework.security.oauth:spring-security-oauth2:${springSecurityOauth2Version}"
     implementation "org.springframework.session:spring-session-data-redis"
     implementation "redis.clients:jedis"
 

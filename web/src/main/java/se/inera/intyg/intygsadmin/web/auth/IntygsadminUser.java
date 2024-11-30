@@ -41,8 +41,8 @@ public class IntygsadminUser extends DefaultOidcUser implements Serializable {
     private final AuthenticationMethod authenticationMethod;
 
     public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OidcIdToken token,
-        Set<GrantedAuthority> authorities, OidcUserInfo claims, String nameAttributeKey) {
-        super(authorities, token, claims, nameAttributeKey);
+        Set<GrantedAuthority> authorities, String nameAttributeKey) {
+        super(authorities, token, nameAttributeKey);
         this.id = userEntity.getId();
         this.employeeHsaId = userEntity.getEmployeeHsaId();
         this.intygsadminRole = userEntity.getIntygsadminRole();

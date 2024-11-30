@@ -47,8 +47,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
         if (sessionInformation != null) {
             Object principal = sessionInformation.getPrincipal();
 
-            if (principal instanceof IntygsadminUser) {
-                IntygsadminUser user = (IntygsadminUser) principal;
+            if (principal instanceof IntygsadminUser user) {
                 if (sessionInformation.isExpired()) {
                     monitoringService.logUserSessionExpired(user.getEmployeeHsaId(), user.getAuthenticationMethod());
                 } else {

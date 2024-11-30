@@ -18,29 +18,31 @@
  */
 package se.inera.intyg.intygsadmin.web.auth;
 
+import static se.inera.intyg.intygsadmin.web.controller.RequestErrorController.IA_SPRING_SEC_ERROR_CONTROLLER_PATH;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
+@Component
 public class LoggingForwardAuthenticationFailureHandler extends ForwardAuthenticationFailureHandler {
 
-    @Autowired
-    MonitoringLogService monitoringLogService;
+    private final MonitoringLogService monitoringLogService;
 
-    public LoggingForwardAuthenticationFailureHandler(String forwardUrl) {
-        super(forwardUrl);
+    public LoggingForwardAuthenticationFailureHandler(MonitoringLogService monitoringLogService) {
+        super(IA_SPRING_SEC_ERROR_CONTROLLER_PATH);
+        this.monitoringLogService = monitoringLogService;
     }
 
-    public void onAuthenticationFailure(
-        HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+        throws IOException, ServletException {
         monitoringLogService.logFailedLogin(exception.getLocalizedMessage());
-
         super.onAuthenticationFailure(request, response, exception);
     }
 }

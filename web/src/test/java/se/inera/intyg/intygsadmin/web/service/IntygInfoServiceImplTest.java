@@ -30,6 +30,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfo;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
@@ -233,7 +235,8 @@ public class IntygInfoServiceImplTest {
         userEntity.setEmployeeHsaId("hsaId");
         userEntity.setName("User1");
 
-        IntygsadminUser user = new IntygsadminUser(userEntity, null, null);
+        IntygsadminUser user = new IntygsadminUser(userEntity, null, null,
+            Collections.emptySet(), "");
         when(userService.getActiveUser()).thenReturn(user);
     }
 

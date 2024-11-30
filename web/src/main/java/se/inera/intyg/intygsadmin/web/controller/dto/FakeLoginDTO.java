@@ -19,6 +19,24 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import lombok.Builder;
+import lombok.Value;
+import se.inera.intyg.intygsadmin.web.controller.dto.FakeLoginDTO.FakeLoginDTOBuilder;
+
+@JsonDeserialize(builder = FakeLoginDTOBuilder.class)
+@Value
+@Builder
 public class FakeLoginDTO {
+
+    String employeeHsaId;
+    String intygsadminRole;
+    String name;
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class FakeLoginDTOBuilder {
+
+    }
 
 }

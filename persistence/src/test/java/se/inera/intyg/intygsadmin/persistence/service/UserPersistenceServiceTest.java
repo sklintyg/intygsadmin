@@ -60,7 +60,7 @@ public class UserPersistenceServiceTest extends TestSupport {
         Pageable pageable = PageRequest.of(0, pageSize);
         Page<UserEntity> list = userPersistenceService.findAll(pageable);
         assertEquals(total, list.getTotalElements());
-        UserEntity userEntityFromList = list.getContent().get(0);
+        UserEntity userEntityFromList = list.getContent().getFirst();
 
         Optional<UserEntity> byEmployeeHsaId = userPersistenceService.findByEmployeeHsaId(userEntityFromList.getEmployeeHsaId());
         assertTrue(byEmployeeHsaId.isPresent());

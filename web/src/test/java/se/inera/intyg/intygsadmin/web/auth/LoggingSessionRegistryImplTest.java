@@ -23,12 +23,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
@@ -39,9 +41,9 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @ContextConfiguration
 class LoggingSessionRegistryImplTest {
 
-    private static final IntygsadminUser IAU = new IntygsadminUser(new UserEntity(UUID.randomUUID(), LocalDateTime.now(),
-        "HSA1", "karl Nilsson", IntygsadminRole.FULL),
-        AuthenticationMethod.FAKE, null);
+    private static final IntygsadminUser USER = new IntygsadminUser(new UserEntity(UUID.randomUUID(), LocalDateTime.now(),
+        "HSA1", "karl Nilsson", IntygsadminRole.FULL), AuthenticationMethod.FAKE, null,
+        Collections.emptySet(), "");
 
     @Mock
     private MonitoringLogService monitoringLogService;
@@ -51,14 +53,14 @@ class LoggingSessionRegistryImplTest {
 
     @Test
     void registerNewSession() {
-        loggingSessionRegistry.registerNewSession("ID1", IAU);
+        loggingSessionRegistry.registerNewSession("ID1", USER);
         verify(monitoringLogService, times(1)).logUserLogin(any(String.class), any(AuthenticationMethod.class));
     }
 
     @Test
     void removeSessionInformation_logout() {
 
-        loggingSessionRegistry.registerNewSession("ID1", IAU);
+        loggingSessionRegistry.registerNewSession("ID1", USER);
         verify(monitoringLogService, times(1)).logUserLogin(any(String.class), any(AuthenticationMethod.class));
 
         loggingSessionRegistry.removeSessionInformation("ID1");
@@ -68,7 +70,7 @@ class LoggingSessionRegistryImplTest {
     @Test
     void removeSessionInformation_expired() {
 
-        loggingSessionRegistry.registerNewSession("ID1", IAU);
+        loggingSessionRegistry.registerNewSession("ID1", USER);
         verify(monitoringLogService, times(1)).logUserLogin(any(String.class), any(AuthenticationMethod.class));
 
         loggingSessionRegistry.getSessionInformation("ID1").expireNow();

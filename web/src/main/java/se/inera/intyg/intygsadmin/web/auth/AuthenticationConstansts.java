@@ -21,6 +21,7 @@ package se.inera.intyg.intygsadmin.web.auth;
 public final class AuthenticationConstansts {
 
     public static final String LOGIN_URL = "/oauth2/authorization/siths";
+    public static final String LOGIN_REDIRECT_URL = "/login/inera";
     public static final String LOGOUT_URL = "/logout";
     public static final String FAKE_PROFILE = "fake";
     public static final String FAKE_LOGIN_ENDPOINT = "/fake";

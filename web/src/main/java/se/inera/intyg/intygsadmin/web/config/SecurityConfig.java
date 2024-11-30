@@ -18,13 +18,13 @@
  */
 package se.inera.intyg.intygsadmin.web.config;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_URL;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGIN_REDIRECT_URL;
+import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
 import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
-import static se.inera.intyg.intygsadmin.web.controller.RequestErrorController.IA_SPRING_SEC_ERROR_CONTROLLER_PATH;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
 
 import java.util.Arrays;
@@ -39,24 +39,17 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.oauth2.client.oidc.authentication.OidcIdTokenDecoderFactory;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ClientRegistrations;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoderFactory;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -65,6 +58,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.CsrfCookieFilter;
@@ -75,8 +69,6 @@ import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.auth.LoggingForwardAuthenticationFailureHandler;
 import se.inera.intyg.intygsadmin.web.auth.LoggingSessionRegistryImpl;
-//import se.inera.intyg.intygsadmin.web.auth.fake.FakeAuthenticationFilter;
-//import se.inera.intyg.intygsadmin.web.auth.filter.IndividualClaimsOuth2ContextFilter;
 import se.inera.intyg.intygsadmin.web.auth.SpaCsrfTokenRequestHandler;
 import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
@@ -84,22 +76,13 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImp
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(value = {IdpProperties.class})
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    //private final OIDCProviderMetadata ineraOIDCProviderMetadata;
-    //private final OAuth2RestTemplate restTemplate;
     private final UserPersistenceService userPersistenceService;
     private final IdpProperties idpProperties;
-
     private final List<String> profiles;
 
-    public SecurityConfig(/*OIDCProviderMetadata ineraOIDCProviderMetadata,
-      OAuth2RestTemplate restTemplate,*/
-        UserPersistenceService userPersistenceService, IdpProperties idpProperties,
-        Environment environment) {
-        //this.ineraOIDCProviderMetadata = ineraOIDCProviderMetadata;
-        //this.restTemplate = restTemplate;
+    public SecurityConfig(UserPersistenceService userPersistenceService, IdpProperties idpProperties, Environment environment) {
         this.userPersistenceService = userPersistenceService;
         this.idpProperties = idpProperties;
         this.profiles = Arrays.asList(environment.getActiveProfiles());
@@ -129,41 +112,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationFailureHandler failureHandler() {
-        return new LoggingForwardAuthenticationFailureHandler(IA_SPRING_SEC_ERROR_CONTROLLER_PATH);
-    }
-
-  /*@Bean
-  public IndividualClaimsOuth2ContextFilter outh2ContextFilter() {
-    return new IndividualClaimsOuth2ContextFilter(idpProperties.getRequestedClaims());
-  }*/
-
-//  @Bean
-//  public IneraOidcFilter ineraOidcFilter() {
-//    IneraOidcFilter ineraOidcFilter = new IneraOidcFilter(idpProperties.getRedirectUri().getPath(),
-//        ineraOIDCProviderMetadata,
-//        idpProperties.getClientId(),
-//        restTemplate, userPersistenceService);
-//    ineraOidcFilter.setAuthenticationSuccessHandler(successRedirectHandler());
-//    ineraOidcFilter.setAuthenticationFailureHandler(failureHandler());
-//    ineraOidcFilter.setSessionAuthenticationStrategy(registerSessionAuthenticationStrategy());
-//    return ineraOidcFilter;
-//  }
-
-
-    //@Bean
-  /*@Profile({FAKE_PROFILE})
-  public FakeAuthenticationFilter fakeAuthenticationFilter() {
-    FakeAuthenticationFilter fakeAuthenticationFilter = new FakeAuthenticationFilter(
-        userPersistenceService);
-    fakeAuthenticationFilter.setSessionAuthenticationStrategy(
-        registerSessionAuthenticationStrategy());
-    fakeAuthenticationFilter.setAuthenticationSuccessHandler(successRedirectHandler());
-    fakeAuthenticationFilter.setAuthenticationFailureHandler(failureHandler());
-    return fakeAuthenticationFilter;
-  }*/
-
-    @Bean
     public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter() {
         final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter(
             loggingSessionRegistry());
@@ -181,26 +129,33 @@ public class SecurityConfig {
         // All static client resources could be completely ignored by Spring Security.
         // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
         // will stop IE from loading fonts properly.
-        return web -> web.ignoring().requestMatchers("/static/**", "/oidc/logout");
+        return web -> web.ignoring().requestMatchers("/static/**");
     }
 
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        final var registration = ClientRegistrations.fromOidcIssuerLocation(idpProperties.getIssuerUri())
+                .registrationId(idpProperties.getClientRegistrationId())
+                .clientId(idpProperties.getClientId())
+                .clientSecret(idpProperties.getClientSecret())
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri(idpProperties.getRedirectUri().toString())
+                .userNameAttributeName(idpProperties.getUserNameAttributeName())
+                .scope(idpProperties.getScope())
+                .build();
+        return new InMemoryClientRegistrationRepository(registration);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
         ClientRegistrationRepository clientRegistrationRepository,
         CustomLogoutSuccessHandler customLogoutSuccessHandler,
         CustomAuthenticationEntrypoint customAuthenticationEntrypoint,
-        AuthenticationFailureHandler failureHandler) throws Exception {
+        LoggingForwardAuthenticationFailureHandler authenticationFailureHandler) throws Exception {
 
-        if (profiles.contains(FAKE_PROFILE)) {
-            addFakeLogin(http);
-        } else {
-            denyFakeLogin(http);
-        }
-
+        configureFakeLogin(http, profiles);
         configureOpenApi(http);
-        configureOidc(http, clientRegistrationRepository, customLogoutSuccessHandler,
-            customAuthenticationEntrypoint, failureHandler);
 
         http
             .authorizeHttpRequests(auth -> auth
@@ -219,69 +174,21 @@ public class SecurityConfig {
                 .requestMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll()
                 .anyRequest().fullyAuthenticated()
             )
-            .csrf(csrfConfigurer -> csrfConfigurer
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-            )
-            .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-            .requestCache(cacheConfigurer -> cacheConfigurer
-                .requestCache(new HttpSessionRequestCache()
-                )
-            );
-
-        return http.build();
-    }
-
-    private void configureOpenApi(HttpSecurity http) throws Exception {
-        if (profiles.contains("dev")) {
-            http
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/swagger-ui.html").permitAll()
-                    .requestMatchers("/swagger-ui/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**").permitAll()
-                );
-        }
-    }
-
-
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        final var registration =
-            ClientRegistrations.fromOidcIssuerLocation("https://idp.ineratest.org:443/oidc")
-                .registrationId("siths")
-                .clientId(idpProperties.getClientId())
-                .clientSecret(idpProperties.getClientSecret())
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri(idpProperties.getRedirectUri().toString())
-                .userNameAttributeName("employeeHsaId")
-                .scope("openid")
-                .build();
-        return new InMemoryClientRegistrationRepository(registration);
-    }
-
-
-    private void configureOidc(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository,
-        CustomLogoutSuccessHandler customLogoutSuccessHandler, CustomAuthenticationEntrypoint customAuthenticationEntrypoint,
-        AuthenticationFailureHandler failureHandler)
-        throws Exception {
-
-        http
             .oauth2Client(httpSecurityOAuth2ClientConfigurer -> httpSecurityOAuth2ClientConfigurer
                 .authorizationCodeGrant(authorizationCodeGrantConfigurer -> authorizationCodeGrantConfigurer
                     .authorizationRequestResolver(new CustomAuthorizationResolver(clientRegistrationRepository))
                 )
             )
             .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
-                    .failureHandler(failureHandler)
+                .failureHandler(authenticationFailureHandler)
                 .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
-                    .baseUri("/login/inera")
+                    .baseUri(LOGIN_REDIRECT_URL)
                 )
                 .userInfoEndpoint(userInfo -> userInfo
                     .oidcUserService(this.oidcUserService()))
             )
             .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
                 .logoutSuccessHandler(customLogoutSuccessHandler)
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
@@ -298,46 +205,45 @@ public class SecurityConfig {
                     .defaultAuthenticationEntryPointFor(
                         customAuthenticationEntrypoint, AnyRequestMatcher.INSTANCE
                     )
+            )
+            .csrf(csrfConfigurer -> csrfConfigurer
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+            )
+            .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+            .requestCache(cacheConfigurer -> cacheConfigurer
+                .requestCache(new HttpSessionRequestCache())
             );
 
-
-
-        //.addFilterAfter(outh2ContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
-        //.addFilterAfter(ineraOidcFilter(), IndividualClaimsOuth2ContextFilter.class)
-        //.logout()
-        //.invalidateHttpSession(true)
-        //.logoutUrl(AuthenticationConstansts.LOGOUT_URL)
-        //.logoutSuccessHandler(logoutSuccessHandler())
-        //.clearAuthentication(true)
-
-        // @formatter:on
-
+        return http.build();
     }
 
-
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
-
         return userRequest -> {
             final var oidcIdidToken = userRequest.getIdToken();
             final var claims = oidcIdidToken.getClaims();
-            final var userHsaId = String.valueOf(claims.get("employeeHsaId"));
-            final var userEntity = userPersistenceService.findByEmployeeHsaId(userHsaId)
-                .orElseThrow(() -> new BadCredentialsException("Authentication failed. No IntygsadminUser for employeeHsaId " + userHsaId));
-
-            final var grantedAuthorities = Set.of((GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name()));
+            final var userHsaId = String.valueOf(claims.get(idpProperties.getUserNameAttributeName()));
+            final var userEntity = getUserEntity(userHsaId);
+            final var grantedAuthority = new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name());
             final var providerDetails = userRequest.getClientRegistration().getProviderDetails();
             final var userNameAttributeName = providerDetails.getUserInfoEndpoint().getUserNameAttributeName();
-            final var oidcUserInfo = new OidcUserInfo(claims);
-            return new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, oidcIdidToken, grantedAuthorities, oidcUserInfo,
+
+            return new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, oidcIdidToken, Set.of(grantedAuthority),
                 userNameAttributeName);
         };
     }
 
-    @Bean
-    public JwtDecoderFactory<ClientRegistration> idTokenDecoderFactory() {
-        OidcIdTokenDecoderFactory idTokenDecoderFactory = new OidcIdTokenDecoderFactory();
-        idTokenDecoderFactory.setJwsAlgorithmResolver(clientRegistration -> SignatureAlgorithm.RS256);
-        return idTokenDecoderFactory;
+    private UserEntity getUserEntity(String userHsaId) {
+        return userPersistenceService.findByEmployeeHsaId(userHsaId)
+            .orElseThrow(() -> new BadCredentialsException("Authentication failed. No IntygsadminUser for employeeHsaId " + userHsaId));
+    }
+
+    private void configureFakeLogin(HttpSecurity http,List<String> profiles) throws Exception {
+        if (profiles.contains(FAKE_PROFILE)) {
+            allowFakeLogin(http);
+        } else {
+            denyFakeLogin(http);
+        }
     }
 
     private void denyFakeLogin(HttpSecurity http) throws Exception {
@@ -350,16 +256,27 @@ public class SecurityConfig {
             );
     }
 
-    private void addFakeLogin(HttpSecurity http) throws Exception {
+    private void allowFakeLogin(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(FAKE_LOGIN_URL).permitAll()
                 .requestMatchers("/welcome-assets/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll()
+            )
+            .csrf(csrfConfigurer -> csrfConfigurer
+                .ignoringRequestMatchers("/fake-api/login")
             );
-//        .headers(headersConfigurer -> headersConfigurer
-//            .frameOptions(FrameOptionsConfig::sameOrigin))
-//        .addFilterAt(fakeAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+    }
+
+    private void configureOpenApi(HttpSecurity http) throws Exception {
+        if (profiles.contains("dev")) {
+            http
+                .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/swagger-ui.html").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                );
+        }
     }
 }
