@@ -24,12 +24,14 @@ import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -41,9 +43,11 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @ContextConfiguration
 class LoggingSessionRegistryImplTest {
 
+    private static final OidcIdToken OIDC_ID_TOKEN = new OidcIdToken("tokenValue", null, null, Map.of("employeeHsaId", "HSA1"));
+
     private static final IntygsadminUser USER = new IntygsadminUser(new UserEntity(UUID.randomUUID(), LocalDateTime.now(),
-        "HSA1", "karl Nilsson", IntygsadminRole.FULL), AuthenticationMethod.FAKE, null,
-        Collections.emptySet(), "");
+        "HSA1", "Karl Nilsson", IntygsadminRole.FULL), AuthenticationMethod.FAKE, OIDC_ID_TOKEN,
+        Collections.emptySet(), "employeeHsaId");
 
     @Mock
     private MonitoringLogService monitoringLogService;

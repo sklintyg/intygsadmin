@@ -43,6 +43,7 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;
+import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
 @Service
 @RequiredArgsConstructor
@@ -51,13 +52,16 @@ public class FakeLoginService {
 
     private UserPersistenceService userPersistenceService;
     private IdpProperties idpProperties;
+    private MonitoringLogService monitoringLogService;
 
     private static final String FAKE_OIDC_ID_TOKEN = "fakeOidcIdToken";
 
     @Autowired
-    public FakeLoginService(UserPersistenceService userPersistenceService, IdpProperties idpProperties) {
+    public FakeLoginService(UserPersistenceService userPersistenceService, IdpProperties idpProperties,
+        MonitoringLogService monitoringLogService) {
         this.userPersistenceService = userPersistenceService;
         this.idpProperties = idpProperties;
+        this.monitoringLogService = monitoringLogService;
     }
 
     public void login(FakeUser fakeUser, HttpServletRequest request) {
@@ -78,6 +82,7 @@ public class FakeLoginService {
 
         final var newSession = request.getSession(true);
         newSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+        monitoringLogService.logUserLogin(user.getEmployeeHsaId(), user.getAuthenticationMethod());
     }
 
     public void logout(HttpSession session) {

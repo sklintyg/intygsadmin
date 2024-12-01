@@ -23,8 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -48,13 +47,13 @@ import se.inera.intyg.intygsadmin.web.exception.IaServiceException;
  * Custom ErrorController that overrides Spring boots default "whitepage" error handling.
  */
 @RestController
+@Slf4j
 public class RequestErrorController implements ErrorController {
 
     public static final String IA_ERROR_CONTROLLER_PATH = "/error";
     public static final String IA_SPRING_SEC_ERROR_CONTROLLER_PATH = IA_ERROR_CONTROLLER_PATH + "/spring-sec-error";
     private static final String IA_CLIENT_ROOTPATH = "/#/";
     public static final String IA_CLIENT_EXIT_BOOT_PATH = IA_CLIENT_ROOTPATH + "exit/";
-    private static final Logger LOG = LoggerFactory.getLogger(RequestErrorController.class);
     private final ErrorAttributes errorAttributes = new DefaultErrorAttributes();
 
     /**
@@ -76,7 +75,7 @@ public class RequestErrorController implements ErrorController {
         }
         String redirectView = "redirect:" + IA_CLIENT_EXIT_BOOT_PATH + apiErrorResponse.getErrorCode() + "/" + apiErrorResponse.getLogId();
 
-        LOG.error(String.format("(Page) Spring Security error intercepted: %s, %s - responding with: %s",
+        log.error(String.format("(Page) Spring Security error intercepted: %s, %s - responding with: %s",
             errorContext, apiErrorResponse, redirectView), error);
         return new ModelAndView(redirectView);
     }
@@ -103,7 +102,7 @@ public class RequestErrorController implements ErrorController {
         }
         String redirectView = "redirect:" + IA_CLIENT_EXIT_BOOT_PATH + apiErrorResponse.getErrorCode() + "/" + apiErrorResponse.getLogId();
 
-        LOG.error(String.format("(Page) Request error intercepted: %s - responding with: %s", errorContext, redirectView));
+        log.error(String.format("(Page) Request error intercepted: %s - responding with: %s", errorContext, redirectView));
         return new ModelAndView(redirectView);
     }
 
@@ -125,7 +124,7 @@ public class RequestErrorController implements ErrorController {
         } else {
             apiErrorResponse = fromHttpStatus(httpStatus);
         }
-        LOG.error(String.format(
+        log.error(String.format(
             "(REST) Request error intercepted: %s - responding with: %s", errorContext, apiErrorResponse), error);
         return new ResponseEntity<>(apiErrorResponse, httpStatus);
     }

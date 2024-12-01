@@ -17,7 +17,6 @@ ext {
     picocliVersion = "4.7.6"
     shedlockSpringVersion = "5.16.0"
     springDocVersion = "1.8.0"
-    springSecurityOauth2Version = "2.5.2.RELEASE"
     randomBeansVersion = "3.9.0"
 
     nodeVersion = "12.22.12"

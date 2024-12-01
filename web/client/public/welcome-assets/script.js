@@ -86,8 +86,6 @@ function fakeLogin() {
     const response = request.target
     if (response.readyState === XMLHttpRequest.DONE && response.status === 200) {
       window.open('/', '_self')
-    } else {
-      window.open('/loggedout/LOGIN_FEL001', '_self')
     }
   };
   xhr.send(jsonUser);
