@@ -7,7 +7,7 @@
     "connected-react-router": "^6.4.0",
     "core-js": "^3.2.1",
     "flat": "^4.1.0",
-    "lodash": "^4.11.2",
+    "lodash": "^4.17.21",
     "node-sass": "^4.11.0",
     "react": "^16.10.2",
     "react-datepicker": "^2.9.6",
