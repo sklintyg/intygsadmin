@@ -19,6 +19,9 @@
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
 import java.util.List;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -32,14 +35,14 @@ import se.inera.intyg.intygsadmin.web.service.BannerService;
 @WebEndpoint(id = "banner")
 public class BannerEndpoint {
 
-    private BannerService bannerService;
+    private final BannerService bannerService;
 
     public BannerEndpoint(BannerService bannerService) {
         this.bannerService = bannerService;
     }
 
-    @GetMapping("/{application}")
-    public ResponseEntity<List<Banner>> getActiveAndFutureBanners(@PathVariable Application application) {
+    @ReadOperation
+    public ResponseEntity<List<Banner>> getActiveAndFutureBanners(@Selector Application application) {
         List<Banner> banners = bannerService.getActiveAndFutureBanners(application);
 
         return ResponseEntity.ok(banners);
