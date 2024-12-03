@@ -19,6 +19,8 @@ management:
         include: 'health, banner, info, user'
 
 spring:
+  jpa:
+    open-in-view: true
   liquibase:
     change-log: classpath:/changelog/db-changelog-master.xml
   profiles:
