@@ -92,14 +92,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        // All static client resources could be completely ignored by Spring Security.
-        // This is also needed for a IE11 font loading bug where Springs Security default no-cache headers
-        // will stop IE from loading fonts properly.
-        return web -> web.ignoring().requestMatchers("/static/**");
-    }
-
-    @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         final var registration = ClientRegistrations.fromOidcIssuerLocation(idpProperties.getIssuerUri())
             .registrationId(idpProperties.getClientRegistrationId())
@@ -134,6 +126,7 @@ public class SecurityConfig {
                 .requestMatchers("/assets/**").permitAll()
                 .requestMatchers("/components/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/static/**").permitAll()
                 .requestMatchers(API_ANVANDARE).permitAll()
                 .requestMatchers(IA_SPRING_SEC_ERROR_CONTROLLER_PATH).permitAll()
                 .requestMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll()
