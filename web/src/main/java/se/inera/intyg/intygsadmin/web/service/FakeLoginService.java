@@ -28,10 +28,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
+import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -43,26 +45,17 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;
-import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
 @Service
 @RequiredArgsConstructor
 @EnableConfigurationProperties(value = {IdpProperties.class})
 public class FakeLoginService {
 
-    private UserPersistenceService userPersistenceService;
-    private IdpProperties idpProperties;
-    private MonitoringLogService monitoringLogService;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final UserPersistenceService userPersistenceService;
+    private final IdpProperties idpProperties;
 
     private static final String FAKE_OIDC_ID_TOKEN = "fakeOidcIdToken";
-
-    @Autowired
-    public FakeLoginService(UserPersistenceService userPersistenceService, IdpProperties idpProperties,
-        MonitoringLogService monitoringLogService) {
-        this.userPersistenceService = userPersistenceService;
-        this.idpProperties = idpProperties;
-        this.monitoringLogService = monitoringLogService;
-    }
 
     public void login(FakeUser fakeUser, HttpServletRequest request) {
         final var oldSession = request.getSession(false);
@@ -77,12 +70,13 @@ public class FakeLoginService {
             idpProperties.getUserNameAttributeName());
 
         final var context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, oidcToken, Collections.emptySet()));
+        final var authentication = new UsernamePasswordAuthenticationToken(user, oidcToken, Collections.emptySet());
+        context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
         final var newSession = request.getSession(true);
         newSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
-        monitoringLogService.logUserLogin(user.getEmployeeHsaId(), user.getAuthenticationMethod());
+        applicationEventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authentication, this.getClass()));
     }
 
     public void logout(HttpSession session) {
@@ -91,8 +85,10 @@ public class FakeLoginService {
         }
         session.invalidate();
 
+        final var authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityContextHolder.getContext().setAuthentication(null);
         SecurityContextHolder.clearContext();
+        applicationEventPublisher.publishEvent(new LogoutSuccessEvent(authentication));
     }
 
     private UserEntity getUserEntity(FakeUser fakeUser) {

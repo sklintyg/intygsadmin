@@ -24,7 +24,7 @@ import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGIN
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.LOGOUT_URL;
 import static se.inera.intyg.intygsadmin.web.auth.fake.FakeApiController.FAKE_API_REQUEST_MAPPING;
 import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.PUBLIC_API_REQUEST_MAPPING;
-import static se.inera.intyg.intygsadmin.web.controller.PublicApiController.SESSION_STAT_REQUEST_MAPPING;
+import static se.inera.intyg.intygsadmin.web.controller.RequestErrorController.IA_SPRING_SEC_ERROR_CONTROLLER_PATH;
 import static se.inera.intyg.intygsadmin.web.controller.UserController.API_ANVANDARE;
 
 import java.util.Arrays;
@@ -39,8 +39,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.ClientRegistrations;
@@ -50,28 +50,20 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
-import se.inera.intyg.intygsadmin.web.auth.CsrfCookieFilter;
-import se.inera.intyg.intygsadmin.web.auth.CustomAuthenticationEntrypoint;
 import se.inera.intyg.intygsadmin.web.auth.CustomAuthorizationResolver;
 import se.inera.intyg.intygsadmin.web.auth.CustomLogoutSuccessHandler;
 import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
-import se.inera.intyg.intygsadmin.web.auth.LoggingForwardAuthenticationFailureHandler;
-import se.inera.intyg.intygsadmin.web.auth.LoggingSessionRegistryImpl;
-import se.inera.intyg.intygsadmin.web.auth.SpaCsrfTokenRequestHandler;
 import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
-import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogServiceImpl;
+import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
 @Configuration
 @EnableWebSecurity
@@ -89,33 +81,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
-    }
-
-    @Bean
-    public SessionRegistry loggingSessionRegistry() {
-        return new LoggingSessionRegistryImpl(new MonitoringLogServiceImpl());
-    }
-
-    @Bean
-    public RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(loggingSessionRegistry());
-    }
-
-    @Bean
-    public SimpleUrlAuthenticationSuccessHandler successRedirectHandler() {
-        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
-        handler.setDefaultTargetUrl("/");
-        handler.setAlwaysUseDefaultTargetUrl(true);
-        return handler;
-    }
-
-    @Bean
-    public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter() {
-        final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter(
-            loggingSessionRegistry());
-        sessionTimeoutFilter.setGetSessionStatusUri(SESSION_STAT_REQUEST_MAPPING);
+    public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter(MonitoringLogService monitoringLogService) {
+        final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter(monitoringLogService);
 
         FilterRegistrationBean<SessionTimeoutFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(sessionTimeoutFilter);
@@ -135,24 +102,21 @@ public class SecurityConfig {
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
         final var registration = ClientRegistrations.fromOidcIssuerLocation(idpProperties.getIssuerUri())
-                .registrationId(idpProperties.getClientRegistrationId())
-                .clientId(idpProperties.getClientId())
-                .clientSecret(idpProperties.getClientSecret())
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri(idpProperties.getRedirectUri().toString())
-                .userNameAttributeName(idpProperties.getUserNameAttributeName())
-                .scope(idpProperties.getScope())
-                .build();
+            .registrationId(idpProperties.getClientRegistrationId())
+            .clientId(idpProperties.getClientId())
+            .clientSecret(idpProperties.getClientSecret())
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .redirectUri(idpProperties.getRedirectUri().toString())
+            .userNameAttributeName(idpProperties.getUserNameAttributeName())
+            .scope(idpProperties.getScope())
+            .build();
         return new InMemoryClientRegistrationRepository(registration);
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-        ClientRegistrationRepository clientRegistrationRepository,
-        CustomLogoutSuccessHandler customLogoutSuccessHandler,
-        CustomAuthenticationEntrypoint customAuthenticationEntrypoint,
-        LoggingForwardAuthenticationFailureHandler authenticationFailureHandler) throws Exception {
+        CustomLogoutSuccessHandler customLogoutSuccessHandler) throws Exception {
 
         configureFakeLogin(http, profiles);
         configureOpenApi(http);
@@ -171,16 +135,17 @@ public class SecurityConfig {
                 .requestMatchers("/components/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers(API_ANVANDARE).permitAll()
+                .requestMatchers(IA_SPRING_SEC_ERROR_CONTROLLER_PATH).permitAll()
                 .requestMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll()
                 .anyRequest().fullyAuthenticated()
             )
             .oauth2Client(httpSecurityOAuth2ClientConfigurer -> httpSecurityOAuth2ClientConfigurer
                 .authorizationCodeGrant(authorizationCodeGrantConfigurer -> authorizationCodeGrantConfigurer
-                    .authorizationRequestResolver(new CustomAuthorizationResolver(clientRegistrationRepository))
+                    .authorizationRequestResolver(new CustomAuthorizationResolver(clientRegistrationRepository()))
                 )
             )
             .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
-                .failureHandler(authenticationFailureHandler)
+                .failureHandler(new ForwardAuthenticationFailureHandler(IA_SPRING_SEC_ERROR_CONTROLLER_PATH))
                 .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
                     .baseUri(LOGIN_REDIRECT_URL)
                 )
@@ -193,18 +158,8 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
             )
-            .sessionManagement(sessionConfigurer -> sessionConfigurer
-                .sessionAuthenticationStrategy(registerSessionAuthenticationStrategy())
-            )
-
             .exceptionHandling(exceptionHandler -> exceptionHandler
-//                .defaultAuthenticationEntryPointFor(
-//                    new LoginUrlAuthenticationEntryPoint(idpProperties.getRedirectUri().getPath()),
-//                    new AntPathRequestMatcher(AuthenticationConstansts.LOGIN_URL)
-//                )
-                    .defaultAuthenticationEntryPointFor(
-                        customAuthenticationEntrypoint, AnyRequestMatcher.INSTANCE
-                    )
+                .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
             )
             .csrf(AbstractHttpConfigurer::disable)
             .requestCache(cacheConfigurer -> cacheConfigurer
@@ -234,7 +189,7 @@ public class SecurityConfig {
             .orElseThrow(() -> new BadCredentialsException("Authentication failed. No IntygsadminUser for employeeHsaId " + userHsaId));
     }
 
-    private void configureFakeLogin(HttpSecurity http,List<String> profiles) throws Exception {
+    private void configureFakeLogin(HttpSecurity http, List<String> profiles) throws Exception {
         if (profiles.contains(FAKE_PROFILE)) {
             allowFakeLogin(http);
         } else {
@@ -259,9 +214,6 @@ public class SecurityConfig {
                 .requestMatchers("/welcome-assets/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll()
-            )
-            .csrf(csrfConfigurer -> csrfConfigurer
-                .ignoringRequestMatchers("/fake-api/login")
             );
     }
 

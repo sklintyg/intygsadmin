@@ -28,17 +28,13 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
-import org.springframework.stereotype.Component;
 import se.inera.intyg.intygsadmin.web.controller.dto.IdToken;
 
-
-@Component
 public class CustomAuthorizationResolver implements OAuth2AuthorizationRequestResolver {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final OAuth2AuthorizationRequestResolver defaultResolver;
     private final Map<String, IdToken> idToken = Map.of("id_token", new IdToken());
-
 
     public CustomAuthorizationResolver(ClientRegistrationRepository repo) {
         defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");

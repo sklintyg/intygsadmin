@@ -27,7 +27,7 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
  */
 public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
 
-    private MonitoringLogService monitoringService;
+    private final MonitoringLogService monitoringService;
 
     public LoggingSessionRegistryImpl(MonitoringLogService monitoringService) {
         this.monitoringService = monitoringService;

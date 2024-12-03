@@ -25,7 +25,6 @@ import java.util.UUID;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;

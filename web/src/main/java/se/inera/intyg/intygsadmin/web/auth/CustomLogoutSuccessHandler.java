@@ -81,6 +81,6 @@ public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccess
             .queryParam("post_logout_redirect_uri", "https://ia.localtest.me/#/loggedout/m");
 
         getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
-
     }
+
 }
