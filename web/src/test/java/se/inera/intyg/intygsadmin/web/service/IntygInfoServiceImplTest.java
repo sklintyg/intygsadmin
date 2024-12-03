@@ -46,7 +46,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfo;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
