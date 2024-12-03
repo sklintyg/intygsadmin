@@ -206,11 +206,7 @@ public class SecurityConfig {
                         customAuthenticationEntrypoint, AnyRequestMatcher.INSTANCE
                     )
             )
-            .csrf(csrfConfigurer -> csrfConfigurer
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-            )
-            .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+            .csrf(AbstractHttpConfigurer::disable)
             .requestCache(cacheConfigurer -> cacheConfigurer
                 .requestCache(new HttpSessionRequestCache())
             );
