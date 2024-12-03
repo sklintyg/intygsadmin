@@ -126,7 +126,7 @@ class IntygInfoServiceImplTest {
         IntygInfoDTO intygInfo = optionalIntygInfo.get();
         assertEquals("lisjp", intygInfo.getIntygType());
         assertEquals(1, intygInfo.getEvents().size());
-        assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
+        assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().getFirst().getSource());
         assertFalse(intygInfo.isCreatedInWC());
 
         verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(itIntygInfo));
@@ -155,7 +155,7 @@ class IntygInfoServiceImplTest {
         IntygInfoDTO intygInfo = optionalIntygInfo.get();
         assertEquals("lisjp", intygInfo.getIntygType());
         assertEquals(1, intygInfo.getEvents().size());
-        assertEquals(Source.WEBCERT, intygInfo.getEvents().get(0).getSource());
+        assertEquals(Source.WEBCERT, intygInfo.getEvents().getFirst().getSource());
         assertTrue(intygInfo.isCreatedInWC());
 
         verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(wcIntygInfo));
