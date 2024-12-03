@@ -116,36 +116,6 @@ test {
     exclude("**/*IT*")
 }
 
-def runtimeOnlyExtended = configurations.create("runtimeOnlyExtended").extendsFrom(configurations.runtimeOnly)
-tasks.register('pathingJar', Jar) {
-    dependsOn runtimeOnlyExtended
-    archiveAppendix.set("pathing")
-
-    doFirst {
-        manifest {
-            def mainClass = mainClassName
-            def classpath = configurations.runtimeClasspath.files.collect {
-                it.toURI().toURL().toString().replaceFirst("file:/", "/")
-            }.join(" ")
-            attributes("Class-Path": classpath, "Main-Class": mainClass)
-        }
-    }
-}
-
-if (System.getProperty("os.name").contains("Windows")) {
-    bootRun {
-        dependsOn pathingJar
-        doFirst {
-            classpath = files(
-                    "${project.projectDir}/build/classes/java/main",
-                    "${project.projectDir}/src/main/resources",
-                    "${project.projectDir}/build/resources/main",
-                    pathingJar.archiveFile
-            )
-        }
-    }
-}
-
 dependencies {
     implementation project(":intygsadmin-persistence")
 
