@@ -171,15 +171,15 @@ public class SecurityConfig {
 
     private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         return userRequest -> {
-            final var oidcIdidToken = userRequest.getIdToken();
-            final var claims = oidcIdidToken.getClaims();
+            final var oidcIdToken = userRequest.getIdToken();
+            final var claims = oidcIdToken.getClaims();
             final var userHsaId = String.valueOf(claims.get(idpProperties.getUserNameAttributeName()));
             final var userEntity = getUserEntity(userHsaId);
             final var grantedAuthority = new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name());
             final var providerDetails = userRequest.getClientRegistration().getProviderDetails();
             final var userNameAttributeName = providerDetails.getUserInfoEndpoint().getUserNameAttributeName();
 
-            return new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, oidcIdidToken, Set.of(grantedAuthority),
+            return new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, oidcIdToken, Set.of(grantedAuthority),
                 userNameAttributeName);
         };
     }
