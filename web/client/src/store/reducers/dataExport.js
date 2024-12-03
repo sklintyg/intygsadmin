@@ -16,14 +16,13 @@ export const DataExportListDefaultState = {
 const dataExportList = (state = DataExportListDefaultState, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_DATA_EXPORT_LIST_SUCCESS:
-      return {
-        ...state,
+      return { ...state,
         content: action.response.content,
-        numberOfElements: action.response.numberOfElements,
-        pageIndex: action.response.number,
-        start: action.response.number * action.response.size + 1,
-        end: action.response.number * action.response.size + action.response.numberOfElements,
-        totalElements: action.response.totalElements,
+        numberOfElements: action.response.content.length,
+        pageIndex: action.response.page.number,
+        start: action.response.page.number * action.response.page.size + 1,
+        end: action.response.page.number * action.response.page.size + action.response.content.length,
+        totalElements: action.response.page.totalElements,
         sortColumn: action.sortColumn,
         sortDirection: action.sortDirection
       };

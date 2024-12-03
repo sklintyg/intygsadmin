@@ -86,6 +86,10 @@ if (buildClient) {
     tasks.named('bootJar') {
         dependsOn copyReactbuild
     }
+
+    tasks.named('compileTestJava') {
+        dependsOn copyReactbuild
+    }
 }
 
 clean {
