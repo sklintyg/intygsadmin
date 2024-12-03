@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -39,14 +40,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.service.FakeLoginService;
+import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
 @Profile(FAKE_PROFILE)
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(FakeApiController.FAKE_API_REQUEST_MAPPING)
 public class FakeApiController {
 
     private final FakeLoginService fakeLoginService;
+    private final MonitoringLogService monitoringLogService;
 
     public static final String FAKE_API_REQUEST_MAPPING = "/fake-api";
 
@@ -75,6 +79,12 @@ public class FakeApiController {
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void login(HttpServletRequest request, @RequestBody FakeUser fakeUser) {
-        fakeLoginService.login(fakeUser, request);
+        try {
+            fakeLoginService.login(fakeUser, request);
+        } catch (Exception e) {
+            monitoringLogService.logFailedLogin("Fake login failure for user '%s'.".formatted(fakeUser.getEmployeeHsaId()));
+            log.error("Fake login failure for user '{}'.", fakeUser.getEmployeeHsaId(), e);
+            throw e;
+        }
     }
 }
