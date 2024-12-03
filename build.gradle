@@ -16,7 +16,7 @@ ext {
     mapstructVersion = "1.6.3"
     picocliVersion = "4.7.6"
     shedlockSpringVersion = "5.16.0"
-    springDocVersion = "1.8.0"
+    springDocVersion = "2.6.0"
     randomBeansVersion = "3.9.0"
 
     nodeVersion = "12.22.12"

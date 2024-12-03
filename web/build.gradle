@@ -163,8 +163,8 @@ dependencies {
     implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
     implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    implementation "org.springdoc:springdoc-openapi-data-rest:${springDocVersion}"
-    implementation "org.springdoc:springdoc-openapi-ui:${springDocVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
     implementation "org.springframework.session:spring-session-data-redis"
     implementation "redis.clients:jedis"
 
