@@ -99,7 +99,7 @@ clean {
 bootJar {
     manifest {
         attributes(
-                "Main-Class": "org.springframework.boot.loader.PropertiesLauncher",
+                "Main-Class": "org.springframework.boot.loader.launch.PropertiesLauncher",
                 "Start-Class": "se.inera.intyg.intygsadmin.web.IntygsadminApplication"
         )
     }
