@@ -79,9 +79,9 @@ public abstract class BaseRestIntegrationTest {
     }
 
     private String getAuthSession(String credentialsJson) {
-        Response response = given().contentType(ContentType.URLENC).and().redirects().follow(false).and()
-            .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
-            .statusCode(HttpServletResponse.SC_FOUND).when()
+        Response response = given().contentType(ContentType.JSON).and().redirects().follow(false).and()
+            .body(credentialsJson).expect()
+            .statusCode(HttpServletResponse.SC_OK).when()
             .post(FAKE_LOGIN_ENDPOINT).then().extract().response();
         assertNotNull(response.sessionId());
         return response.sessionId();
