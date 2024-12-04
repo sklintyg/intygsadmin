@@ -3,7 +3,7 @@ let jsonSelect;
 
 const fakeUsersMap = {};
 const fakeLoginUri = "/fake-api/login"
-const validProperties = [ 'employeeHsaId', 'intygsadminRole', 'name' ];
+const validProperties = ['employeeHsaId', 'intygsadminRole', 'name'];
 
 $(function() {
   fetchFakeUsers();
@@ -22,15 +22,15 @@ $(function() {
 
 function fetchFakeUsers() {
   $.getJSON('/fake-api/users')
-    .then(
-      function(response) {
-        fakeUsers = response;
-        updateUserList();
-      },
-      function(data, status) {
-        console.log('error ' + status);
-      }
-    );
+  .then(
+    function(response) {
+      fakeUsers = response;
+      updateUserList();
+    },
+    function(data, status) {
+      console.log('error ' + status);
+    }
+  );
 }
 
 function updateUserList() {
@@ -79,18 +79,17 @@ function fakeLogin() {
   const userJsonDisplay = $("#userJsonDisplay").val()
   const jsonUser = JSON.stringify(JSON.parse(userJsonDisplay), validProperties)
 
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', fakeLoginUri, true);
-  xhr.setRequestHeader('Content-Type', 'application/json')
-  xhr.onreadystatechange = request=> {
-    const response = request.target
-    if (response.readyState === XMLHttpRequest.DONE && response.status === 200) {
-      window.open('/', '_self')
-    } else if (response.readyState === XMLHttpRequest.DONE && response.status === 403) {
-      window.open('/#/loggedout/LOGIN_FEL002', '_self')
+  fetch(fakeLoginUri, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: jsonUser
+  }).then((response) => {
+    if (response.status === 200) {
+      window.location.href = '/'
+    } else if (response.status === 403) {
+      window.location.href = '/#/loggedout/LOGIN_FEL002'
     } else {
-      window.open('/#/loggedout/LOGIN_FEL001', '_self')
+      window.location.href = '/#/loggedout/LOGIN_FEL001'
     }
-  };
-  xhr.send(jsonUser);
+  });
 }
