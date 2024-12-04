@@ -16,27 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.auth.fake;
+
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser.FakeUserBuilder;
+import se.inera.intyg.intygsadmin.web.controller.dto.FakeLoginDTO.FakeLoginDTOBuilder;
 
-@JsonDeserialize(builder = FakeUserBuilder.class)
+@JsonDeserialize(builder = FakeLoginDTOBuilder.class)
 @Value
 @Builder
-@AllArgsConstructor
-public class FakeUser {
+public class FakeLoginDTO {
 
     String employeeHsaId;
     String intygsadminRole;
     String name;
 
     @JsonPOJOBuilder(withPrefix = "")
-    public static class FakeUserBuilder {
+    public static class FakeLoginDTOBuilder {
 
     }
 

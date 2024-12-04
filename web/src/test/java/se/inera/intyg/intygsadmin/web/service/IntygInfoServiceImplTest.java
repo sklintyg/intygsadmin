@@ -30,6 +30,8 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfo;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent.Source;
@@ -52,6 +55,7 @@ import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.IntygInfoPersistenceService;
+import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
@@ -60,7 +64,7 @@ import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.mapper.IntygInfoMapper;
 
 @ExtendWith(MockitoExtension.class)
-public class IntygInfoServiceImplTest {
+class IntygInfoServiceImplTest {
 
     @Spy
     private IntygInfoMapper intygInfoMapper = Mappers.getMapper(IntygInfoMapper.class);
@@ -76,7 +80,7 @@ public class IntygInfoServiceImplTest {
     private IntygInfoServiceImpl intygInfoService;
 
     @Test
-    public void testGetIntygInfoList() {
+    void testGetIntygInfoList() {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<IntygInfoEntity> persistenceResult = new PageImpl<>(new ArrayList<>(), pageable, 0);
@@ -89,7 +93,7 @@ public class IntygInfoServiceImplTest {
     }
 
     @Test
-    public void testGetIntygInfoNotFound() {
+    void testGetIntygInfoNotFound() {
         String intygId = "intygId";
 
         when(wcIntegrationRestService.getIntygInfo(intygId)).thenReturn(null);
@@ -102,7 +106,7 @@ public class IntygInfoServiceImplTest {
     }
 
     @Test
-    public void testGetIntygInfoFoundInIT() {
+    void testGetIntygInfoFoundInIT() {
         mockUser();
 
         String intygId = "intygId";
@@ -122,14 +126,14 @@ public class IntygInfoServiceImplTest {
         IntygInfoDTO intygInfo = optionalIntygInfo.get();
         assertEquals("lisjp", intygInfo.getIntygType());
         assertEquals(1, intygInfo.getEvents().size());
-        assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().get(0).getSource());
+        assertEquals(Source.INTYGSTJANSTEN, intygInfo.getEvents().getFirst().getSource());
         assertFalse(intygInfo.isCreatedInWC());
 
         verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(itIntygInfo));
     }
 
     @Test
-    public void testGetIntygInfoFoundInWC() {
+    void testGetIntygInfoFoundInWC() {
         mockUser();
 
         String intygId = "intygId";
@@ -151,14 +155,14 @@ public class IntygInfoServiceImplTest {
         IntygInfoDTO intygInfo = optionalIntygInfo.get();
         assertEquals("lisjp", intygInfo.getIntygType());
         assertEquals(1, intygInfo.getEvents().size());
-        assertEquals(Source.WEBCERT, intygInfo.getEvents().get(0).getSource());
+        assertEquals(Source.WEBCERT, intygInfo.getEvents().getFirst().getSource());
         assertTrue(intygInfo.isCreatedInWC());
 
         verify(intygInfoPersistenceService, times(1)).create(createIntyInfo(wcIntygInfo));
     }
 
     @Test
-    public void testGetIntygInfo() {
+    void testGetIntygInfo() {
         mockUser();
 
         String intygId = "intygId";
@@ -193,7 +197,7 @@ public class IntygInfoServiceImplTest {
     }
 
     @Test
-    public void testGetIntygInfoDateNull() {
+    void testGetIntygInfoDateNull() {
         mockUser();
 
         String intygId = "intygId";
@@ -233,7 +237,9 @@ public class IntygInfoServiceImplTest {
         userEntity.setEmployeeHsaId("hsaId");
         userEntity.setName("User1");
 
-        IntygsadminUser user = new IntygsadminUser(userEntity, null, null);
+        final var oidcIdToken = new OidcIdToken("tokenValue", null, null, Map.of("employeeHsaId", "hsaId"));
+        IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, oidcIdToken,
+            Collections.emptySet(), "employeeHsaId");
         when(userService.getActiveUser()).thenReturn(user);
     }
 

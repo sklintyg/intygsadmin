@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserResponseDTO {
 
-    private String logoutUrl = LOGOUT_URL;
+    private final String logoutUrl = LOGOUT_URL;
     private final String employeeHsaId;
     private final String intygsadminRole;
     private final String name;

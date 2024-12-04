@@ -19,6 +19,7 @@
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,19 +29,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateDataExportDTO {
 
-    @Schema(description = "Care provider ID", required = true)
+    @Schema(description = "Care provider ID", requiredMode = RequiredMode.REQUIRED)
     private String hsaId;
 
-    @Schema(description = "Organization ID", required = true)
+    @Schema(description = "Organization ID", requiredMode = RequiredMode.REQUIRED)
     private String organizationNumber;
 
-    @Schema(description = "Personal id of the receiving person", required = true)
+    @Schema(description = "Personal id of the receiving person", requiredMode = RequiredMode.REQUIRED)
     private String personId;
 
-    @Schema(description = "Email address for the receiving person", required = true)
+    @Schema(description = "Email address for the receiving person", requiredMode = RequiredMode.REQUIRED)
     private String emailAddress;
 
-    @Schema(description = "Phone number to the receiving person", required = true)
+    @Schema(description = "Phone number to the receiving person", requiredMode = RequiredMode.REQUIRED)
     private String phoneNumber;
 
 }

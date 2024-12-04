@@ -2,16 +2,7 @@
   "type": "object",
   "required": [
     "content",
-    "empty",
-    "first",
-    "last",
-    "pageable",
-    "totalPages",
-    "number",
-    "numberOfElements",
-    "totalElements",
-    "sort",
-    "size"
+    "page"
   ],
   "additionalProperties": false,
   "properties": {
@@ -46,35 +37,19 @@
         }
       }
     },
-    "empty": {
-      "type": "boolean"
-    },
-    "first": {
-      "type": "boolean"
-    },
-    "last": {
-      "type": "boolean"
-    },
-    "totalElements": {
-      "type": "integer"
-    },
-    "number": {
-      "type": "integer"
-    },
-    "pageable": {
-      "type": "object"
-    },
-    "size": {
-      "type": "integer"
-    },
-    "sort": {
-      "type": "object"
-    },
-    "totalPages": {
-      "type": "integer"
-    },
-    "numberOfElements": {
-      "type": "integer"
+    "page": {
+      "totalElements": {
+        "type": "integer"
+      },
+      "number": {
+        "type": "integer"
+      },
+      "size": {
+        "type": "integer"
+      },
+      "totalPages": {
+        "type": "integer"
+      }
     }
   }
 }

@@ -19,23 +19,30 @@
 package se.inera.intyg.intygsadmin.web.auth;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
 @Getter
-public class IntygsadminUser implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class IntygsadminUser extends DefaultOidcUser implements Serializable {
 
-    private UUID id;
-    private String employeeHsaId;
-    private String name;
-    private OAuth2AccessToken token;
-    private IntygsadminRole intygsadminRole;
-    private AuthenticationMethod authenticationMethod;
+    private final UUID id;
+    private final String employeeHsaId;
+    private final String name;
+    private final OidcIdToken token;
+    private final IntygsadminRole intygsadminRole;
+    private final AuthenticationMethod authenticationMethod;
 
-    public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OAuth2AccessToken token) {
+    public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OidcIdToken token,
+        Set<GrantedAuthority> authorities, String nameAttributeKey) {
+        super(authorities, token, nameAttributeKey);
         this.id = userEntity.getId();
         this.employeeHsaId = userEntity.getEmployeeHsaId();
         this.intygsadminRole = userEntity.getIntygsadminRole();
@@ -43,5 +50,4 @@ public class IntygsadminUser implements Serializable {
         this.token = token;
         this.name = userEntity.getName();
     }
-
 }

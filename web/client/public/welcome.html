@@ -17,20 +17,18 @@
       Templatelista till vänster - Manuella ändringar kan göras i jsonstrukturen - detta omvandlas till inloggad
       userContext </p>
 
-    <form id="loginForm" action="/fake" method="POST" accept-charset="UTF-8">
-      <div class="fake-users-container">
-        <h4>Templatelista</h4>
+    <div class="fake-users-container">
+      <h4>Templatelista</h4>
+      <select name="jsonSelect" id="jsonSelect" size="15" class="fake-user-list" autofocus></select>
+      <label for="jsonSelect">Templatelista</label>
+      <button id="loginBtn" class="login-btn" onclick="fakeLogin()">Logga in</button>
+    </div>
 
-        <select name="jsonSelect" id="jsonSelect" size="15" class="fake-user-list" autofocus></select>
-        <button id="loginBtn" class="login-btn">Logga in</button>
-      </div>
-
-      <div class="login-textarea-container">
-        <h4>Inloggningsprofil</h4>
-
-        <textarea id="userJsonDisplay" name="userJsonDisplay" class="login-textarea"></textarea>
-      </div>
-    </form>
+    <div class="login-textarea-container">
+      <h4>Inloggningsprofil</h4>
+      <textarea id="userJsonDisplay" name="userJsonDisplay" class="login-textarea"></textarea>
+      <label for="userJsonDisplay">Inloggningsprofil</label>
+    </div>
 
     <div class="helplinks row">
       <h4>Hjälplänkar</h4>

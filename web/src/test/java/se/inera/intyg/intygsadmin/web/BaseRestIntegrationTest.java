@@ -29,7 +29,7 @@ import io.restassured.RestAssured;
 import io.restassured.config.SessionConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.http.HttpStatus;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;
@@ -79,9 +79,9 @@ public abstract class BaseRestIntegrationTest {
     }
 
     private String getAuthSession(String credentialsJson) {
-        Response response = given().contentType(ContentType.URLENC).and().redirects().follow(false).and()
-            .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
-            .statusCode(HttpServletResponse.SC_FOUND).when()
+        Response response = given().contentType(ContentType.JSON).and().redirects().follow(false).and()
+            .body(credentialsJson).expect()
+            .statusCode(HttpServletResponse.SC_OK).when()
             .post(FAKE_LOGIN_ENDPOINT).then().extract().response();
         assertNotNull(response.sessionId());
         return response.sessionId();

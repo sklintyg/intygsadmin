@@ -33,6 +33,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -48,8 +49,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
@@ -98,7 +99,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldHandlePagingOfFetchedTerminations() {
+        void shouldHandlePagingOfFetchedTerminations() {
             final var pageable1 = PageRequest.of(0, 2, Sort.by(Direction.DESC, "createdAt"));
             final var pageable2 = PageRequest.of(1, 2, Sort.by(Direction.DESC, "createdAt"));
             when(terminationRestService.getDataExports()).thenReturn(terminations);
@@ -115,7 +116,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldHandleEmptyTerminationsList() {
+        void shouldHandleEmptyTerminationsList() {
             final var terminationsEmpty = Collections.<DataExportResponse>emptyList();
             final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "createdAt"));
             when(terminationRestService.getDataExports()).thenReturn(terminationsEmpty);
@@ -130,7 +131,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldHandleDescendingSort() {
+        void shouldHandleDescendingSort() {
             final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "createdAt"));
 
             final var page = terminationService.getDataExports(pageable);
@@ -139,7 +140,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldHandleAscendingSort() {
+        void shouldHandleAscendingSort() {
             final var pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "createdAt"));
 
             final var page = terminationService.getDataExports(pageable);
@@ -148,7 +149,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldHandleSwedishCharsInDescendingSort() {
+        void shouldHandleSwedishCharsInDescendingSort() {
             final var pageable = PageRequest.of(0, 10, Sort.by(Direction.DESC, "creatorName"));
 
             final var page = terminationService.getDataExports(pageable);
@@ -157,7 +158,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldHandleSwedishCharsInAscendingSort() {
+        void shouldHandleSwedishCharsInAscendingSort() {
             final var pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "creatorName"));
 
             final var page = terminationService.getDataExports(pageable);
@@ -166,7 +167,7 @@ class TerminationServiceImplTest {
         }
 
         @Test
-        public void shouldSortByCreatedDescendingWhenPrimarySortColumnWithEqualValues() {
+        void shouldSortByCreatedDescendingWhenPrimarySortColumnWithEqualValues() {
             final var pageable = PageRequest.of(0, 10, Sort.by(Direction.ASC, "status"));
 
             final var page = terminationService.getDataExports(pageable);
@@ -191,12 +192,13 @@ class TerminationServiceImplTest {
     @Test
     void testCreateDataExport() {
 
-        UserEntity userEntity = new UserEntity();
+        final var userEntity = new UserEntity();
         userEntity.setName("test");
         userEntity.setEmployeeHsaId("Nmågot hsa-id");
-        AuthenticationMethod authenticationMethod = AuthenticationMethod.FAKE;
-        OAuth2AccessToken oAuth2AccessToken = new DefaultOAuth2AccessToken("Token");
-        IntygsadminUser intygsadminUser = new IntygsadminUser(userEntity, authenticationMethod, oAuth2AccessToken);
+        final var authenticationMethod = AuthenticationMethod.FAKE;
+        final var oidcIdToken = new OidcIdToken("token", null, null, Map.of("employeeHsaId", "hsaId"));
+        final var grantedAuthorities = Collections.<GrantedAuthority>emptySet();
+        final var intygsadminUser = new IntygsadminUser(userEntity, authenticationMethod, oidcIdToken, grantedAuthorities, "employeeHsaId");
 
         CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
         createDataExportDTO.setHsaId("1");
@@ -218,11 +220,11 @@ class TerminationServiceImplTest {
         assertEquals(createdCreateDataExport.getCreatorName(), userEntity.getName());
         assertEquals(createdCreateDataExport.getCreatorHSAId(), userEntity.getEmployeeHsaId());
 
-        assertEquals(createDataExportDTO.getHsaId(), createDataExportDTO.getHsaId());
-        assertEquals(createDataExportDTO.getPersonId(), createDataExportDTO.getPersonId());
-        assertEquals(createDataExportDTO.getPhoneNumber(), createDataExportDTO.getPhoneNumber());
-        assertEquals(createDataExportDTO.getEmailAddress(), createDataExportDTO.getEmailAddress());
-        assertEquals(createDataExportDTO.getOrganizationNumber(), createDataExportDTO.getOrganizationNumber());
+        assertEquals(createDataExportDTO.getHsaId(), createdCreateDataExport.getHsaId());
+        assertEquals(createDataExportDTO.getPersonId(), createdCreateDataExport.getPersonId());
+        assertEquals(createDataExportDTO.getPhoneNumber(), createdCreateDataExport.getPhoneNumber());
+        assertEquals(createDataExportDTO.getEmailAddress(), createdCreateDataExport.getEmailAddress());
+        assertEquals(createDataExportDTO.getOrganizationNumber(), createdCreateDataExport.getOrganizationNumber());
     }
 
     @Test

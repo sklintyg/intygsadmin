@@ -16,13 +16,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.intygsadmin.web.rediscache;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-@Configuration
-@Import(EmbeddedCacheConfiguration.class)
-public class TestConfig {
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class IdToken {
+
+  // CHECKSTYLE:OFF MemberName
+  private String employeeHsaId = null;
+  private String given_name = null;
+  private String family_name = null;
+  //CHECKSTYLE:ON MemberName
 
 }
