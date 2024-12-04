@@ -19,9 +19,9 @@
 package se.inera.intyg.intygsadmin.web.auth;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -30,6 +30,7 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class IntygsadminUser extends DefaultOidcUser implements Serializable {
 
     private final UUID id;
@@ -48,27 +49,5 @@ public class IntygsadminUser extends DefaultOidcUser implements Serializable {
         this.authenticationMethod = authenticationMethod;
         this.token = token;
         this.name = userEntity.getName();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        IntygsadminUser that = (IntygsadminUser) o;
-        return Objects.equals(id, that.id) && Objects.equals(employeeHsaId, that.employeeHsaId) && Objects.equals(
-            name, that.name) && Objects.equals(token, that.token) && intygsadminRole == that.intygsadminRole
-            && authenticationMethod == that.authenticationMethod;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), id, employeeHsaId, name, token, intygsadminRole, authenticationMethod);
     }
 }
