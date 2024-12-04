@@ -70,7 +70,7 @@ public class FakeLoginService {
             idpProperties.getUserNameAttributeName());
 
         final var context = SecurityContextHolder.createEmptyContext();
-        final var authentication = new UsernamePasswordAuthenticationToken(user, oidcToken, Collections.emptySet());
+        final var authentication = new UsernamePasswordAuthenticationToken(user, oidcToken, Set.of(grantedAuthority));
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
