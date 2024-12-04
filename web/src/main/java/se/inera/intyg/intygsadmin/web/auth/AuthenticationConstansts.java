@@ -24,10 +24,9 @@ public final class AuthenticationConstansts {
     public static final String LOGIN_REDIRECT_URL = "/login/inera";
     public static final String LOGOUT_URL = "/logout";
     public static final String FAKE_PROFILE = "fake";
-    public static final String FAKE_LOGIN_ENDPOINT = "/fake";
+    public static final String FAKE_LOGIN_ENDPOINT = "/fake-api/login";
     public static final String FAKE_LOGIN_URL = "/welcome.html";
     public static final String SUCCESSFUL_LOGOUT_REDIRECT_URL = "/#/loggedout/m";
-    public static final String TIMEOUT_LOGOUT_REDIRECT_URL = "/#/loggedout/LOGIN_FEL003";
 
     // Prevent instantiation
     private AuthenticationConstansts() {
