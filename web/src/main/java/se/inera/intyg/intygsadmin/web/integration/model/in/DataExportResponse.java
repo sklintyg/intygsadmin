@@ -20,6 +20,7 @@ package se.inera.intyg.intygsadmin.web.integration.model.in;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Schema.RequiredMode;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -33,36 +34,36 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class DataExportResponse {
 
-    @Schema(name = "Export ID", required = true)
+    @Schema(name = "Export ID", requiredMode = RequiredMode.REQUIRED)
     private UUID terminationId;
 
     //JSON formating for JAVA 8 types
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Schema(name = "Date when the request was first created", required = true)
+    @Schema(name = "Date when the request was first created", requiredMode = RequiredMode.REQUIRED)
     private LocalDateTime created;
 
-    @Schema(name = "Current status of the export", required = true)
+    @Schema(name = "Current status of the export", requiredMode = RequiredMode.REQUIRED)
     private String status;
 
-    @Schema(name = "The name of the administrator who created the request.", required = true)
+    @Schema(name = "The name of the administrator who created the request.", requiredMode = RequiredMode.REQUIRED)
     private String creatorName;
 
-    @Schema(name = "The HSAiD of the administrator who created the request.", required = true)
+    @Schema(name = "The HSAiD of the administrator who created the request.", requiredMode = RequiredMode.REQUIRED)
     private String creatorHSAId;
 
-    @Schema(name = "Care provider ID", required = true)
+    @Schema(name = "Care provider ID", requiredMode = RequiredMode.REQUIRED)
     private String hsaId;
 
-    @Schema(name = "Organization ID", required = true)
+    @Schema(name = "Organization ID", requiredMode = RequiredMode.REQUIRED)
     private String organizationNumber;
 
-    @Schema(name = "Personal id of the receiving person", required = true)
+    @Schema(name = "Personal id of the receiving person", requiredMode = RequiredMode.REQUIRED)
     private String personId;
 
-    @Schema(name = "Email address for the receiving person", required = true)
+    @Schema(name = "Email address for the receiving person", requiredMode = RequiredMode.REQUIRED)
     private String emailAddress;
 
-    @Schema(name = "Phone number to the receiving person", required = true)
+    @Schema(name = "Phone number to the receiving person", requiredMode = RequiredMode.REQUIRED)
     private String phoneNumber;
 
 }
