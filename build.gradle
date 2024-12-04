@@ -13,6 +13,7 @@ ext {
     apachePoiVersion = "5.3.0"
     commonsIOVersion = "2.18.0"
     guavaVersion = "33.3.1-jre"
+    logbackEcsEncoderVersion = '1.6.0'
     mapstructVersion = "1.6.3"
     picocliVersion = "4.7.6"
     shedlockSpringVersion = "5.16.0"

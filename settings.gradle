@@ -8,10 +8,12 @@ pluginManagement {
 
 rootProject.name = "intygsadmin"
 
+include ":intygsadmin-logging"
 include ":intygsadmin-persistence"
 include ":intygsadmin-web"
 include ":intygsadmin-liquibase-runner"
 
+project(':intygsadmin-logging').projectDir = "$rootDir/logging" as File
 project(':intygsadmin-persistence').projectDir = "$rootDir/persistence" as File
 project(':intygsadmin-web').projectDir = "$rootDir/web" as File
 project(':intygsadmin-liquibase-runner').projectDir = "$rootDir/tools/liquibase-runner" as File

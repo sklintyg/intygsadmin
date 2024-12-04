@@ -21,6 +21,8 @@ package se.inera.intyg.intygsadmin.web.service.monitoring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.logging.MdcCloseableMap;
+import se.inera.intyg.intygsadmin.logging.MdcLogConstants;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 
 @Service("webMonitoringLogService")
@@ -31,22 +33,56 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
 
     @Override
     public void logUserLogin(String userId, AuthenticationMethod authMethod) {
-        logEvent(MonitoringEvent.USER_LOGIN, userId, authMethod);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_ACTION, toEventType(MonitoringEvent.USER_LOGIN))
+                .put(MdcLogConstants.EVENT_TYPE, MdcLogConstants.EVENT_TYPE_INFO)
+                .put(MdcLogConstants.EVENT_LOGIN_METHOD, authMethod.name())
+                .put(MdcLogConstants.USER_ID, userId)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_LOGIN, userId, authMethod);
+        }
     }
 
     @Override
     public void logUserLogout(String userId, AuthenticationMethod authMethod) {
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_ACTION, toEventType(MonitoringEvent.USER_LOGOUT))
+                .put(MdcLogConstants.EVENT_TYPE, MdcLogConstants.EVENT_TYPE_INFO)
+                .put(MdcLogConstants.EVENT_LOGIN_METHOD, authMethod.name())
+                .put(MdcLogConstants.USER_ID, userId)
+                .build()
+        ) {
         logEvent(MonitoringEvent.USER_LOGOUT, userId, authMethod);
+        }
     }
 
     @Override
     public void logUserSessionExpired(String userId, AuthenticationMethod authMethod) {
-        logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userId, authMethod);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_ACTION, toEventType(MonitoringEvent.USER_SESSION_EXPIRY))
+                .put(MdcLogConstants.EVENT_TYPE, MdcLogConstants.EVENT_TYPE_INFO)
+                .put(MdcLogConstants.EVENT_LOGIN_METHOD, authMethod.name())
+                .put(MdcLogConstants.USER_ID, userId)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userId, authMethod);
+        }
     }
 
     @Override
     public void logFailedLogin(String exceptionMessage) {
-        logEvent(MonitoringEvent.USER_LOGIN_FAIL, exceptionMessage);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_ACTION, toEventType(MonitoringEvent.USER_LOGIN_FAIL))
+                .put(MdcLogConstants.EVENT_TYPE, MdcLogConstants.EVENT_TYPE_INFO)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_LOGIN_FAIL, exceptionMessage);
+        }
     }
 
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
@@ -59,11 +95,14 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         return logMsg.toString();
     }
 
+    private String toEventType(MonitoringEvent monitoringEvent) {
+        return monitoringEvent.name().toLowerCase().replace("_", "-");
+    }
+
     private enum MonitoringEvent {
         USER_LOGIN("Login user '{}' using scheme '{}'"),
         USER_LOGOUT("Logout user '{}' using scheme '{}'"),
         USER_SESSION_EXPIRY("Session expired for user '{}' using scheme '{}'"),
-
         USER_LOGIN_FAIL("Login failed with message '{}'");
 
         private final String message;
