@@ -18,21 +18,25 @@
  */
 package se.inera.intyg.intygsadmin.web.integration;
 
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.SESSION_ID_KEY;
+
 import java.time.LocalDateTime;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.intyginfo.dto.ItIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
@@ -42,21 +46,26 @@ public class ITIntegrationRestServiceImpl implements ITIntegrationRestService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ITIntegrationRestServiceImpl.class);
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     @Value("${intygstjansten.internalapi}")
     private String intygstjanstenUrl;
 
     @Autowired
-    public ITIntegrationRestServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public ITIntegrationRestServiceImpl(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     @Override
     public ItIntygInfo getIntygInfo(String intygId) {
-        String url = intygstjanstenUrl + "/internalapi/intygInfo/" + intygId;
         try {
-            return restTemplate.getForObject(url, ItIntygInfo.class);
+            return restClient
+                .get()
+                .uri(intygstjanstenUrl + "/internalapi/intygInfo/" + intygId)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve()
+                .body(ItIntygInfo.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -67,24 +76,31 @@ public class ITIntegrationRestServiceImpl implements ITIntegrationRestService {
 
     @Override
     public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        final var eraseUrl = intygstjanstenUrl + "/internalapi/testCertificate/erase";
-
-        final var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
         final var eraseJSON = new JSONObject();
         eraseJSON.put("from", from);
         eraseJSON.put("to", to);
 
-        final var eraseRequest = new HttpEntity<>(eraseJSON, headers);
-        return restTemplate.postForObject(eraseUrl, eraseRequest, TestCertificateEraseResult.class);
+        return restClient
+            .post()
+            .uri(intygstjanstenUrl + "/internalapi/testCertificate/erase")
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(eraseJSON)
+            .retrieve()
+            .body(TestCertificateEraseResult.class);
     }
 
     @Override
     public Integer getCertificateCount(String hsaId) {
         try {
-            final var url = intygstjanstenUrl + "/internalapi/intygInfo/" + hsaId + "/count";
-            return restTemplate.getForObject(url, Integer.class);
+            return restClient
+                .get()
+                .uri(intygstjanstenUrl + "/internalapi/intygInfo/" + hsaId + "/count")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve()
+                .body(Integer.class);
         } catch (RestClientException e) {
             LOG.error("Failure fetching certificate count for private practitioner {}.", hsaId, e);
             return null;

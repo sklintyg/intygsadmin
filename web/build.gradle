@@ -65,7 +65,8 @@ tasks.register('appRunDebug') {
     doFirst {
         bootRun.configure {
             jvmArgs = [
-                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort"
+                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort",
+                    "-Dlogging.config=${applicationDir}/config/logback-spring.xml",
             ]
         }
     }
@@ -74,6 +75,13 @@ tasks.register('appRunDebug') {
 
 tasks.register('appRun') {
     println 'Running in normal mode'
+    doFirst {
+        bootRun.configure {
+            jvmArgs = [
+                    "-Dlogging.config=${applicationDir}/config/logback-spring.xml",
+            ]
+        }
+    }
     finalizedBy("bootRun")
 }
 
@@ -108,7 +116,7 @@ bootJar {
 bootRun {
     systemProperty "dev.http.port", devPort
     systemProperty "dev.http.port.internal", devPortInternal
-    systemProperty "spring.profiles.active", "dev, fake, caching-enabled, it-stub, wc-stub, pp-stub, ts-stub"
+    systemProperty "spring.profiles.active", "dev, fake, caching-enabled"
     systemProperty "spring.config.additional-location", "file:${applicationDir}/config/"
 }
 
@@ -117,6 +125,7 @@ test {
 }
 
 dependencies {
+    implementation project(":intygsadmin-logging")
     implementation project(":intygsadmin-persistence")
 
     implementation "se.inera.intyg.infra:driftbanner-dto:${infraVersion}"
@@ -130,6 +139,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
+    implementation "co.elastic.logging:logback-ecs-encoder:${logbackEcsEncoderVersion}"
     implementation "com.querydsl:querydsl-core"
     implementation "jakarta.servlet:jakarta.servlet-api"
     implementation "jakarta.annotation:jakarta.annotation-api"
