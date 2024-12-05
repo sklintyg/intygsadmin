@@ -26,7 +26,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -39,14 +38,14 @@ import se.inera.intyg.intygsadmin.web.service.FakeLoginService;
 @Component
 public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccessHandler {
 
-    @Value("${inera.idp.logout-redirect-uri}")
-    private String logoutRedirectUri;
-
+    private final IdpProperties idpProperties;
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final FakeLoginService fakeLoginService;
 
-    public CustomLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository, FakeLoginService fakeLoginService) {
+    public CustomLogoutSuccessHandler(final IdpProperties idpProperties, ClientRegistrationRepository clientRegistrationRepository,
+        FakeLoginService fakeLoginService) {
         super(clientRegistrationRepository);
+        this.idpProperties = idpProperties;
         this.clientRegistrationRepository = clientRegistrationRepository;
         this.fakeLoginService = fakeLoginService;
     }
@@ -86,7 +85,7 @@ public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccess
 
         final var uriBuilder = UriComponentsBuilder.fromUriString(idpEndSessionEndpoint)
             .queryParam("id_token_hint", idToken)
-            .queryParam("post_logout_redirect_uri", logoutRedirectUri);
+            .queryParam("post_logout_redirect_uri", idpProperties.getLogoutRedirectUri());
 
         getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
     }
