@@ -25,6 +25,8 @@ import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.SUCCE
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -33,8 +35,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import se.inera.intyg.intygsadmin.web.service.FakeLoginService;
 
+@Slf4j
 @Component
 public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccessHandler {
+
+    @Value("${inera.idp.logout-redirect-uri}")
+    private String logoutRedirectUri;
 
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final FakeLoginService fakeLoginService;
@@ -68,6 +74,8 @@ public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccess
 
         if (oidcIdToken == null || !StringUtils.hasText(oidcIdToken.getTokenValue())) {
             getRedirectStrategy().sendRedirect(request, response, SUCCESSFUL_LOGOUT_REDIRECT_URL);
+
+            log.warn("Failed to log out user since user token was null or empty");
             return;
         }
 
@@ -78,7 +86,7 @@ public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccess
 
         final var uriBuilder = UriComponentsBuilder.fromUriString(idpEndSessionEndpoint)
             .queryParam("id_token_hint", idToken)
-            .queryParam("post_logout_redirect_uri", "https://ia.localtest.me/#/loggedout/m");
+            .queryParam("post_logout_redirect_uri", logoutRedirectUri);
 
         getRedirectStrategy().sendRedirect(request, response, uriBuilder.toUriString());
     }
