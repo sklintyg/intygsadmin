@@ -73,7 +73,6 @@ public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccess
 
         if (oidcIdToken == null || !StringUtils.hasText(oidcIdToken.getTokenValue())) {
             getRedirectStrategy().sendRedirect(request, response, SUCCESSFUL_LOGOUT_REDIRECT_URL);
-
             log.warn("Failed to log out user since user token was null or empty");
             return;
         }
