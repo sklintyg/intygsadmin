@@ -42,7 +42,7 @@ public class CustomLogoutSuccessHandler extends OidcClientInitiatedLogoutSuccess
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final FakeLoginService fakeLoginService;
 
-    public CustomLogoutSuccessHandler(final IdpProperties idpProperties, ClientRegistrationRepository clientRegistrationRepository,
+    public CustomLogoutSuccessHandler(IdpProperties idpProperties, ClientRegistrationRepository clientRegistrationRepository,
         FakeLoginService fakeLoginService) {
         super(clientRegistrationRepository);
         this.idpProperties = idpProperties;
