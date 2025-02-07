@@ -20,12 +20,12 @@
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
-@Getter
+@Value
 @Builder
 public class SendStatusIntegrationRequestDTO {
 
-    private String statusId;
+    String statusId;
 
 }

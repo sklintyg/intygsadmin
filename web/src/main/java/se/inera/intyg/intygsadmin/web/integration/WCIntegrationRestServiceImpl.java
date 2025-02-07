@@ -126,9 +126,17 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
-        String url = webcertUrl + "/internalapi/notification/" + request.getStatusId();
         try {
-            return restTemplate.postForObject(url, null, SendStatusIntegrationResponseDTO.class);
+            return restClient
+                .post()
+                .uri(webcertUrl + "/internalapi/notification/" + request.getStatusId())
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .body(SendStatusIntegrationResponseDTO.class);
+
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -139,10 +147,17 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request) {
-        String url = webcertUrl + "/internalapi/notification/certificates";
-
         try {
-            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
+            return restClient
+                .post()
+                .uri(webcertUrl + "/internalapi/notification/certificates")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .body(SendStatusIntegrationResponseDTO.class);
+
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -153,10 +168,17 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request) {
-        String url = webcertUrl + "/internalapi/notification/units";
-
         try {
-            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
+            return restClient
+                .post()
+                .uri(webcertUrl + "/internalapi/notification/units")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .body(SendStatusIntegrationResponseDTO.class);
+
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -167,10 +189,16 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
-        String url = webcertUrl + "/internalapi/notification/careGiver/" + request.getCareGiverId();
-
         try {
-            return restTemplate.postForObject(url, request, SendStatusIntegrationResponseDTO.class);
+            return restClient
+                .post()
+                .uri(webcertUrl + "/internalapi/notification/careGiver/" + request.getCareGiverId())
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(request)
+                .retrieve()
+                .body(SendStatusIntegrationResponseDTO.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -178,5 +206,4 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
             return SendStatusIntegrationResponseDTO.builder().build();
         }
     }
-
 }

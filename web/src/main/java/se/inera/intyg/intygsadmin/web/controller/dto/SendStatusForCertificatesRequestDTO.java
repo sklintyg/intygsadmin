@@ -3,15 +3,15 @@ package se.inera.intyg.intygsadmin.web.controller.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
-@Getter
+@Value
 @Builder
 public class SendStatusForCertificatesRequestDTO {
 
-    private List<String> certificateIds;
-    private List<NotificationStatusEnum> status;
-    private LocalDateTime activationTime;
+    List<String> certificateIds;
+    List<NotificationStatusEnum> status;
+    LocalDateTime activationTime;
 
 }

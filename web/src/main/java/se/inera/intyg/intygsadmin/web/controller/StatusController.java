@@ -19,6 +19,7 @@
 
 package se.inera.intyg.intygsadmin.web.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +34,7 @@ import se.inera.intyg.intygsadmin.web.service.status.SendStatusForCertificatesSe
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForUnitsService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusService;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/status")
 public class StatusController {
@@ -42,37 +44,37 @@ public class StatusController {
     private final SendStatusForUnitsService sendStatusForUnitsService;
     private final SendStatusForCareGiverService sendStatusForCareGiverService;
 
-    public StatusController(SendStatusService sendStatusService, SendStatusForCertificatesService sendStatusForCertificatesService,
-        SendStatusForUnitsService sendStatusForUnitsService, SendStatusForCareGiverService sendStatusForCareGiverService) {
-        this.sendStatusService = sendStatusService;
-        this.sendStatusForCertificatesService = sendStatusForCertificatesService;
-        this.sendStatusForUnitsService = sendStatusForUnitsService;
-        this.sendStatusForCareGiverService = sendStatusForCareGiverService;
-    }
-
     @PostMapping("/{statusId}")
     public SendStatusResponseDTO sendStatus(@PathVariable String statusId) {
         final var response = sendStatusService.send(statusId);
-        return SendStatusResponseDTO.create(response);
+        return SendStatusResponseDTO.builder()
+            .count(response)
+            .build();
     }
 
     @PostMapping("/certificates")
     public SendStatusResponseDTO sendStatusForCertificate(@RequestBody SendStatusForCertificatesRequestDTO request) {
         final var response = sendStatusForCertificatesService.send(request);
-        return SendStatusResponseDTO.create(response);
+        return SendStatusResponseDTO.builder()
+            .count(response)
+            .build();
     }
 
     @PostMapping("/units")
     public SendStatusResponseDTO sendStatusForUnits(@RequestBody SendStatusForUnitsRequestDTO request) {
         final var response = sendStatusForUnitsService.send(request);
-        return SendStatusResponseDTO.create(response);
+        return SendStatusResponseDTO.builder()
+            .count(response)
+            .build();
     }
 
     @PostMapping("/{careGiverId}")
     public SendStatusResponseDTO sendStatusForCareGiver(@PathVariable String careGiverId,
         @RequestBody SendStatusForCareGiverRequestDTO request) {
         final var response = sendStatusForCareGiverService.send(careGiverId, request);
-        return SendStatusResponseDTO.create(response);
+        return SendStatusResponseDTO.builder()
+            .count(response)
+            .build();
     }
 
 }

@@ -67,7 +67,9 @@ class StatusControllerTest {
 
     @Test
     void shouldSendStatus() {
-        final var sendStatusResponse = SendStatusResponseDTO.create(1);
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
         when(sendStatusService.send(STATUS_ID)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatus(STATUS_ID).getCount());
     }
@@ -80,7 +82,10 @@ class StatusControllerTest {
             .activationTime(LocalDateTime.now())
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.create(1);
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
+
         when(sendStatusForCertificatesService.send(request)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatusForCertificate(request).getCount());
     }
@@ -95,7 +100,10 @@ class StatusControllerTest {
             .activationTime(ACTIVATION_TIME)
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.create(1);
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
+
         when(sendStatusForUnitsService.send(request)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatusForUnits(request).getCount());
     }
@@ -110,7 +118,10 @@ class StatusControllerTest {
             .status(STATUS_LIST)
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.create(1);
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
+
         when(sendStatusForCareGiverService.send(CARE_GIVER_ID, request)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatusForCareGiver(CARE_GIVER_ID, request).getCount());
     }
