@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,7 +21,6 @@ package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 
 @Service
 public interface SendStatusForCareGiverService {
