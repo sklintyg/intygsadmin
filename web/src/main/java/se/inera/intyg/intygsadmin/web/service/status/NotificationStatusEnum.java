@@ -18,32 +18,8 @@
  */
 package se.inera.intyg.intygsadmin.web.service.status;
 
-import java.util.stream.Stream;
-
 public enum NotificationStatusEnum {
 
-    SUCCESS("SUCCESS", "Notification delivery status success"),
-    RESEND("RESEND", "Notification delivery status resend"),
-    FAILURE("FAILURE", "Notification delivery status failure");
+    SUCCESS, RESEND, FAILURE
 
-    private final String value;
-    private final String description;
-
-    NotificationStatusEnum(String value, String description) {
-        this.value = value;
-        this.description = description;
-    }
-
-    public String value() {
-        return this.value;
-    }
-
-    public String description() {
-        return this.description;
-    }
-
-    public static NotificationStatusEnum fromValue(String value) {
-        return Stream.of(values()).filter((s) -> value.equals(s.value())).findFirst()
-            .orElseThrow(() -> new IllegalArgumentException(value));
-    }
 }
