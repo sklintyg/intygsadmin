@@ -17,14 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service.status;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForTimePeriodIntegrationRequestDTO;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
+import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
-@Service
-public interface SendStatusForTimePeriodService {
+@Getter
+@Builder
+public class SendStatusForUnitsRequestDTO {
 
-    Integer send(SendStatusForTimePeriodIntegrationRequestDTO request);
+    private List<String> unitIds;
+    private LocalDateTime start;
+    private LocalDateTime end;
+    private List<NotificationStatusEnum> status;
+    private LocalDateTime activationTime;
 
 }

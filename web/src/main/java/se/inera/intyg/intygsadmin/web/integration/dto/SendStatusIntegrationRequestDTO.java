@@ -19,17 +19,13 @@
 
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class SendStatusIntegrationRequestDTO {
 
     private String statusId;
 
-    public static SendStatusIntegrationRequestDTO create(String statusId) {
-        final var response = new SendStatusIntegrationRequestDTO();
-        response.statusId = statusId;
-        return response;
-    }
-
-    public String getStatusId() {
-        return statusId;
-    }
 }

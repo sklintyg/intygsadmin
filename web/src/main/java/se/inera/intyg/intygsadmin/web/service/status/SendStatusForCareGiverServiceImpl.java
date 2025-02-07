@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 
@@ -33,11 +34,16 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
     }
 
     @Override
-    public Integer send(String careGiverId, SendStatusForCareGiverIntegrationRequestDTO request) {
-        final var integrationRequest = SendStatusForCareGiverIntegrationRequestDTO.create(careGiverId, request.getStart(), request.getEnd(),
-            request.getStatus(), request.getActivationTime());
+    public Integer send(String careGiverId, SendStatusForCareGiverRequestDTO request) {
+        final var integrationRequest = SendStatusForCareGiverIntegrationRequestDTO.builder()
+            .careGiverId(request.getCareGiverId())
+            .start(request.getStart())
+            .end(request.getEnd())
+            .activationTime(request.getActivationTime())
+            .status(request.getStatus())
+            .build();
+
         final var response = wcIntegrationRestService.sendStatusForCareGiver(integrationRequest);
         return response.getCount();
     }
-
 }

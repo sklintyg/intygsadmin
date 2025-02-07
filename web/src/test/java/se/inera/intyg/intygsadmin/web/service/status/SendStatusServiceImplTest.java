@@ -37,20 +37,21 @@ class SendStatusServiceImplTest {
 
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
+
     @InjectMocks
     private SendStatusServiceImpl sendStatusServiceImpl;
 
     @Test
     void shouldSendStatus() {
+        final var expected = SendStatusIntegrationResponseDTO.builder()
+            .count(1)
+            .build();
 
-        final var request = SendStatusIntegrationRequestDTO.create("statusId");
+        when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class)))
+            .thenReturn(expected);
 
-        when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class))).thenReturn(
-            SendStatusIntegrationResponseDTO.create(1));
-
-        final var response = sendStatusServiceImpl.send(request.getStatusId());
+        final var response = sendStatusServiceImpl.send("statusId");
 
         assertEquals(1, response);
-
     }
 }

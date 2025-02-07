@@ -21,35 +21,16 @@ package se.inera.intyg.intygsadmin.web.integration.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
+@Getter
+@Builder
 public class SendStatusForCertificatesIntegrationRequestDTO {
 
     private List<String> certificateIds;
     private List<NotificationStatusEnum> status;
     private LocalDateTime activationTime;
-
-    public static SendStatusForCertificatesIntegrationRequestDTO create(List<String> certificateIds, List<NotificationStatusEnum> status,
-        LocalDateTime activationTime) {
-        final var response = new SendStatusForCertificatesIntegrationRequestDTO();
-
-        response.certificateIds = certificateIds;
-        response.status = status;
-        response.activationTime = activationTime;
-
-        return response;
-    }
-
-    public List<String> getCertificateIds() {
-        return certificateIds;
-    }
-
-    public List<NotificationStatusEnum> getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getActivationTime() {
-        return activationTime;
-    }
 
 }

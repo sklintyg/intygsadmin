@@ -20,11 +20,12 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 
 @Service
 public interface SendStatusForCertificatesService {
 
-    Integer send(SendStatusForCertificatesIntegrationRequestDTO request);
+    Integer send(SendStatusForCertificatesRequestDTO request);
 
 }

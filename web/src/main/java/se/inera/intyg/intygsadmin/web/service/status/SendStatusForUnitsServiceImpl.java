@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 
@@ -33,9 +34,15 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
     }
 
     @Override
-    public Integer send(SendStatusForUnitsIntegrationRequestDTO request) {
-        final var integrationRequest = SendStatusForUnitsIntegrationRequestDTO.create(request.getUnitIds(), request.getStart(),
-            request.getEnd(), request.getStatus(), request.getActivationTime());
+    public Integer send(SendStatusForUnitsRequestDTO request) {
+        final var integrationRequest = SendStatusForUnitsIntegrationRequestDTO.builder()
+            .unitIds(request.getUnitIds())
+            .start(request.getStart())
+            .end(request.getEnd())
+            .status(request.getStatus())
+            .activationTime(request.getActivationTime())
+            .build();
+
         final var response = wcIntegrationRestService.sendStatusForUnits(integrationRequest);
         return response.getCount();
     }

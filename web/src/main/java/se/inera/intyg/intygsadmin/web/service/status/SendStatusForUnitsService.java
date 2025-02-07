@@ -20,11 +20,12 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 
 @Service
 public interface SendStatusForUnitsService {
 
-    Integer send(SendStatusForUnitsIntegrationRequestDTO request);
+    Integer send(SendStatusForUnitsRequestDTO request);
 
 }

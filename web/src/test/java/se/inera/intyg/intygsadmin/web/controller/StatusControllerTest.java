@@ -29,22 +29,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusResponseDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForTimePeriodIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForCareGiverService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForCertificatesService;
-import se.inera.intyg.intygsadmin.web.service.status.SendStatusForTimePeriodService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForUnitsService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusService;
 
 @ExtendWith(MockitoExtension.class)
 class StatusControllerTest {
 
-    public static final String STATUS_ID = "statusId";
+    private static final String STATUS_ID = "statusId";
+    private static final LocalDateTime START = LocalDateTime.now().minusDays(1);
+    private static final LocalDateTime END = LocalDateTime.now();
+    private static final LocalDateTime ACTIVATION_TIME = LocalDateTime.now().plusDays(1);
+    private static final List<NotificationStatusEnum> STATUS_LIST = List.of(NotificationStatusEnum.FAILURE);
+    private static final String CARE_GIVER_ID = "careGiverId";
+
     @Mock
     private SendStatusService sendStatusService;
 
@@ -57,8 +61,6 @@ class StatusControllerTest {
     @Mock
     private SendStatusForCareGiverService sendStatusForCareGiverService;
 
-    @Mock
-    private SendStatusForTimePeriodService sendStatusForTimePeriodService;
 
     @InjectMocks
     private StatusController statusController;
@@ -72,11 +74,11 @@ class StatusControllerTest {
 
     @Test
     void shouldSetSendStatusForCertificates() {
-        final var request = SendStatusForCertificatesIntegrationRequestDTO.create(
-            List.of("certificateId1", "certificateId2"),
-            List.of(NotificationStatusEnum.FAILURE),
-            LocalDateTime.now()
-        );
+        final var request = SendStatusForCertificatesRequestDTO.builder()
+            .certificateIds(List.of("certificateId"))
+            .status(STATUS_LIST)
+            .activationTime(LocalDateTime.now())
+            .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.create(1);
         when(sendStatusForCertificatesService.send(request)).thenReturn(sendStatusResponse.getCount());
@@ -85,13 +87,13 @@ class StatusControllerTest {
 
     @Test
     void shouldSetSendStatusForUnits() {
-        final var request = SendStatusForUnitsIntegrationRequestDTO.create(
-            List.of("unitId1", "unitId2"),
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            List.of(NotificationStatusEnum.FAILURE),
-            LocalDateTime.now()
-        );
+        final var request = SendStatusForUnitsRequestDTO.builder()
+            .unitIds(List.of("unitId"))
+            .status(STATUS_LIST)
+            .start(START)
+            .end(END)
+            .activationTime(ACTIVATION_TIME)
+            .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.create(1);
         when(sendStatusForUnitsService.send(request)).thenReturn(sendStatusResponse.getCount());
@@ -100,30 +102,17 @@ class StatusControllerTest {
 
     @Test
     void shouldSetSendStatusForCareGiver() {
-        final var request = SendStatusForCareGiverIntegrationRequestDTO.create(
-            "careGiverId",
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            List.of(NotificationStatusEnum.FAILURE),
-            LocalDateTime.now()
-        );
+        final var request = SendStatusForCareGiverRequestDTO.builder()
+            .careGiverId(CARE_GIVER_ID)
+            .start(START)
+            .end(END)
+            .activationTime(ACTIVATION_TIME)
+            .status(STATUS_LIST)
+            .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.create(1);
-        when(sendStatusForCareGiverService.send("careGiverId", request)).thenReturn(sendStatusResponse.getCount());
-        assertEquals(1, statusController.sendStatusForCareGiver("careGiverId", request).getCount());
+        when(sendStatusForCareGiverService.send(CARE_GIVER_ID, request)).thenReturn(sendStatusResponse.getCount());
+        assertEquals(1, statusController.sendStatusForCareGiver(CARE_GIVER_ID, request).getCount());
     }
 
-    @Test
-    void shouldSetSendStatusForTimePeriod() {
-        final var request = SendStatusForTimePeriodIntegrationRequestDTO.create(
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            List.of(NotificationStatusEnum.FAILURE),
-            LocalDateTime.now()
-        );
-
-        final var sendStatusResponse = SendStatusResponseDTO.create(1);
-        when(sendStatusForTimePeriodService.send(request)).thenReturn(sendStatusResponse.getCount());
-        assertEquals(1, statusController.sendStatusForTimePeriod(request).getCount());
-    }
 }

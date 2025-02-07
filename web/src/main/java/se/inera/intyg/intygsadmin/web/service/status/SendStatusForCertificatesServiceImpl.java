@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 
@@ -33,11 +34,14 @@ public class SendStatusForCertificatesServiceImpl implements SendStatusForCertif
     }
 
     @Override
-    public Integer send(SendStatusForCertificatesIntegrationRequestDTO request) {
-        final var integrationRequest = SendStatusForCertificatesIntegrationRequestDTO.create(request.getCertificateIds(),
-            request.getStatus(), request.getActivationTime());
+    public Integer send(SendStatusForCertificatesRequestDTO request) {
+        final var integrationRequest = SendStatusForCertificatesIntegrationRequestDTO.builder()
+            .certificateIds(request.getCertificateIds())
+            .status(request.getStatus())
+            .activationTime(request.getActivationTime())
+            .build();
+
         final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);
         return response.getCount();
     }
-
 }

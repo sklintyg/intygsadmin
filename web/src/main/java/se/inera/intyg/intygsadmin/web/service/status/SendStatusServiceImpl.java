@@ -34,7 +34,10 @@ public class SendStatusServiceImpl implements SendStatusService {
 
     @Override
     public Integer send(String statusId) {
-        final var request = SendStatusIntegrationRequestDTO.create(statusId);
+        final var request = SendStatusIntegrationRequestDTO.builder()
+            .statusId(statusId)
+            .build();
+
         final var response = wcIntegrationRestService.sendStatus(request);
         return response.getCount();
     }

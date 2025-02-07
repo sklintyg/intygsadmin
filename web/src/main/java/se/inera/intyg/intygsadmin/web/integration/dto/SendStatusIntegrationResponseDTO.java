@@ -19,17 +19,13 @@
 
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class SendStatusIntegrationResponseDTO {
 
     private Integer count;
 
-    public static SendStatusIntegrationResponseDTO create(Integer count) {
-        final var response = new SendStatusIntegrationResponseDTO();
-        response.count = count;
-        return response;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
 }

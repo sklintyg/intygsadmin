@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
@@ -39,26 +40,29 @@ class SendStatusForCareGiverServiceImplTest {
 
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
+
     @InjectMocks
     private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
 
     @Test
     void shouldSendStatusForCareGiver() {
+        final var request = SendStatusForCareGiverRequestDTO.builder()
+            .careGiverId("careGiverId")
+            .status(List.of(NotificationStatusEnum.FAILURE))
+            .start(LocalDateTime.now())
+            .end(LocalDateTime.now())
+            .activationTime(LocalDateTime.now())
+            .build();
 
-        final var request = SendStatusForCareGiverIntegrationRequestDTO.create(
-            "careGiverId",
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            List.of(NotificationStatusEnum.FAILURE),
-            LocalDateTime.now()
-        );
+        final var expected = SendStatusIntegrationResponseDTO.builder()
+            .count(1)
+            .build();
 
-        when(wcIntegrationRestService.sendStatusForCareGiver(any(SendStatusForCareGiverIntegrationRequestDTO.class))).thenReturn(
-            SendStatusIntegrationResponseDTO.create(1));
+        when(wcIntegrationRestService.sendStatusForCareGiver(any(SendStatusForCareGiverIntegrationRequestDTO.class)))
+            .thenReturn(expected);
 
         final var response = sendStatusForCareGiverServiceImpl.send("careGiverId", request);
 
         assertEquals(1, response);
-
     }
 }

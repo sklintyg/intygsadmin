@@ -24,14 +24,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusResponseDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForTimePeriodIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForCareGiverService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForCertificatesService;
-import se.inera.intyg.intygsadmin.web.service.status.SendStatusForTimePeriodService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForUnitsService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusService;
 
@@ -43,52 +41,38 @@ public class StatusController {
     private final SendStatusForCertificatesService sendStatusForCertificatesService;
     private final SendStatusForUnitsService sendStatusForUnitsService;
     private final SendStatusForCareGiverService sendStatusForCareGiverService;
-    private final SendStatusForTimePeriodService sendStatusForTimePeriodService;
 
     public StatusController(SendStatusService sendStatusService, SendStatusForCertificatesService sendStatusForCertificatesService,
-        SendStatusForUnitsService sendStatusForUnitsService, SendStatusForCareGiverService sendStatusForCareGiverService,
-        SendStatusForTimePeriodService sendStatusForTimePeriodService) {
+        SendStatusForUnitsService sendStatusForUnitsService, SendStatusForCareGiverService sendStatusForCareGiverService) {
         this.sendStatusService = sendStatusService;
         this.sendStatusForCertificatesService = sendStatusForCertificatesService;
         this.sendStatusForUnitsService = sendStatusForUnitsService;
         this.sendStatusForCareGiverService = sendStatusForCareGiverService;
-        this.sendStatusForTimePeriodService = sendStatusForTimePeriodService;
     }
 
     @PostMapping("/{statusId}")
     public SendStatusResponseDTO sendStatus(@PathVariable String statusId) {
         final var response = sendStatusService.send(statusId);
         return SendStatusResponseDTO.create(response);
-
     }
 
     @PostMapping("/certificates")
-    public SendStatusResponseDTO sendStatusForCertificate(@RequestBody SendStatusForCertificatesIntegrationRequestDTO request) {
+    public SendStatusResponseDTO sendStatusForCertificate(@RequestBody SendStatusForCertificatesRequestDTO request) {
         final var response = sendStatusForCertificatesService.send(request);
         return SendStatusResponseDTO.create(response);
-
     }
 
     @PostMapping("/units")
-    public SendStatusResponseDTO sendStatusForUnits(@RequestBody SendStatusForUnitsIntegrationRequestDTO request) {
+    public SendStatusResponseDTO sendStatusForUnits(@RequestBody SendStatusForUnitsRequestDTO request) {
         final var response = sendStatusForUnitsService.send(request);
         return SendStatusResponseDTO.create(response);
-
     }
 
     @PostMapping("/{careGiverId}")
     public SendStatusResponseDTO sendStatusForCareGiver(@PathVariable String careGiverId,
-        @RequestBody SendStatusForCareGiverIntegrationRequestDTO request) {
+        @RequestBody SendStatusForCareGiverRequestDTO request) {
         final var response = sendStatusForCareGiverService.send(careGiverId, request);
         return SendStatusResponseDTO.create(response);
-
-    }
-
-    @PostMapping("/timePeriod")
-    public SendStatusResponseDTO sendStatusForTimePeriod(@RequestBody SendStatusForTimePeriodIntegrationRequestDTO request) {
-        final var response = sendStatusForTimePeriodService.send(request);
-        return SendStatusResponseDTO.create(response);
-
     }
 
 }

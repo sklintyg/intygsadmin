@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
@@ -39,29 +40,31 @@ class SendStatusForUnitsServiceImplTest {
 
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
+
     @InjectMocks
     private SendStatusForUnitsServiceImpl sendStatusForUnitsServiceImpl;
 
     @Test
     void shouldSendStatusForUnits() {
 
-        final var request = SendStatusForUnitsIntegrationRequestDTO.create(
-            List.of("unitId1", "unitId2"),
-            LocalDateTime.now(),
-            LocalDateTime.now(),
-            List.of(NotificationStatusEnum.FAILURE),
-            LocalDateTime.now()
-        );
+        final var request = SendStatusForUnitsRequestDTO.builder()
+            .unitIds(List.of("unit1", "unit2"))
+            .status(List.of(NotificationStatusEnum.FAILURE))
+            .start(LocalDateTime.now())
+            .build();
 
-        when(wcIntegrationRestService.sendStatusForUnits(any(SendStatusForUnitsIntegrationRequestDTO.class))).thenReturn(
-            SendStatusIntegrationResponseDTO.create(1));
+        final var expected = SendStatusIntegrationResponseDTO.builder()
+            .count(1)
+            .build();
+
+        when(wcIntegrationRestService.sendStatusForUnits(any(SendStatusForUnitsIntegrationRequestDTO.class)))
+            .thenReturn(expected);
 
         final var response = sendStatusForUnitsServiceImpl.send(request);
 
         assertEquals(1, response);
 
     }
-
 }
 
 

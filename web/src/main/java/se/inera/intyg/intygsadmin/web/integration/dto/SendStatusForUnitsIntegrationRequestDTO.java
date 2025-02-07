@@ -21,8 +21,12 @@ package se.inera.intyg.intygsadmin.web.integration.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
+@Getter
+@Builder
 public class SendStatusForUnitsIntegrationRequestDTO {
 
     private List<String> unitIds;
@@ -30,39 +34,5 @@ public class SendStatusForUnitsIntegrationRequestDTO {
     private LocalDateTime end;
     private List<NotificationStatusEnum> status;
     private LocalDateTime activationTime;
-
-    public static SendStatusForUnitsIntegrationRequestDTO create(List<String> unitIds, LocalDateTime start, LocalDateTime end,
-        List<NotificationStatusEnum> status,
-        LocalDateTime activationTime) {
-        final var response = new SendStatusForUnitsIntegrationRequestDTO();
-
-        response.unitIds = unitIds;
-        response.start = start;
-        response.end = end;
-        response.status = status;
-        response.activationTime = activationTime;
-
-        return response;
-    }
-
-    public List<String> getUnitIds() {
-        return unitIds;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public List<NotificationStatusEnum> getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getActivationTime() {
-        return activationTime;
-    }
 
 }
