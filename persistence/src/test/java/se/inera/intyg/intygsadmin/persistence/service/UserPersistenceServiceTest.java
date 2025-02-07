@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -60,7 +60,7 @@ public class UserPersistenceServiceTest extends TestSupport {
         Pageable pageable = PageRequest.of(0, pageSize);
         Page<UserEntity> list = userPersistenceService.findAll(pageable);
         assertEquals(total, list.getTotalElements());
-        UserEntity userEntityFromList = list.getContent().get(0);
+        UserEntity userEntityFromList = list.getContent().getFirst();
 
         Optional<UserEntity> byEmployeeHsaId = userPersistenceService.findByEmployeeHsaId(userEntityFromList.getEmployeeHsaId());
         assertTrue(byEmployeeHsaId.isPresent());

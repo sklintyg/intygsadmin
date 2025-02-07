@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -56,11 +56,15 @@ public class IdpProperties {
      * This is normally a URL with /oidc at the end. The application will use this to access the OP's configuration
      * via the default path for .well-known-location
      */
-    private URL issuerUri;
+    private String issuerUri;
 
     /**
      * A list of claims that should be requested from this OP.
      */
     private List<String> requestedClaims = List.of("employeeHsaId", "given_name", "family_name");
+
+    private String clientRegistrationId;
+    private String userNameAttributeName;
+    private String scope;
 
 }

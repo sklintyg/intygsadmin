@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -57,7 +57,7 @@ import se.inera.intyg.intygsadmin.web.mapper.UserMapper;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @ContextConfiguration
-public class UserServiceImplTest {
+class UserServiceImplTest {
 
     @Spy
     private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
@@ -70,7 +70,7 @@ public class UserServiceImplTest {
 
     @Test
     @WithMockIntygsadminUser
-    public void testGetActiveUser_found() throws NoSuchMethodException {
+    void testGetActiveUser_found() throws NoSuchMethodException {
         IntygsadminUser activeUser = userService.getActiveUser();
 
         assertNotNull(activeUser);
@@ -80,12 +80,12 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testGetActiveUser_notFound() {
+    void testGetActiveUser_notFound() {
         assertNull(userService.getActiveUser());
     }
 
     @Test
-    public void testGetUsers() {
+    void testGetUsers() {
         Pageable pageable = PageRequest.of(0, 10);
 
         UserEntity ue1 = new UserEntity(UUID.randomUUID(), LocalDateTime.now(), "HSA1", "name1", IntygsadminRole.BAS);
@@ -103,7 +103,7 @@ public class UserServiceImplTest {
 
     @Test
     @WithMockIntygsadminUser
-    public void testDeleteUser() {
+    void testDeleteUser() {
         UUID id = UUID.randomUUID();
 
         userService.deleteUser(id);
@@ -112,7 +112,7 @@ public class UserServiceImplTest {
 
     @Test
     @WithMockIntygsadminUser
-    public void testDeleteUser_currentUser() {
+    void testDeleteUser_currentUser() {
         UUID id = userService.getActiveUser().getId();
 
         try {
@@ -127,7 +127,7 @@ public class UserServiceImplTest {
 
     @Test
     @WithMockIntygsadminUser
-    public void testUpdateUser() {
+    void testUpdateUser() {
         UUID id = UUID.randomUUID();
         UserDTO userDTO = new UserDTO();
         userDTO.setId(id);
@@ -148,7 +148,7 @@ public class UserServiceImplTest {
 
     @Test
     @WithMockIntygsadminUser
-    public void testUpdateUser_currentUser() {
+    void testUpdateUser_currentUser() {
         UUID id = userService.getActiveUser().getId();
         UserDTO userDTO = new UserDTO();
         userDTO.setId(id);
@@ -168,7 +168,7 @@ public class UserServiceImplTest {
 
     @Test
     @WithMockIntygsadminUser
-    public void testUpdateUser_hsaExists() {
+    void testUpdateUser_hsaExists() {
         UUID id = UUID.randomUUID();
 
         UserDTO userDTO = new UserDTO();
@@ -195,7 +195,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testAddUser() {
+    void testAddUser() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("name");
         userDTO.setEmployeeHsaId("HSA-1");
@@ -206,7 +206,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testAddUser_hsaExists() {
+    void testAddUser_hsaExists() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("name");
         userDTO.setEmployeeHsaId("HSA-1");

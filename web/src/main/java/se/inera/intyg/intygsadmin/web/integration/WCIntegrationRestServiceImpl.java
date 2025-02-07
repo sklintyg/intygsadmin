@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,21 +18,24 @@
  */
 package se.inera.intyg.intygsadmin.web.integration;
 
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
+
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import net.minidev.json.JSONObject;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
@@ -46,21 +49,26 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @Service
 public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
-    private RestTemplate restTemplate;
+    private RestClient restClient;
 
     @Value("${webcert.internalapi}")
     private String webcertUrl;
 
     @Autowired
-    public WCIntegrationRestServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public WCIntegrationRestServiceImpl(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     @Override
     public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
-        String url = webcertUrl + "/internalapi/integratedUnits/" + hsaId;
         try {
-            return restTemplate.getForObject(url, IntegratedUnitDTO.class);
+            return restClient
+                .get()
+                .uri(webcertUrl + "/internalapi/integratedUnits/" + hsaId)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve()
+                .body(IntegratedUnitDTO.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -71,21 +79,26 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public List<IntegratedUnitDTO> getAllIntegratedUnits() {
-        String url = webcertUrl + "/internalapi/integratedUnits/all";
-
-        IntegratedUnitDTO[] integratedUnitDTOArray = restTemplate.getForObject(url, IntegratedUnitDTO[].class);
-
-        if (integratedUnitDTOArray == null) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(integratedUnitDTOArray);
+        return restClient
+            .get()
+            .uri(webcertUrl + "/internalapi/integratedUnits/all")
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .retrieve()
+            .body(new ParameterizedTypeReference<>() {
+            });
     }
 
     @Override
     public WcIntygInfo getIntygInfo(String intygId) {
-        String url = webcertUrl + "/internalapi/intygInfo/" + intygId;
         try {
-            return restTemplate.getForObject(url, WcIntygInfo.class);
+            return restClient
+                .get()
+                .uri(webcertUrl + "/internalapi/intygInfo/" + intygId)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve()
+                .body(WcIntygInfo.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -96,17 +109,19 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        final var eraseUrl = webcertUrl + "/internalapi/testCertificate/erase";
-
-        final var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
         final var eraseJSON = new JSONObject();
         eraseJSON.put("from", from);
         eraseJSON.put("to", to);
 
-        final var eraseRequest = new HttpEntity<>(eraseJSON, headers);
-        return restTemplate.postForObject(eraseUrl, eraseRequest, TestCertificateEraseResult.class);
+        return restClient
+            .post()
+            .uri(webcertUrl + "/internalapi/testCertificate/erase")
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(eraseJSON)
+            .retrieve()
+            .body(TestCertificateEraseResult.class);
     }
 
     @Override

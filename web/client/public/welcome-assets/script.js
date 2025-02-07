@@ -1,14 +1,11 @@
-var fakeUsers = [];
-var fakeUsersMap = {};
-var jsonSelect;
+let fakeUsers = [];
+let jsonSelect;
 
-var validProperties = [
-  'employeeHsaId',
-  'intygsadminRole',
-  'name'
-];
+const fakeUsersMap = {};
+const fakeLoginUri = "/fake-api/login"
+const validProperties = ['employeeHsaId', 'intygsadminRole', 'name'];
 
-$(document).ready(function() {
+$(function() {
   fetchFakeUsers();
 
   jsonSelect = $("#jsonSelect");
@@ -19,27 +16,27 @@ $(document).ready(function() {
 
   jsonSelect.dblclick(function() {
     updateUserContext(jsonSelect.val());
-    $("#loginForm").submit();
+    fakeLogin()
   });
 });
 
 function fetchFakeUsers() {
   $.getJSON('/fake-api/users')
-    .then(
-      function(response) {
-        fakeUsers = response;
-        updateUserList();
-      },
-      function(data, status) {
-        console.log('error ' + status);
-      }
-    );
+  .then(
+    function(response) {
+      fakeUsers = response;
+      updateUserList();
+    },
+    function(data, status) {
+      console.log('error ' + status);
+    }
+  );
 }
 
 function updateUserList() {
   jsonSelect.innerHtml = "";
 
-  fakeUsers.forEach(function(item, index) {
+  fakeUsers.forEach(function(item) {
     fakeUsersMap[item.employeeHsaId] = item;
     jsonSelect.append(
       '<option id="' + item.employeeHsaId + '" value="' + item.employeeHsaId + '">' + item.name + ' ' + item.intygsadminRole +
@@ -51,15 +48,15 @@ function updateUserList() {
 }
 
 function _replacer(key, value) {
-  if (value === null || ($.isArray(value) && value.length === 0)) {
+  if (value === null || (Array.isArray(value) && value.length === 0)) {
     return undefined;
   }
   return value;
 }
 
 function _stringify(fakeUser) {
-  var string = JSON.stringify(fakeUser, validProperties, 1);
-  var object = JSON.parse(string);
+  const string = JSON.stringify(fakeUser, validProperties, 1);
+  const object = JSON.parse(string);
 
   return JSON.stringify(object, _replacer, 1);
 }
@@ -70,12 +67,29 @@ function updateUserContext(newSelected) {
   }
 
   // Catch user login option
-  var login = fakeUsersMap[newSelected];
+  const login = fakeUsersMap[newSelected];
 
   if (typeof login !== 'undefined') {
-
-    var loginJson = _stringify(login);
-
+    const loginJson = _stringify(login);
     $("#userJsonDisplay").val(loginJson);
   }
+}
+
+function fakeLogin() {
+  const userJsonDisplay = $("#userJsonDisplay").val()
+  const jsonUser = JSON.stringify(JSON.parse(userJsonDisplay), validProperties)
+
+  fetch(fakeLoginUri, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: jsonUser
+  }).then((response) => {
+    if (response.status === 200) {
+      window.location.href = '/'
+    } else if (response.status === 403) {
+      window.location.href = '/#/loggedout/LOGIN_FEL002'
+    } else {
+      window.location.href = '/#/loggedout/LOGIN_FEL001'
+    }
+  });
 }

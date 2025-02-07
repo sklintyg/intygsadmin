@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.intygsadmin.persistence.service;
 
+import jakarta.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

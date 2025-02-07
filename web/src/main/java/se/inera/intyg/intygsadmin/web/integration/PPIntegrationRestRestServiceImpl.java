@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,17 +18,24 @@
  */
 package se.inera.intyg.intygsadmin.web.integration;
 
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
+
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 @Profile("!pp-stub")
@@ -37,21 +44,26 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
 
     private static final Logger LOG = LoggerFactory.getLogger(PPIntegrationRestRestServiceImpl.class);
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     @Value("${privatlakarportal.internalapi}")
     private String privatlakarportalUrl;
 
     @Autowired
-    public PPIntegrationRestRestServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public PPIntegrationRestRestServiceImpl(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     @Override
     public PrivatePractitioner getPrivatePractitioner(String personOrHsaId) {
-        String url = privatlakarportalUrl + "/internalapi/privatepractitioner?personOrHsaId=" + personOrHsaId;
         try {
-            return restTemplate.getForObject(url, PrivatePractitioner.class);
+            return restClient
+                .get()
+                .uri(privatlakarportalUrl + "/internalapi/privatepractitioner?personOrHsaId=" + personOrHsaId)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve()
+                .body(PrivatePractitioner.class);
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
                 throw ex;
@@ -62,21 +74,24 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
 
     @Override
     public List<PrivatePractitioner> getAllPrivatePractitioners() {
-        String url = privatlakarportalUrl + "/internalapi/privatepractitioner/all";
-
-        PrivatePractitioner[] privatePractitionerArray = restTemplate.getForObject(url, PrivatePractitioner[].class);
-
-        if (privatePractitionerArray == null) {
-            return List.of();
-        }
-        return List.of(privatePractitionerArray);
+        return restClient
+            .get()
+            .uri(privatlakarportalUrl + "/internalapi/privatepractitioner/all")
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .retrieve()
+            .body(new ParameterizedTypeReference<>() {});
     }
 
     @Override
     public void unregisterPrivatePractitioner(String hsaId) {
         try {
-            String url = privatlakarportalUrl + "/internalapi/privatepractitioner/erase/" + hsaId;
-            restTemplate.delete(url);
+            restClient
+                .delete()
+                .uri(privatlakarportalUrl + "/internalapi/privatepractitioner/erase/" + hsaId)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve();
         } catch (RestClientException e) {
             LOG.error("Failure unregistering private practitioner {}.", hsaId, e);
             throw e;

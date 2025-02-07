@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -93,7 +93,7 @@ public class UsersControllerIT extends BaseRestIntegrationTest {
             .get(USER_API_ENDPOINT)
             .then()
             .extract()
-            .path("totalElements");
+            .path("page.totalElements");
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmployeeHsaId("hsaId-1");
@@ -116,7 +116,7 @@ public class UsersControllerIT extends BaseRestIntegrationTest {
             .get(USER_API_ENDPOINT)
             .then()
             .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore + 1))
+            .body("page.totalElements", is(totalElementsBefore + 1))
             .body("content.find { it.id == '" + userId + "' }.name",
                 equalTo("name"));
 
@@ -137,7 +137,7 @@ public class UsersControllerIT extends BaseRestIntegrationTest {
             .get(USER_API_ENDPOINT)
             .then()
             .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore + 1))
+            .body("page.totalElements", is(totalElementsBefore + 1))
             .body("content.find { it.id == '" + userId + "' }.name",
                 equalTo("New name"));
 
@@ -153,7 +153,7 @@ public class UsersControllerIT extends BaseRestIntegrationTest {
             .get(USER_API_ENDPOINT)
             .then()
             .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore));
+            .body("page.totalElements", is(totalElementsBefore));
     }
 
 }

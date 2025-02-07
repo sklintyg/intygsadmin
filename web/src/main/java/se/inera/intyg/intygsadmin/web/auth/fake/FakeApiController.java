@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,24 +21,36 @@ package se.inera.intyg.intygsadmin.web.auth.fake;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.service.FakeLoginService;
+import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 
 @Profile(FAKE_PROFILE)
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(FakeApiController.FAKE_API_REQUEST_MAPPING)
 public class FakeApiController {
+
+    private final FakeLoginService fakeLoginService;
+    private final MonitoringLogService monitoringLogService;
 
     public static final String FAKE_API_REQUEST_MAPPING = "/fake-api";
 
@@ -57,12 +69,22 @@ public class FakeApiController {
                 fakeUsers.add(objectMapper.readValue(jsonUserStream, FakeUser.class));
             }
         }
-
     }
 
     @GetMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<FakeUser>> getFakeUsers() {
 
         return ResponseEntity.ok(fakeUsers);
+    }
+
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void login(HttpServletRequest request, @RequestBody FakeUser fakeUser) {
+        try {
+            fakeLoginService.login(fakeUser, request);
+        } catch (Exception e) {
+            monitoringLogService.logFailedLogin("Fake login failure for user '%s'.".formatted(fakeUser.getEmployeeHsaId()));
+            log.error("Fake login failure for user '{}'.", fakeUser.getEmployeeHsaId(), e);
+            throw e;
+        }
     }
 }

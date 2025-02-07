@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,16 +18,22 @@
  */
 package se.inera.intyg.intygsadmin.web.integration;
 
-import java.util.Arrays;
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
+
 import java.util.List;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.intygsadmin.web.controller.dto.UpdateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
@@ -38,13 +44,13 @@ public class TerminationRestServiceImpl implements TerminationRestService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TerminationRestServiceImpl.class);
 
-    private final RestTemplate restTemplate;
+    private final RestClient restClient;
 
     @Value("${terminationservice.api}")
     private String terminationServiceUrl;
 
-    public TerminationRestServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public TerminationRestServiceImpl(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     /**
@@ -54,10 +60,15 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public List<DataExportResponse> getDataExports() {
-        String url = terminationServiceUrl + "/api/v1/terminations";
         try {
-            DataExportResponse[] dataExportResponses = restTemplate.getForObject(url, DataExportResponse[].class);
-            return Arrays.asList(Objects.requireNonNull(dataExportResponses));
+            return restClient
+                .get()
+                .uri(terminationServiceUrl + "/api/v1/terminations")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
         } catch (RestClientException | NullPointerException e) {
             LOG.error("Failure fetching terminations from cts.", e);
             throw e;
@@ -72,9 +83,16 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public DataExportResponse createDataExport(CreateDataExport createDataExport) {
-        String url = terminationServiceUrl + "/api/v1/terminations";
         try {
-            return restTemplate.postForObject(url, createDataExport, DataExportResponse.class);
+            return restClient
+                .post()
+                .uri(terminationServiceUrl + "/api/v1/terminations")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(createDataExport)
+                .retrieve()
+                .body(DataExportResponse.class);
         } catch (RestClientException e) {
             LOG.error(e.getMessage());
             throw e;
@@ -88,9 +106,15 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public String eraseDataExport(String terminationId) {
-        String url = terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/erase";
         try {
-            return restTemplate.postForObject(url, null, String.class);
+            return restClient
+                .post()
+                .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/erase")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(String.class);
         } catch (RestClientException e) {
             LOG.error(e.getMessage());
             throw e;
@@ -106,11 +130,16 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO updateDataExportDTO) {
-        String url = terminationServiceUrl + "/api/v1/terminations/" + terminationId;
         try {
-            final var dataExportResponse = restTemplate.postForObject(url, updateDataExportDTO, DataExportResponse.class);
-            LOG.info("Successfully updated termination {}", terminationId);
-            return dataExportResponse;
+            return restClient
+                .post()
+                .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(updateDataExportDTO)
+                .retrieve()
+                .body(DataExportResponse.class);
         } catch (RestClientException e) {
             LOG.error("Failure updating termination.", e);
             throw e;
@@ -124,9 +153,15 @@ public class TerminationRestServiceImpl implements TerminationRestService {
      */
     @Override
     public String resendDataExportKey(String terminationId) {
-        String url = terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/resendpassword";
         try {
-            return restTemplate.postForObject(url, null, String.class);
+            return restClient
+                .post()
+                .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/resendpassword")
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(String.class);
         } catch (RestClientException e) {
             LOG.error(e.getMessage());
             throw e;

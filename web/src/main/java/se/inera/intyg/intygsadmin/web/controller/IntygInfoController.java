@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -54,11 +54,8 @@ public class IntygInfoController {
     public ResponseEntity<IntygInfoDTO> getIntygInfo(@PathVariable String intygId) {
 
         Optional<IntygInfoDTO> intygInfoDTO = intygInfoService.getIntygInfo(intygId);
-        if (!intygInfoDTO.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
+        return intygInfoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
-        return ResponseEntity.ok(intygInfoDTO.get());
     }
 
 }

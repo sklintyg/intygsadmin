@@ -32,3 +32,4 @@ tools/*/build/
 
 ### OS X ###
 .DS_Store
+/.java-version

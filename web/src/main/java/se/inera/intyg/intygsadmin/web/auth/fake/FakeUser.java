@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,17 +18,26 @@
  */
 package se.inera.intyg.intygsadmin.web.auth.fake;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser.FakeUserBuilder;
 
-@Data
+@JsonDeserialize(builder = FakeUserBuilder.class)
+@Value
+@Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class FakeUser {
 
-    private String employeeHsaId;
-    private String intygsadminRole;
-    private String name;
+    String employeeHsaId;
+    String intygsadminRole;
+    String name;
+
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class FakeUserBuilder {
+
+    }
 
 }

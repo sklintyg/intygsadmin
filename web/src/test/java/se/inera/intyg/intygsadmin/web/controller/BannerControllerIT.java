@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -68,7 +68,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
             .get(BANNER_API_ENDPOINT)
             .then()
             .extract()
-            .path("totalElements");
+            .path("page.totalElements");
 
         BannerDTO bannerDTO = new BannerDTO();
 
@@ -94,7 +94,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
             .get(BANNER_API_ENDPOINT)
             .then()
             .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore + 1))
+            .body("page.totalElements", is(totalElementsBefore + 1))
             .body("content.find { it.id == '" + bannerId + "' }.message",
                 equalTo("hej"));
 
@@ -115,7 +115,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
             .get(BANNER_API_ENDPOINT)
             .then()
             .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore + 1))
+            .body("page.totalElements", is(totalElementsBefore + 1))
             .body("content.find { it.id == '" + bannerId + "' }.message",
                 equalTo("New message"));
 
@@ -131,7 +131,7 @@ public class BannerControllerIT extends BaseRestIntegrationTest {
             .get(BANNER_API_ENDPOINT)
             .then()
             .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-response-schema.json"))
-            .body("totalElements", is(totalElementsBefore));
+            .body("page.totalElements", is(totalElementsBefore));
     }
 
 }

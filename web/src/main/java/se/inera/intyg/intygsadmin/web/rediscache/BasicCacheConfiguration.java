@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,9 +19,9 @@
 package se.inera.intyg.intygsadmin.web.rediscache;
 
 import com.google.common.base.Strings;
+import jakarta.annotation.Resource;
 import java.time.Duration;
 import java.util.List;
-import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

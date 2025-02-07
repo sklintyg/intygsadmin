@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2025 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserResponseDTO {
 
-    private String logoutUrl = LOGOUT_URL;
+    private final String logoutUrl = LOGOUT_URL;
     private final String employeeHsaId;
     private final String intygsadminRole;
     private final String name;
