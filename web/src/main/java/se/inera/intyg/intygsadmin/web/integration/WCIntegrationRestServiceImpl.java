@@ -126,84 +126,53 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
-        try {
-            return restClient
-                .post()
-                .uri(webcertUrl + "/internalapi/notification/" + request.getStatusId())
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(request)
-                .retrieve()
-                .body(SendStatusIntegrationResponseDTO.class);
-
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return SendStatusIntegrationResponseDTO.builder().build();
-        }
+        return restClient
+            .post()
+            .uri(webcertUrl + "/internalapi/notification/" + request.getStatusId())
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(request)
+            .retrieve()
+            .body(SendStatusIntegrationResponseDTO.class);
     }
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request) {
-        try {
-            return restClient
-                .post()
-                .uri(webcertUrl + "/internalapi/notification/certificates")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(request)
-                .retrieve()
-                .body(SendStatusIntegrationResponseDTO.class);
-
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return SendStatusIntegrationResponseDTO.builder().build();
-        }
+        return restClient
+            .post()
+            .uri(webcertUrl + "/internalapi/notification/certificates")
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(request)
+            .retrieve()
+            .body(SendStatusIntegrationResponseDTO.class);
     }
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request) {
-        try {
-            return restClient
-                .post()
-                .uri(webcertUrl + "/internalapi/notification/units")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(request)
-                .retrieve()
-                .body(SendStatusIntegrationResponseDTO.class);
-
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return SendStatusIntegrationResponseDTO.builder().build();
-        }
+        return restClient
+            .post()
+            .uri(webcertUrl + "/internalapi/notification/units")
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(request)
+            .retrieve()
+            .body(SendStatusIntegrationResponseDTO.class);
     }
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
-        try {
-            return restClient
-                .post()
-                .uri(webcertUrl + "/internalapi/notification/careGiver/" + request.getCareGiverId())
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(request)
-                .retrieve()
-                .body(SendStatusIntegrationResponseDTO.class);
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return SendStatusIntegrationResponseDTO.builder().build();
-        }
+        return restClient
+            .post()
+            .uri(webcertUrl + "/internalapi/notification/careGiver/" + request.getCareGiverId())
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(request)
+            .retrieve()
+            .body(SendStatusIntegrationResponseDTO.class);
     }
 }

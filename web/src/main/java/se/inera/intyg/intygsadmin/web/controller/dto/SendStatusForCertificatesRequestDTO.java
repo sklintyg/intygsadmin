@@ -13,5 +13,6 @@ public class SendStatusForCertificatesRequestDTO {
     List<String> certificateIds;
     List<NotificationStatusEnum> status;
     LocalDateTime activationTime;
-
+    LocalDateTime start;
+    LocalDateTime end;
 }

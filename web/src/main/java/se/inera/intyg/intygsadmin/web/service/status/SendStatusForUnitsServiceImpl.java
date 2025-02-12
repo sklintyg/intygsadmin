@@ -19,32 +19,41 @@
 
 package se.inera.intyg.intygsadmin.web.service.status;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 
 @Service
+@RequiredArgsConstructor
 public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService {
 
     private final WCIntegrationRestService wcIntegrationRestService;
+    private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    public SendStatusForUnitsServiceImpl(WCIntegrationRestService wcIntegrationRestService) {
-        this.wcIntegrationRestService = wcIntegrationRestService;
-    }
+    @Value("${timeinterval.maxdays.unit:7}")
+    private int maxTimeInterval;
+
+    @Value("${timelimit.daysback.start:365}")
+    private int maxDaysBackStartDate;
 
     @Override
     public Integer send(SendStatusForUnitsRequestDTO request) {
+        sendNotificationRequestValidator.validateIds(request.getUnitIds());
+        sendNotificationRequestValidator.validateDate(request.getStart(), request.getEnd(),
+            maxTimeInterval, maxDaysBackStartDate);
+
         final var integrationRequest = SendStatusForUnitsIntegrationRequestDTO.builder()
             .unitIds(request.getUnitIds())
+            .status(request.getStatus())
             .start(request.getStart())
             .end(request.getEnd())
-            .status(request.getStatus())
             .activationTime(request.getActivationTime())
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForUnits(integrationRequest);
         return response.getCount();
     }
-
 }

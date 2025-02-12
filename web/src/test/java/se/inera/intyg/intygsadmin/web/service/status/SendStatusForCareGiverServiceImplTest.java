@@ -41,13 +41,15 @@ class SendStatusForCareGiverServiceImplTest {
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
 
+    @Mock
+    private SendNotificationRequestValidator sendNotificationRequestValidator;
+
     @InjectMocks
     private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
 
     @Test
     void shouldSendStatusForCareGiver() {
         final var request = SendStatusForCareGiverRequestDTO.builder()
-            .careGiverId("careGiverId")
             .status(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now())
             .end(LocalDateTime.now())

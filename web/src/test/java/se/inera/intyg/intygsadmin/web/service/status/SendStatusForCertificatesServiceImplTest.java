@@ -41,6 +41,9 @@ class SendStatusForCertificatesServiceImplTest {
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
 
+    @Mock
+    private SendNotificationRequestValidator sendNotificationRequestValidator;
+
     @InjectMocks
     private SendStatusForCertificatesServiceImpl sendStatusForCertificatesServiceImpl;
 
@@ -51,6 +54,8 @@ class SendStatusForCertificatesServiceImplTest {
             .certificateIds(List.of("certificateId"))
             .status(List.of(NotificationStatusEnum.FAILURE))
             .activationTime(LocalDateTime.now())
+            .start(LocalDateTime.now())
+            .end(LocalDateTime.now())
             .build();
 
         final var expected = SendStatusIntegrationResponseDTO.builder()

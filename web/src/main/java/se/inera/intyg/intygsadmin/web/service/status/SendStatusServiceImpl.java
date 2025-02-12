@@ -19,21 +19,22 @@
 
 package se.inera.intyg.intygsadmin.web.service.status;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
 
 @Service
+@RequiredArgsConstructor
 public class SendStatusServiceImpl implements SendStatusService {
 
     private final WCIntegrationRestService wcIntegrationRestService;
-
-    public SendStatusServiceImpl(WCIntegrationRestService wcIntegrationRestService) {
-        this.wcIntegrationRestService = wcIntegrationRestService;
-    }
+    private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
     @Override
     public Integer send(String statusId) {
+        sendNotificationRequestValidator.validateId(statusId);
+
         final var request = SendStatusIntegrationRequestDTO.builder()
             .statusId(statusId)
             .build();
