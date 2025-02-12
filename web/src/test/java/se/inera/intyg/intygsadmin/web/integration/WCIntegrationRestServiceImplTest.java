@@ -30,6 +30,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -262,6 +263,21 @@ class WCIntegrationRestServiceImplTest {
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
 
             assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatusForCareGiver(request));
+        }
+
+        @Test
+        void shouldCountStatusesForCareGiver() {
+            final var request = CountStatusesForCareGiverIntegrationRequestDTO.builder()
+                .careGiverId(careGiverId)
+                .status(List.of(NotificationStatusEnum.FAILURE))
+                .build();
+
+            final var response = SendStatusIntegrationResponseDTO.builder()
+                .count(1)
+                .build();
+
+            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+            assertNotNull(wcIntegrationRestService.countStatusesForCareGiver(request));
         }
 
     }

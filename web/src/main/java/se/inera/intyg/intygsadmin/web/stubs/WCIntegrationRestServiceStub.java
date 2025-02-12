@@ -33,6 +33,7 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -108,6 +109,12 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
 
     @Override
     public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
+        return SendStatusIntegrationResponseDTO.builder().build();
+    }
+
+    @Override
+    public SendStatusIntegrationResponseDTO countStatusesForCareGiver(
+        CountStatusesForCareGiverIntegrationRequestDTO request) {
         return SendStatusIntegrationResponseDTO.builder().build();
     }
 

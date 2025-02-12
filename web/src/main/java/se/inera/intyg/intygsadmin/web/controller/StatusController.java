@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
@@ -72,6 +73,15 @@ public class StatusController {
     public SendStatusResponseDTO sendStatusForCareGiver(@PathVariable String careGiverId,
         @RequestBody SendStatusForCareGiverRequestDTO request) {
         final var response = sendStatusForCareGiverService.send(careGiverId, request);
+        return SendStatusResponseDTO.builder()
+            .count(response)
+            .build();
+    }
+
+    @PostMapping("count/caregiver/{careGiverId}")
+    public SendStatusResponseDTO countStatusesForCareGiver(@PathVariable String careGiverId,
+        @RequestBody CountStatusesForCareGiverRequestDTO request) {
+        final var response = sendStatusForCareGiverService.count(careGiverId, request);
         return SendStatusResponseDTO.builder()
             .count(response)
             .build();
