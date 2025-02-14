@@ -39,6 +39,7 @@ import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -175,4 +176,18 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
             .retrieve()
             .body(SendStatusIntegrationResponseDTO.class);
     }
+
+  @Override
+  public SendStatusIntegrationResponseDTO countStatusesForCareGiver(
+      CountStatusesForCareGiverIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/count/careGiver/" + request.getCareGiverId())
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(SendStatusIntegrationResponseDTO.class);
+  }
 }
