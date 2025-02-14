@@ -100,7 +100,7 @@ class SendNotificationRequestValidatorTest {
         @Test
         void shouldThrowExceptionIfIntervalIsOverLimit() {
             final var end = LocalDateTime.now();
-            final var start = LocalDateTime.now().minusDays(11);
+            final var start = LocalDateTime.now().minusDays(12);
             final var limitBack = 20;
             final var limitInterval = 10;
 
