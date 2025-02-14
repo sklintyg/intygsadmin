@@ -10,7 +10,6 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 @Builder
 public class SendStatusForCareGiverRequestDTO {
 
-    String careGiverId;
     LocalDateTime start;
     LocalDateTime end;
     List<NotificationStatusEnum> status;

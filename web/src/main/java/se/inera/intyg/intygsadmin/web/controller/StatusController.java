@@ -69,7 +69,7 @@ public class StatusController {
             .build();
     }
 
-    @PostMapping("/{careGiverId}")
+    @PostMapping("/caregiver/{careGiverId}")
     public SendStatusResponseDTO sendStatusForCareGiver(@PathVariable String careGiverId,
         @RequestBody SendStatusForCareGiverRequestDTO request) {
         final var response = sendStatusForCareGiverService.send(careGiverId, request);

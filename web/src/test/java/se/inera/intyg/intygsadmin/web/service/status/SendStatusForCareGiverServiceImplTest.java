@@ -43,6 +43,9 @@ class SendStatusForCareGiverServiceImplTest {
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
 
+    @Mock
+    private SendNotificationRequestValidator sendNotificationRequestValidator;
+
     @InjectMocks
     private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
 

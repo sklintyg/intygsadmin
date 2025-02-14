@@ -19,18 +19,28 @@
 
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO.SendStatusForCertificatesIntegrationRequestDTOBuilder;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
 @Value
 @Builder
+@JsonDeserialize(builder = SendStatusForCertificatesIntegrationRequestDTOBuilder.class)
 public class SendStatusForCertificatesIntegrationRequestDTO {
 
     List<String> certificateIds;
     List<NotificationStatusEnum> status;
     LocalDateTime activationTime;
+    LocalDateTime start;
+    LocalDateTime end;
 
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class SendStatusForCertificatesIntegrationRequestDTOBuilder {
+
+    }
 }

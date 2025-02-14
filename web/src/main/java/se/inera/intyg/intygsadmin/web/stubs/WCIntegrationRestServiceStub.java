@@ -112,11 +112,11 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
         return SendStatusIntegrationResponseDTO.builder().build();
     }
 
-    @Override
-    public SendStatusIntegrationResponseDTO countStatusesForCareGiver(
-        CountStatusesForCareGiverIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO countStatusesForCareGiver(
+      CountStatusesForCareGiverIntegrationRequestDTO request) {
+    return SendStatusIntegrationResponseDTO.builder().build();
+  }
 
     private void addUnit(String unitId) {
         int number = validUnit.size() + 1;

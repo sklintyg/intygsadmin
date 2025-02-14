@@ -24,11 +24,11 @@ import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 public interface WCIntegrationRestService {
 
@@ -55,6 +55,6 @@ public interface WCIntegrationRestService {
 
     SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request);
 
-    SendStatusIntegrationResponseDTO countStatusesForCareGiver(
-        CountStatusesForCareGiverIntegrationRequestDTO request);
+  SendStatusIntegrationResponseDTO countStatusesForCareGiver(
+      CountStatusesForCareGiverIntegrationRequestDTO request);
 }

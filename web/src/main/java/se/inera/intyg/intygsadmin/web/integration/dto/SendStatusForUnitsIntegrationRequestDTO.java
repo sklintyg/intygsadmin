@@ -19,14 +19,18 @@
 
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO.SendStatusForUnitsIntegrationRequestDTOBuilder;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
 @Value
 @Builder
+@JsonDeserialize(builder = SendStatusForUnitsIntegrationRequestDTOBuilder.class)
 public class SendStatusForUnitsIntegrationRequestDTO {
 
     List<String> unitIds;
@@ -35,4 +39,8 @@ public class SendStatusForUnitsIntegrationRequestDTO {
     List<NotificationStatusEnum> status;
     LocalDateTime activationTime;
 
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class SendStatusForUnitsIntegrationRequestDTOBuilder {
+
+    }
 }

@@ -19,6 +19,8 @@
 
 package se.inera.intyg.intygsadmin.web.service.status;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
@@ -27,16 +29,23 @@ import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverI
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 
 @Service
+@RequiredArgsConstructor
 public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiverService {
 
     private final WCIntegrationRestService wcIntegrationRestService;
+    private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    public SendStatusForCareGiverServiceImpl(WCIntegrationRestService wcIntegrationRestService) {
-        this.wcIntegrationRestService = wcIntegrationRestService;
-    }
+    @Value("${timeinterval.maxdays.caregiver:1}")
+    private int maxTimeInterval;
+
+    @Value("${timelimit.daysback.start:365}")
+    private int maxDaysBackStartDate;
 
     @Override
     public Integer send(String careGiverId, SendStatusForCareGiverRequestDTO request) {
+        sendNotificationRequestValidator.validateId(careGiverId);
+        sendNotificationRequestValidator.validateDate(request.getStart(), request.getEnd(), maxTimeInterval, maxDaysBackStartDate);
+
         final var integrationRequest = SendStatusForCareGiverIntegrationRequestDTO.builder()
             .careGiverId(request.getCareGiverId())
             .start(request.getStart())

@@ -41,6 +41,9 @@ class SendStatusForUnitsServiceImplTest {
     @Mock
     private WCIntegrationRestService wcIntegrationRestService;
 
+    @Mock
+    private SendNotificationRequestValidator sendNotificationRequestValidator;
+
     @InjectMocks
     private SendStatusForUnitsServiceImpl sendStatusForUnitsServiceImpl;
 
