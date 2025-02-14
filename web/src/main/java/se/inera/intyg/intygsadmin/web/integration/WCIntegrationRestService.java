@@ -23,6 +23,11 @@ import java.util.List;
 import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 public interface WCIntegrationRestService {
 
@@ -40,5 +45,13 @@ public interface WCIntegrationRestService {
      * @return Result of the erase operation
      */
     TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+
+    SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request);
+
+    SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request);
+
+    SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request);
+
+    SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request);
 
 }

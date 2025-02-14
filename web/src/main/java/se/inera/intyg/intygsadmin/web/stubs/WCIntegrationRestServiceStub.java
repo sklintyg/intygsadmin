@@ -33,6 +33,11 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEventType;
 import se.inera.intyg.infra.intyginfo.dto.WcIntygInfo;
 import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 @Profile("wc-stub")
 @Service
@@ -84,6 +89,26 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
     @Override
     public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
         return TestCertificateEraseResult.create(0, 0);
+    }
+
+    @Override
+    public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
+        return SendStatusIntegrationResponseDTO.builder().build();
+    }
+
+    @Override
+    public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request) {
+        return SendStatusIntegrationResponseDTO.builder().build();
+    }
+
+    @Override
+    public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request) {
+        return SendStatusIntegrationResponseDTO.builder().build();
+    }
+
+    @Override
+    public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
+        return SendStatusIntegrationResponseDTO.builder().build();
     }
 
     private void addUnit(String unitId) {
