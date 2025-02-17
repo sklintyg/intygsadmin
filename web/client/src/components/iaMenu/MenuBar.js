@@ -60,6 +60,12 @@ const MenuBar = ({ userRole }) => {
       to: '/dataExport',
       text: 'Dataexport',
       enabled: userRole === 'FULL'
+    },
+    {
+      id: 'resend',
+      to: '/resend',
+      text: 'Omsändning',
+      enabled: userRole === 'FULL'
     }
   ]
 
