@@ -21,6 +21,7 @@ import {fetchAppConfig} from './store/actions/appConfig'
 import IntygInfoPage from "./pages/IntygInfoPage";
 import UsersPage from "./pages/UsersPage";
 import DataExportPage from "./pages/DataExportPage";
+import ResendPage from "./pages/ResendPage";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
             <SecuredRoute path="/intygInfo" component={IntygInfoPage} />
             <SecuredRoute path="/administratorer" component={UsersPage} />
             <SecuredRoute path="/dataExport" component={DataExportPage} />
+            <SecuredRoute path="/resend" component={ResendPage} />
             <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
           </Switch>
         </Fragment>
