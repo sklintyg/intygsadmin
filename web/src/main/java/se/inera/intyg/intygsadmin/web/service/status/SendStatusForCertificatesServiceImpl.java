@@ -20,7 +20,6 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
@@ -33,20 +32,13 @@ public class SendStatusForCertificatesServiceImpl implements SendStatusForCertif
     private final WCIntegrationRestService wcIntegrationRestService;
     private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @Value("${timelimit.daysback.start:365}")
-    private int maxDaysBackStartDate;
-
     @Override
     public Integer send(SendStatusForCertificatesRequestDTO request) {
         sendNotificationRequestValidator.validateIds(request.getCertificateIds());
-        sendNotificationRequestValidator.validateDate(request.getStart(), request.getEnd(), maxDaysBackStartDate);
 
         final var integrationRequest = SendStatusForCertificatesIntegrationRequestDTO.builder()
             .certificateIds(request.getCertificateIds())
             .status(request.getStatus())
-            .start(request.getStart())
-            .end(request.getEnd())
-            .activationTime(request.getActivationTime())
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);

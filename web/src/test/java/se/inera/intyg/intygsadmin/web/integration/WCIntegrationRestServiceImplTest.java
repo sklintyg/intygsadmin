@@ -130,7 +130,6 @@ class WCIntegrationRestServiceImplTest {
             final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
                 .certificateIds(List.of(certificateId))
                 .status(List.of(NotificationStatusEnum.FAILURE))
-                .activationTime(LocalDateTime.now())
                 .build();
 
             final var response = SendStatusIntegrationResponseDTO.builder()
@@ -146,7 +145,6 @@ class WCIntegrationRestServiceImplTest {
             final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
                 .certificateIds(List.of(certificateId))
                 .status(List.of(NotificationStatusEnum.FAILURE))
-                .activationTime(LocalDateTime.now())
                 .build();
 
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
@@ -186,6 +184,8 @@ class WCIntegrationRestServiceImplTest {
                 .unitIds(List.of(unitId))
                 .status(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now())
                 .build();
 
             final var response = SendStatusIntegrationResponseDTO.builder()
@@ -202,6 +202,8 @@ class WCIntegrationRestServiceImplTest {
                 .unitIds(List.of(unitId))
                 .status(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now())
                 .build();
 
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
@@ -241,6 +243,8 @@ class WCIntegrationRestServiceImplTest {
                 .careGiverId(careGiverId)
                 .status(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now())
                 .build();
 
             final var response = SendStatusIntegrationResponseDTO.builder()
@@ -257,6 +261,8 @@ class WCIntegrationRestServiceImplTest {
                 .careGiverId(careGiverId)
                 .status(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
+                .start(LocalDateTime.now())
+                .end(LocalDateTime.now())
                 .build();
 
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);

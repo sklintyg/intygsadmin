@@ -79,7 +79,6 @@ class StatusControllerTest {
         final var request = SendStatusForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
             .status(STATUS_LIST)
-            .activationTime(LocalDateTime.now())
             .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.builder()
