@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,9 +52,6 @@ class SendStatusForCertificatesServiceImplTest {
         final var request = SendStatusForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
             .status(List.of(NotificationStatusEnum.FAILURE))
-            .activationTime(LocalDateTime.now())
-            .start(LocalDateTime.now())
-            .end(LocalDateTime.now())
             .build();
 
         final var expected = SendStatusIntegrationResponseDTO.builder()
