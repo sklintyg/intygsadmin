@@ -38,7 +38,7 @@ public class SendStatusForCertificatesServiceImpl implements SendStatusForCertif
 
         final var integrationRequest = SendStatusForCertificatesIntegrationRequestDTO.builder()
             .certificateIds(request.getCertificateIds())
-            .status(request.getStatus())
+            .statuses(request.getStatus())
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);
