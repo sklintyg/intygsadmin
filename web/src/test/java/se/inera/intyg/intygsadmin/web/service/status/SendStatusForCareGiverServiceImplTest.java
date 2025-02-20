@@ -52,7 +52,6 @@ class SendStatusForCareGiverServiceImplTest {
     @Test
     void shouldSendStatusForCareGiver() {
         final var request = SendStatusForCareGiverRequestDTO.builder()
-            .careGiverId("careGiverId")
             .status(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now().minusMonths(1))
             .end(LocalDateTime.now())
