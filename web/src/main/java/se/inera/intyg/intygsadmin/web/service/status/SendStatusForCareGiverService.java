@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 
 @Service
@@ -27,4 +28,5 @@ public interface SendStatusForCareGiverService {
 
     Integer send(String caregiverId, SendStatusForCareGiverRequestDTO request);
 
+    Integer count(String careGiverId, CountStatusesForCareGiverRequestDTO request);
 }
