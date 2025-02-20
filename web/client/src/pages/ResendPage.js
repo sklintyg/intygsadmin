@@ -1,3 +1,4 @@
+import React from 'react'
 import MenuBar from '../components/iaMenu/MenuBar'
 import PageHeader from '../components/styles/PageHeader'
 import IaColors from '../components/styles/iaColors'
