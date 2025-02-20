@@ -28,7 +28,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd web/client
-          npm install
+          npm ci
 
       - name: Run Build
         run: |
@@ -53,7 +53,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd web/client
-          npm install
+          npm ci
 
       - name: Run Tests
         run: |
@@ -78,7 +78,7 @@ jobs:
       - name: Install Dependencies
         run: |
           cd web/client
-          npm install
+          npm ci
 
       - name: Run Linter
         run: |
