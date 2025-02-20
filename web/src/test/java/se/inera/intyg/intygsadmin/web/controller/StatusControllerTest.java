@@ -81,7 +81,7 @@ class StatusControllerTest {
     void shouldSetSendStatusForCertificates() {
         final var request = SendStatusForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.builder()
@@ -111,7 +111,7 @@ class StatusControllerTest {
     void shouldSetSendStatusForUnits() {
         final var request = SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unitId"))
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .start(START)
             .end(END)
             .activationTime(ACTIVATION_TIME)
@@ -148,7 +148,7 @@ class StatusControllerTest {
             .start(START)
             .end(END)
             .activationTime(ACTIVATION_TIME)
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.builder()

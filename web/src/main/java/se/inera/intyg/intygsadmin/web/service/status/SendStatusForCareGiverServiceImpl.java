@@ -51,7 +51,7 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
             .start(request.getStart())
             .end(request.getEnd())
             .activationTime(request.getActivationTime())
-            .status(request.getStatus())
+            .statuses(request.getStatuses())
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForCareGiver(integrationRequest);
@@ -64,7 +64,7 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
             .careGiverId(request.getCareGiverId())
             .start(request.getStart())
             .end(request.getEnd())
-            .status(request.getStatus())
+            .statuses(request.getStatus())
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);

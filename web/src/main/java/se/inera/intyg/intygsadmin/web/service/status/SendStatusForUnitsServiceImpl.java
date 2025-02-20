@@ -49,7 +49,7 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
 
         final var integrationRequest = SendStatusForUnitsIntegrationRequestDTO.builder()
             .unitIds(request.getUnitIds())
-            .status(request.getStatus())
+            .statuses(request.getStatuses())
             .start(request.getStart())
             .end(request.getEnd())
             .activationTime(request.getActivationTime())
@@ -65,7 +65,7 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
             .unitIds(request.getUnitIds())
             .start(request.getStart())
             .end(request.getEnd())
-            .status(request.getStatus())
+            .statuses(request.getStatus())
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForUnits(integrationRequest);

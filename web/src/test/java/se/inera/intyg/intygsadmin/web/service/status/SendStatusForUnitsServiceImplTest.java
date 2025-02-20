@@ -52,7 +52,7 @@ class SendStatusForUnitsServiceImplTest {
 
         final var request = SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unit1", "unit2"))
-            .status(List.of(NotificationStatusEnum.FAILURE))
+            .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now())
             .build();
 
@@ -73,7 +73,7 @@ class SendStatusForUnitsServiceImplTest {
     void shouldCountStatusesForUnits(){
         final var request = SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unit1", "unit2"))
-            .status(List.of(NotificationStatusEnum.FAILURE))
+            .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now())
             .build();
 

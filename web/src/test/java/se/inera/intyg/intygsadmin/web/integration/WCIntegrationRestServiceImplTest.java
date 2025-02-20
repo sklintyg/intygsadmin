@@ -183,7 +183,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldSendStatusForUnits() {
             final var request = SendStatusForUnitsIntegrationRequestDTO.builder()
                 .unitIds(List.of(unitId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -201,7 +201,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldThrowException() {
             final var request = SendStatusForUnitsIntegrationRequestDTO.builder()
                 .unitIds(List.of(unitId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -242,7 +242,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldSendStatusForCareGiver() {
             final var request = SendStatusForCareGiverIntegrationRequestDTO.builder()
                 .careGiverId(careGiverId)
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -260,7 +260,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldThrowException() {
             final var request = SendStatusForCareGiverIntegrationRequestDTO.builder()
                 .careGiverId(careGiverId)
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -300,7 +300,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldCountStatusesForCareGiver() {
             final var request = CountStatusesForCareGiverIntegrationRequestDTO.builder()
                 .careGiverId(careGiverId)
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
             final var response = SendStatusIntegrationResponseDTO.builder()

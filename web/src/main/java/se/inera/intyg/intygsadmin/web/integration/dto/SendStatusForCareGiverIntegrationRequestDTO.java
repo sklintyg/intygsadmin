@@ -36,7 +36,7 @@ public class SendStatusForCareGiverIntegrationRequestDTO {
     String careGiverId;
     LocalDateTime start;
     LocalDateTime end;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
     LocalDateTime activationTime;
 
     @JsonPOJOBuilder(withPrefix = "")

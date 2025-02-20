@@ -40,7 +40,7 @@ public class SendStatusForCertificatesServiceImpl implements SendStatusForCertif
 
         final var integrationRequest = SendStatusForCertificatesIntegrationRequestDTO.builder()
             .certificateIds(request.getCertificateIds())
-            .statuses(request.getStatus())
+            .statuses(request.getStatuses())
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);
@@ -51,7 +51,7 @@ public class SendStatusForCertificatesServiceImpl implements SendStatusForCertif
     public Integer count(CountStatusesForCertificatesRequestDTO request) {
         final var integrationRequest = CountStatusesForCertificatesIntegrationRequestDTO.builder()
             .certificateIds(request.getCertificateIds())
-            .status(request.getStatus())
+            .statuses(request.getStatus())
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForCertificates(integrationRequest);

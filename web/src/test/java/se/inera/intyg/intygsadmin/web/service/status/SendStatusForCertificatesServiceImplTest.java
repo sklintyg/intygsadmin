@@ -53,7 +53,7 @@ class SendStatusForCertificatesServiceImplTest {
 
         final var request = SendStatusForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
-            .status(List.of(NotificationStatusEnum.FAILURE))
+            .statuses(List.of(NotificationStatusEnum.FAILURE))
             .build();
 
         final var expected = SendStatusIntegrationResponseDTO.builder()
