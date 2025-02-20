@@ -47,7 +47,7 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
         sendNotificationRequestValidator.validateDate(request.getStart(), request.getEnd(), maxTimeInterval, maxDaysBackStartDate);
 
         final var integrationRequest = SendStatusForCareGiverIntegrationRequestDTO.builder()
-            .careGiverId(request.getCareGiverId())
+            .careGiverId(careGiverId)
             .start(request.getStart())
             .end(request.getEnd())
             .activationTime(request.getActivationTime())

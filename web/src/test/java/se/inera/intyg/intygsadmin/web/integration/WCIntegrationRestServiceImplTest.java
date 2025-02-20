@@ -270,6 +270,31 @@ class WCIntegrationRestServiceImplTest {
 
             assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatusForCareGiver(request));
         }
+    }
+
+    @Nested
+    class CountStatusForCareGiverTest {
+
+        private ResponseSpec responseSpec;
+        private String careGiverId;
+
+        @BeforeEach
+        void setUp() {
+            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+            responseSpec = mock(RestClient.ResponseSpec.class);
+            careGiverId = UUID.randomUUID().toString();
+
+            MDC.put(TRACE_ID_KEY, "traceId");
+            MDC.put(SESSION_ID_KEY, "sessionId");
+
+            when(restClient.post()).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.uri("Host/internalapi/notification/count/careGiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.body(any(CountStatusesForCareGiverIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+        }
 
         @Test
         void shouldCountStatusesForCareGiver() {

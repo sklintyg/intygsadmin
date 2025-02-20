@@ -111,7 +111,6 @@ class StatusControllerTest {
     @Test
     void shouldSetSendStatusForCareGiver() {
         final var request = SendStatusForCareGiverRequestDTO.builder()
-            .careGiverId(CARE_GIVER_ID)
             .start(START)
             .end(END)
             .activationTime(ACTIVATION_TIME)
