@@ -68,6 +68,26 @@ class SendStatusForUnitsServiceImplTest {
         assertEquals(1, response);
 
     }
+
+    @Test
+    void shouldCountStatusesForUnits(){
+        final var request = SendStatusForUnitsRequestDTO.builder()
+            .unitIds(List.of("unit1", "unit2"))
+            .status(List.of(NotificationStatusEnum.FAILURE))
+            .start(LocalDateTime.now())
+            .build();
+
+        final var expected = SendStatusIntegrationResponseDTO.builder()
+            .count(1)
+            .build();
+
+        when(wcIntegrationRestService.sendStatusForUnits(any(SendStatusForUnitsIntegrationRequestDTO.class)))
+            .thenReturn(expected);
+
+        final var response = sendStatusForUnitsServiceImpl.send(request);
+
+        assertEquals(1, response);
+    }
 }
 
 

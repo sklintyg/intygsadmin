@@ -30,6 +30,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
@@ -91,6 +93,21 @@ class StatusControllerTest {
     }
 
     @Test
+    void shouldCountStatusesForCertificates() {
+        final var request = CountStatusesForCertificatesRequestDTO.builder()
+            .certificateIds(List.of("certificateId"))
+            .status(STATUS_LIST)
+            .build();
+
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
+
+        when(sendStatusForCertificatesService.count(request)).thenReturn(sendStatusResponse.getCount());
+        assertEquals(1, statusController.countStatusesForCertificates(request).getCount());
+    }
+
+    @Test
     void shouldSetSendStatusForUnits() {
         final var request = SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unitId"))
@@ -106,6 +123,23 @@ class StatusControllerTest {
 
         when(sendStatusForUnitsService.send(request)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatusForUnits(request).getCount());
+    }
+
+    @Test
+    void shouldCountStatusesForUnits() {
+        final var request = CountStatusesForUnitsRequestDTO.builder()
+            .unitIds(List.of("unitId"))
+            .start(START)
+            .end(END)
+            .status(STATUS_LIST)
+            .build();
+
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
+
+        when(sendStatusForUnitsService.count( request)).thenReturn(sendStatusResponse.getCount());
+        assertEquals(1, statusController.countStatusesForUnits(request).getCount());
     }
 
     @Test

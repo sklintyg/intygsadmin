@@ -29,8 +29,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
@@ -65,6 +67,26 @@ class SendStatusForCertificatesServiceImplTest {
 
         assertEquals(1, response);
 
+    }
+
+    @Test
+    void shouldCountStatusesForCertificates() {
+
+        final var request = CountStatusesForCertificatesRequestDTO.builder()
+            .certificateIds(List.of("certificateId"))
+            .status(List.of(NotificationStatusEnum.FAILURE))
+            .build();
+
+        final var expected = SendStatusIntegrationResponseDTO.builder()
+            .count(1)
+            .build();
+
+        when(wcIntegrationRestService.countStatusesForCertificates(any(CountStatusesForCertificatesIntegrationRequestDTO.class)))
+            .thenReturn(expected);
+
+        final var response = sendStatusForCertificatesServiceImpl.count(request);
+
+        assertEquals(1, response);
     }
 }
 
