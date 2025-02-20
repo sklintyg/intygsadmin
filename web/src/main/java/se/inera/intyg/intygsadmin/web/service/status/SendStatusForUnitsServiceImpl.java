@@ -22,8 +22,10 @@ package se.inera.intyg.intygsadmin.web.service.status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 
 @Service
@@ -54,6 +56,19 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForUnits(integrationRequest);
+        return response.getCount();
+    }
+
+    @Override
+    public Integer count(CountStatusesForUnitsRequestDTO request) {
+        final var integrationRequest = CountStatusesForUnitsIntegrationRequestDTO.builder()
+            .unitIds(request.getUnitIds())
+            .start(request.getStart())
+            .end(request.getEnd())
+            .status(request.getStatus())
+            .build();
+
+        final var response = wcIntegrationRestService.countStatusesForUnits(integrationRequest);
         return response.getCount();
     }
 }

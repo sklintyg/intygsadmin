@@ -21,8 +21,10 @@ package se.inera.intyg.intygsadmin.web.service.status;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 
 @Service
@@ -42,6 +44,17 @@ public class SendStatusForCertificatesServiceImpl implements SendStatusForCertif
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);
+        return response.getCount();
+    }
+
+    @Override
+    public Integer count(CountStatusesForCertificatesRequestDTO request) {
+        final var integrationRequest = CountStatusesForCertificatesIntegrationRequestDTO.builder()
+            .certificateIds(request.getCertificateIds())
+            .status(request.getStatus())
+            .build();
+
+        final var response = wcIntegrationRestService.countStatusesForCertificates(integrationRequest);
         return response.getCount();
     }
 }
