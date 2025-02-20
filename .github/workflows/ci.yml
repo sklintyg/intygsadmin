@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+          cache: "npm"
+          cache-dependency-path: web/client/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          cd web/client
+          npm install
+
+      - name: Run Build
+        run: |
+          cd web/client
+          npm run build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+          cache: "npm"
+          cache-dependency-path: web/client/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          cd web/client
+          npm install
+
+      - name: Run Tests
+        run: |
+          cd web/client
+          npm test
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+          cache: "npm"
+          cache-dependency-path: web/client/package-lock.json
+
+      - name: Install Dependencies
+        run: |
+          cd web/client
+          npm install
+
+      - name: Run Linter
+        run: |
+          cd web/client
+          npm run lint
