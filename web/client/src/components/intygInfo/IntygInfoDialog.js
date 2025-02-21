@@ -303,7 +303,7 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCert
           <Button
             id={'resendEvents'}
             onClick={() => {
-              resendCertificateStatus({ certificateIds: [intygInfo.intygId], status: ['SUCCESS', 'RESEND', 'FAILURE'] })
+              resendCertificateStatus({ certificateIds: [intygInfo.intygId], statuses: ['SUCCESS', 'RESEND', 'FAILURE'] })
             }}
             color={'default'}>
             Skicka om alla

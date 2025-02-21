@@ -2,8 +2,8 @@ import * as utils from './utils'
 
 export const fetchIntygInfo = (intygsId) => utils.makeServerRequest(`intygInfo/${intygsId}`)
 
-export const resendCertificateStatus = ({ certificateIds, status }) =>
-  utils.makeServerPost(`status/certificates`, { certificateIds, status })
+export const resendCertificateStatus = ({ certificateIds, statuses }) =>
+  utils.makeServerPost(`status/certificates`, { certificateIds, statuses })
 
 export const fetchIntygInfoList = ({ pageIndex, sortColumn, sortDirection }) => {
   if (!pageIndex) {

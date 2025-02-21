@@ -37,12 +37,12 @@ export const RESEND_CERTIFICATE_STATUS_REQUEST = 'RESEND_CERTIFICATE_STATUS_REQU
 export const RESEND_CERTIFICATE_STATUS_SUCCESS = 'RESEND_CERTIFICATE_STATUS_SUCCESS'
 export const RESEND_CERTIFICATE_STATUS_FAILURE = 'RESEND_CERTIFICATE_STATUS_FAILURE'
 
-export const resendCertificateStatus = ({ certificateIds, status }) => (dispatch) => {
+export const resendCertificateStatus = ({ certificateIds, statuses }) => (dispatch) => {
   dispatch({
     type: RESEND_CERTIFICATE_STATUS_REQUEST,
   })
 
-  return api.resendCertificateStatus({ certificateIds, status }).then(
+  return api.resendCertificateStatus({ certificateIds, statuses }).then(
     (response) => {
       dispatch({
         type: RESEND_CERTIFICATE_STATUS_SUCCESS,
