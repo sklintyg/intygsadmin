@@ -30,7 +30,7 @@ $modal-xl: 1400px;
 //@import '~bootstrap/scss/_code';
 @import '~bootstrap/scss/_grid';
 @import '~bootstrap/scss/_tables';
-//@import '~bootstrap/scss/_forms';
+@import '~bootstrap/scss/_forms';
 @import '~bootstrap/scss/_buttons';
 @import '~bootstrap/scss/_transitions';
 @import '~bootstrap/scss/_dropdown';
@@ -162,7 +162,7 @@ $modal-xl: 1400px;
   // For some unknown reason, using the value "transparent" doesn't work.
   // Something in the scss processing replaces it with "initial" which in turn causes btn-link to have a gray background in IE11
   // As a workaround, setting an corresponding tranaparant rgb value works..
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 th .btn-link {
@@ -366,7 +366,6 @@ a {
     color: $ia-color-18;
   }
 }
-
 
 // Tooltip
 .tooltip {

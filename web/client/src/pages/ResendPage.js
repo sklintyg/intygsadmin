@@ -1,11 +1,158 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MenuBar from '../components/iaMenu/MenuBar'
 import PageHeader from '../components/styles/PageHeader'
 import IaColors from '../components/styles/iaColors'
 import { CustomScrollingContainer, FlexColumnContainer, PageContainer } from '../components/styles/iaLayout'
 import { DocIcon } from '../components/styles/iaSvgIcons'
+import { useState } from 'react'
+import { IaTypo03 } from '../components/styles/iaTypography'
+import { RadioWrapper } from '../components/radioButton'
+import DatePicker from '../components/datePicker'
+import { Input, Button, UncontrolledTooltip, FormFeedback } from 'reactstrap'
+import styled from 'styled-components'
+import TimePicker from '../components/timePicker'
+import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation'
+
+const resentOptions = [
+  {
+    id: `certificate`,
+    label: 'Intygs-id',
+    value: '0',
+  },
+  {
+    id: `caregiver`,
+    label: 'Vårdgivare',
+    value: '1',
+  },
+  {
+    id: `unit`,
+    label: 'Vårdenhet',
+    value: '2',
+  },
+]
+
+const StyledInput = styled(Input)`
+  width: 100% !important;
+`
+const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 640px;
+  gap: 10px;
+`
+
+const ActionsContainer = styled.div`
+  display: flex;
+  gap: 20px;
+  padding: 40px 0 0;
+`
+
+const FlexDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const DateDiv = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  > label {
+    flex: 0 0 50px;
+    margin-bottom: 0;
+  }
+  > span {
+    flex: 0 0 150px;
+  }
+`
+
+const PreviewDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+`
 
 const ResendPage = () => {
+  const [preview, setPreview] = useState(false)
+  const [statusFor, setStatusFor] = useState('0')
+  const [status, setStatus] = useState('')
+  const [caregiver, setCaregiver] = useState('')
+  const [unit, setUnit] = useState('')
+  const [certificates, setCertificates] = useState('')
+  const [fromDate, setFromDate] = useState('')
+  const [fromTime, setFromTime] = useState('')
+  const [toDate, setToDate] = useState('')
+  const [toTime, setToTime] = useState('')
+  const [schedule, setSchedule] = useState(false)
+  const [scheduleDate, setScheduleDate] = useState('')
+  const [scheduleTime, setScheduleTime] = useState('')
+  const [validationMessages, setValidationMessages] = useState({})
+  const [showValidation, setShowValidation] = useState(false)
+
+  useEffect(() => {
+    let result = {}
+    if (statusFor === '0' && certificates === '') {
+      result.certificates = 'Ange intygs-id separarerade med kommatecken.'
+    }
+    if (statusFor === '1' && caregiver === '') {
+      result.caregiver = 'Ange vårdgivarens HSA-ID'
+    }
+    if (statusFor === '2' && unit === '') {
+      result.unit = 'Ange vårdenhetens HSA-ID'
+    }
+
+    if (!['SUCCESS', 'FAILURE'].includes(status)) {
+      result.status = 'Välj status att skicka'
+    }
+
+    if (validateDateFormat(fromDate) !== 'ok') {
+      result.fromDate = validateDateFormat(fromDate)
+    }
+    if (validateTimeFormat(fromTime) !== 'ok') {
+      result.fromTime = validateTimeFormat(fromTime)
+    }
+    if (validateDateFormat(toDate) !== 'ok') {
+      result.toDate = validateDateFormat(toDate)
+    }
+    if (validateTimeFormat(toTime) !== 'ok') {
+      result.toTime = validateTimeFormat(toTime)
+    }
+
+    const validFromBeforeTo = validateFromDateBeforeToDate(fromDate, toDate, fromTime, toTime)
+    if (validFromBeforeTo !== 'ok') {
+      if (validFromBeforeTo === 'toDateBeforeFrom') {
+        result.fromDate = 'Startdatumet ska ligga före slutdatumet.'
+      }
+      if (validFromBeforeTo === 'toTimeBeforeFrom') {
+        result.fromTime = 'Starttiden ska ligga före sluttiden.'
+      }
+    }
+
+    if (schedule === true) {
+      if (validateDateFormat(scheduleDate) !== 'ok') {
+        result.scheduleDate = validateDateFormat(scheduleDate)
+      }
+      if (validateTimeFormat(scheduleTime) !== 'ok') {
+        result.scheduleTime = validateTimeFormat(scheduleTime)
+      }
+    }
+
+    setValidationMessages(result)
+  }, [
+    statusFor,
+    status,
+    certificates,
+    caregiver,
+    unit,
+    showValidation,
+    fromDate,
+    fromTime,
+    toDate,
+    toTime,
+    schedule,
+    scheduleDate,
+    scheduleTime,
+  ])
+
   return (
     <FlexColumnContainer>
       <MenuBar />
@@ -15,7 +162,274 @@ const ResendPage = () => {
           subHeader="Här kan du skapa en omsändning av händelser för både enskilda intygs-id och för hela vårdgivare/vårdenheter. Administrerade omsändningar visas i tabellen."
           icon={<DocIcon color={IaColors.IA_COLOR_02} />}
         />
-        <PageContainer>{/* TODO: Add page content */}</PageContainer>
+        <PageContainer>
+          {!preview && (
+            <FormContainer>
+              <IaTypo03 style={{ marginBottom: '20px' }}>Skapa omsändning</IaTypo03>
+
+              <div>
+                <label>Omsändning av status för</label>
+                <RadioWrapper radioButtons={resentOptions} onChange={(event) => setStatusFor(event.target.value)} selected={statusFor} />
+              </div>
+
+              {statusFor === '0' && (
+                <FlexDiv>
+                  <label htmlFor="certificates" id="certificateLabel">
+                    Ange ett eller flera intygs-id
+                  </label>
+                  <StyledInput
+                    type="textarea"
+                    id="certificates"
+                    value={certificates}
+                    onChange={(event) => setCertificates(event.target.value)}
+                    invalid={Boolean(showValidation && validationMessages.certificates)}
+                  />
+                  <FormFeedback>{validationMessages.certificates}</FormFeedback>
+                  <UncontrolledTooltip trigger="hover focus" placement="top" target="certificates">
+                    Ange flera intygs-id genom att separarera med kommatecken.
+                  </UncontrolledTooltip>
+                </FlexDiv>
+              )}
+              {statusFor === '1' && (
+                <FlexDiv>
+                  <label htmlFor="caregiverId">Ange vårdgivarens HSA-ID</label>
+                  <StyledInput
+                    id="caregiverId"
+                    value={caregiver}
+                    onChange={(event) => setCaregiver(event.target.value)}
+                    invalid={Boolean(showValidation && validationMessages.caregiver)}
+                  />
+                  <FormFeedback>{validationMessages.caregiver}</FormFeedback>
+                </FlexDiv>
+              )}
+              {statusFor === '2' && (
+                <FlexDiv>
+                  <label htmlFor="unitId">Ange vårdenhetens HSA-ID</label>
+                  <StyledInput
+                    id="unitId"
+                    value={unit}
+                    onChange={(event) => setUnit(event.target.value)}
+                    invalid={Boolean(showValidation && validationMessages.unit)}
+                  />
+                  <FormFeedback>{validationMessages.unit}</FormFeedback>
+                </FlexDiv>
+              )}
+
+              <FlexDiv>
+                <label>Välj status att skicka</label>
+                <StyledInput
+                  className="form-select"
+                  type="select"
+                  value={status}
+                  onChange={(event) => setStatus(event.target.value)}
+                  invalid={Boolean(showValidation && validationMessages.status)}>
+                  <option value={''}>Välj</option>
+                  <option value={'SUCCESS'}>Lyckade</option>
+                  <option value={'FAILURE'}>Misslyckade</option>
+                </StyledInput>
+                <FormFeedback>{validationMessages.status}</FormFeedback>
+              </FlexDiv>
+
+              <FlexDiv>
+                <label htmlFor="fromDate">Välj period</label>
+                <DateDiv>
+                  <label htmlFor="fromDate">Från</label>
+                  <span>
+                    <DatePicker
+                      inputId="fromDate"
+                      date={fromDate}
+                      onChange={(value) => setFromDate(value)}
+                      className={showValidation && validationMessages.fromDate !== undefined ? 'error' : ''}
+                    />
+                    {showValidation && validationMessages.fromDate !== undefined && (
+                      <FormFeedback style={{ display: 'block' }}>{validationMessages.fromDate}</FormFeedback>
+                    )}
+                  </span>
+                  <span>
+                    <TimePicker
+                      inputId="fromTime"
+                      value={fromTime}
+                      onChange={(value) => setFromTime(value)}
+                      className={showValidation && validationMessages.fromTime !== undefined ? 'error' : ''}
+                    />
+                    {showValidation && validationMessages.fromTime !== undefined && (
+                      <FormFeedback style={{ display: 'block' }}>{validationMessages.fromTime}</FormFeedback>
+                    )}
+                  </span>
+                </DateDiv>
+
+                <DateDiv>
+                  <label htmlFor="toDate">Till</label>
+                  <span>
+                    <DatePicker
+                      inputId="toDate"
+                      date={toDate}
+                      onChange={(value) => setToDate(value)}
+                      className={showValidation && validationMessages.toDate !== undefined ? 'error' : ''}
+                    />
+                    {showValidation && validationMessages.toDate !== undefined && (
+                      <FormFeedback style={{ display: 'block' }}>{validationMessages.toDate}</FormFeedback>
+                    )}
+                  </span>
+                  <span>
+                    <TimePicker
+                      inputId="toTime"
+                      value={toTime}
+                      onChange={(value) => setToTime(value)}
+                      className={showValidation && validationMessages.toTime !== undefined ? 'error' : ''}
+                    />
+                    {showValidation && validationMessages.toTime !== undefined && (
+                      <FormFeedback style={{ display: 'block' }}>{validationMessages.toTime}</FormFeedback>
+                    )}
+                  </span>
+                </DateDiv>
+              </FlexDiv>
+
+              {/* <div>
+                <label>Tid för omsändning</label>
+                <RadioWrapper
+                  radioButtons={[
+                    {
+                      id: `now`,
+                      label: 'Skicka nu',
+                      value: '0',
+                    },
+                    {
+                      id: `schedule`,
+                      label: 'Schemalägg',
+                      value: '1',
+                    },
+                  ]}
+                  onChange={(event) => (event.target.value === '0' ? setSchedule(false) : setSchedule(true))}
+                  selected={schedule === false ? '0' : '1'}
+                />
+              </div> */}
+
+              {schedule === true && (
+                <DateDiv>
+                  <label htmlFor="scheduleDate">Till</label>
+                  <span>
+                    <DatePicker
+                      inputId="scheduleDate"
+                      date={scheduleDate}
+                      onChange={(value) => setScheduleDate(value)}
+                      className={showValidation && validationMessages.scheduleDate !== undefined ? 'error' : ''}
+                    />
+                    {showValidation && validationMessages.scheduleDate !== undefined && (
+                      <FormFeedback style={{ display: 'block' }}>{validationMessages.scheduleDate}</FormFeedback>
+                    )}
+                  </span>
+                  <span>
+                    <TimePicker
+                      inputId="scheduleTime"
+                      value={scheduleTime}
+                      onChange={(value) => setScheduleTime(value)}
+                      className={showValidation && validationMessages.scheduleTime !== undefined ? 'error' : ''}
+                    />
+                    {showValidation && validationMessages.scheduleTime !== undefined && (
+                      <FormFeedback style={{ display: 'block' }}>{validationMessages.scheduleTime}</FormFeedback>
+                    )}
+                  </span>
+                </DateDiv>
+              )}
+
+              <ActionsContainer>
+                <Button
+                  color={'default'}
+                  onClick={() => {
+                    setStatusFor('0')
+                    setCaregiver('')
+                    setUnit('')
+                    setCertificates('')
+                    setFromDate('')
+                    setFromTime('')
+                    setToDate('')
+                    setToTime('')
+                    setSchedule(false)
+                    setScheduleDate('')
+                    setScheduleTime('')
+                  }}>
+                  Rensa
+                </Button>
+                <Button
+                  color={'primary'}
+                  onClick={() => {
+                    setShowValidation(true)
+                    if (Object.keys(validationMessages).length === 0) {
+                      setPreview(true)
+                    }
+                  }}>
+                  Granska
+                </Button>
+              </ActionsContainer>
+            </FormContainer>
+          )}
+
+          {preview && (
+            <>
+              <IaTypo03 style={{ marginBottom: '20px' }}>Granska omsändning</IaTypo03>
+              <PreviewDiv>
+                <strong>Omsändning av status för</strong>
+                <span>{resentOptions.find(({ value }) => statusFor === value).label}</span>
+              </PreviewDiv>
+
+              {statusFor === '0' && (
+                <PreviewDiv>
+                  <strong>Ange ett eller flera intygs-id</strong>
+                  <span>{certificates}</span>
+                </PreviewDiv>
+              )}
+              {statusFor === '1' && (
+                <PreviewDiv>
+                  <strong>Ange vårdgivarens HSA-ID</strong>
+                  <span>{caregiver}</span>
+                </PreviewDiv>
+              )}
+              {statusFor === '2' && (
+                <PreviewDiv>
+                  <strong>Ange vårdenhetens HSA-ID</strong>
+                  <span>{unit}</span>
+                </PreviewDiv>
+              )}
+
+              <PreviewDiv>
+                <strong>Välj status att skicka</strong>
+                <span>{status === 'SUCCESS' ? 'Lyckade' : 'Misslyckade'}</span>
+              </PreviewDiv>
+
+              <PreviewDiv>
+                <strong>Välj period</strong>
+                <span>Från {`${fromDate}:${fromTime}`}</span>
+                <span>Till {`${toDate}:${toTime}`}</span>
+              </PreviewDiv>
+
+              {schedule === true && (
+                <PreviewDiv>
+                  <strong>Tid för omsändning</strong>
+                  <span>Schemalägg {`${scheduleDate}:${scheduleTime}`}</span>
+                </PreviewDiv>
+              )}
+
+              <PreviewDiv>
+                <strong>Antal händelser för omsändning</strong>
+                <span>0</span>
+              </PreviewDiv>
+
+              <ActionsContainer>
+                <Button
+                  color={'default'}
+                  onClick={() => {
+                    setPreview(false)
+                  }}>
+                  Tillbaka
+                </Button>
+                <Button color={'primary'} onClick={() => console.log('send')}>
+                  Skicka
+                </Button>
+              </ActionsContainer>
+            </>
+          )}
+        </PageContainer>
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )
