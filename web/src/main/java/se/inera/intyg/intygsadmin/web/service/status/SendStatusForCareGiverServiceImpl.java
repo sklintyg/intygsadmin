@@ -22,6 +22,7 @@ package se.inera.intyg.intygsadmin.web.service.status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
@@ -59,7 +60,7 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
     }
 
     @Override
-    public Integer count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
+    public CountStatusesDTO count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
         final var integrationRequest = CountStatusesForCareGiverIntegrationRequestDTO.builder()
             .careGiverId(request.getCareGiverId())
             .start(request.getStart())
@@ -68,6 +69,9 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);
-        return response.getCount();
+        return CountStatusesDTO.builder()
+            .count(response.getCount())
+            .max(response.getMax())
+            .build();
     }
 }

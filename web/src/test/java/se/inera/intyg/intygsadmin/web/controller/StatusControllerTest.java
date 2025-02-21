@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
@@ -99,12 +100,14 @@ class StatusControllerTest {
             .status(STATUS_LIST)
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.builder()
+        final var countStatusesResponse = CountStatusesDTO.builder()
             .count(1)
+            .max(1)
             .build();
 
-        when(sendStatusForCertificatesService.count(request)).thenReturn(sendStatusResponse.getCount());
+        when(sendStatusForCertificatesService.count(request)).thenReturn(countStatusesResponse);
         assertEquals(1, statusController.countStatusesForCertificates(request).getCount());
+        assertEquals(1, statusController.countStatusesForCertificates(request).getMax());
     }
 
     @Test
@@ -131,15 +134,17 @@ class StatusControllerTest {
             .unitIds(List.of("unitId"))
             .start(START)
             .end(END)
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.builder()
+        final var countStatusesResponse = CountStatusesDTO.builder()
             .count(1)
+            .max(1)
             .build();
 
-        when(sendStatusForUnitsService.count( request)).thenReturn(sendStatusResponse.getCount());
+        when(sendStatusForUnitsService.count( request)).thenReturn(countStatusesResponse);
         assertEquals(1, statusController.countStatusesForUnits(request).getCount());
+        assertEquals(1, statusController.countStatusesForUnits(request).getMax());
     }
 
     @Test
@@ -168,11 +173,13 @@ class StatusControllerTest {
             .status(STATUS_LIST)
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.builder()
+        final var countStatusesResponse = CountStatusesDTO.builder()
             .count(1)
+            .max(1)
             .build();
 
-        when(sendStatusForCareGiverService.count(CARE_GIVER_ID, request)).thenReturn(sendStatusResponse.getCount());
+        when(sendStatusForCareGiverService.count(CARE_GIVER_ID, request)).thenReturn(countStatusesResponse);
+        assertEquals(1, statusController.countStatusesForCareGiver(CARE_GIVER_ID, request).getMax());
         assertEquals(1, statusController.countStatusesForCareGiver(CARE_GIVER_ID, request).getCount());
     }
 

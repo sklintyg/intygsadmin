@@ -36,6 +36,7 @@ import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForUnitsIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -105,8 +106,8 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
+    public CountStatusesIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request) {
+        return CountStatusesIntegrationResponseDTO.builder().build();
     }
 
     @Override
@@ -115,8 +116,8 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
+    public CountStatusesIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request) {
+        return CountStatusesIntegrationResponseDTO.builder().build();
     }
 
     @Override
@@ -125,9 +126,9 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
     }
 
   @Override
-  public SendStatusIntegrationResponseDTO countStatusesForCareGiver(
+  public CountStatusesIntegrationResponseDTO countStatusesForCareGiver(
       CountStatusesForCareGiverIntegrationRequestDTO request) {
-    return SendStatusIntegrationResponseDTO.builder().build();
+    return CountStatusesIntegrationResponseDTO.builder().build();
   }
 
     private void addUnit(String unitId) {

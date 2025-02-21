@@ -33,6 +33,7 @@ import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificate
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
@@ -77,8 +78,9 @@ class SendStatusForCertificatesServiceImplTest {
             .status(List.of(NotificationStatusEnum.FAILURE))
             .build();
 
-        final var expected = SendStatusIntegrationResponseDTO.builder()
+        final var expected = CountStatusesIntegrationResponseDTO.builder()
             .count(1)
+            .max(1)
             .build();
 
         when(wcIntegrationRestService.countStatusesForCertificates(any(CountStatusesForCertificatesIntegrationRequestDTO.class)))
@@ -86,7 +88,9 @@ class SendStatusForCertificatesServiceImplTest {
 
         final var response = sendStatusForCertificatesServiceImpl.count(request);
 
-        assertEquals(1, response);
+
+        assertEquals(1, response.getCount());
+        assertEquals(1, response.getMax());
     }
 }
 

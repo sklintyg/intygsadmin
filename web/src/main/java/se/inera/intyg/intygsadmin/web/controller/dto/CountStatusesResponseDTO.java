@@ -17,18 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service.status;
+package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
+import lombok.Builder;
+import lombok.Value;
 
-@Service
-public interface SendStatusForCertificatesService {
-
-    Integer send(SendStatusForCertificatesRequestDTO request);
-
-    CountStatusesDTO count(CountStatusesForCertificatesRequestDTO request);
+@Value
+@Builder
+public class CountStatusesResponseDTO {
+    Integer count;
+    Integer max;
 
 }

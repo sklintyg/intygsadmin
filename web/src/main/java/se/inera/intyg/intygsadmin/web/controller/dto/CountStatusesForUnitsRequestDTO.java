@@ -16,7 +16,7 @@ public class CountStatusesForUnitsRequestDTO {
     List<String> unitIds;
     LocalDateTime start;
     LocalDateTime end;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class CountStatusesForUnitsRequestDTOBuilder {

@@ -31,6 +31,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -303,11 +304,12 @@ class WCIntegrationRestServiceImplTest {
                 .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
-            final var response = SendStatusIntegrationResponseDTO.builder()
+            final var response = CountStatusesIntegrationResponseDTO.builder()
                 .count(1)
+                .max(1)
                 .build();
 
-            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+            doReturn(response).when(responseSpec).body(CountStatusesIntegrationResponseDTO.class);
             assertNotNull(wcIntegrationRestService.countStatusesForCareGiver(request));
         }
 

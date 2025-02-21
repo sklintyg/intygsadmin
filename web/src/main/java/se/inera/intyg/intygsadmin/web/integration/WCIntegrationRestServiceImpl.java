@@ -42,6 +42,7 @@ import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForUnitsIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -154,7 +155,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request) {
+    public CountStatusesIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request) {
         return restClient.post()
             .uri(webcertUrl + "/internalapi/notification/count/certificates")
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
@@ -162,7 +163,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
             .contentType(MediaType.APPLICATION_JSON)
             .body(request)
             .retrieve()
-            .body(SendStatusIntegrationResponseDTO.class);
+            .body(CountStatusesIntegrationResponseDTO.class);
     }
 
     @Override
@@ -179,7 +180,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
     @Override
-    public SendStatusIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request) {
+    public CountStatusesIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request) {
         return restClient.post()
             .uri(webcertUrl + "/internalapi/notification/count/units")
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
@@ -187,7 +188,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
             .contentType(MediaType.APPLICATION_JSON)
             .body(request)
             .retrieve()
-            .body(SendStatusIntegrationResponseDTO.class);
+            .body(CountStatusesIntegrationResponseDTO.class);
     }
 
     @Override
@@ -204,7 +205,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     }
 
   @Override
-  public SendStatusIntegrationResponseDTO countStatusesForCareGiver(
+  public CountStatusesIntegrationResponseDTO countStatusesForCareGiver(
       CountStatusesForCareGiverIntegrationRequestDTO request) {
     return restClient
         .post()
@@ -214,6 +215,6 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
         .contentType(MediaType.APPLICATION_JSON)
         .body(request)
         .retrieve()
-        .body(SendStatusIntegrationResponseDTO.class);
+        .body(CountStatusesIntegrationResponseDTO.class);
   }
 }
