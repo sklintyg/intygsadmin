@@ -19,13 +19,21 @@
 
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO.SendStatusIntegrationResponseDTOBuilder;
 
 @Value
 @Builder
+@JsonDeserialize(builder = SendStatusIntegrationResponseDTOBuilder.class)
 public class SendStatusIntegrationResponseDTO {
 
     Integer count;
 
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class SendStatusIntegrationResponseDTOBuilder {
+
+    }
 }
