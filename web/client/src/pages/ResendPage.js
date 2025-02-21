@@ -285,7 +285,7 @@ const ResendPage = () => {
                 </DateDiv>
               </FlexDiv>
 
-              <div>
+              {/* <div>
                 <label>Tid för omsändning</label>
                 <RadioWrapper
                   radioButtons={[
@@ -303,7 +303,7 @@ const ResendPage = () => {
                   onChange={(event) => (event.target.value === '0' ? setSchedule(false) : setSchedule(true))}
                   selected={schedule === false ? '0' : '1'}
                 />
-              </div>
+              </div> */}
 
               {schedule === true && (
                 <DateDiv>
