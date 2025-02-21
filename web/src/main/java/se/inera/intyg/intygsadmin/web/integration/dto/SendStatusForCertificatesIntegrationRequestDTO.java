@@ -33,7 +33,7 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 public class SendStatusForCertificatesIntegrationRequestDTO {
 
     List<String> certificateIds;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class SendStatusForCertificatesIntegrationRequestDTOBuilder {
