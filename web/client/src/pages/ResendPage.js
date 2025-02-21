@@ -15,6 +15,7 @@ import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } 
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import * as actions from '../store/actions/intygInfo'
+import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount'
 
 const resentOptions = [
   {
@@ -424,10 +425,15 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </PreviewDiv>
               )}
 
-              {/* <PreviewDiv>
-                <strong>Antal händelser för omsändning</strong>
-                <span>0</span>
-              </PreviewDiv> */}
+              <ResendStatusCount
+                statusFor={statusFor}
+                certificateIds={certificates.split(',').map((id) => id.trim())}
+                careGiverId={caregiver}
+                unitIds={unit}
+                statuses={[status]}
+                start={`${fromDate}T${fromTime}`}
+                end={`${toDate}T${toTime}`}
+              />
 
               <ActionsContainer>
                 <Button
@@ -443,7 +449,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                     if (statusFor === '0') {
                       resendCertificateStatus({
                         certificateIds: certificates.split(',').map((id) => id.trim()),
-                        status: [status],
+                        statuses: [status],
                       })
                     }
                     if (statusFor === '1') {
@@ -451,7 +457,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         careGiverId: caregiver,
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        status: [status],
+                        statuses: [status],
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }
@@ -460,7 +466,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         unitIds: unit,
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        status: [status],
+                        statuses: [status],
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }

@@ -37,3 +37,7 @@ export const fetchIntygInfo = (intygsId) => (dispatch, getState) => {
 export const resendCertificateStatus = createAPIReducer('RESEND_CERTIFICATE_STATUS', api.resendCertificateStatus)
 export const resendUnitsStatus = createAPIReducer('RESEND_UNIT_STATUS', api.resendUnitsStatus)
 export const resendCaregiverStatus = createAPIReducer('RESEND_CAREGIVER_STATUS', api.resendCaregiverStatus)
+
+export const resendCertificateStatusCount = createAPIReducer('RESEND_CERTIFICATE_STATUS_COUNT', api.resendCertificateStatusCount)
+export const resendUnitsStatusCount = createAPIReducer('RESEND_UNIT_STATUS_COUNT', api.resendUnitsStatusCount)
+export const resendCaregiverStatusCount = createAPIReducer('RESEND_CAREGIVER_STATUS_COUNT', api.resendCaregiverStatusCount)
