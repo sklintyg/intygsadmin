@@ -17,16 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.intygsadmin.web.service.status;
+package se.inera.intyg.intygsadmin.web.integration.dto;
 
-import org.springframework.stereotype.Service;
-import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
-import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.Builder;
+import lombok.Value;
+import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
-@Service
-public interface SendStatusForCareGiverService {
+@Value
+@Builder
+public class CountStatusesForCareGiverIntegrationRequestDTO {
 
-    Integer send(String caregiverId, SendStatusForCareGiverRequestDTO request);
+    String careGiverId;
+    LocalDateTime start;
+    LocalDateTime end;
+    List<NotificationStatusEnum> status;
+    LocalDateTime activationTime;
 
-    Integer count(String careGiverId, CountStatusesForCareGiverRequestDTO request);
 }

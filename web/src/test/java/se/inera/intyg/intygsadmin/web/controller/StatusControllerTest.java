@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
@@ -122,6 +123,23 @@ class StatusControllerTest {
 
         when(sendStatusForCareGiverService.send(CARE_GIVER_ID, request)).thenReturn(sendStatusResponse.getCount());
         assertEquals(1, statusController.sendStatusForCareGiver(CARE_GIVER_ID, request).getCount());
+    }
+
+    @Test
+    void shouldCountStatusesForCareGiver() {
+        final var request = CountStatusesForCareGiverRequestDTO.builder()
+            .careGiverId(CARE_GIVER_ID)
+            .start(START)
+            .end(END)
+            .status(STATUS_LIST)
+            .build();
+
+        final var sendStatusResponse = SendStatusResponseDTO.builder()
+            .count(1)
+            .build();
+
+        when(sendStatusForCareGiverService.count(CARE_GIVER_ID, request)).thenReturn(sendStatusResponse.getCount());
+        assertEquals(1, statusController.countStatusesForCareGiver(CARE_GIVER_ID, request).getCount());
     }
 
 }

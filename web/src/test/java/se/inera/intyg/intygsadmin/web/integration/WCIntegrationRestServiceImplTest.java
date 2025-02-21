@@ -30,6 +30,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -129,7 +130,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldSendStatusForCertificates() {
             final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
                 .certificateIds(List.of(certificateId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
             final var response = SendStatusIntegrationResponseDTO.builder()
@@ -144,7 +145,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldThrowException() {
             final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
                 .certificateIds(List.of(certificateId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
@@ -268,6 +269,46 @@ class WCIntegrationRestServiceImplTest {
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
 
             assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatusForCareGiver(request));
+        }
+    }
+
+    @Nested
+    class CountStatusForCareGiverTest {
+
+        private ResponseSpec responseSpec;
+        private String careGiverId;
+
+        @BeforeEach
+        void setUp() {
+            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+            responseSpec = mock(RestClient.ResponseSpec.class);
+            careGiverId = UUID.randomUUID().toString();
+
+            MDC.put(TRACE_ID_KEY, "traceId");
+            MDC.put(SESSION_ID_KEY, "sessionId");
+
+            when(restClient.post()).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.uri("Host/internalapi/notification/count/careGiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.body(any(CountStatusesForCareGiverIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+        }
+
+        @Test
+        void shouldCountStatusesForCareGiver() {
+            final var request = CountStatusesForCareGiverIntegrationRequestDTO.builder()
+                .careGiverId(careGiverId)
+                .status(List.of(NotificationStatusEnum.FAILURE))
+                .build();
+
+            final var response = SendStatusIntegrationResponseDTO.builder()
+                .count(1)
+                .build();
+
+            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+            assertNotNull(wcIntegrationRestService.countStatusesForCareGiver(request));
         }
 
     }
