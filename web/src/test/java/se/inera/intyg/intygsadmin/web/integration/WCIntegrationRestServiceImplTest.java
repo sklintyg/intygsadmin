@@ -130,7 +130,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldSendStatusForCertificates() {
             final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
                 .certificateIds(List.of(certificateId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
             final var response = SendStatusIntegrationResponseDTO.builder()
@@ -145,7 +145,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldThrowException() {
             final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
                 .certificateIds(List.of(certificateId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
             doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
