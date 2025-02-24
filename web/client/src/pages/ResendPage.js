@@ -104,7 +104,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
       result.unit = 'Ange vårdenhetens HSA-ID'
     }
 
-    if (!['SUCCESS', 'FAILURE'].includes(status)) {
+    if (!status.length <= 0) {
       result.status = 'Välj status att skicka'
     }
 
@@ -229,7 +229,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                   value={status}
                   onChange={(event) => setStatus(event.target.value)}
                   invalid={Boolean(showValidation && validationMessages.status)}>
-                  <option value={''}>Välj</option>
+                  <option value={[]}>Välj</option>
                   <option value={['SUCCESS', 'FAILURE']}>Alla</option>
                   <option value={['FAILURE']}>Misslyckade</option>
                 </StyledInput>
