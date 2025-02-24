@@ -195,7 +195,17 @@ const getEventStatus = (status) => {
       return ""
   }
 
-  return " (" + status + ")"
+  let convertedStatus = "misslyckad"
+  if (status === "SUCCESS") {
+    convertedStatus = "lyckad"
+  }
+
+  if (status === "RESEND") {
+    convertedStatus = "omsändning"
+  }
+
+
+  return " (" + convertedStatus + ")"
 }
 
 const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCertificateStatus }) => {
