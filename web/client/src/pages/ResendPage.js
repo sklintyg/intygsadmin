@@ -456,7 +456,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         careGiverId: caregiver,
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        statuses: status,
+                        statuses: status.split(',').map((id) => id.trim()),
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }
