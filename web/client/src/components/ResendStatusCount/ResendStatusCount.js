@@ -11,17 +11,13 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendStatusCount = ({ count, max, isFetching, errorMessage }) => {
-  if (errorMessage) {
-    return <p style={{ color: 'red' }}>Kunde inte hämta antal händelser för omsändning</p>
-  }
-
+const ResendStatusCount = ({ count, max }) => {
   if (!count) {
-    return null
+    return <p style={{color: 'red'}}>Kunde inte hämta antal händelser för omsändning</p>
   }
 
   if (count > max) {
-    return <p style={{ color: 'red' }}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p>
+    return <p style={{color: 'red'}}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p>
   }
 
   return (
