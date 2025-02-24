@@ -1,19 +1,18 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import MenuBar from '../components/iaMenu/MenuBar'
 import PageHeader from '../components/styles/PageHeader'
 import IaColors from '../components/styles/iaColors'
-import { CustomScrollingContainer, FlexColumnContainer, PageContainer } from '../components/styles/iaLayout'
-import { DocIcon } from '../components/styles/iaSvgIcons'
-import { useState } from 'react'
-import { IaTypo03 } from '../components/styles/iaTypography'
-import { RadioWrapper } from '../components/radioButton'
+import {CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout'
+import {DocIcon} from '../components/styles/iaSvgIcons'
+import {IaTypo03} from '../components/styles/iaTypography'
+import {RadioWrapper} from '../components/radioButton'
 import DatePicker from '../components/datePicker'
-import { Input, Button, UncontrolledTooltip, FormFeedback } from 'reactstrap'
+import {Button, FormFeedback, Input, UncontrolledTooltip} from 'reactstrap'
 import styled from 'styled-components'
 import TimePicker from '../components/timePicker'
-import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
+import {validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat} from '../utils/validation'
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
 import * as actions from '../store/actions/intygInfo'
 import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount'
 
@@ -231,8 +230,8 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                   onChange={(event) => setStatus(event.target.value)}
                   invalid={Boolean(showValidation && validationMessages.status)}>
                   <option value={''}>Välj</option>
-                  <option value={'SUCCESS'}>Lyckade</option>
-                  <option value={'FAILURE'}>Misslyckade</option>
+                  <option value={['SUCCESS', 'FAILURE']}>Alla</option>
+                  <option value={['FAILURE']}>Misslyckade</option>
                 </StyledInput>
                 <FormFeedback>{validationMessages.status}</FormFeedback>
               </FlexDiv>
