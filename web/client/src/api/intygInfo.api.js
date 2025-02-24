@@ -5,6 +5,21 @@ export const fetchIntygInfo = (intygsId) => utils.makeServerRequest(`intygInfo/$
 export const resendCertificateStatus = ({ certificateIds, statuses }) =>
   utils.makeServerPost(`status/certificates`, { certificateIds, statuses })
 
+export const resendUnitsStatus = ({ unitIds, start, end, statuses, activationTime }) =>
+  utils.makeServerPost(`status/units`, { unitIds, start, end, statuses, activationTime })
+
+export const resendCaregiverStatus = ({ careGiverId, start, end, statuses, activationTime }) =>
+  utils.makeServerPost(`status/caregiver/${careGiverId}`, { start, end, statuses, activationTime })
+
+export const resendCertificateStatusCount = ({ certificateIds, statuses }) =>
+  utils.makeServerPost(`status/count/certificates`, { certificateIds, statuses })
+
+export const resendUnitsStatusCount = ({ careGiverId, start, end, statuses }) =>
+  utils.makeServerPost(`status/count/units/${careGiverId}`, { start, end, statuses })
+
+export const resendCaregiverStatusCount = ({ careGiverId, start, end, statuses }) =>
+  utils.makeServerPost(`status/count/caregiver/${careGiverId}`, { start, end, statuses })
+
 export const fetchIntygInfoList = ({ pageIndex, sortColumn, sortDirection }) => {
   if (!pageIndex) {
     pageIndex = 0
