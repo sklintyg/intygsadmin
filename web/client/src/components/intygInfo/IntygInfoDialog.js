@@ -186,8 +186,8 @@ const IntygEventRow = ({ event, fetchIntygInfo }) => {
       </TableTD>
       <TableTD>{getMessage(`intygInfo.source.${event.source}`)}</TableTD>
       <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data) + (event.data && event.data.status ? getEventStatus(event.data.status) : "")}</TableTD>
-      <TableTD>{(event.data && event.data.status && event.data.status !== "RESEND" ?
-        <Button id={'closeBtn'} onClick={() => resendNotificationStatus("123")} color={'default'}>
+      <TableTD>{(event.data && event.data.status && event.data.status !== "RESEND" && event.data.notificationId ?
+        <Button id={'closeBtn'} onClick={() => resendNotificationStatus(event.data.notificationId)} color={'default'}>
           Skicka om
         </Button> : "")}
       </TableTD>
