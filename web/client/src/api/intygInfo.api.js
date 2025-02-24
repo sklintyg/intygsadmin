@@ -2,6 +2,9 @@ import * as utils from './utils'
 
 export const fetchIntygInfo = (intygsId) => utils.makeServerRequest(`intygInfo/${intygsId}`)
 
+export const resendNotificationStatus = ({ notificationId }) =>
+  utils.makeServerPost(`status/${notificationId}`, { notificationId })
+
 export const resendCertificateStatus = ({ certificateIds, statuses }) =>
   utils.makeServerPost(`status/certificates`, { certificateIds, statuses })
 
