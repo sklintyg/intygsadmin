@@ -14,8 +14,8 @@ export const resendCaregiverStatus = ({ careGiverId, start, end, statuses, activ
 export const resendCertificateStatusCount = ({ certificateIds, statuses }) =>
   utils.makeServerPost(`status/count/certificates`, { certificateIds, statuses })
 
-export const resendUnitsStatusCount = ({ careGiverId, start, end, statuses }) =>
-  utils.makeServerPost(`status/count/units/${careGiverId}`, { start, end, statuses })
+export const resendUnitsStatusCount = ({ unitIds, start, end, statuses }) =>
+  utils.makeServerPost(`status/count/units`, { start, end, statuses, unitIds })
 
 export const resendCaregiverStatusCount = ({ careGiverId, start, end, statuses }) =>
   utils.makeServerPost(`status/count/caregiver/${careGiverId}`, { start, end, statuses })
