@@ -1,15 +1,15 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap'
+import {connect} from 'react-redux'
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
-import { compose } from 'recompose'
+import {compose} from 'recompose'
 import styled from 'styled-components'
-import { getMessage } from '../../messages/messages'
+import {getMessage} from '../../messages/messages'
 import * as actions from '../../store/actions/intygInfo'
 import DisplayDateTime from '../displayDateTime/DisplayDateTime'
 import modalContainer from '../modalContainer/modalContainer'
 import colors from '../styles/iaColors'
-import { IaTypo02, IaTypo03, IaTypo05 } from '../styles/iaTypography'
+import {IaTypo02, IaTypo03, IaTypo05} from '../styles/iaTypography'
 
 const BodyHeight = styled(ModalBody)`
   height: 60vh;
@@ -184,10 +184,18 @@ const IntygEventRow = ({ event, fetchIntygInfo }) => {
         <DisplayDateTime date={event.date} />
       </TableTD>
       <TableTD>{getMessage(`intygInfo.source.${event.source}`)}</TableTD>
-      <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data)}</TableTD>
+      <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data) + event.data ? getEventStatus(event.data.status) : ""}</TableTD>
       <TableTD>{event.data && event.data.intygsId ? <VisaIntyg /> : ''}</TableTD>
     </tr>
   )
+}
+
+const getEventStatus = (status) => {
+  if (status === undefined) {
+      return ""
+  }
+
+  return " (" + status + ")"
 }
 
 const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCertificateStatus }) => {
