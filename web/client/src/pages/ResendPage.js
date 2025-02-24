@@ -104,7 +104,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
       result.unit = 'Ange vårdenhetens HSA-ID'
     }
 
-    if (status.length <= 0) {
+    if (status.length === "") {
       result.status = 'Välj status att skicka'
     }
 
