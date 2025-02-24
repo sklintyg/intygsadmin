@@ -78,7 +78,7 @@ const PreviewDiv = styled.div`
 const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificateStatus }) => {
   const [preview, setPreview] = useState(false)
   const [statusFor, setStatusFor] = useState('0')
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState([])
   const [caregiver, setCaregiver] = useState('')
   const [unit, setUnit] = useState('')
   const [certificates, setCertificates] = useState('')
@@ -406,7 +406,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
 
               <PreviewDiv>
                 <strong>Välj status att skicka</strong>
-                <span>{status === 'SUCCESS' ? 'Lyckade' : 'Misslyckade'}</span>
+                <span>{status === ['SUCCESS'] ? 'Lyckade' : 'Alla'}</span>
               </PreviewDiv>
 
               {statusFor !== '0' && (
