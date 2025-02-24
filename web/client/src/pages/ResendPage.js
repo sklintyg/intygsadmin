@@ -429,7 +429,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 certificateIds={certificates.split(',').map((id) => id.trim())}
                 careGiverId={caregiver}
                 unitIds={unit}
-                statuses={[status]}
+                statuses={status}
                 start={`${fromDate}T${fromTime}`}
                 end={`${toDate}T${toTime}`}
               />
@@ -448,7 +448,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                     if (statusFor === '0') {
                       resendCertificateStatus({
                         certificateIds: certificates.split(',').map((id) => id.trim()),
-                        statuses: [status],
+                        statuses: status,
                       })
                     }
                     if (statusFor === '1') {
@@ -456,7 +456,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         careGiverId: caregiver,
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        statuses: [status],
+                        statuses: status,
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }
@@ -465,7 +465,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         unitIds: unit,
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        statuses: [status],
+                        statuses: status,
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }
