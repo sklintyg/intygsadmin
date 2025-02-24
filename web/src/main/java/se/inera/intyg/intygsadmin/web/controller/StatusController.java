@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesResponseDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesResponseDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
@@ -99,7 +99,7 @@ public class StatusController {
             .build();
     }
 
-    @PostMapping("count/caregiver/{careGiverId}")
+    @PostMapping("/count/caregiver/{careGiverId}")
     public CountStatusesResponseDTO countStatusesForCareGiver(@PathVariable String careGiverId,
         @RequestBody CountStatusesForCareGiverRequestDTO request) {
         final var response = sendStatusForCareGiverService.count(careGiverId, request);
