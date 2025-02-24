@@ -78,7 +78,7 @@ const PreviewDiv = styled.div`
 const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificateStatus }) => {
   const [preview, setPreview] = useState(false)
   const [statusFor, setStatusFor] = useState('0')
-  const [status, setStatus] = useState([])
+  const [status, setStatus] = useState("")
   const [caregiver, setCaregiver] = useState('')
   const [unit, setUnit] = useState('')
   const [certificates, setCertificates] = useState('')
