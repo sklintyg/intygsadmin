@@ -184,7 +184,7 @@ const IntygEventRow = ({ event, fetchIntygInfo }) => {
         <DisplayDateTime date={event.date} />
       </TableTD>
       <TableTD>{getMessage(`intygInfo.source.${event.source}`)}</TableTD>
-      <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data) + event.data ? getEventStatus(event.data.status) : ""}</TableTD>
+      <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data) + event.data && event.data.status ? getEventStatus(event.data.status) : ""}</TableTD>
       <TableTD>{event.data && event.data.intygsId ? <VisaIntyg /> : ''}</TableTD>
     </tr>
   )
