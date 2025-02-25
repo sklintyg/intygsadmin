@@ -1,9 +1,9 @@
 import React from 'react'
-import { compose, lifecycle } from 'recompose'
-import { connect } from 'react-redux'
+import {compose, lifecycle} from 'recompose'
+import {connect} from 'react-redux'
 import * as actions from '../../store/actions/intygInfo'
 import styled from 'styled-components'
-import { getStatusCount, getIsFetching, getErrorMessage } from '../../store/reducers/countStatus.reducer'
+import {getErrorMessage, getIsFetching, getStatusCount, getStatusMaxCount} from '../../store/reducers/countStatus.reducer'
 
 const PreviewDiv = styled.div`
   display: flex;
@@ -11,13 +11,13 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendStatusCount = ({ count, isFetching, errorMessage }) => {
-  if (errorMessage) {
-    return <p style={{ color: 'red' }}>Kunde inte hämta antal händelser för omsändning</p>
+const ResendStatusCount = ({ count, max }) => {
+  if (!count) {
+    return <p style={{color: 'red'}}>Kunde inte hämta antal händelser för omsändning</p>
   }
 
-  if (!count) {
-    return null
+  if (count > max) {
+    return <p style={{color: 'red'}}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p>
   }
 
   return (
@@ -67,6 +67,7 @@ const lifeCycleValues = {
 const mapStateToProps = (state) => {
   return {
     count: getStatusCount(state),
+    max: getStatusMaxCount(state),
     isFetching: getIsFetching,
     errorMessage: getErrorMessage,
   }

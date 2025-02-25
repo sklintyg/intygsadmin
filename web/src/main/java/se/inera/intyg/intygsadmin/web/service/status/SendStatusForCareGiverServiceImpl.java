@@ -22,6 +22,7 @@ package se.inera.intyg.intygsadmin.web.service.status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
@@ -51,7 +52,7 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
             .start(request.getStart())
             .end(request.getEnd())
             .activationTime(request.getActivationTime())
-            .status(request.getStatus())
+            .statuses(request.getStatuses())
             .build();
 
         final var response = wcIntegrationRestService.sendStatusForCareGiver(integrationRequest);
@@ -59,15 +60,18 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
     }
 
     @Override
-    public Integer count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
+    public CountStatusesDTO count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
         final var integrationRequest = CountStatusesForCareGiverIntegrationRequestDTO.builder()
             .careGiverId(request.getCareGiverId())
             .start(request.getStart())
             .end(request.getEnd())
-            .status(request.getStatus())
+            .statuses(request.getStatus())
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);
-        return response.getCount();
+        return CountStatusesDTO.builder()
+            .count(response.getCount())
+            .max(response.getMax())
+            .build();
     }
 }

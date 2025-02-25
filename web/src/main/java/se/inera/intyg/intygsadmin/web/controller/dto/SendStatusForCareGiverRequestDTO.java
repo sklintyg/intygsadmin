@@ -12,7 +12,7 @@ public class SendStatusForCareGiverRequestDTO {
 
     LocalDateTime start;
     LocalDateTime end;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
     LocalDateTime activationTime;
 
 }

@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesResponseDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
@@ -61,11 +64,29 @@ public class StatusController {
             .build();
     }
 
+    @PostMapping("/count/certificates")
+    public CountStatusesResponseDTO countStatusesForCertificates(@RequestBody CountStatusesForCertificatesRequestDTO request) {
+        final var response = sendStatusForCertificatesService.count(request);
+        return CountStatusesResponseDTO.builder()
+            .count(response.getCount())
+            .max(response.getMax())
+            .build();
+    }
+
     @PostMapping("/units")
     public SendStatusResponseDTO sendStatusForUnits(@RequestBody SendStatusForUnitsRequestDTO request) {
         final var response = sendStatusForUnitsService.send(request);
         return SendStatusResponseDTO.builder()
             .count(response)
+            .build();
+    }
+
+    @PostMapping("/count/units")
+    public CountStatusesResponseDTO countStatusesForUnits(@RequestBody CountStatusesForUnitsRequestDTO request) {
+        final var response = sendStatusForUnitsService.count(request);
+        return CountStatusesResponseDTO.builder()
+            .count(response.getCount())
+            .max(response.getMax())
             .build();
     }
 
@@ -78,12 +99,13 @@ public class StatusController {
             .build();
     }
 
-    @PostMapping("count/caregiver/{careGiverId}")
-    public SendStatusResponseDTO countStatusesForCareGiver(@PathVariable String careGiverId,
+    @PostMapping("/count/caregiver/{careGiverId}")
+    public CountStatusesResponseDTO countStatusesForCareGiver(@PathVariable String careGiverId,
         @RequestBody CountStatusesForCareGiverRequestDTO request) {
         final var response = sendStatusForCareGiverService.count(careGiverId, request);
-        return SendStatusResponseDTO.builder()
-            .count(response)
+        return CountStatusesResponseDTO.builder()
+            .count(response.getCount())
+            .max(response.getMax())
             .build();
     }
 

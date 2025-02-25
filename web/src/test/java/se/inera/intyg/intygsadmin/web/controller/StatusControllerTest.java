@@ -29,7 +29,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCertificatesRequestDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCertificatesRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
@@ -79,7 +82,7 @@ class StatusControllerTest {
     void shouldSetSendStatusForCertificates() {
         final var request = SendStatusForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.builder()
@@ -91,10 +94,27 @@ class StatusControllerTest {
     }
 
     @Test
+    void shouldCountStatusesForCertificates() {
+        final var request = CountStatusesForCertificatesRequestDTO.builder()
+            .certificateIds(List.of("certificateId"))
+            .status(STATUS_LIST)
+            .build();
+
+        final var countStatusesResponse = CountStatusesDTO.builder()
+            .count(1)
+            .max(1)
+            .build();
+
+        when(sendStatusForCertificatesService.count(request)).thenReturn(countStatusesResponse);
+        assertEquals(1, statusController.countStatusesForCertificates(request).getCount());
+        assertEquals(1, statusController.countStatusesForCertificates(request).getMax());
+    }
+
+    @Test
     void shouldSetSendStatusForUnits() {
         final var request = SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unitId"))
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .start(START)
             .end(END)
             .activationTime(ACTIVATION_TIME)
@@ -109,12 +129,31 @@ class StatusControllerTest {
     }
 
     @Test
+    void shouldCountStatusesForUnits() {
+        final var request = CountStatusesForUnitsRequestDTO.builder()
+            .unitIds(List.of("unitId"))
+            .start(START)
+            .end(END)
+            .statuses(STATUS_LIST)
+            .build();
+
+        final var countStatusesResponse = CountStatusesDTO.builder()
+            .count(1)
+            .max(1)
+            .build();
+
+        when(sendStatusForUnitsService.count( request)).thenReturn(countStatusesResponse);
+        assertEquals(1, statusController.countStatusesForUnits(request).getCount());
+        assertEquals(1, statusController.countStatusesForUnits(request).getMax());
+    }
+
+    @Test
     void shouldSetSendStatusForCareGiver() {
         final var request = SendStatusForCareGiverRequestDTO.builder()
             .start(START)
             .end(END)
             .activationTime(ACTIVATION_TIME)
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
         final var sendStatusResponse = SendStatusResponseDTO.builder()
@@ -134,11 +173,13 @@ class StatusControllerTest {
             .status(STATUS_LIST)
             .build();
 
-        final var sendStatusResponse = SendStatusResponseDTO.builder()
+        final var countStatusesResponse = CountStatusesDTO.builder()
             .count(1)
+            .max(1)
             .build();
 
-        when(sendStatusForCareGiverService.count(CARE_GIVER_ID, request)).thenReturn(sendStatusResponse.getCount());
+        when(sendStatusForCareGiverService.count(CARE_GIVER_ID, request)).thenReturn(countStatusesResponse);
+        assertEquals(1, statusController.countStatusesForCareGiver(CARE_GIVER_ID, request).getMax());
         assertEquals(1, statusController.countStatusesForCareGiver(CARE_GIVER_ID, request).getCount());
     }
 
