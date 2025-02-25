@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 export const CountStatusDefaultState = {
   count: 0,
+  max: 0,
 }
 
 const countStatus = (state = CountStatusDefaultState, action) => {
@@ -59,9 +60,9 @@ export default combineReducers({ countStatus, isFetching, errorMessage })
 
 // Selectors
 
-export const getStatusCount = (state) => state.countStatus.count
+export const getStatusCount = (state) => state.countStatus.countStatus.count
 
-export const getStatusMaxCount = (state) => state.countStatus.countMax
+export const getStatusMaxCount = (state) => state.countStatus.countStatus.countMax
 
 export const getIsFetching = (state) => state.countStatus.isFetching
 
