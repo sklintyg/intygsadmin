@@ -19,20 +19,13 @@
 
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Builder;
 import lombok.Value;
-import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 
 @Value
 @Builder
-public class SendStatusForUnitsRequestDTO {
-
-    List<String> unitIds;
-    LocalDateTime start;
-    LocalDateTime end;
-    List<NotificationStatusEnum> statuses;
-    LocalDateTime activationTime;
+public class CountStatusesResponseDTO {
+    Integer count;
+    Integer max;
 
 }

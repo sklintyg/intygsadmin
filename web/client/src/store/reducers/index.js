@@ -12,6 +12,7 @@ import intygInfo from './intygInfo'
 import intygInfoList from './intygInfoList'
 import users from './users'
 import dataExport from './dataExport'
+import countStatus from './countStatus.reducer'
 
 const appReducer = (history) =>
   combineReducers({
@@ -28,6 +29,7 @@ const appReducer = (history) =>
     intygInfoList,
     users,
     dataExport,
+    countStatus,
   })
 
 const reducers = (history) => (state, action) => {

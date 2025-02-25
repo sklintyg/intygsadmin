@@ -1,4 +1,5 @@
 import * as api from '../../api/intygInfo.api'
+import { createAPIReducer } from '../../api/utils'
 import { getIsFetching } from '../reducers/intygInfo'
 import { fetchIntygInfoList } from './intygInfoList'
 
@@ -33,27 +34,10 @@ export const fetchIntygInfo = (intygsId) => (dispatch, getState) => {
   )
 }
 
-export const RESEND_CERTIFICATE_STATUS_REQUEST = 'RESEND_CERTIFICATE_STATUS_REQUEST'
-export const RESEND_CERTIFICATE_STATUS_SUCCESS = 'RESEND_CERTIFICATE_STATUS_SUCCESS'
-export const RESEND_CERTIFICATE_STATUS_FAILURE = 'RESEND_CERTIFICATE_STATUS_FAILURE'
+export const resendCertificateStatus = createAPIReducer('RESEND_CERTIFICATE_STATUS', api.resendCertificateStatus)
+export const resendUnitsStatus = createAPIReducer('RESEND_UNIT_STATUS', api.resendUnitsStatus)
+export const resendCaregiverStatus = createAPIReducer('RESEND_CAREGIVER_STATUS', api.resendCaregiverStatus)
 
-export const resendCertificateStatus = ({ certificateIds, status }) => (dispatch) => {
-  dispatch({
-    type: RESEND_CERTIFICATE_STATUS_REQUEST,
-  })
-
-  return api.resendCertificateStatus({ certificateIds, status }).then(
-    (response) => {
-      dispatch({
-        type: RESEND_CERTIFICATE_STATUS_SUCCESS,
-        response: response,
-      })
-    },
-    (errorResponse) => {
-      return dispatch({
-        type: RESEND_CERTIFICATE_STATUS_FAILURE,
-        payload: errorResponse,
-      })
-    }
-  )
-}
+export const resendCertificateStatusCount = createAPIReducer('RESEND_CERTIFICATE_STATUS_COUNT', api.resendCertificateStatusCount)
+export const resendUnitsStatusCount = createAPIReducer('RESEND_UNIT_STATUS_COUNT', api.resendUnitsStatusCount)
+export const resendCaregiverStatusCount = createAPIReducer('RESEND_CAREGIVER_STATUS_COUNT', api.resendCaregiverStatusCount)

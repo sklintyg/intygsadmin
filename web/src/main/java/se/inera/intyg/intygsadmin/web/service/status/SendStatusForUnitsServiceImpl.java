@@ -22,8 +22,11 @@ package se.inera.intyg.intygsadmin.web.service.status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesDTO;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 
 @Service
@@ -47,7 +50,7 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
 
         final var integrationRequest = SendStatusForUnitsIntegrationRequestDTO.builder()
             .unitIds(request.getUnitIds())
-            .status(request.getStatus())
+            .statuses(request.getStatuses())
             .start(request.getStart())
             .end(request.getEnd())
             .activationTime(request.getActivationTime())
@@ -55,5 +58,21 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
 
         final var response = wcIntegrationRestService.sendStatusForUnits(integrationRequest);
         return response.getCount();
+    }
+
+    @Override
+    public CountStatusesDTO count(CountStatusesForUnitsRequestDTO request) {
+        final var integrationRequest = CountStatusesForUnitsIntegrationRequestDTO.builder()
+            .unitIds(request.getUnitIds())
+            .start(request.getStart())
+            .end(request.getEnd())
+            .statuses(request.getStatuses())
+            .build();
+
+        final var response = wcIntegrationRestService.countStatusesForUnits(integrationRequest);
+        return CountStatusesDTO.builder()
+            .count(response.getCount())
+            .max(response.getMax())
+            .build();
     }
 }

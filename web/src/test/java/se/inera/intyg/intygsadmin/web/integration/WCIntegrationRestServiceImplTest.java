@@ -31,6 +31,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClient.RequestBodyUriSpec;
 import org.springframework.web.client.RestClient.ResponseSpec;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
@@ -183,7 +184,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldSendStatusForUnits() {
             final var request = SendStatusForUnitsIntegrationRequestDTO.builder()
                 .unitIds(List.of(unitId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -201,7 +202,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldThrowException() {
             final var request = SendStatusForUnitsIntegrationRequestDTO.builder()
                 .unitIds(List.of(unitId))
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -242,7 +243,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldSendStatusForCareGiver() {
             final var request = SendStatusForCareGiverIntegrationRequestDTO.builder()
                 .careGiverId(careGiverId)
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -260,7 +261,7 @@ class WCIntegrationRestServiceImplTest {
         void shouldThrowException() {
             final var request = SendStatusForCareGiverIntegrationRequestDTO.builder()
                 .careGiverId(careGiverId)
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .activationTime(LocalDateTime.now())
                 .start(LocalDateTime.now())
                 .end(LocalDateTime.now())
@@ -300,14 +301,15 @@ class WCIntegrationRestServiceImplTest {
         void shouldCountStatusesForCareGiver() {
             final var request = CountStatusesForCareGiverIntegrationRequestDTO.builder()
                 .careGiverId(careGiverId)
-                .status(List.of(NotificationStatusEnum.FAILURE))
+                .statuses(List.of(NotificationStatusEnum.FAILURE))
                 .build();
 
-            final var response = SendStatusIntegrationResponseDTO.builder()
+            final var response = CountStatusesIntegrationResponseDTO.builder()
                 .count(1)
+                .max(1)
                 .build();
 
-            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+            doReturn(response).when(responseSpec).body(CountStatusesIntegrationResponseDTO.class);
             assertNotNull(wcIntegrationRestService.countStatusesForCareGiver(request));
         }
 

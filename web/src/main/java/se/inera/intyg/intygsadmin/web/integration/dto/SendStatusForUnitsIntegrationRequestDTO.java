@@ -36,7 +36,7 @@ public class SendStatusForUnitsIntegrationRequestDTO {
     List<String> unitIds;
     LocalDateTime start;
     LocalDateTime end;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
     LocalDateTime activationTime;
 
     @JsonPOJOBuilder(withPrefix = "")

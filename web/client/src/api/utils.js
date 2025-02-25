@@ -49,7 +49,7 @@ export const handleResponse = (config) => (response) => {
   }
 
   if (response.status === 204) {
-    return {};
+    return {}
   }
 
   if (config) {
@@ -98,12 +98,12 @@ const getJsonConfig = (method, body) => ({
   headers: {
     'Content-Type': 'application/json',
   },
-  credentials: "same-origin",
+  credentials: 'same-origin',
   body: JSON.stringify(body),
 })
 
 export const makeServerRequest = (path, config) => {
-  return internalRequest(path, {credentials: "same-origin"}, config)
+  return internalRequest(path, { credentials: 'same-origin' }, config)
 }
 
 export const makeServerPost = (path, body, config = {}) => {
@@ -122,4 +122,29 @@ export const makeServerDelete = (path, body, config = {}) => {
   const fetchConfig = getJsonConfig('DELETE', body)
 
   return internalRequest(path, fetchConfig, config)
+}
+
+export function createAPIReducer(name, cb) {
+  return (...args) => {
+    return (dispatch) => {
+      dispatch({
+        type: `${name}_REQUEST`,
+      })
+
+      return cb(...args).then(
+        (response) => {
+          dispatch({
+            type: `${name}_SUCCESS`,
+            response: response,
+          })
+        },
+        (errorResponse) => {
+          return dispatch({
+            type: `${name}_FAILURE`,
+            payload: errorResponse,
+          })
+        }
+      )
+    }
+  }
 }
