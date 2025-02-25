@@ -165,7 +165,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
       <CustomScrollingContainer>
         <PageHeader
           header="Skapa omsändning"
-          subHeader="Här kan du skapa en omsändning av händelser för både enskilda intygs-id och för hela vårdgivare/vårdenheter. Administrerade omsändningar visas i tabellen."
+          subHeader="Här kan du skapa en omsändning av händelser för både enskilda intygs-id och för hela vårdgivare/vårdenheter."
           icon={<DocIcon color={IaColors.IA_COLOR_02} />}
         />
         <PageContainer>
