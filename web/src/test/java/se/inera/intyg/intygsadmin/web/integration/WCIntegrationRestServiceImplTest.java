@@ -231,7 +231,7 @@ class WCIntegrationRestServiceImplTest {
             MDC.put(SESSION_ID_KEY, "sessionId");
 
             when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/careGiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.uri("Host/internalapi/notification/caregiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.body(any(SendStatusForCareGiverIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
@@ -289,7 +289,7 @@ class WCIntegrationRestServiceImplTest {
             MDC.put(SESSION_ID_KEY, "sessionId");
 
             when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/count/careGiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.uri("Host/internalapi/notification/count/caregiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.body(any(CountStatusesForCareGiverIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);

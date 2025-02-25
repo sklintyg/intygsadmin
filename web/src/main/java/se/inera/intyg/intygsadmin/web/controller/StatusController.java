@@ -20,6 +20,7 @@
 package se.inera.intyg.intygsadmin.web.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +39,7 @@ import se.inera.intyg.intygsadmin.web.service.status.SendStatusForCertificatesSe
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusForUnitsService;
 import se.inera.intyg.intygsadmin.web.service.status.SendStatusService;
 
+@Slf4j
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/status")
@@ -47,6 +49,7 @@ public class StatusController {
     private final SendStatusForCertificatesService sendStatusForCertificatesService;
     private final SendStatusForUnitsService sendStatusForUnitsService;
     private final SendStatusForCareGiverService sendStatusForCareGiverService;
+
 
     @PostMapping("/{statusId}")
     public SendStatusResponseDTO sendStatus(@PathVariable String statusId) {
@@ -102,6 +105,7 @@ public class StatusController {
     @PostMapping("/count/caregiver/{careGiverId}")
     public CountStatusesResponseDTO countStatusesForCareGiver(@PathVariable String careGiverId,
         @RequestBody CountStatusesForCareGiverRequestDTO request) {
+        log.info("Count statuses for care giver with id: {}", careGiverId);
         final var response = sendStatusForCareGiverService.count(careGiverId, request);
         return CountStatusesResponseDTO.builder()
             .count(response.getCount())

@@ -167,7 +167,6 @@ class StatusControllerTest {
     @Test
     void shouldCountStatusesForCareGiver() {
         final var request = CountStatusesForCareGiverRequestDTO.builder()
-            .careGiverId(CARE_GIVER_ID)
             .start(START)
             .end(END)
             .statuses(STATUS_LIST)

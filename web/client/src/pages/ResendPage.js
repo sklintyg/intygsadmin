@@ -317,7 +317,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </div>
               )}
 
-              {schedule === true && (
+              {['1', '2'].includes(statusFor) && schedule === true && (
                 <DateDiv>
                   <label htmlFor="scheduleDate">Till</label>
                   <span>
@@ -417,7 +417,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </PreviewDiv>
               )}
 
-              {schedule === true && (
+              {['1', '2'].includes(statusFor) && schedule === true && (
                 <PreviewDiv>
                   <strong>Tid för omsändning</strong>
                   <span>Schemalägg {`${scheduleDate}:${scheduleTime}`}</span>
@@ -457,7 +457,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
                         statuses: status.split(',').map((id) => id.trim()),
-                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
+                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
                       })
                     }
                     if (statusFor === '2') {
@@ -466,7 +466,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
                         statuses: status.split(',').map((id) => id.trim()),
-                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
+                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
                       })
                     }
                   }}>

@@ -74,7 +74,6 @@ class SendStatusForCareGiverServiceImplTest {
     @Test
     void shouldCountStatusForCareGiver() {
         final var request = CountStatusesForCareGiverRequestDTO.builder()
-            .careGiverId("careGiverId")
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now().minusMonths(1))
             .end(LocalDateTime.now())
