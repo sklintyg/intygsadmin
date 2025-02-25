@@ -30,8 +30,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForUnitsIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
@@ -52,7 +55,7 @@ class SendStatusForUnitsServiceImplTest {
 
         final var request = SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unit1", "unit2"))
-            .status(List.of(NotificationStatusEnum.FAILURE))
+            .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now())
             .build();
 
@@ -67,6 +70,29 @@ class SendStatusForUnitsServiceImplTest {
 
         assertEquals(1, response);
 
+    }
+
+    @Test
+    void shouldCountStatusesForUnits(){
+        final var request = CountStatusesForUnitsRequestDTO.builder()
+            .unitIds(List.of("unit1", "unit2"))
+            .statuses(List.of(NotificationStatusEnum.FAILURE))
+            .start(LocalDateTime.now())
+            .build();
+
+        final var expected = CountStatusesIntegrationResponseDTO.builder()
+            .count(1)
+            .max(1)
+            .build();
+
+        when(wcIntegrationRestService.countStatusesForUnits(any(CountStatusesForUnitsIntegrationRequestDTO.class)))
+            .thenReturn(expected);
+
+
+        final var response = sendStatusForUnitsServiceImpl.count(request);
+
+        assertEquals(1, response.getCount());
+        assertEquals(1, response.getMax());
     }
 }
 

@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import MenuBar from '../components/iaMenu/MenuBar'
 import PageHeader from '../components/styles/PageHeader'
 import IaColors from '../components/styles/iaColors'
-import { CustomScrollingContainer, FlexColumnContainer, PageContainer } from '../components/styles/iaLayout'
+import { CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout'
 import { DocIcon } from '../components/styles/iaSvgIcons'
-import { useState } from 'react'
 import { IaTypo03 } from '../components/styles/iaTypography'
 import { RadioWrapper } from '../components/radioButton'
 import DatePicker from '../components/datePicker'
-import { Input, Button, UncontrolledTooltip, FormFeedback } from 'reactstrap'
+import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap'
 import styled from 'styled-components'
 import TimePicker from '../components/timePicker'
 import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation'
@@ -79,7 +78,7 @@ const PreviewDiv = styled.div`
 const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificateStatus }) => {
   const [preview, setPreview] = useState(false)
   const [statusFor, setStatusFor] = useState('0')
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState("")
   const [caregiver, setCaregiver] = useState('')
   const [unit, setUnit] = useState('')
   const [certificates, setCertificates] = useState('')
@@ -105,7 +104,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
       result.unit = 'Ange vårdenhetens HSA-ID'
     }
 
-    if (!['SUCCESS', 'FAILURE'].includes(status)) {
+    if (status === "") {
       result.status = 'Välj status att skicka'
     }
 
@@ -230,9 +229,9 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                   value={status}
                   onChange={(event) => setStatus(event.target.value)}
                   invalid={Boolean(showValidation && validationMessages.status)}>
-                  <option value={''}>Välj</option>
-                  <option value={'SUCCESS'}>Lyckade</option>
-                  <option value={'FAILURE'}>Misslyckade</option>
+                  <option value={""}>Välj</option>
+                  <option value={"SUCCESS,FAILURE"}>Alla</option>
+                  <option value={"FAILURE"}>Misslyckade</option>
                 </StyledInput>
                 <FormFeedback>{validationMessages.status}</FormFeedback>
               </FlexDiv>
@@ -407,7 +406,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
 
               <PreviewDiv>
                 <strong>Välj status att skicka</strong>
-                <span>{status === 'SUCCESS' ? 'Lyckade' : 'Misslyckade'}</span>
+                <span>{status === "FAILURE" ? 'Misslyckade' : 'Alla'}</span>
               </PreviewDiv>
 
               {statusFor !== '0' && (
@@ -429,8 +428,8 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 statusFor={statusFor}
                 certificateIds={certificates.split(',').map((id) => id.trim())}
                 careGiverId={caregiver}
-                unitIds={unit}
-                statuses={[status]}
+                unitIds={[unit]}
+                statuses={status.split(',').map((id) => id.trim())}
                 start={`${fromDate}T${fromTime}`}
                 end={`${toDate}T${toTime}`}
               />
@@ -449,7 +448,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                     if (statusFor === '0') {
                       resendCertificateStatus({
                         certificateIds: certificates.split(',').map((id) => id.trim()),
-                        statuses: [status],
+                        statuses: status.split(',').map((id) => id.trim()),
                       })
                     }
                     if (statusFor === '1') {
@@ -457,16 +456,16 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                         careGiverId: caregiver,
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        statuses: [status],
+                        statuses: status.split(',').map((id) => id.trim()),
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }
                     if (statusFor === '2') {
                       resendUnitsStatus({
-                        unitIds: unit,
+                        unitIds: [unit],
                         start: `${fromDate}T${fromTime}`,
                         end: `${toDate}T${toTime}`,
-                        statuses: [status],
+                        statuses: status.split(',').map((id) => id.trim()),
                         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
                       })
                     }

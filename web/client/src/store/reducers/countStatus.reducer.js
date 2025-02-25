@@ -9,7 +9,7 @@ const countStatus = (state = CountStatusDefaultState, action) => {
     case 'RESEND_CERTIFICATE_STATUS_COUNT_SUCCESS':
     case 'RESEND_UNIT_STATUS_COUNT_SUCCESS':
     case 'RESEND_CAREGIVER_STATUS_COUNT_SUCCESS':
-      return { ...state, count: action.response.count }
+      return { ...state, count: action.response.count, countMax: action.response.max }
     case 'RESEND_CERTIFICATE_STATUS_COUNT_FAILURE':
     case 'RESEND_UNIT_STATUS_COUNT_FAILURE':
     case 'RESEND_CAREGIVER_STATUS_COUNT_FAILURE':
@@ -60,6 +60,8 @@ export default combineReducers({ countStatus, isFetching, errorMessage })
 // Selectors
 
 export const getStatusCount = (state) => state.countStatus.count
+
+export const getStatusMaxCount = (state) => state.countStatus.countMax
 
 export const getIsFetching = (state) => state.countStatus.isFetching
 

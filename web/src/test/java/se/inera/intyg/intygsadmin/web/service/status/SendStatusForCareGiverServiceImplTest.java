@@ -34,6 +34,7 @@ import se.inera.intyg.intygsadmin.web.controller.dto.CountStatusesForCareGiverRe
 import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForCareGiverRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
@@ -52,7 +53,7 @@ class SendStatusForCareGiverServiceImplTest {
     @Test
     void shouldSendStatusForCareGiver() {
         final var request = SendStatusForCareGiverRequestDTO.builder()
-            .status(List.of(NotificationStatusEnum.FAILURE))
+            .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now().minusMonths(1))
             .end(LocalDateTime.now())
             .activationTime(LocalDateTime.now())
@@ -79,8 +80,9 @@ class SendStatusForCareGiverServiceImplTest {
             .end(LocalDateTime.now())
             .build();
 
-        final var expected = SendStatusIntegrationResponseDTO.builder()
+        final var expected = CountStatusesIntegrationResponseDTO.builder()
             .count(1)
+            .max(1)
             .build();
 
         when(wcIntegrationRestService.countStatusesForCareGiver(any(
@@ -89,6 +91,7 @@ class SendStatusForCareGiverServiceImplTest {
 
         final var response = sendStatusForCareGiverServiceImpl.count("careGiverId", request);
 
-        assertEquals(1, response);
+        assertEquals(1, response.getCount());
+        assertEquals(1, response.getMax());
     }
 }

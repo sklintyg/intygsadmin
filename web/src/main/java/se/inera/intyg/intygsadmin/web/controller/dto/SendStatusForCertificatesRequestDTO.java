@@ -10,5 +10,5 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 public class SendStatusForCertificatesRequestDTO {
 
     List<String> certificateIds;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
 }
