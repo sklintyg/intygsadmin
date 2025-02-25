@@ -65,7 +65,7 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
             .careGiverId(request.getCareGiverId())
             .start(request.getStart())
             .end(request.getEnd())
-            .statuses(request.getStatus())
+            .statuses(request.getStatuses())
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);

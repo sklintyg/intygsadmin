@@ -97,7 +97,7 @@ class StatusControllerTest {
     void shouldCountStatusesForCertificates() {
         final var request = CountStatusesForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
         final var countStatusesResponse = CountStatusesDTO.builder()
@@ -170,7 +170,7 @@ class StatusControllerTest {
             .careGiverId(CARE_GIVER_ID)
             .start(START)
             .end(END)
-            .status(STATUS_LIST)
+            .statuses(STATUS_LIST)
             .build();
 
         final var countStatusesResponse = CountStatusesDTO.builder()
