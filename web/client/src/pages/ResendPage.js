@@ -173,7 +173,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
         start: `${fromDate}T${fromTime}`,
         end: `${toDate}T${toTime}`,
         statuses: status.split(',').map((id) => id.trim()),
-        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
+        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
       });
     } else if (statusFor === '2') {
       request = resendUnitsStatus({
@@ -181,7 +181,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
         start: `${fromDate}T${fromTime}`,
         end: `${toDate}T${toTime}`,
         statuses: status.split(',').map((id) => id.trim()),
-        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
+        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
       });
     }
 
