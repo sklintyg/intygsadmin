@@ -159,7 +159,7 @@ const AdminQuestionsReceived = ({ intygInfo }) => {
   )
 }
 
-const IntygEventRow = ({ event, fetchIntygInfo, setMessage }) => {
+const IntygEventRow = ({ event, fetchIntygInfo, setMessage}) => {
   const VisaIntyg = () => {
     const openIntyg = () => {
       fetchIntygInfo(event.data.intygsId)
@@ -357,7 +357,7 @@ const handleResend = (type, id, setMessage) => {
   let request;
   if (type === 'certificate') {
     request = resendCertificateStatus({
-      certificateIds: id,
+      certificateIds: id.split(',').map((i) => i.trim()),
       statuses: ['SUCCESS', 'FAILURE'],
     });
   } else if (type === 'notification') {
@@ -366,13 +366,13 @@ const handleResend = (type, id, setMessage) => {
     );
   }
 
-  request
-  .then((response) => {
-    if (response.status === 200) {
-      setMessage('Omsändningen lyckades');
-    } else {
+  request.then((response) => {
+    if(response.count === 0) {
       setMessage('Omsändningen misslyckades');
     }
+    else(
+      setMessage('Omsändningen lyckades')
+    )
   })
   .catch(() => {
     setMessage('Omsändningen misslyckades');

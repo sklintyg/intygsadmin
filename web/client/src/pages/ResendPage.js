@@ -186,18 +186,14 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
     }
 
     request.then((response) => {
-      console.log("response " + response)
-
-      if (response.status === 200) {
-        console.log("status ok: " + response.status)
-        setMessage('Omsändningen lyckades');
-      } else {
-        console.log("status not ok: " + response.status)
+      if(response !== undefined) {
         setMessage('Omsändningen misslyckades');
       }
+      else(
+        setMessage('Omsändningen lyckades')
+      )
     })
-    .catch(() => {
-      console.log("status catch error")
+    .catch((error) => {
       setMessage('Omsändningen misslyckades');
     });
   };
