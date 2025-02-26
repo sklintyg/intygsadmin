@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
@@ -10,7 +10,7 @@ import DisplayDateTime from '../displayDateTime/DisplayDateTime'
 import modalContainer from '../modalContainer/modalContainer'
 import colors from '../styles/iaColors'
 import {IaTypo02, IaTypo03, IaTypo05} from '../styles/iaTypography'
-import {resendNotificationStatus} from "../../api/intygInfo.api";
+import {resendCertificateStatus, resendNotificationStatus} from "../../api/intygInfo.api";
 
 const BodyHeight = styled(ModalBody)`
   height: 60vh;
@@ -159,7 +159,7 @@ const AdminQuestionsReceived = ({ intygInfo }) => {
   )
 }
 
-const IntygEventRow = ({ event, fetchIntygInfo }) => {
+const IntygEventRow = ({ event, fetchIntygInfo, setMessage }) => {
   const VisaIntyg = () => {
     const openIntyg = () => {
       fetchIntygInfo(event.data.intygsId)
@@ -187,7 +187,12 @@ const IntygEventRow = ({ event, fetchIntygInfo }) => {
       <TableTD>{getMessage(`intygInfo.source.${event.source}`)}</TableTD>
       <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data) + (event.data && event.data.status ? getEventStatus(event.data.status) : "")}</TableTD>
       <TableTD>{(event.data && event.data.status && event.data.status !== "RESEND" && event.data.notificationId ?
-        <Button id={'closeBtn'} onClick={() => resendNotificationStatus(event.data.notificationId)} color={'default'}>
+        <Button
+          id={'closeBtn'}
+          onClick={() => {
+            handleResend('notification', event.data.notificationId, setMessage)
+          }}
+          color={'default'}>
           Skicka om
         </Button> : "")}
       </TableTD>
@@ -214,7 +219,10 @@ const getEventStatus = (status) => {
   return " (" + convertedStatus + ")"
 }
 
-const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCertificateStatus }) => {
+const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
+
+  const [message, setMessage] = useState('')
+
   if (!data) {
     return null
   }
@@ -229,8 +237,8 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCert
   }
 
   return (
-    <Modal id={'intygInfoDialogId'} isOpen={isOpen} size={'xl'} backdrop={true} toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>Intygsinformation för ID: {intygInfo.intygId}</ModalHeader>
+    <Modal id={'intygInfoDialogId'} isOpen={isOpen} size={'xl'} backdrop={true} toggle={() => handleOnClose(handleClose, setMessage)}>
+      <ModalHeader toggle={() => handleOnClose(handleClose, setMessage)}>Intygsinformation för ID: {intygInfo.intygId}</ModalHeader>
       <BodyHeight>
         <RowWrapper>
           <IaTypo03 color={colors.IA_COLOR_01}>
@@ -267,7 +275,9 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCert
                   .filter((row) => {
                     return displayEvent(row)
                   })
-                  .map((row, index) => <IntygEventRow key={index} event={row} fetchIntygInfo={fetchIntygInfo} />)}
+                .map((row, index) => (
+                  <IntygEventRow key={index} event={row} fetchIntygInfo={fetchIntygInfo} setMessage={setMessage} />
+                ))}
             </tbody>
           </Table>
         </RowWrapper>
@@ -321,13 +331,18 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCert
       </BodyHeight>
       <ModalFooter>
         <ModalFooterContainer>
-          <Button id={'closeBtn'} onClick={handleClose} color={'default'}>
+          <Button id={'closeBtn'} onClick={() => handleOnClose(handleClose, setMessage)} color={'default'}>
             Stäng
           </Button>
+          {message && (
+            <p style={{ color: message === 'Omsändningen lyckades' ? 'green' : 'red' }}>
+              {message}
+            </p>
+          )}
           <Button
             id={'resendEvents'}
             onClick={() => {
-              resendCertificateStatus({ certificateIds: [intygInfo.intygId], statuses: ['SUCCESS', 'RESEND', 'FAILURE'] })
+              handleResend('certificate', intygInfo.intygId, setMessage)
             }}
             color={'default'}>
             Skicka om alla
@@ -336,6 +351,37 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo, resendCert
       </ModalFooter>
     </Modal>
   )
+}
+
+const handleResend = (type, id, setMessage) => {
+  let request;
+  if (type === 'certificate') {
+    request = resendCertificateStatus({
+      certificateIds: id,
+      statuses: ['SUCCESS', 'FAILURE'],
+    });
+  } else if (type === 'notification') {
+    request = resendNotificationStatus({
+      notificationId: id
+    });
+  }
+
+  request
+  .then((response) => {
+    if (response.status === 200) {
+      setMessage('Omsändningen lyckades');
+    } else {
+      setMessage('Omsändningen misslyckades');
+    }
+  })
+  .catch(() => {
+    setMessage('Omsändningen misslyckades');
+  });
+};
+
+const handleOnClose = (handleClose, setMessage) => {
+  handleClose()
+  setMessage('')
 }
 
 export const intygInfoDialogId = 'intygInfoDialog'

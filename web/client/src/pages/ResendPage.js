@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from 'react'
-import MenuBar from '../components/iaMenu/MenuBar'
-import PageHeader from '../components/styles/PageHeader'
-import IaColors from '../components/styles/iaColors'
-import { CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout'
-import { DocIcon } from '../components/styles/iaSvgIcons'
-import { IaTypo03 } from '../components/styles/iaTypography'
-import { RadioWrapper } from '../components/radioButton'
-import DatePicker from '../components/datePicker'
-import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap'
-import styled from 'styled-components'
-import TimePicker from '../components/timePicker'
-import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
-import * as actions from '../store/actions/intygInfo'
-import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount'
+import React, { useEffect, useState } from 'react';
+import MenuBar from '../components/iaMenu/MenuBar';
+import PageHeader from '../components/styles/PageHeader';
+import IaColors from '../components/styles/iaColors';
+import { CustomScrollingContainer, FlexColumnContainer, PageContainer } from '../components/styles/iaLayout';
+import { DocIcon } from '../components/styles/iaSvgIcons';
+import { IaTypo03 } from '../components/styles/iaTypography';
+import { RadioWrapper } from '../components/radioButton';
+import DatePicker from '../components/datePicker';
+import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap';
+import styled from 'styled-components';
+import TimePicker from '../components/timePicker';
+import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import * as actions from '../store/actions/intygInfo';
+import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount';
 
 const resentOptions = [
   {
@@ -91,11 +91,12 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
   const [scheduleTime, setScheduleTime] = useState('')
   const [validationMessages, setValidationMessages] = useState({})
   const [showValidation, setShowValidation] = useState(false)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     let result = {}
     if (statusFor === '0' && certificates === '') {
-      result.certificates = 'Ange intygs-id separarerade med kommatecken.'
+      result.certificates = 'Ange intygs-id separerade med kommatecken.'
     }
     if (statusFor === '1' && caregiver === '') {
       result.caregiver = 'Ange vårdgivarens HSA-ID'
@@ -158,6 +159,44 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
     scheduleDate,
     scheduleTime,
   ])
+
+  const handleResend = () => {
+    let request;
+    if (statusFor === '0') {
+      request = resendCertificateStatus({
+        certificateIds: certificates.split(',').map((id) => id.trim()),
+        statuses: status.split(',').map((id) => id.trim()),
+      });
+    } else if (statusFor === '1') {
+      request = resendCaregiverStatus({
+        careGiverId: caregiver,
+        start: `${fromDate}T${fromTime}`,
+        end: `${toDate}T${toTime}`,
+        statuses: status.split(',').map((id) => id.trim()),
+        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
+      });
+    } else if (statusFor === '2') {
+      request = resendUnitsStatus({
+        unitIds: [unit],
+        start: `${fromDate}T${fromTime}`,
+        end: `${toDate}T${toTime}`,
+        statuses: status.split(',').map((id) => id.trim()),
+        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
+      });
+    }
+
+    request
+    .then((response) => {
+      if (response.status === 200) {
+        setMessage('Omsändningen lyckades');
+      } else {
+        setMessage('Omsändningen misslyckades');
+      }
+    })
+    .catch(() => {
+      setMessage('Omsändningen misslyckades');
+    });
+  };
 
   return (
     <FlexColumnContainer>
@@ -439,40 +478,21 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                   color={'default'}
                   onClick={() => {
                     setPreview(false)
+                    setMessage('')
                   }}>
                   Tillbaka
                 </Button>
                 <Button
                   color={'primary'}
-                  onClick={() => {
-                    if (statusFor === '0') {
-                      resendCertificateStatus({
-                        certificateIds: certificates.split(',').map((id) => id.trim()),
-                        statuses: status.split(',').map((id) => id.trim()),
-                      })
-                    }
-                    if (statusFor === '1') {
-                      resendCaregiverStatus({
-                        careGiverId: caregiver,
-                        start: `${fromDate}T${fromTime}`,
-                        end: `${toDate}T${toTime}`,
-                        statuses: status.split(',').map((id) => id.trim()),
-                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
-                      })
-                    }
-                    if (statusFor === '2') {
-                      resendUnitsStatus({
-                        unitIds: [unit],
-                        start: `${fromDate}T${fromTime}`,
-                        end: `${toDate}T${toTime}`,
-                        statuses: status.split(',').map((id) => id.trim()),
-                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : new Date().toISOString(),
-                      })
-                    }
-                  }}>
+                  onClick={handleResend}>
                   Skicka
                 </Button>
               </ActionsContainer>
+              {message && (
+                <p style={{ marginTop: '20px', color: message === 'Omsändningen lyckades' ? 'green' : 'red' }}>
+                  {message}
+                </p>
+              )}
             </>
           )}
         </PageContainer>

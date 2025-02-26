@@ -13,7 +13,7 @@ const PreviewDiv = styled.div`
 
 const ResendStatusCount = ({ count, max }) => {
   if (count === 0) {
-    return <p style={{color: 'orange'}}>Det finns inga händelser att skicka om</p>
+    return <p style={{color: 'red'}}>Det finns inga händelser att skicka om</p>
   }
   if (!count) {
     return <p style={{color: 'red'}}>Kunde inte hämta antal händelser för omsändning</p>
