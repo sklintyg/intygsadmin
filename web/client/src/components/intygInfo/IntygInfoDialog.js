@@ -361,9 +361,9 @@ const handleResend = (type, id, setMessage) => {
       statuses: ['SUCCESS', 'FAILURE'],
     });
   } else if (type === 'notification') {
-    request = resendNotificationStatus({
-      notificationId: id
-    });
+    request = resendNotificationStatus(
+      id
+    );
   }
 
   request
