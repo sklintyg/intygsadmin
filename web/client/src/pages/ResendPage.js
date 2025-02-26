@@ -185,15 +185,19 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
       });
     }
 
-    request
-    .then((response) => {
+    request.then((response) => {
+      console.log("response " + response)
+
       if (response.status === 200) {
+        console.log("status ok: " + response.status)
         setMessage('Omsändningen lyckades');
       } else {
+        console.log("status not ok: " + response.status)
         setMessage('Omsändningen misslyckades');
       }
     })
     .catch(() => {
+      console.log("status catch error")
       setMessage('Omsändningen misslyckades');
     });
   };
@@ -356,6 +360,12 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </div>
               )}
 
+              {['0'].includes(statusFor) && (
+                <div>
+                  <strong>Tid för omsändning: </strong><span>Skicka nu</span>
+                </div>
+              )}
+
               {['1', '2'].includes(statusFor) && schedule === true && (
                 <DateDiv>
                   <label htmlFor="scheduleDate">Till</label>
@@ -456,10 +466,10 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </PreviewDiv>
               )}
 
-              {['1', '2'].includes(statusFor) && schedule === true && (
+              {['0', '1', '2'].includes(statusFor) && (
                 <PreviewDiv>
                   <strong>Tid för omsändning</strong>
-                  <span>Schemalägg {`${scheduleDate}:${scheduleTime}`}</span>
+                  <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
                 </PreviewDiv>
               )}
 
