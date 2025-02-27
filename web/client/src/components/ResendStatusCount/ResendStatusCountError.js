@@ -59,7 +59,7 @@ const ResendStatusCount = ({ count, max, statusFor,
 
       setError(true)
     });
-  });
+  }, []);
 
   if (count === 0 && !error) {
     return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>

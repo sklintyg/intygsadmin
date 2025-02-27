@@ -483,16 +483,7 @@ const ResendPage = () => {
                   <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
                 </PreviewDiv>
               )}
-              <ResendStatusCount
-                statusFor={statusFor}
-                certificateIds={certificates.split(',').map((id) => id.trim())}
-                careGiverId={caregiver}
-                unitIds={[unit]}
-                statuses={status.split(',').map((id) => id.trim())}
-                start={`${fromDate}T${fromTime}`}
-                end={`${toDate}T${toTime}`}
-              />
-
+              <ResendStatusCount />
               {message && (
                 <IaAlert type={message === 'Omsändningen lyckades' ? alertType.CONFIRM : alertType.ERROR }>
                   {message}
