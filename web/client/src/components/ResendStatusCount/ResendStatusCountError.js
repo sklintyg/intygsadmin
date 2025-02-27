@@ -1,5 +1,5 @@
-import React from 'react'
-import {compose, lifecycle} from 'recompose'
+import React, {useEffect} from 'react'
+import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import * as actions from '../../store/actions/intygInfo'
 import styled from 'styled-components'
@@ -13,26 +13,9 @@ const PreviewDiv = styled.div`
 `
 
 const ResendStatusCount = ({ count, max }) => {
-  if (count === 0) {
-    return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>
-  }
-  if (!count) {
-    return <IaAlert type={alertType.ERROR}>Kunde inte hämta antal händelser för omsändning</IaAlert>
-  }
+  const [error, setError] = React.useState(false)
 
-  if (count > max) {
-    return <IaAlert type={alertType.ERROR}>Det finns för många händelser att skicka om. Begränsa perioden. Antal händelser: {count}</IaAlert>
-  }
-
-  return (
-    <PreviewDiv>
-      <IaAlert type={alertType.CONFIRM}>Antal händelser för omsändning: {count}</IaAlert>
-    </PreviewDiv>
-  )
-}
-
-const lifeCycleValues = {
-  componentDidMount() {
+  useEffect(() => {
     const {
       statusFor,
       resendCertificateStatusCount,
@@ -45,11 +28,12 @@ const lifeCycleValues = {
       start,
       end,
     } = this.props
+    let request;
     if (statusFor === '0') {
-      resendCertificateStatusCount({ certificateIds, statuses })
+      request = resendCertificateStatusCount({ certificateIds, statuses })
     }
     if (statusFor === '1') {
-      resendCaregiverStatusCount({
+      request = resendCaregiverStatusCount({
         careGiverId,
         start,
         end,
@@ -57,14 +41,45 @@ const lifeCycleValues = {
       })
     }
     if (statusFor === '2') {
-      resendUnitsStatusCount({
+      request = resendUnitsStatusCount({
         unitIds,
         start,
         end,
         statuses,
       })
     }
-  },
+
+    request.then((response) => {
+      if(response.count !== 0) {
+        setError(false)
+
+      }
+      else(
+        setError(true)
+      )
+    })
+    .catch(() => {
+      setError(true)
+    });
+  });
+
+  if (!count || error) {
+    return <IaAlert type={alertType.ERROR}>Kunde inte hämta antal händelser för omsändning</IaAlert>
+  }
+
+  if (count === 0) {
+    return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>
+  }
+
+  if (count > max) {
+    return <IaAlert type={alertType.ERROR}>Det finns för många händelser att skicka om. Begränsa perioden. Antal händelser: {count}</IaAlert>
+  }
+
+  return (
+    <PreviewDiv>
+      <IaAlert type={alertType.CONFIRM}>Antal händelser för omsändning: {count}</IaAlert>
+    </PreviewDiv>
+  )
 }
 
 const mapStateToProps = (state) => {
@@ -80,6 +95,5 @@ export default compose(
   connect(
     mapStateToProps,
     actions
-  ),
-  lifecycle(lifeCycleValues)
+  )
 )(ResendStatusCount)
