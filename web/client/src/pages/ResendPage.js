@@ -439,6 +439,7 @@ const ResendPage = () => {
                 start={`${fromDate}T${fromTime}`}
                 end={`${toDate}T${toTime}`}
               />
+              <br/>
               <PreviewDiv>
                 <strong>Omsändning av status för</strong>
                 <span>{resentOptions.find(({ value }) => statusFor === value).label}</span>
