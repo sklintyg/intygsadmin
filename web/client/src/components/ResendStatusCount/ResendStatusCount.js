@@ -55,7 +55,7 @@ const ResendStatusCount = ({ statusFor,
       setCount(undefined)
       setMax(undefined)
     });
-  }, []);
+  }, [statusFor, careGiverId, unitIds, start, end, statuses, certificateIds]);
 
   if (count === 0 && !error) {
     return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>
