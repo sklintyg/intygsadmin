@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import * as actions from '../../store/actions/intygInfo'
 import styled from 'styled-components'
 import {getErrorMessage, getIsFetching, getStatusCount, getStatusMaxCount} from '../../store/reducers/countStatus.reducer'
+import IaAlert, {alertType} from "../alert/Alert";
 
 const PreviewDiv = styled.div`
   display: flex;
@@ -13,14 +14,14 @@ const PreviewDiv = styled.div`
 
 const ResendStatusCount = ({ count, max }) => {
   if (count === 0) {
-    return <p style={{color: 'red'}}>Det finns inga händelser att skicka om</p>
+    return <IaAlert type={alertType.ERROR}><p>Det finns inga händelser att skicka om</p></IaAlert>
   }
   if (!count) {
-    return <p style={{color: 'red'}}>Kunde inte hämta antal händelser för omsändning</p>
+    return <IaAlert type={alertType.ERROR}><p>Kunde inte hämta antal händelser för omsändning</p></IaAlert>
   }
 
   if (count > max) {
-    return <p style={{color: 'red'}}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p>
+    return <IaAlert type={alertType.ERROR}><p>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p></IaAlert>
   }
 
   return (
