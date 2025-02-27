@@ -190,17 +190,17 @@ const ResendPage = () => {
     }
 
     request.then((response) => {
-      if(response.count === 0) {
-        setMessage('Omsändningen misslyckades. Försök igen.');
+      if(response.count !== 0) {
+        setMessage('Omsändningen lyckades.')
+        setShowSend(false)
+
       }
       else(
-        setMessage('Omsändningen lyckades.')
+      setMessage('Omsändningen misslyckades. Försök igen.')
       )
-      setShowSend(false)
     })
     .catch(() => {
       setMessage('Omsändningen misslyckades. Försök igen.');
-      setShowSend(false)
     });
   };
 
