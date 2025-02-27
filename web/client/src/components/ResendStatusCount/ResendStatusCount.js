@@ -21,13 +21,12 @@ const ResendStatusCount = ({ count, max }) => {
   }
 
   if (count > max) {
-    return <IaAlert type={alertType.ERROR}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</IaAlert>
+    return <IaAlert type={alertType.ERROR}>Det finns för många händelser att skicka om. Begränsa perioden.</IaAlert>
   }
 
   return (
     <PreviewDiv>
-      <strong>Antal händelser för omsändning</strong>
-      <span>{count}</span>
+      <IaAlert type={alertType.CONFIRM}>Antal händelser för omsändning: {count}</IaAlert>
     </PreviewDiv>
   )
 }

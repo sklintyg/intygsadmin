@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import MenuBar from '../components/iaMenu/MenuBar';
 import PageHeader from '../components/styles/PageHeader';
 import IaColors from '../components/styles/iaColors';
-import { CustomScrollingContainer, FlexColumnContainer, PageContainer } from '../components/styles/iaLayout';
-import { DocIcon } from '../components/styles/iaSvgIcons';
-import { IaTypo03 } from '../components/styles/iaTypography';
-import { RadioWrapper } from '../components/radioButton';
+import {CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout';
+import {DocIcon} from '../components/styles/iaSvgIcons';
+import {IaTypo03} from '../components/styles/iaTypography';
+import {RadioWrapper} from '../components/radioButton';
 import DatePicker from '../components/datePicker';
-import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap';
+import {Button, FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
 import styled from 'styled-components';
 import TimePicker from '../components/timePicker';
-import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
+import {validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat} from '../utils/validation';
+import {connect} from 'react-redux';
+import {compose} from 'recompose';
 import * as actions from '../store/actions/intygInfo';
 import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount';
+import IaAlert from "../components/alert/Alert";
 
 const resentOptions = [
   {
@@ -425,6 +426,15 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
           {preview && (
             <>
               <IaTypo03 style={{ marginBottom: '20px' }}>Granska omsändning</IaTypo03>
+              <ResendStatusCount
+                statusFor={statusFor}
+                certificateIds={certificates.split(',').map((id) => id.trim())}
+                careGiverId={caregiver}
+                unitIds={[unit]}
+                statuses={status.split(',').map((id) => id.trim())}
+                start={`${fromDate}T${fromTime}`}
+                end={`${toDate}T${toTime}`}
+              />
               <PreviewDiv>
                 <strong>Omsändning av status för</strong>
                 <span>{resentOptions.find(({ value }) => statusFor === value).label}</span>
@@ -469,16 +479,6 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </PreviewDiv>
               )}
 
-              <ResendStatusCount
-                statusFor={statusFor}
-                certificateIds={certificates.split(',').map((id) => id.trim())}
-                careGiverId={caregiver}
-                unitIds={[unit]}
-                statuses={status.split(',').map((id) => id.trim())}
-                start={`${fromDate}T${fromTime}`}
-                end={`${toDate}T${toTime}`}
-              />
-
               <ActionsContainer>
                 <Button
                   color={'default'}
@@ -495,9 +495,9 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </Button>
               </ActionsContainer>
               {message && (
-                <p style={{ marginTop: '20px', color: message === 'Omsändningen lyckades' ? 'green' : 'red' }}>
+                <IaAlert type={message === 'Omsändningen lyckades' ? 'green' : 'red' }>
                   {message}
-                </p>
+                </IaAlert>
               )}
             </>
           )}
