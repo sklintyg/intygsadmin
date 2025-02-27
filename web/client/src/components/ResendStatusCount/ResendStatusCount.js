@@ -1,9 +1,11 @@
-import React from 'react'
-import {compose, lifecycle} from 'recompose'
+import React, {useEffect} from 'react'
+import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import * as actions from '../../store/actions/intygInfo'
 import styled from 'styled-components'
-import {getErrorMessage, getIsFetching, getStatusCount, getStatusMaxCount} from '../../store/reducers/countStatus.reducer'
+import {getErrorMessage, getIsFetching} from '../../store/reducers/countStatus.reducer'
+import IaAlert, {alertType} from "../alert/Alert";
+import {resendCaregiverStatusCount, resendCertificateStatusCount, resendUnitsStatusCount} from "../../api/intygInfo.api";
 
 const PreviewDiv = styled.div`
   display: flex;
@@ -11,13 +13,60 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendStatusCount = ({ count, max }) => {
-  if (!count) {
-    return <p style={{color: 'red'}}>Kunde inte hämta antal händelser för omsändning</p>
+const ResendStatusCount = ({ statusFor,
+  certificateIds,
+  unitIds,
+  careGiverId,
+  statuses,
+  start,
+  end }) => {
+  const [error, setError] = React.useState(false)
+  const [count, setCount] = React.useState(undefined)
+  const [max, setMax] = React.useState(undefined)
+
+  useEffect(() => {
+    let request;
+    if (statusFor === '0') {
+      request = resendCertificateStatusCount({ certificateIds, statuses })
+    }
+    if (statusFor === '1') {
+      request = resendCaregiverStatusCount({
+        careGiverId,
+        start,
+        end,
+        statuses,
+      })
+    }
+    if (statusFor === '2') {
+      request = resendUnitsStatusCount({
+        unitIds,
+        start,
+        end,
+        statuses,
+      })
+    }
+
+    request.then((response) => {
+        setError(false)
+        setCount(response.count)
+        setMax(response.max)
+    }).catch(() => {
+      setError(true)
+      setCount(undefined)
+      setMax(undefined)
+    });
+  }, []);
+
+  if (count === 0 && !error) {
+    return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>
+  }
+
+  if (!count || error) {
+    return <IaAlert type={alertType.ERROR}>Kunde inte hämta antal händelser för omsändning</IaAlert>
   }
 
   if (count > max) {
-    return <p style={{color: 'red'}}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p>
+    return <IaAlert type={alertType.ERROR}>Det finns för många händelser att skicka om. Begränsa perioden. Antal händelser: {count}</IaAlert>
   }
 
   return (
@@ -28,46 +77,8 @@ const ResendStatusCount = ({ count, max }) => {
   )
 }
 
-const lifeCycleValues = {
-  componentDidMount() {
-    const {
-      statusFor,
-      resendCertificateStatusCount,
-      resendUnitsStatusCount,
-      resendCaregiverStatusCount,
-      certificateIds,
-      unitIds,
-      careGiverId,
-      statuses,
-      start,
-      end,
-    } = this.props
-    if (statusFor === '0') {
-      resendCertificateStatusCount({ certificateIds, statuses })
-    }
-    if (statusFor === '1') {
-      resendCaregiverStatusCount({
-        careGiverId,
-        start,
-        end,
-        statuses,
-      })
-    }
-    if (statusFor === '2') {
-      resendUnitsStatusCount({
-        unitIds,
-        start,
-        end,
-        statuses,
-      })
-    }
-  },
-}
-
 const mapStateToProps = (state) => {
   return {
-    count: getStatusCount(state),
-    max: getStatusMaxCount(state),
     isFetching: getIsFetching,
     errorMessage: getErrorMessage,
   }
@@ -77,6 +88,5 @@ export default compose(
   connect(
     mapStateToProps,
     actions
-  ),
-  lifecycle(lifeCycleValues)
+  )
 )(ResendStatusCount)

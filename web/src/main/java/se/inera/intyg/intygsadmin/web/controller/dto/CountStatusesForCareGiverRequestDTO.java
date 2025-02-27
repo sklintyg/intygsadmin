@@ -13,10 +13,9 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 @JsonDeserialize(builder = CountStatusesForCareGiverRequestDTO.CountStatusesForCareGiverRequestDTOBuilder.class)
 public class CountStatusesForCareGiverRequestDTO {
 
-    String careGiverId;
     LocalDateTime start;
     LocalDateTime end;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class CountStatusesForCareGiverRequestDTOBuilder {

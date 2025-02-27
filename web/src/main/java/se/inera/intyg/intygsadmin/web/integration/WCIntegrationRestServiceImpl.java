@@ -195,7 +195,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
     public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
         return restClient
             .post()
-            .uri(webcertUrl + "/internalapi/notification/careGiver/" + request.getCareGiverId())
+            .uri(webcertUrl + "/internalapi/notification/caregiver/" + request.getCareGiverId())
             .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
             .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
             .contentType(MediaType.APPLICATION_JSON)
@@ -209,7 +209,7 @@ public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
       CountStatusesForCareGiverIntegrationRequestDTO request) {
     return restClient
         .post()
-        .uri(webcertUrl + "/internalapi/notification/count/careGiver/" + request.getCareGiverId())
+        .uri(webcertUrl + "/internalapi/notification/count/caregiver/" + request.getCareGiverId())
         .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
         .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
         .contentType(MediaType.APPLICATION_JSON)

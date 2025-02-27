@@ -1,20 +1,22 @@
-import React, {useEffect, useState} from 'react'
-import MenuBar from '../components/iaMenu/MenuBar'
-import PageHeader from '../components/styles/PageHeader'
-import IaColors from '../components/styles/iaColors'
-import { CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout'
-import { DocIcon } from '../components/styles/iaSvgIcons'
-import { IaTypo03 } from '../components/styles/iaTypography'
-import { RadioWrapper } from '../components/radioButton'
-import DatePicker from '../components/datePicker'
-import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap'
-import styled from 'styled-components'
-import TimePicker from '../components/timePicker'
-import { validateTimeFormat, validateDateFormat, validateFromDateBeforeToDate } from '../utils/validation'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
-import * as actions from '../store/actions/intygInfo'
-import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount'
+import React, {useEffect, useState} from 'react';
+import MenuBar from '../components/iaMenu/MenuBar';
+import PageHeader from '../components/styles/PageHeader';
+import IaColors from '../components/styles/iaColors';
+import {CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout';
+import {DocIcon} from '../components/styles/iaSvgIcons';
+import {IaTypo03} from '../components/styles/iaTypography';
+import {RadioWrapper} from '../components/radioButton';
+import DatePicker from '../components/datePicker';
+import {Button, FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
+import styled from 'styled-components';
+import TimePicker from '../components/timePicker';
+import {validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat} from '../utils/validation';
+import {connect} from 'react-redux';
+import {compose} from 'recompose';
+import * as actions from '../store/actions/intygInfo';
+import {resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus} from "../api/intygInfo.api";
+import IaAlert, {alertType} from "../components/alert/Alert";
+import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCount";
 
 const resentOptions = [
   {
@@ -75,7 +77,7 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificateStatus }) => {
+const ResendPage = () => {
   const [preview, setPreview] = useState(false)
   const [statusFor, setStatusFor] = useState('0')
   const [status, setStatus] = useState("")
@@ -91,11 +93,13 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
   const [scheduleTime, setScheduleTime] = useState('')
   const [validationMessages, setValidationMessages] = useState({})
   const [showValidation, setShowValidation] = useState(false)
+  const [message, setMessage] = useState('')
+  const [showSend, setShowSend] = useState(true)
 
   useEffect(() => {
     let result = {}
     if (statusFor === '0' && certificates === '') {
-      result.certificates = 'Ange intygs-id separarerade med kommatecken.'
+      result.certificates = 'Ange intygs-id separerade med kommatecken.'
     }
     if (statusFor === '1' && caregiver === '') {
       result.caregiver = 'Ange vårdgivarens HSA-ID'
@@ -159,13 +163,53 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
     scheduleTime,
   ])
 
+  const handleResend = () => {
+    let request;
+    if (statusFor === '0') {
+      request = resendCertificateStatus({
+        certificateIds: certificates.split(',').map((id) => id.trim()),
+        statuses: status.split(',').map((id) => id.trim()),
+      });
+    } else if (statusFor === '1') {
+      request = resendCaregiverStatus({
+        careGiverId: caregiver,
+        start: `${fromDate}T${fromTime}`,
+        end: `${toDate}T${toTime}`,
+        statuses: status.split(',').map((id) => id.trim()),
+        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
+      });
+    } else if (statusFor === '2') {
+      request = resendUnitsStatus({
+        unitIds: [unit],
+        start: `${fromDate}T${fromTime}`,
+        end: `${toDate}T${toTime}`,
+        statuses: status.split(',').map((id) => id.trim()),
+        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
+      });
+    }
+
+    request.then((response) => {
+      if(response.count !== 0) {
+        setMessage('Omsändningen lyckades.')
+        setShowSend(false)
+
+      }
+      else(
+      setMessage('Omsändningen misslyckades. Försök igen.')
+      )
+    })
+    .catch(() => {
+      setMessage('Omsändningen misslyckades. Försök igen.');
+    });
+  };
+
   return (
     <FlexColumnContainer>
       <MenuBar />
       <CustomScrollingContainer>
         <PageHeader
           header="Skapa omsändning"
-          subHeader="Här kan du skapa en omsändning av händelser för både enskilda intygs-id och för hela vårdgivare/vårdenheter. Administrerade omsändningar visas i tabellen."
+          subHeader="Här kan du skapa en omsändning av händelser för både enskilda intygs-id och för hela vårdgivare/vårdenheter."
           icon={<DocIcon color={IaColors.IA_COLOR_02} />}
         />
         <PageContainer>
@@ -317,7 +361,13 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </div>
               )}
 
-              {schedule === true && (
+              {['0'].includes(statusFor) && (
+                <div>
+                  <strong>Tid för omsändning: </strong><span>Skicka nu</span>
+                </div>
+              )}
+
+              {['1', '2'].includes(statusFor) && schedule === true && (
                 <DateDiv>
                   <label htmlFor="scheduleDate">Till</label>
                   <span>
@@ -380,6 +430,15 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
           {preview && (
             <>
               <IaTypo03 style={{ marginBottom: '20px' }}>Granska omsändning</IaTypo03>
+              <ResendStatusCountError
+                statusFor={statusFor}
+                certificateIds={certificates.split(',').map((id) => id.trim())}
+                careGiverId={caregiver}
+                unitIds={[unit]}
+                statuses={status.split(',').map((id) => id.trim())}
+                start={`${fromDate}T${fromTime}`}
+                end={`${toDate}T${toTime}`}
+              />
               <PreviewDiv>
                 <strong>Omsändning av status för</strong>
                 <span>{resentOptions.find(({ value }) => statusFor === value).label}</span>
@@ -417,61 +476,35 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 </PreviewDiv>
               )}
 
-              {schedule === true && (
+              {['0', '1', '2'].includes(statusFor) && (
                 <PreviewDiv>
                   <strong>Tid för omsändning</strong>
-                  <span>Schemalägg {`${scheduleDate}:${scheduleTime}`}</span>
+                  <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
                 </PreviewDiv>
               )}
-
-              <ResendStatusCount
-                statusFor={statusFor}
-                certificateIds={certificates.split(',').map((id) => id.trim())}
-                careGiverId={caregiver}
-                unitIds={[unit]}
-                statuses={status.split(',').map((id) => id.trim())}
-                start={`${fromDate}T${fromTime}`}
-                end={`${toDate}T${toTime}`}
-              />
+              {message && (
+                <IaAlert type={message === 'Omsändningen lyckades.' ? alertType.CONFIRM : alertType.ERROR }>
+                  {message}
+                </IaAlert>
+              )}
 
               <ActionsContainer>
                 <Button
                   color={'default'}
                   onClick={() => {
                     setPreview(false)
+                    setMessage('')
+                    setShowSend(true)
                   }}>
                   Tillbaka
                 </Button>
+                {showSend && (
                 <Button
                   color={'primary'}
-                  onClick={() => {
-                    if (statusFor === '0') {
-                      resendCertificateStatus({
-                        certificateIds: certificates.split(',').map((id) => id.trim()),
-                        statuses: status.split(',').map((id) => id.trim()),
-                      })
-                    }
-                    if (statusFor === '1') {
-                      resendCaregiverStatus({
-                        careGiverId: caregiver,
-                        start: `${fromDate}T${fromTime}`,
-                        end: `${toDate}T${toTime}`,
-                        statuses: status.split(',').map((id) => id.trim()),
-                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
-                      })
-                    }
-                    if (statusFor === '2') {
-                      resendUnitsStatus({
-                        unitIds: [unit],
-                        start: `${fromDate}T${fromTime}`,
-                        end: `${toDate}T${toTime}`,
-                        statuses: status.split(',').map((id) => id.trim()),
-                        activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
-                      })
-                    }
-                  }}>
+                  onClick={handleResend}>
                   Skicka
                 </Button>
+                )}
               </ActionsContainer>
             </>
           )}

@@ -1,6 +1,5 @@
 package se.inera.intyg.intygsadmin.web.controller.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
@@ -15,7 +14,7 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 public class CountStatusesForCertificatesRequestDTO {
 
     List<String> certificateIds;
-    List<NotificationStatusEnum> status;
+    List<NotificationStatusEnum> statuses;
 
     @JsonPOJOBuilder(withPrefix = "")
     public static class CountStatusesForCertificatesRequestDTOBuilder {

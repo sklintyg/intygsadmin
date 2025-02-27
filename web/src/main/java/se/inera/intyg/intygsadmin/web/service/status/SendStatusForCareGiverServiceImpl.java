@@ -62,10 +62,10 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
     @Override
     public CountStatusesDTO count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
         final var integrationRequest = CountStatusesForCareGiverIntegrationRequestDTO.builder()
-            .careGiverId(request.getCareGiverId())
+            .careGiverId(caregiverId)
             .start(request.getStart())
             .end(request.getEnd())
-            .statuses(request.getStatus())
+            .statuses(request.getStatuses())
             .build();
 
         final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);
