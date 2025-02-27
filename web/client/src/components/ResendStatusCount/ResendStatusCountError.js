@@ -72,7 +72,8 @@ const ResendStatusCount = ({ statusFor,
 
   return (
     <PreviewDiv>
-      <IaAlert type={alertType.CONFIRM}>Antal händelser för omsändning: {count}</IaAlert>
+      <strong>Antal händelser för omsändning</strong>
+      <span>{count}</span>
     </PreviewDiv>
   )
 }
