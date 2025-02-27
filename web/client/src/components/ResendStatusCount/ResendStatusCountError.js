@@ -5,6 +5,7 @@ import * as actions from '../../store/actions/intygInfo'
 import styled from 'styled-components'
 import {getErrorMessage, getIsFetching, getStatusCount, getStatusMaxCount} from '../../store/reducers/countStatus.reducer'
 import IaAlert, {alertType} from "../alert/Alert";
+import {resendCaregiverStatusCount, resendCertificateStatusCount, resendUnitsStatusCount} from "../../api/intygInfo.api";
 
 const PreviewDiv = styled.div`
   display: flex;
@@ -13,9 +14,6 @@ const PreviewDiv = styled.div`
 `
 
 const ResendStatusCount = ({ count, max, statusFor,
-  resendCertificateStatusCount,
-  resendUnitsStatusCount,
-  resendCaregiverStatusCount,
   certificateIds,
   unitIds,
   careGiverId,
@@ -47,16 +45,25 @@ const ResendStatusCount = ({ count, max, statusFor,
     }
 
     request.then((response) => {
-      if (response !== undefined && response.count !== undefined && response.count >= 0) {
+      console.log("response: ", response.count)
+      if(response.count !== 0) {
         setError(false)
-      } else {
-        setError(true)
+
       }
+      else(
+        setError(false)
+      )
     })
     .catch(() => {
+      console.log("error: ")
+
       setError(true)
     });
   });
+
+  if (count === 0 && !error) {
+    return <IaAlert type={alertType.INFO}>Det finns inga händelser att skicka om</IaAlert>
+  }
 
   if (!count || error) {
     return <IaAlert type={alertType.ERROR}>Kunde inte hämta antal händelser för omsändning</IaAlert>
