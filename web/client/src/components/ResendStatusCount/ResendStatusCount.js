@@ -51,7 +51,6 @@ const ResendStatusCount = ({ statusFor,
         setCount(response.count)
         setMax(response.max)
     }).catch(() => {
-      console.log("error: ")
       setError(true)
       setCount(undefined)
       setMax(undefined)
