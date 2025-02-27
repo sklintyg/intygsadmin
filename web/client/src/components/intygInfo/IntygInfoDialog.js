@@ -335,7 +335,7 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
             Stäng
           </Button>
           {message && (
-            <p style={{ color: message === 'Omsändningen lyckades' ? 'green' : 'red' }}>
+            <p style={{ color: message === 'Omsändningen lyckades.' ? 'green' : 'red' }}>
               {message}
             </p>
           )}
