@@ -47,13 +47,11 @@ const ResendStatusCount = ({ count, max, statusFor,
     }
 
     request.then((response) => {
-      if(response.count !== 0) {
+      if (response !== undefined && response.count !== undefined && response.count >= 0) {
         setError(false)
-
-      }
-      else(
+      } else {
         setError(true)
-      )
+      }
     })
     .catch(() => {
       setError(true)
