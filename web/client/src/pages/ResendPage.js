@@ -14,6 +14,7 @@ import {validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat} fr
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import * as actions from '../store/actions/intygInfo';
+import {resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus} from "../api/intygInfo.api";
 import IaAlert, {alertType} from "../components/alert/Alert";
 import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCountError";
 import ResendStatusCount from "../components/ResendStatusCount/ResendStatusCount";
@@ -77,7 +78,7 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificateStatus }) => {
+const ResendPage = () => {
   const [preview, setPreview] = useState(false)
   const [statusFor, setStatusFor] = useState('0')
   const [status, setStatus] = useState("")
@@ -189,16 +190,16 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
     }
 
     request.then((response) => {
-      if(response !== undefined) {
-        setMessage('Omsändningen misslyckades');
+      if(response.count === 0) {
+        setMessage('Omsändningen misslyckades. Försök igen.');
       }
       else(
-        setMessage('Omsändningen lyckades')
+        setMessage('Omsändningen lyckades.')
       )
       setShowSend(false)
     })
-    .catch((error) => {
-      setMessage('Omsändningen misslyckades');
+    .catch(() => {
+      setMessage('Omsändningen misslyckades. Försök igen.');
       setShowSend(false)
     });
   };
@@ -482,11 +483,6 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                   <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
                 </PreviewDiv>
               )}
-              {message && (
-                <IaAlert type={message === 'Omsändningen lyckades' ? alertType.CONFIRM : alertType.ERROR }>
-                  {message}
-                </IaAlert>
-              )}
               <ResendStatusCount
                 statusFor={statusFor}
                 certificateIds={certificates.split(',').map((id) => id.trim())}
@@ -496,6 +492,13 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                 start={`${fromDate}T${fromTime}`}
                 end={`${toDate}T${toTime}`}
               />
+
+              {message && (
+                <IaAlert type={message === 'Omsändningen lyckades' ? alertType.CONFIRM : alertType.ERROR }>
+                  {message}
+                </IaAlert>
+              )}
+
               <ActionsContainer>
                 <Button
                   color={'default'}

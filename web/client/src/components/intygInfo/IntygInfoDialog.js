@@ -368,14 +368,14 @@ const handleResend = (type, id, setMessage) => {
 
   request.then((response) => {
     if(response.count === 0) {
-      setMessage('Omsändningen misslyckades');
+      setMessage('Omsändningen misslyckades. Försök igen.');
     }
     else(
-      setMessage('Omsändningen lyckades')
+      setMessage('Omsändningen lyckades.')
     )
   })
   .catch(() => {
-    setMessage('Omsändningen misslyckades');
+    setMessage('Omsändningen misslyckades. Försök igen.');
   });
 };
 
