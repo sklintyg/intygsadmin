@@ -12,22 +12,19 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendStatusCount = ({ count, max }) => {
+const ResendStatusCount = ({ count, max, statusFor,
+  resendCertificateStatusCount,
+  resendUnitsStatusCount,
+  resendCaregiverStatusCount,
+  certificateIds,
+  unitIds,
+  careGiverId,
+  statuses,
+  start,
+  end }) => {
   const [error, setError] = React.useState(false)
 
   useEffect(() => {
-    const {
-      statusFor,
-      resendCertificateStatusCount,
-      resendUnitsStatusCount,
-      resendCaregiverStatusCount,
-      certificateIds,
-      unitIds,
-      careGiverId,
-      statuses,
-      start,
-      end,
-    } = this.props
     let request;
     if (statusFor === '0') {
       request = resendCertificateStatusCount({ certificateIds, statuses })
