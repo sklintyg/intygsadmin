@@ -14,14 +14,14 @@ const PreviewDiv = styled.div`
 
 const ResendStatusCount = ({ count, max }) => {
   if (count === 0) {
-    return <IaAlert type={alertType.ERROR}><p>Det finns inga händelser att skicka om</p></IaAlert>
+    return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>
   }
   if (!count) {
-    return <IaAlert type={alertType.ERROR}><p>Kunde inte hämta antal händelser för omsändning</p></IaAlert>
+    return <IaAlert type={alertType.ERROR}>Kunde inte hämta antal händelser för omsändning</IaAlert>
   }
 
   if (count > max) {
-    return <IaAlert type={alertType.ERROR}><p>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</p></IaAlert>
+    return <IaAlert type={alertType.ERROR}>Du försöker skicka om fler omsändningar än tillåtet. Är du säker att du vill utföra omskicket?</IaAlert>
   }
 
   return (
