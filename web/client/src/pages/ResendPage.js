@@ -14,8 +14,9 @@ import {validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat} fr
 import {connect} from 'react-redux';
 import {compose} from 'recompose';
 import * as actions from '../store/actions/intygInfo';
-import ResendStatusCount from '../components/ResendStatusCount/ResendStatusCount';
-import IaAlert from "../components/alert/Alert";
+import IaAlert, {alertType} from "../components/alert/Alert";
+import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCountError";
+import ResendStatusCount from "../components/ResendStatusCount/ResendStatusCount";
 
 const resentOptions = [
   {
@@ -93,6 +94,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
   const [validationMessages, setValidationMessages] = useState({})
   const [showValidation, setShowValidation] = useState(false)
   const [message, setMessage] = useState('')
+  const [showSend, setShowSend] = useState(true)
 
   useEffect(() => {
     let result = {}
@@ -193,9 +195,11 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
       else(
         setMessage('Omsändningen lyckades')
       )
+      setShowSend(false)
     })
     .catch((error) => {
       setMessage('Omsändningen misslyckades');
+      setShowSend(false)
     });
   };
 
@@ -426,7 +430,7 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
           {preview && (
             <>
               <IaTypo03 style={{ marginBottom: '20px' }}>Granska omsändning</IaTypo03>
-              <ResendStatusCount
+              <ResendStatusCountError
                 statusFor={statusFor}
                 certificateIds={certificates.split(',').map((id) => id.trim())}
                 careGiverId={caregiver}
@@ -478,27 +482,38 @@ const ResendPage = ({ resendUnitsStatus, resendCaregiverStatus, resendCertificat
                   <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
                 </PreviewDiv>
               )}
-
+              {message && (
+                <IaAlert type={message === 'Omsändningen lyckades' ? alertType.CONFIRM : alertType.ERROR }>
+                  {message}
+                </IaAlert>
+              )}
+              <ResendStatusCount
+                statusFor={statusFor}
+                certificateIds={certificates.split(',').map((id) => id.trim())}
+                careGiverId={caregiver}
+                unitIds={[unit]}
+                statuses={status.split(',').map((id) => id.trim())}
+                start={`${fromDate}T${fromTime}`}
+                end={`${toDate}T${toTime}`}
+              />
               <ActionsContainer>
                 <Button
                   color={'default'}
                   onClick={() => {
                     setPreview(false)
                     setMessage('')
+                    setShowSend(true)
                   }}>
                   Tillbaka
                 </Button>
+                {showSend && (
                 <Button
                   color={'primary'}
                   onClick={handleResend}>
                   Skicka
                 </Button>
+                )}
               </ActionsContainer>
-              {message && (
-                <IaAlert type={message === 'Omsändningen lyckades' ? 'green' : 'red' }>
-                  {message}
-                </IaAlert>
-              )}
             </>
           )}
         </PageContainer>
