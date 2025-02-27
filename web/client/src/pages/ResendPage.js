@@ -17,7 +17,6 @@ import * as actions from '../store/actions/intygInfo';
 import {resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus} from "../api/intygInfo.api";
 import IaAlert, {alertType} from "../components/alert/Alert";
 import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCountError";
-import ResendStatusCount from "../components/ResendStatusCount/ResendStatusCount";
 
 const resentOptions = [
   {
@@ -483,7 +482,6 @@ const ResendPage = () => {
                   <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
                 </PreviewDiv>
               )}
-              <ResendStatusCount />
               {message && (
                 <IaAlert type={message === 'Omsändningen lyckades' ? alertType.CONFIRM : alertType.ERROR }>
                   {message}
