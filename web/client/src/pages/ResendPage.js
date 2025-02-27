@@ -16,7 +16,7 @@ import {compose} from 'recompose';
 import * as actions from '../store/actions/intygInfo';
 import {resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus} from "../api/intygInfo.api";
 import IaAlert, {alertType} from "../components/alert/Alert";
-import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCountError";
+import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCount";
 
 const resentOptions = [
   {
@@ -483,7 +483,7 @@ const ResendPage = () => {
                 </PreviewDiv>
               )}
               {message && (
-                <IaAlert type={message === 'Omsändningen lyckades' ? alertType.CONFIRM : alertType.ERROR }>
+                <IaAlert type={message === 'Omsändningen lyckades.' ? alertType.CONFIRM : alertType.ERROR }>
                   {message}
                 </IaAlert>
               )}
