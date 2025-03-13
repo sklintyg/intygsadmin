@@ -36,10 +36,10 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
     private final WCIntegrationRestService wcIntegrationRestService;
     private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @Value("${timeinterval.maxdays.unit:7}")
+    @Value("${timeinterval.maxdays.unit}")
     private Integer maxTimeInterval;
 
-    @Value("${timelimit.daysback.start:365}")
+    @Value("${timelimit.daysback.start}")
     private Integer maxDaysBackStartDate;
 
     @Override

@@ -82,3 +82,13 @@ springdoc:
   packagesToScan: se.inera.intyg.intygsadmin.web.controller
   swagger-ui:
     operationsSorter: alpha
+
+
+timeinterval:
+  maxdays:
+    caregiver: 365
+    unit: 365
+
+timelimit:
+  daysback:
+    start: 365

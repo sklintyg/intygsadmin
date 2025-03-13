@@ -36,10 +36,10 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
     private final WCIntegrationRestService wcIntegrationRestService;
     private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @Value("${timeinterval.maxdays.caregiver:1}")
+    @Value("${timeinterval.maxdays.caregiver}")
     private Integer maxTimeInterval;
 
-    @Value("${timelimit.daysback.start:365}")
+    @Value("${timelimit.daysback.start}")
     private Integer maxDaysBackStartDate;
 
     @Override
