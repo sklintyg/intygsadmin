@@ -37,10 +37,10 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
     private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
     @Value("${timeinterval.maxdays.caregiver:1}")
-    private int maxTimeInterval;
+    private Integer maxTimeInterval;
 
     @Value("${timelimit.daysback.start:365}")
-    private int maxDaysBackStartDate;
+    private Integer maxDaysBackStartDate;
 
     @Override
     public Integer send(String careGiverId, SendStatusForCareGiverRequestDTO request) {

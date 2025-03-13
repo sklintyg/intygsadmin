@@ -37,10 +37,10 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
     private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
     @Value("${timeinterval.maxdays.unit:7}")
-    private int maxTimeInterval;
+    private Integer maxTimeInterval;
 
     @Value("${timelimit.daysback.start:365}")
-    private int maxDaysBackStartDate;
+    private Integer maxDaysBackStartDate;
 
     @Override
     public Integer send(SendStatusForUnitsRequestDTO request) {
