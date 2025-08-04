@@ -190,7 +190,7 @@ const ResendPage = () => {
 
     request.then((response) => {
       if(response.count !== 0) {
-        setMessage('Omsändningen lyckades.')
+        setMessage('Skapandet av omsändningen lyckades.')
         setShowSend(false)
 
       }
@@ -484,7 +484,7 @@ const ResendPage = () => {
                 </PreviewDiv>
               )}
               {message && (
-                <IaAlert type={message === 'Omsändningen lyckades.' ? alertType.CONFIRM : alertType.ERROR }>
+                <IaAlert type={message === 'Skapandet av omsändningen lyckades.' ? alertType.CONFIRM : alertType.ERROR }>
                   {message}
                 </IaAlert>
               )}
