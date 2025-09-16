@@ -18,21 +18,14 @@
  */
 package se.inera.intyg.intygsadmin.web.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.web.http.CookieSerializer;
 import se.inera.intyg.infra.security.common.cookie.IneraCookieSerializer;
 
 @Configuration
-@EnableRedisHttpSession(redisNamespace = "${spring.session.redis.namespace}")
 public class SessionConfig {
 
-    @Autowired
-    private JedisConnectionFactory jedisConnectionFactory;
 
     @Bean
     public CookieSerializer cookieSerializer() {
@@ -42,11 +35,6 @@ public class SessionConfig {
         Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
          */
         return new IneraCookieSerializer();
-    }
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return jedisConnectionFactory;
     }
 
 }
