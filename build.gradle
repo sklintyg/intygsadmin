@@ -73,23 +73,26 @@ allprojects {
         maven { url "${ineraMavenRepository}" }
         mavenCentral()
     }
-}
 
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        }
 
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                        "**/testability/**",
+                        "**/integrationtest/**"
+                ])
+            }))
+        }
     }
 
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    "**/testability/**",
-                    "**/integrationtest/**"
-            ])
-        }))
+    tasks.withType(Test).configureEach {
+        jvmArgs '-Xshare:off'
     }
 }
 
