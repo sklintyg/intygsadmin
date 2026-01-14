@@ -6,9 +6,9 @@ including iterations, document updates, and developer guidance.
 ---
 
 > **Specification**  
-> **app to migrate:** [YOUR-APP]  
-> **migration type:** [TO BE DETERMINED]  
-> **app to use as inspiration:** [OPTIONAL]
+> **app to migrate:** intygsadmin
+> **migration type:** React frontend, to React 18 from 16  
+> **app to use as inspiration:** intyg-frontend
 
 ---
 
@@ -44,6 +44,8 @@ through multiple iterations.
 - **Prefer Target Framework Solutions**: Use built-in features of the target framework over custom implementations.
 
 ### Migration Phases at a Glance
+
+Optional steps cannot be skipped unless developer chooses to skip them when asked. 
 
 1. **Phase 1: Initialization (Foundation Building)** 🏗️
     - **Step 1 (Optional but Recommended)**: Analyze test coverage to identify gaps and prevent regressions
@@ -612,13 +614,23 @@ For EACH increment during migration, follow this workflow:
 #### Complete Increment Example
 
 ```
-Increment 5: Migrate ProductController
+Increment 5: Remove all recompose usage from components
 
 📋 PLAN
-[Plan details presented, developer approves]
+Scope: Remove all recompose imports and usage from repository
+Files mentioned in guide: UsersList.js, App.js, SessionPoller.js
+
+Repository Scan Results:
+- Command: grep -r "from 'recompose'" src/
+- Found 20 files total (guide mentioned 3 as examples)
+- Complete file list: [all 20 files listed]
+
+Plan: Migrate all 20 files, not just the 3 examples in guide
+
+[Developer approves plan with complete list]
 
 🔨 IMPLEMENT
-[Code changes made]
+[Code changes made to all 20 files]
 
 ✅ VALIDATE
 Build: PASS
@@ -626,18 +638,24 @@ Tests: PASS
 Application Start: PASS
 
 🔍 QUALITY CHECK
-Code Quality: PASS - Target framework annotations correct, clean code
-Architecture: PASS - Follows target framework patterns
-Requirements: FAIL - Missing @PerformanceLogging annotation per requirements
-Completeness: FAIL - Source framework import still present
+Code Quality: PASS - Target framework patterns used correctly
+Architecture: PASS - Follows React 18 hooks patterns
+Requirements: PASS - All lifecycle converted to useEffect
+
+Completeness (Repository-Wide Scan): FAIL
+- Scanned: grep -r "from 'recompose'" src/
+- Results: 2 files still found
+- Files mentioned in guide: UsersList.js, App.js, SessionPoller.js (migrated ✓)
+- Additional files found in scan: HeaderContainer.js, LoginOptions.js (NOT migrated ✗)
+- Verification: 18/20 files migrated, 2 missed
 
 Overall: ⚠️ NEEDS IMPROVEMENT
-Issues: Missing @PerformanceLogging, unused import
+Issues: HeaderContainer.js and LoginOptions.js still import recompose
 
-[Return to IMPLEMENT, fix issues]
+[Return to IMPLEMENT to fix missed files]
 
 🔨 IMPLEMENT (Iteration 2)
-[Fix issues found in quality check]
+[Migrate HeaderContainer.js and LoginOptions.js]
 
 ✅ VALIDATE
 Build: PASS
@@ -646,23 +664,29 @@ Tests: PASS
 🔍 QUALITY CHECK
 Code Quality: PASS
 Architecture: PASS
-Requirements: PASS - @PerformanceLogging added
-Completeness: PASS - All imports cleaned
+Requirements: PASS
+
+Completeness (Repository-Wide Scan): PASS
+- Scanned: grep -r "from 'recompose'" src/
+- Results: 0 files found
+- All 20 files successfully migrated
+- Verification: Complete - no recompose usage remains in repository
 
 Overall: ✅ APPROVED
 
 💡 FEEDBACK CAPTURE
 What Went Well:
-- Clear mapping from source to target framework
-- Quality check caught missing requirements
+- Repository-wide scan caught files not mentioned in guide
+- Complete migration verified with grep search
 
 What Could Be Improved:
-- Initial implementation missed @PerformanceLogging - should be in checklist
-- Could have caught source framework import during implementation
+- Initial scan in PLAN phase found all 20 files, but implementation only did 18
+- Should have double-checked scan results before moving to quality check
 
 Recommendations for Template/Guide:
-- Add explicit checklist item for @PerformanceLogging in controller migration
-- Add step to verify all old framework imports removed before quality check
+- Emphasize that guide provides examples, not complete lists
+- Add explicit step in IMPLEMENT to re-verify file list from PLAN
+- Quality gate repository scan is critical - caught the gap
 
 [Update progress document with feedback, proceed to Increment 6]
 ```
@@ -833,15 +857,15 @@ already completed but not marked.
 
 ### Phase 1: Initialization
 
-- [ ] 
+- [x] 
     0. Determine Migration Type
-- [ ] 
+- [x] 
     1. Analyze Test Coverage and Identify Gaps (Optional but Highly Recommended)
-- [ ] 
+- [x] 
     2. Request Initial Requirements
-- [ ] 
+- [x] 
     3. Request Inspiration Document (Optional)
-- [ ] 
+- [x] 
     4. Execute Prompt 1.2: Enhance Requirements Document
 - [ ] 
     5. Execute Prompt 2: Generate General Analysis Instructions (+ Follow-up enhancements)
