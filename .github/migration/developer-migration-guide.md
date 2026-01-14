@@ -48,8 +48,6 @@ When using AI for migration tasks, several challenges arise:
 
 ## 📋 Migration Process
 
-![img.png](img.png)
-
 ### 📝 Document Creation Phase
 
 **Migration Type Identification:**
