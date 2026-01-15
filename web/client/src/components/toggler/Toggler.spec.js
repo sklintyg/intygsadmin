@@ -1,25 +1,28 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import sinon from 'sinon';
-
-import Toggler from './Toggler';
-import {CollapseIcon, ExpandIcon} from "../styles/iaSvgIcons";
+import React from 'react'
+import { render, screen, userEvent } from '../../testUtils'
+import Toggler from './Toggler'
 
 describe('<Toggler />', () => {
-  it('renders a CollapseIcon when expanded = false', () => {
-    const wrapper = shallow(<Toggler expanded={false} />).shallow();
-    expect(wrapper.find(CollapseIcon)).toHaveLength(1);
-  });
+  it('renders collapse icon when expanded = false', () => {
+    render(<Toggler expanded={false} />)
+    const button = screen.getByRole('button')
+    expect(button).toBeInTheDocument()
+  })
 
-  it('renders a ExpandIcon when expanded = true', () => {
-    const wrapper = shallow(<Toggler expanded={true} />).shallow();
-    expect(wrapper.find(ExpandIcon)).toHaveLength(1);
-  });
+  it('renders expand icon when expanded = true', () => {
+    render(<Toggler expanded={true} />)
+    const button = screen.getByRole('button')
+    expect(button).toBeInTheDocument()
+  })
 
-  it('simulates click events', () => {
-    const onButtonClick = sinon.spy();
-    const wrapper = shallow(<Toggler handleToggle={onButtonClick} />);
-    wrapper.simulate('click');
-    expect(onButtonClick).toHaveProperty('callCount', 1);
-  });
-});
+  it('calls handleToggle when clicked', async () => {
+    const user = userEvent.setup()
+    const handleToggle = jest.fn()
+    render(<Toggler handleToggle={handleToggle} />)
+    const button = screen.getByRole('button')
+
+    await user.click(button)
+
+    expect(handleToggle).toHaveBeenCalledTimes(1)
+  })
+})

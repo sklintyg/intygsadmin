@@ -1,31 +1,21 @@
-import React from 'react';
-import {Redirect, Route} from 'react-router-dom';
-import {connect} from 'react-redux'
-import Loading from './Loading';
+import React from 'react'
+import { Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import Loading from './Loading'
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.user.isAuthenticated,
-    isLoading: state.user.isLoading,
-    hasCurrentUnit: !!state.user.unitContext
-  };
-};
+const SecuredRoute = ({ component: Component, ...rest }) => {
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+  const isLoading = useSelector((state) => state.user.isLoading)
 
-const SecuredRoute = ({component: Component, isAuthenticated, isLoading, hasCurrentUnit, allowMissingUnit, ...rest}) => {
-
-  if (!isAuthenticated && isLoading){
+  if (!isAuthenticated && isLoading) {
     return <Loading />
   }
 
-  return (
-    <Route {...rest} render={(props) => {
-      if (!isAuthenticated) {
-        return <Redirect to='/' />;
-      }
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
 
-      return (<Component {...props}/>)
-    }} />
-  );
+  return <Component {...rest} />
 }
 
-export default connect(mapStateToProps)(SecuredRoute);
+export default SecuredRoute

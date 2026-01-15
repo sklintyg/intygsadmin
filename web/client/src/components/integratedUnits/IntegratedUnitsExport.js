@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { compose } from 'recompose'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'reactstrap'
-import { IaTypo03 } from "../styles/iaTypography"
-import styled from "styled-components"
+import { IaTypo03 } from '../styles/iaTypography'
+import styled from 'styled-components'
 import * as actions from '../../store/actions/integratedUnits'
-import { getIsFetchingIntegratedUnitsFile, getErrorMessageIntegratedUnitsFile } from "../../store/reducers/integratedUnits";
-import colors from "../styles/iaColors";
-import LoadingSpinner from "../loadingSpinner";
-import { validateIntegratedUnitsFile  } from "./IntegratedUnitsValidator";
+import { getErrorMessageIntegratedUnitsFile, getIsFetchingIntegratedUnitsFile } from '../../store/reducers/integratedUnits'
+import colors from '../styles/iaColors'
+import LoadingSpinner from '../loadingSpinner'
+import { validateIntegratedUnitsFile } from './IntegratedUnitsValidator'
 
 const SpinnerWrapper = styled.div`
   position: relative;
 `
 
 const PageHeader = styled.div`
-    padding: 12px 0 4px;
-    &:first-of-type {
-      padding: 4px 0;
-    }
+  padding: 12px 0 4px;
+  &:first-of-type {
+    padding: 4px 0;
+  }
 `
 
 const PageExportRow = styled.div`
@@ -40,20 +39,26 @@ const ValidationMessage = styled.div`
   color: ${colors.IA_COLOR_16};
 `
 
-const IntegratedUnitsSearchAndExportPage = ({ fetchIntegratedUnitsFile, isFetchingIntegratedUnitsFile, errorMessageIntegratedUnitsFile }) => {
+const IntegratedUnitsSearchAndExportPage = () => {
+  const dispatch = useDispatch()
+  const isFetchingIntegratedUnitsFile = useSelector(getIsFetchingIntegratedUnitsFile)
+  const errorMessageIntegratedUnitsFile = useSelector(getErrorMessageIntegratedUnitsFile)
+
+  const fetchIntegratedUnitsFile = () => dispatch(actions.fetchIntegratedUnitsFile())
+
   const [validationExportMessage, setValidationExportMessage] = useState(undefined)
 
   const exportIntegratedUnits = () => {
-    fetchIntegratedUnitsFile().then(response => {
+    fetchIntegratedUnitsFile().then((response) => {
       if (response !== undefined) {
-        const filename =  response.headers.get('Content-Disposition').split('filename=')[1];
-        response.blob().then(blob => {
-          let url = window.URL.createObjectURL(blob);
-          let a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          a.click();
-        });
+        const filename = response.headers.get('Content-Disposition').split('filename=')[1]
+        response.blob().then((blob) => {
+          let url = window.URL.createObjectURL(blob)
+          let a = document.createElement('a')
+          a.href = url
+          a.download = filename
+          a.click()
+        })
       }
     })
   }
@@ -82,16 +87,4 @@ const IntegratedUnitsSearchAndExportPage = ({ fetchIntegratedUnitsFile, isFetchi
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isFetchingIntegratedUnitsFile: getIsFetchingIntegratedUnitsFile(state),
-    errorMessageIntegratedUnitsFile: getErrorMessageIntegratedUnitsFile(state)
-  }
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions }
-  )
-)(IntegratedUnitsSearchAndExportPage)
+export default IntegratedUnitsSearchAndExportPage

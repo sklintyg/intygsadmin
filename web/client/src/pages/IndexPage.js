@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import {IaTypo01, IaTypo05} from '../components/styles/iaTypography'
-import {CustomScrollingContainer, FlexColumnContainer, PageContainer, Section} from '../components/styles/iaLayout'
-import IaAlert, {alertType} from '../components/alert/Alert'
-import LoginOptions from '../components/loginOptions'
+import { IaTypo01, IaTypo05 } from '../components/styles/iaTypography'
+import { CustomScrollingContainer, FlexColumnContainer, PageContainer, Section } from '../components/styles/iaLayout'
+import IaAlert, { alertType } from '../components/alert/Alert'
+import LoginOptions from '../components/loginOptions/LoginOptions'
+import { useParams } from 'react-router-dom'
 
 const CustomPageContainer = styled(PageContainer)`
   flex-direction: row;
@@ -14,25 +15,26 @@ const Wrapper = styled.div`
   padding-left: 40px;
 `
 
-const HomePage = ({ match }) => {
+const HomePage = () => {
+  const { code } = useParams()
   let title = 'Välkommen till Intygsadmin'
   let message = null
 
-  switch (match.params.code) {
-  case 'LOGIN_FEL001':
-    title = 'Inloggningen misslyckades';
-    message = 'Autentiseringen misslyckades.';
-    break;
-  case 'LOGIN_FEL002':
-    title = 'Inloggningen misslyckades';
-    message = 'Du saknar behörighet för att logga in.';
-    break;
-  case 'LOGIN_FEL003':
-    title = 'Du är utloggad';
-    message = 'Du har blivit utloggad på grund av inaktivitet. Om du vill fortsätta använda Intygsadmin behöver du logga in igen. ';
-    break;
-  default:
-    break;
+  switch (code) {
+    case 'LOGIN_FEL001':
+      title = 'Inloggningen misslyckades'
+      message = 'Autentiseringen misslyckades.'
+      break
+    case 'LOGIN_FEL002':
+      title = 'Inloggningen misslyckades'
+      message = 'Du saknar behörighet för att logga in.'
+      break
+    case 'LOGIN_FEL003':
+      title = 'Du är utloggad'
+      message = 'Du har blivit utloggad på grund av inaktivitet. Om du vill fortsätta använda Intygsadmin behöver du logga in igen. '
+      break
+    default:
+      break
   }
 
   return (
@@ -40,7 +42,9 @@ const HomePage = ({ match }) => {
       <CustomScrollingContainer>
         <CustomPageContainer>
           <Wrapper>
-            <IaTypo01 as="h1" id="indexTitle">{title}</IaTypo01>
+            <IaTypo01 as="h1" id="indexTitle">
+              {title}
+            </IaTypo01>
             {message && (
               <Section>
                 <IaAlert type={alertType.INFO} id="indexAlertMessage">
@@ -50,7 +54,8 @@ const HomePage = ({ match }) => {
             )}
 
             <IaTypo05 as="p">
-              I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster utföra administrativa uppgifter som rör de olika systemen som hanterar intyg.
+              I Intygsadmin kan du som jobbar med förvaltning av Intygstjänster utföra administrativa uppgifter som rör de olika systemen
+              som hanterar intyg.
             </IaTypo05>
 
             <Section />

@@ -1,27 +1,21 @@
 import * as utils from './utils'
 
-export const fetchUsersList = ({pageIndex, sortColumn, sortDirection}) => {
-  if(!pageIndex) {
-    pageIndex = 0
-  }
+export const fetchUsersList = ({ pageIndex, sortColumn, sortDirection }) => {
+  const finalPageIndex = pageIndex ?? 0
+  const finalSortColumn = sortColumn ?? 'createdAt'
+  const finalSortDirection = sortDirection ?? 'DESC'
 
-  if(!sortColumn) {
-    sortColumn = 'createdAt'
-  }
-
-  if(!sortDirection) {
-    sortDirection = 'DESC'
-  }
-
-  return utils.makeServerRequest(utils.buildUrlFromParams('user', {
-    page: pageIndex,
-    size: 10,
-    sort: `${sortColumn},${sortDirection}`
-  }));
+  return utils.makeServerRequest(
+    utils.buildUrlFromParams('user', {
+      page: finalPageIndex,
+      size: 10,
+      sort: `${finalSortColumn},${finalSortDirection}`,
+    })
+  )
 }
 
 export const createUser = (user) => utils.makeServerPut('user', user)
 
-export const removeUser = (userId) => utils.makeServerDelete(`user/${userId}`, {}, {emptyBody: true})
+export const removeUser = (userId) => utils.makeServerDelete(`user/${userId}`, {}, { emptyBody: true })
 
 export const updateUser = (user, userId) => utils.makeServerPost(`user/${userId}`, user)

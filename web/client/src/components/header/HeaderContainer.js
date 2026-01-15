@@ -1,13 +1,9 @@
-import {compose} from "recompose";
-import {connect} from "react-redux";
-import Header from "./Header";
+import { connect } from 'react-redux'
+import Header from './Header'
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state, _ownProps) => {
   return {
-   ...state.user
+    ...state.user,
   }
-};
-export default compose(
-  connect(mapStateToProps, null)
-)(Header);
-
+}
+export default connect(mapStateToProps, null)(Header)

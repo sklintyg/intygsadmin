@@ -1,9 +1,31 @@
 {
-  "extends": "react-app",
-  "plugins": [
-    "react-hooks"
-  ],
+  "root": true,
+  "extends": ["react-app", "react-app/jest"],
+  "ignorePatterns": ["coverage/**/*.*", "build/**/*.*"],
   "rules": {
-    "react-hooks/rules-of-hooks": "error"
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-undef": "error",
+    "array-callback-return": "warn",
+    "react/jsx-no-undef": "error",
+    "no-duplicate-imports": "error",
+    "import/no-anonymous-default-export": "warn",
+    "react/no-unknown-property": ["error", { "ignore": ["trigger"] }],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "labelComponents": [],
+        "labelAttributes": [],
+        "controlComponents": [],
+        "assert": "either",
+        "depth": 25
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

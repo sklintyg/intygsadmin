@@ -1,14 +1,13 @@
-import React from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import modalContainer from '../../modalContainer/modalContainer';
-import { compose } from 'recompose';
-import * as actions from '../../../store/actions/dataExport';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout';
-import IaAlert, { alertType } from '../../alert/Alert';
-import { getErrorMessageResendDataExportKey } from "../../../store/reducers/dataExport";
-import { getMessage } from '../../../messages/messages';
+import React from 'react'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import modalContainer from '../../modalContainer/modalContainer'
+import * as actions from '../../../store/actions/dataExport'
+import { connect } from 'react-redux'
+import styled from 'styled-components'
+import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
+import IaAlert, { alertType } from '../../alert/Alert'
+import { getErrorMessageResendDataExportKey } from '../../../store/reducers/dataExport'
+import { getMessage } from '../../../messages/messages'
 
 const StyledBody = styled(ModalBody)`
   .form-control {
@@ -29,24 +28,23 @@ const StyledBody = styled(ModalBody)`
   label {
     display: block;
   }
-`;
+`
 
 const ResendDataExportKey = ({ handleClose, isOpen, onComplete, resendDataExportKey, errorMessage, data }) => {
-
   const sendResendDataExportKey = () => {
-    const func = resendDataExportKey(data.terminationId);
+    const func = resendDataExportKey(data.terminationId)
 
     func
       .then(() => {
-        cancel();
-        onComplete();
+        cancel()
+        onComplete()
       })
-      .catch(() => {});
-  };
+      .catch(() => {})
+  }
 
   const cancel = () => {
-    handleClose();
-  };
+    handleClose()
+  }
 
   return (
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
@@ -58,9 +56,7 @@ const ResendDataExportKey = ({ handleClose, isOpen, onComplete, resendDataExport
       <ErrorSection>
         {errorMessage !== null && (
           <ErrorWrapper>
-            <IaAlert type={alertType.ERROR}>
-              Kryptonyckel kunde inte skickas. Prova igen om en stund.
-            </IaAlert>
+            <IaAlert type={alertType.ERROR}>Kryptonyckel kunde inte skickas. Prova igen om en stund.</IaAlert>
           </ErrorWrapper>
         )}
       </ErrorSection>
@@ -83,19 +79,13 @@ const ResendDataExportKey = ({ handleClose, isOpen, onComplete, resendDataExport
         </Button>
       </ModalFooter>
     </Modal>
-  );
+  )
 }
 
 const mapStateToProps = (state) => {
-  return { errorMessage: getErrorMessageResendDataExportKey(state) };
-};
+  return { errorMessage: getErrorMessageResendDataExportKey(state) }
+}
 
-export const ResendDataExportKeyId = 'resendDataExportKey';
+export const ResendDataExportKeyId = 'resendDataExportKey'
 
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions }
-  ),
-  modalContainer(ResendDataExportKeyId)
-)(ResendDataExportKey);
+export default connect(mapStateToProps, { ...actions })(modalContainer(ResendDataExportKeyId)(ResendDataExportKey))

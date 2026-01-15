@@ -1,9 +1,9 @@
-import React from 'react';
-import {FlexColumnContainer, ScrollingContainer, WorkareaContainer} from "../components/styles/iaLayout";
-import styled from "styled-components";
-import {ErrorPageIcon} from "../components/styles/iaSvgIcons";
+import React from 'react'
+import { FlexColumnContainer, ScrollingContainer, WorkareaContainer } from '../components/styles/iaLayout'
+import styled from 'styled-components'
+import { ErrorPageIcon } from '../components/styles/iaSvgIcons'
 import ErrorMessageFormatter from '../messages/ErrorMessageFormatter'
-import {Redirect} from "react-router-dom";
+import { Navigate, useParams } from 'react-router-dom'
 
 const CustomScrollingContainer = styled(ScrollingContainer)`
   max-width: none;
@@ -18,25 +18,25 @@ const PageContainer = styled(WorkareaContainer)`
   padding-bottom: 60px;
   justify-content: center;
   align-items: center;
-
 `
-const ErrorPage = ({match}) => {
+const ErrorPage = () => {
+  const { errorCode, logId } = useParams()
 
-  let activeError = {title: 'Tekniskt fel', message: 'Ett tekniskt fel uppstod.', logId: match.params.logId};
+  let activeError = { title: 'Tekniskt fel', message: 'Ett tekniskt fel uppstod.', logId: logId }
 
-  switch (match.params.errorCode) {
-  case 'LOGIN_FEL001':
-    return (<Redirect to="/loggedout/LOGIN_FEL001" />)
-  case 'LOGIN_FEL002':
-    return (<Redirect to="/loggedout/LOGIN_FEL002" />)
-  case 'LOGIN_FEL003':
-    return (<Redirect to="/loggedout/LOGIN_FEL003" />)
-  case 'NOT_FOUND':
-    activeError.title = 'Sidan du söker finns inte';
-    activeError.message = 'Kontrollera att den länk du använder är korrekt.';
-    break;
-  default:
-    break;
+  switch (errorCode) {
+    case 'LOGIN_FEL001':
+      return <Navigate to="/loggedout/LOGIN_FEL001" replace />
+    case 'LOGIN_FEL002':
+      return <Navigate to="/loggedout/LOGIN_FEL002" replace />
+    case 'LOGIN_FEL003':
+      return <Navigate to="/loggedout/LOGIN_FEL003" replace />
+    case 'NOT_FOUND':
+      activeError.title = 'Sidan du söker finns inte'
+      activeError.message = 'Kontrollera att den länk du använder är korrekt.'
+      break
+    default:
+      break
   }
   return (
     <FlexColumnContainer>
@@ -49,6 +49,6 @@ const ErrorPage = ({match}) => {
       </CustomScrollingContainer>
     </FlexColumnContainer>
   )
-};
+}
 
-export default ErrorPage;
+export default ErrorPage

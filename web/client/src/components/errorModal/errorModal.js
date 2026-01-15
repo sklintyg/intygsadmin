@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import modalContainer from '../modalContainer/modalContainer'
-import { compose } from 'recompose'
-import { Button, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import ErrorMessageFormatter from '../../messages/ErrorMessageFormatter'
 
 const BorttagenBanner = ({ handleClose, isOpen, data }) => {
@@ -27,4 +26,4 @@ const BorttagenBanner = ({ handleClose, isOpen, data }) => {
   )
 }
 
-export default compose(modalContainer('errorModal'))(BorttagenBanner)
+export default modalContainer('errorModal')(BorttagenBanner)

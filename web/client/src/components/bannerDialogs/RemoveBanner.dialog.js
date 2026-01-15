@@ -1,12 +1,10 @@
-import React, {useState} from 'react'
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
+import React, { useState } from 'react'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
-import {compose} from 'recompose'
-import IaAlert, {alertType} from '../alert/Alert'
-import {ErrorSection, ErrorWrapper} from '../styles/iaLayout'
+import IaAlert, { alertType } from '../alert/Alert'
+import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
 
 const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
-
   const [errorActive, setErrorActive] = useState(false)
 
   if (!data) {
@@ -17,12 +15,14 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
 
   const remove = () => {
     setErrorActive(false)
-    removeBanner(bannerId).then(() => {
-      handleClose()
-      onComplete()
-    }).catch(() => {
-      setErrorActive(true)
-    })
+    removeBanner(bannerId)
+      .then(() => {
+        handleClose()
+        onComplete()
+      })
+      .catch(() => {
+        setErrorActive(true)
+      })
   }
 
   return (
@@ -30,7 +30,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
       <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={handleClose}>
         <ModalHeader toggle={handleClose}>Avsluta driftbanner</ModalHeader>
         <ModalBody>
-          <div dangerouslySetInnerHTML={{ __html: text }}/>
+          <div dangerouslySetInnerHTML={{ __html: text }} />
         </ModalBody>
         <ErrorSection>
           {errorActive && (
@@ -43,7 +43,7 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
         </ErrorSection>
         <ModalFooter className="no-border">
           <Button
-            id='confirmBtn'
+            id="confirmBtn"
             color={'primary'}
             onClick={() => {
               remove()
@@ -66,6 +66,4 @@ const RemoveBanner = ({ handleClose, isOpen, onComplete, data }) => {
 
 export const RemoveBannerId = 'removeBanner'
 
-export default compose(
-  modalContainer(RemoveBannerId)
-)(RemoveBanner)
+export default modalContainer(RemoveBannerId)(RemoveBanner)

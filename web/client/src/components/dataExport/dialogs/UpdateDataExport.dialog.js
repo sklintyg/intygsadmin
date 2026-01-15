@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
-import modalContainer from '../../modalContainer/modalContainer';
-import {compose} from 'recompose';
-import * as actions from '../../../store/actions/dataExport';
-import {connect} from 'react-redux';
-import styled from 'styled-components';
-import {ErrorSection, ErrorWrapper} from '../../styles/iaLayout';
-import IaAlert, {alertType} from '../../alert/Alert';
-import {IaTypo04} from '../../styles/iaTypography';
-import {getMessage} from '../../../messages/messages';
-import {getErrorMessageUpdateDataExport} from "../../../store/reducers/dataExport";
+import React, { useEffect, useState } from 'react'
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import modalContainer from '../../modalContainer/modalContainer'
+import * as actions from '../../../store/actions/dataExport'
+import { connect } from 'react-redux'
+import styled from 'styled-components'
+import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
+import IaAlert, { alertType } from '../../alert/Alert'
+import { IaTypo04 } from '../../styles/iaTypography'
+import { getMessage } from '../../../messages/messages'
+import { getErrorMessageUpdateDataExport } from '../../../store/reducers/dataExport'
 
 const StyledBody = styled(ModalBody)`
   .form-control {
@@ -20,10 +19,10 @@ const StyledBody = styled(ModalBody)`
     margin-bottom: 15px;
   }
 
-  input[type=text]:disabled {
-      color: #6A6A6A;
-      background-color: #F2F2F2;
-      cursor: not-allowed;
+  input[type='text']:disabled {
+    color: #6a6a6a;
+    background-color: #f2f2f2;
+    cursor: not-allowed;
   }
 
   h5 {
@@ -36,63 +35,66 @@ const StyledBody = styled(ModalBody)`
   label {
     display: block;
   }
-`;
+`
 
-const defaultDataExport =  {
-   terminationId : '',
-   created : '',
-   status : '',
-   creatorName : '',
-   creatorHSAId : '',
-   hsaId : '',
-   organizationNumber : '',
-   personId :  '',
-   emailAddress : '',
-   phoneNumber : ''
+const defaultDataExport = {
+  terminationId: '',
+  created: '',
+  status: '',
+  creatorName: '',
+  creatorHSAId: '',
+  hsaId: '',
+  organizationNumber: '',
+  personId: '',
+  emailAddress: '',
+  phoneNumber: '',
 }
 
 const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, errorMessage, data }) => {
-
   const originalDataExport = data ? data.dataExport : defaultDataExport
-  const [updatedDataExport, setUpdatedDataExport] = useState(originalDataExport);
+  const [updatedDataExport, setUpdatedDataExport] = useState(originalDataExport)
 
   useEffect(() => {
-    if (data && (updatedDataExport.terminationId !== originalDataExport.terminationId ||
-      updatedDataExport.status !== originalDataExport.status)) {
-      setUpdatedDataExport({...originalDataExport})
+    if (
+      data &&
+      (updatedDataExport.terminationId !== originalDataExport.terminationId || updatedDataExport.status !== originalDataExport.status)
+    ) {
+      setUpdatedDataExport({ ...originalDataExport })
     }
   }, [originalDataExport, updatedDataExport, data])
 
   const onChange = (prop) => (value) => {
-    setUpdatedDataExport({ ...updatedDataExport, [prop]: value });
-  };
+    setUpdatedDataExport({ ...updatedDataExport, [prop]: value })
+  }
 
   const sendUpdatedDataExport = () => {
-    updateDataExport(updatedDataExport).then(() => {
-      cancel();
-      onComplete();
-    })
-    .catch(() => {})
-  };
+    updateDataExport(updatedDataExport)
+      .then(() => {
+        cancel()
+        onComplete()
+      })
+      .catch(() => {})
+  }
 
   const cancel = () => {
-    handleClose();
-  };
+    handleClose()
+  }
 
   const enableUpdateBtn = () => {
     const fields = ['hsaId', 'personId', 'emailAddress', 'phoneNumber']
     return fields.reduce((accumulator, currentValue) => {
-      return accumulator || (updatedDataExport[currentValue] !== originalDataExport[currentValue])
+      return accumulator || updatedDataExport[currentValue] !== originalDataExport[currentValue]
     }, false)
-  };
+  }
 
   return (
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
       <ModalHeader toggle={cancel}> {getMessage(`dataExport.update.modalHeader`)}</ModalHeader>
       <StyledBody>
-        <p>Här kan du ändra uppgifter i dataexporten.
-        Endast uppgifter som kan ändras är redigerbara.
-        Mejl och sms kommer att på nytt skickas ut till mottagaren (organisationsrepresentanten).</p>
+        <p>
+          Här kan du ändra uppgifter i dataexporten. Endast uppgifter som kan ändras är redigerbara. Mejl och sms kommer att på nytt skickas
+          ut till mottagaren (organisationsrepresentanten).
+        </p>
         <FormGroup>
           <Label for="dataExportCreatorHSAId">
             <IaTypo04>{getMessage(`dataExport.create.careProviderHsaId`)}</IaTypo04>
@@ -157,9 +159,7 @@ const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, e
       <ErrorSection>
         {errorMessage !== null && (
           <ErrorWrapper>
-            <IaAlert type={alertType.ERROR}>
-              Kunde inte ändra dataexporten på grund av tekniskt fel. Prova igen om en stund.
-            </IaAlert>
+            <IaAlert type={alertType.ERROR}>Kunde inte ändra dataexporten på grund av tekniskt fel. Prova igen om en stund.</IaAlert>
           </ErrorWrapper>
         )}
       </ErrorSection>
@@ -183,21 +183,15 @@ const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, e
         </Button>
       </ModalFooter>
     </Modal>
-  );
+  )
 }
 
 const mapStateToProps = (state) => {
   return {
-    errorMessage: getErrorMessageUpdateDataExport(state)
-  };
-};
+    errorMessage: getErrorMessageUpdateDataExport(state),
+  }
+}
 
-export const UpdateDataExportId = 'changeDataExport';
+export const UpdateDataExportId = 'changeDataExport'
 
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions }
-  ),
-  modalContainer(UpdateDataExportId),
-)(UpdateDataExport);
+export default connect(mapStateToProps, { ...actions })(modalContainer(UpdateDataExportId)(UpdateDataExport))

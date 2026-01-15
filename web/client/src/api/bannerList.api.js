@@ -1,22 +1,15 @@
-import * as utils from "./utils";
+import * as utils from './utils'
 
-export const fetchBannerList = ({pageIndex, sortColumn, sortDirection}) => {
+export const fetchBannerList = ({ pageIndex, sortColumn, sortDirection }) => {
+  const finalPageIndex = pageIndex ?? 0
+  const finalSortColumn = sortColumn ?? 'createdAt'
+  const finalSortDirection = sortDirection ?? 'DESC'
 
-  if(!pageIndex) {
-    pageIndex = 0
-  }
-
-  if(!sortColumn) {
-    sortColumn = 'createdAt'
-  }
-
-  if(!sortDirection) {
-    sortDirection = 'DESC'
-  }
-
-  return utils.makeServerRequest(utils.buildUrlFromParams('banner', {
-    page: pageIndex,
-    size: 10,
-    sort: `${sortColumn},${sortDirection}`
-  }));
+  return utils.makeServerRequest(
+    utils.buildUrlFromParams('banner', {
+      page: finalPageIndex,
+      size: 10,
+      sort: `${finalSortColumn},${finalSortDirection}`,
+    })
+  )
 }

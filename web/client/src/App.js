@@ -1,84 +1,66 @@
-import React, {Fragment} from 'react'
-import {HashRouter, Switch} from 'react-router-dom'
+import React, { Fragment, useEffect } from 'react'
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import HomePage from './pages/IndexPage'
 import BannerPage from './pages/BannerPage'
 import IntegratedUnitsPage from './pages/IntegratedUnitsPage'
 import PrivatePractitionerPage from './pages/PrivatePractitionerPage'
 import Header from './components/header'
-import {getUser} from './store/actions/user'
-import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import { getUser } from './store/actions/user'
 import SecuredRoute from './components/auth/SecuredRoute'
 import UnsecuredRoute from './components/auth/UnsecuredRoute'
-import {history} from './store/configureStore'
-import {ConnectedRouter} from 'connected-react-router'
-import {closeAllModals} from './store/actions/modal'
+import { closeAllModals } from './store/actions/modal'
 import ErrorPage from './pages/ErrorPage'
 import ErrorModal from './components/errorModal'
 import TestLinks from './components/TestLinks/TestLinks'
 import SessionPoller from './components/sessionPoller'
-import {fetchAppConfig} from './store/actions/appConfig'
-import IntygInfoPage from "./pages/IntygInfoPage";
-import UsersPage from "./pages/UsersPage";
-import DataExportPage from "./pages/DataExportPage";
-import ResendPage from "./pages/ResendPage";
+import { fetchAppConfig } from './store/actions/appConfig'
+import IntygInfoPage from './pages/IntygInfoPage'
+import UsersPage from './pages/UsersPage'
+import DataExportPage from './pages/DataExportPage'
+import ResendPage from './pages/ResendPage'
 
-const App = () => {
+const AppContent = () => {
+  const dispatch = useDispatch()
+  const location = useLocation()
+
+  useEffect(() => {
+    dispatch(fetchAppConfig())
+    dispatch(getUser())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(closeAllModals())
+  }, [dispatch, location])
+
   return (
-    <ConnectedRouter history={history}>
-      <HashRouter>
-        <Fragment>
-          <SessionPoller />
-          {process.env.NODE_ENV !== 'production' && <TestLinks />}
-          <Header />
-          <ErrorModal />
-          <Switch>
-            <UnsecuredRoute exact path="/" component={HomePage} />
-            <UnsecuredRoute path="/loggedout/:code" component={HomePage} />
-            <SecuredRoute path="/banner" component={BannerPage} />
-            <SecuredRoute path="/integratedUnits" component={IntegratedUnitsPage} />
-            <SecuredRoute path="/privatePractitioner" component={PrivatePractitionerPage} />
-            <SecuredRoute path="/intygInfo" component={IntygInfoPage} />
-            <SecuredRoute path="/administratorer" component={UsersPage} />
-            <SecuredRoute path="/dataExport" component={DataExportPage} />
-            <SecuredRoute path="/resend" component={ResendPage} />
-            <UnsecuredRoute path="/exit/:errorCode/:logId?" isErrorPage={true} component={ErrorPage} />
-          </Switch>
-        </Fragment>
-      </HashRouter>
-    </ConnectedRouter>
+    <Fragment>
+      <SessionPoller />
+      {process.env.NODE_ENV !== 'production' && <TestLinks />}
+      <Header />
+      <ErrorModal />
+      <Routes>
+        <Route path="/" element={<UnsecuredRoute component={HomePage} exact />} />
+        <Route path="/loggedout/:code" element={<UnsecuredRoute component={HomePage} />} />
+        <Route path="/banner" element={<SecuredRoute component={BannerPage} />} />
+        <Route path="/integratedUnits" element={<SecuredRoute component={IntegratedUnitsPage} />} />
+        <Route path="/privatePractitioner" element={<SecuredRoute component={PrivatePractitionerPage} />} />
+        <Route path="/intygInfo" element={<SecuredRoute component={IntygInfoPage} />} />
+        <Route path="/administratorer" element={<SecuredRoute component={UsersPage} />} />
+        <Route path="/dataExport" element={<SecuredRoute component={DataExportPage} />} />
+        <Route path="/resend" element={<SecuredRoute component={ResendPage} />} />
+        <Route path="/exit/:errorCode/:logId?" element={<UnsecuredRoute component={ErrorPage} isErrorPage />} />
+      </Routes>
+    </Fragment>
   )
 }
 
-const lifeCycleValues = {
-  UNSAFE_componentWillMount() {
-    this.props.fetchAppConfig()
-    this.props.getUser()
-  },
-  componentDidMount() {
-    this.unlisten = history.listen(() => {
-      this.props.closeAllModals()
-    })
-  },
-  componentWillUnmount() {
-    this.unlisten()
-  },
+const App = () => {
+  return (
+    <HashRouter>
+      <AppContent />
+    </HashRouter>
+  )
 }
 
-// expose selected dispachable methods to App props
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    fetchAppConfig: () => dispatch(fetchAppConfig()),
-    getUser: () => dispatch(getUser()),
-    closeAllModals: () => dispatch(closeAllModals()),
-  }
-}
-
-// enhance APP using compose with connect and lifecycle so we can use them in APp
-export default compose(
-  connect(
-    null,
-    mapDispatchToProps
-  ),
-  lifecycle(lifeCycleValues)
-)(App)
+export default App

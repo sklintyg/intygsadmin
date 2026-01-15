@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import iaColors from '../styles/iaColors'
 import { NavItem } from 'reactstrap'
 
@@ -37,8 +37,7 @@ const Wrapper = styled.span`
 `
 
 const MenuBarButton = ({ menuItem }) => {
-
-  if(!menuItem.enabled){
+  if (!menuItem.enabled) {
     return null
   }
 

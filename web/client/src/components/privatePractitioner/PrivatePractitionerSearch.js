@@ -1,27 +1,26 @@
-import React, {createRef, useEffect, useState} from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'recompose'
-import {Button, Form, UncontrolledTooltip} from 'reactstrap'
+import React, { createRef, useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Form, UncontrolledTooltip } from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
-import PrivatePractitionerSearchResult, {PrivatePractitionerSearchResultId} from './PrivatePractitionerSearchResult.dialog'
-import {IaTypo03} from "../styles/iaTypography"
-import styled from "styled-components"
+import PrivatePractitionerSearchResult, { PrivatePractitionerSearchResultId } from './PrivatePractitionerSearchResult.dialog'
+import { IaTypo03 } from '../styles/iaTypography'
+import styled from 'styled-components'
 import * as actions from '../../store/actions/privatePractitioner'
-import {getErrorMessage, getPrivatePractitioner, getIsFetching} from "../../store/reducers/privatePractitioner";
-import colors from "../styles/iaColors";
-import LoadingSpinner from "../loadingSpinner";
-import {COULD_NOT_FIND_PRIVATE_PRACTITIONER, validatePrivatePractitioner} from "./PrivatePractitionerValidator";
-import HsaInput from "../styles/HsaInput";
+import { getErrorMessage, getIsFetching, getPrivatePractitioner } from '../../store/reducers/privatePractitioner'
+import colors from '../styles/iaColors'
+import LoadingSpinner from '../loadingSpinner'
+import { COULD_NOT_FIND_PRIVATE_PRACTITIONER, validatePrivatePractitioner } from './PrivatePractitionerValidator'
+import HsaInput from '../styles/HsaInput'
 
 const SpinnerWrapper = styled.div`
   position: relative;
 `
 
 const PageHeader = styled.div`
-    padding: 12px 0 4px;
-    &:first-of-type {
-      padding: 4px 0;
-    }
+  padding: 12px 0 4px;
+  &:first-of-type {
+    padding: 4px 0;
+  }
 `
 
 const PageSearchRow = styled.div`
@@ -54,11 +53,19 @@ const Container = styled.div`
   }
 `
 
-const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privatePractitioner, isFetching, errorMessage }) => {
+const PrivatePractitionerSearch = () => {
+  const dispatch = useDispatch()
+  const privatePractitioner = useSelector(getPrivatePractitioner)
+  const isFetching = useSelector(getIsFetching)
+  const errorMessage = useSelector(getErrorMessage)
+
+  const fetchPrivatePractitioner = (hsaId) => dispatch(actions.fetchPrivatePractitioner(hsaId))
+  const openModal = useCallback((modalId, props) => dispatch(modalActions.openModal(modalId, props)), [dispatch])
+
   const [searchString, setSearchString] = useState('')
   const [validationSearchMessage, setValidationSearchMessage] = useState(undefined)
   const [searchResult, setSearchResult] = useState(undefined)
-  const inputRef = createRef();
+  const inputRef = createRef()
 
   const searchPrivatePractitioner = (event, hsaId) => {
     event.preventDefault()
@@ -70,7 +77,7 @@ const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privat
     }
   }
 
-  useEffect(() => inputRef.current.focus(), [inputRef]);
+  useEffect(() => inputRef.current.focus(), [inputRef])
 
   useEffect(() => {
     setValidationSearchMessage(validatePrivatePractitioner(privatePractitioner.hsaId, errorMessage))
@@ -81,17 +88,16 @@ const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privat
   }, [privatePractitioner])
 
   useEffect(() => {
-    if (searchResult !== undefined
-      && validationSearchMessage === undefined) {
+    if (searchResult !== undefined && validationSearchMessage === undefined) {
       let text = {
         hsaId: privatePractitioner.hsaId,
         name: privatePractitioner.name,
         careproviderName: privatePractitioner.careproviderName,
         email: privatePractitioner.email,
         registrationDate: privatePractitioner.registrationDate,
-        hasCertificates: privatePractitioner.hasCertificates
+        hasCertificates: privatePractitioner.hasCertificates,
       }
-      openModal(PrivatePractitionerSearchResultId, {text})
+      openModal(PrivatePractitionerSearchResultId, { text })
       setSearchString('')
     }
   }, [searchResult, privatePractitioner, validationSearchMessage, openModal])
@@ -101,7 +107,7 @@ const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privat
       <SpinnerWrapper>
         <LoadingSpinner loading={isFetching} message={'Söker'} />
       </SpinnerWrapper>
-      <PrivatePractitionerSearchResult/>
+      <PrivatePractitionerSearchResult />
       <PageSearchRow>
         <PageHeader>
           <IaTypo03>Ange HSA-id eller personnummer för privatläkare</IaTypo03>
@@ -109,12 +115,12 @@ const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privat
         <Form onSubmit={(event) => searchPrivatePractitioner(event, searchString)}>
           <FlexDiv>
             <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
-              <HsaInput id='searchInput' value={searchString} inputRef={inputRef} onChange={setSearchString} />
+              <HsaInput id="searchInput" value={searchString} inputRef={inputRef} onChange={setSearchString} />
             </Container>
             <Button id={'searchBtn'} color={'success'}>
               Sök privatläkare
             </Button>
-            <UncontrolledTooltip trigger='hover' placement='auto' target='searchBtn'>
+            <UncontrolledTooltip trigger="hover" placement="auto" target="searchBtn">
               Öppnar ett modalfönster med information om privatläkare.
             </UncontrolledTooltip>
           </FlexDiv>
@@ -125,17 +131,4 @@ const PrivatePractitionerSearch = ({ openModal, fetchPrivatePractitioner, privat
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    privatePractitioner: getPrivatePractitioner(state),
-    isFetching: getIsFetching(state),
-    errorMessage: getErrorMessage(state)
-  }
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions, ...modalActions }
-  )
-)(PrivatePractitionerSearch)
+export default PrivatePractitionerSearch

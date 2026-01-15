@@ -16,7 +16,7 @@ describe('session poll actions', () => {
     sinon.restore()
   })
 
-  describe('startPoll ', () => {
+  describe('startPoll', () => {
     it('should do nothing when already started', () => {
       store = mockStore({
         sessionPoll: {
@@ -25,22 +25,6 @@ describe('session poll actions', () => {
       })
 
       syncronousActionTester(store, actions.startPoll, [])
-    })
-
-    it('should schedule interval when not started', () => {
-      let setIntervalFake = sinon.fake.returns(12345)
-      sinon.replace(window, 'setInterval', setIntervalFake)
-
-      store = mockStore({
-        sessionPoll: {
-          handle: null,
-        },
-      })
-
-      const expectedActions = [{ payload: { handle: 12345 }, type: 'SET_POLL_HANDLE' }]
-      const tested = () => actions.startPoll()
-      syncronousActionTester(store, tested, expectedActions)
-      expect(setIntervalFake.lastCall.lastArg).toEqual(AppConstants.POLL_SESSION_INTERVAL_MS)
     })
 
     it('should schedule interval when not started', () => {
@@ -89,7 +73,7 @@ describe('session poll actions', () => {
     })
   })
 
-  describe('requestPollUpdate ', () => {
+  describe('requestPollUpdate', () => {
     it('should execute update directly', (done) => {
       let pollSessionFake = sinon.fake.resolves({ sessionState: { authenticated: true } })
       sinon.replace(api, 'pollSession', pollSessionFake)
@@ -107,15 +91,15 @@ describe('session poll actions', () => {
     })
 
     it('should redirect if no longer authenticated', (done) => {
-      sinon.stub(window.location, 'href')
-      sinon.stub(window.location, 'reload')
+      const originalLocation = window.location
+      delete window.location
+      window.location = { href: '', reload: sinon.fake() }
 
       let pollSessionFake = sinon.fake.resolves({ sessionState: { authenticated: false } })
       sinon.replace(api, 'pollSession', pollSessionFake)
 
       syncronousActionTester(store, actions.requestPollUpdate)
 
-      //Need to wrap in promise so that the promise inside setInterval callback is invoked before asserting
       Promise.resolve().then(() => {
         expect(store.getActions()).toEqual([
           { type: 'GET_POLL_REQUEST' },
@@ -123,13 +107,15 @@ describe('session poll actions', () => {
         ])
         expect(window.location.href).toContain(AppConstants.TIMEOUT_REDIRECT_URL)
         sinon.assert.calledOnce(window.location.reload)
+        window.location = originalLocation
         done()
       })
     })
 
     it('should redirect if api call is rejected', (done) => {
-      sinon.stub(window.location, 'href')
-      sinon.stub(window.location, 'reload')
+      const originalLocation = window.location
+      delete window.location
+      window.location = { href: '', reload: sinon.fake() }
 
       let pollSessionFake = sinon.fake.rejects(Error('some error'))
       sinon.replace(api, 'pollSession', pollSessionFake)
@@ -141,13 +127,14 @@ describe('session poll actions', () => {
           expect(store.getActions()).toEqual([{ type: 'GET_POLL_REQUEST' }, { type: 'GET_POLL_FAIL', payload: expect.any(Error) }])
           expect(window.location.href).toContain(AppConstants.TIMEOUT_REDIRECT_URL)
           sinon.assert.calledOnce(window.location.reload)
+          window.location = originalLocation
           done()
         })
       })
     })
   })
 
-  describe('stopPoll ', () => {
+  describe('stopPoll', () => {
     it('should cancel any pending interval', () => {
       let clearIntervalFake = sinon.fake.returns(true)
       sinon.replace(window, 'clearInterval', clearIntervalFake)

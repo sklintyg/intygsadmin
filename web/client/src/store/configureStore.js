@@ -1,19 +1,19 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
-import rootReducer from './reducers';
-import { createHashHistory } from 'history';
-import { routerMiddleware } from 'connected-react-router';
+import { configureStore } from '@reduxjs/toolkit'
+import { createHashHistory } from 'history'
+import rootReducer from './reducers'
 
-export const history = createHashHistory();
+export const history = createHashHistory()
 
-export default function configureStore(preloadedState) {
-  const middlewares = [thunk, routerMiddleware(history)];
-  const middlewareEnhancer = applyMiddleware(...middlewares);
+export const configureApplicationStore = (customMiddleware = []) =>
+  configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }).concat(customMiddleware),
+    devTools: process.env.NODE_ENV !== 'production',
+  })
 
-  const enhancers = [middlewareEnhancer];
-  const composedEnhancers = compose(...enhancers);
+export const store = configureApplicationStore()
 
-  const store = createStore(rootReducer(history), preloadedState, composedEnhancers);
-
-  return store;
-}
+export default store

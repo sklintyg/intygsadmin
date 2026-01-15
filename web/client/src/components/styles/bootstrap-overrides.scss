@@ -4,7 +4,7 @@
 
 // Override default variables before the import
 $font-family-sans-serif: Roboto, 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, 'Noto Sans', sans-serif,
-  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 $font-size-base: 0.875rem; //This will set base font-size to equivalent of 14px ( default in browsers is 1rem = 16 px, so 16/14 = 0.875rem)
 
 //Set base default font color for body, so we only need to override where its different
@@ -20,43 +20,45 @@ $tooltip-bg: $ia-color-02;
 $modal-xl: 1400px;
 
 // Import only what we use from Bootstrap scss components
-@import '~bootstrap/scss/_functions';
-@import '~bootstrap/scss/_variables';
-@import '~bootstrap/scss/_mixins';
-@import '~bootstrap/scss/_root';
-@import '~bootstrap/scss/_reboot';
-@import '~bootstrap/scss/_type';
-//@import '~bootstrap/scss/_images';
-//@import '~bootstrap/scss/_code';
-@import '~bootstrap/scss/_grid';
-@import '~bootstrap/scss/_tables';
-@import '~bootstrap/scss/_forms';
-@import '~bootstrap/scss/_buttons';
-@import '~bootstrap/scss/_transitions';
-@import '~bootstrap/scss/_dropdown';
-//@import '~bootstrap/scss/_button-group';
-//@import '~bootstrap/scss/_input-group';
-//@import '~bootstrap/scss/_custom-forms';
-@import '~bootstrap/scss/_nav';
-@import '~bootstrap/scss/_navbar';
-//@import '~bootstrap/scss/_card';
-//@import '~bootstrap/scss/_breadcrumb';
-@import '~bootstrap/scss/_pagination';
-@import '~bootstrap/scss/_badge';
-//@import '~bootstrap/scss/_jumbotron';
-//@import '~bootstrap/scss/_alert';
-//@import '~bootstrap/scss/_progress';
-//@import '~bootstrap/scss/_media';
-//@import '~bootstrap/scss/_list-group';
-@import '~bootstrap/scss/_close';
-//@import '~bootstrap/scss/_toasts';
-@import '~bootstrap/scss/_modal';
-@import '~bootstrap/scss/_tooltip';
-//@import '~bootstrap/scss/_popover';
-//@import '~bootstrap/scss/_carousel';
-@import '~bootstrap/scss/_spinners';
-@import '~bootstrap/scss/_utilities';
-//@import '~bootstrap/scss/_print';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/variables-dark';
+@import '~bootstrap/scss/maps';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/root';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/type';
+//@import '~bootstrap/scss/images';
+//@import '~bootstrap/scss/code';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/transitions';
+@import '~bootstrap/scss/dropdown';
+//@import '~bootstrap/scss/button-group';
+//@import '~bootstrap/scss/input-group';
+//@import '~bootstrap/scss/custom-forms';
+@import '~bootstrap/scss/nav';
+@import '~bootstrap/scss/navbar';
+//@import '~bootstrap/scss/card';
+//@import '~bootstrap/scss/breadcrumb';
+@import '~bootstrap/scss/pagination';
+@import '~bootstrap/scss/badge';
+//@import '~bootstrap/scss/jumbotron';
+//@import '~bootstrap/scss/alert';
+//@import '~bootstrap/scss/progress';
+//@import '~bootstrap/scss/media';
+//@import '~bootstrap/scss/list-group';
+@import '~bootstrap/scss/close';
+//@import '~bootstrap/scss/toasts';
+@import '~bootstrap/scss/modal';
+@import '~bootstrap/scss/tooltip';
+//@import '~bootstrap/scss/popover';
+//@import '~bootstrap/scss/carousel';
+@import '~bootstrap/scss/spinners';
+@import '~bootstrap/scss/utilities';
+//@import '~bootstrap/scss/print';
 
 // Bootstrap non-variable overrides for those things we cannot affect with just using variables.
 
@@ -203,6 +205,7 @@ th .btn-link {
       padding-left: 21px;
     }
   }
+
   // Table body ---------------
   > tbody > tr {
     height: 50px;
@@ -362,6 +365,7 @@ th .btn-link {
 a {
   text-decoration: underline;
   color: $ia-color-02;
+
   &:hover {
     color: $ia-color-18;
   }

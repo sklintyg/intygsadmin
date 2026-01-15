@@ -1,11 +1,17 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Section } from '../styles/iaLayout'
 import IaButton4 from '../styles/iaButton4'
 import { Spinner } from 'reactstrap'
 import ErrorMessageFormatter from '../../messages/ErrorMessageFormatter'
 import IaAlert, { alertType } from '../alert/Alert'
+import { getErrorMessage, getIsFetching, getSettings } from '../../store/reducers/appConfig'
 
-const LoginOptions = ({ settings, isFetching, errorMessage }) => {
+const LoginOptions = () => {
+  const settings = useSelector(getSettings)
+  const isFetching = useSelector(getIsFetching)
+  const errorMessage = useSelector(getErrorMessage)
+
   const doLogin = (loginUrl) => () => {
     window.location.href = loginUrl
   }

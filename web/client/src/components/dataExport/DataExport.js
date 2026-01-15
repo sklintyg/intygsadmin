@@ -1,18 +1,21 @@
-import React from 'react';
-import { compose } from 'recompose';
-import { connect } from 'react-redux';
-import * as actions from '../../store/actions/dataExport';
-import { getDataExportList } from '../../store/reducers/dataExport';
-import DataExportList from './DataExportList';
-import LoadingSpinner from '../loadingSpinner';
-import { getIsFetching } from '../../store/reducers/dataExport';
-import CreateDataExport from '../dataExport/dialogs/CreateDataExport.dialog';
-import UpdateDataExport from './dialogs/UpdateDataExport.dialog';
-import EraseDataExport from '../dataExport/dialogs/EraseDataExport.dialog';
-import ResendDataExportKey from '../dataExport/dialogs/ResendDataExportKey.dialog';
-import ListPagination from "../styles/ListPagination";
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import * as actions from '../../store/actions/dataExport'
+import { getDataExportList, getIsFetching } from '../../store/reducers/dataExport'
+import DataExportList from './DataExportList'
+import LoadingSpinner from '../loadingSpinner'
+import CreateDataExport from '../dataExport/dialogs/CreateDataExport.dialog'
+import UpdateDataExport from './dialogs/UpdateDataExport.dialog'
+import EraseDataExport from '../dataExport/dialogs/EraseDataExport.dialog'
+import ResendDataExportKey from '../dataExport/dialogs/ResendDataExportKey.dialog'
+import ListPagination from '../styles/ListPagination'
 
-const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
+const DataExport = () => {
+  const dispatch = useDispatch()
+  const dataExportList = useSelector(getDataExportList)
+  const isFetching = useSelector(getIsFetching)
+
+  const fetchDataExportList = (params) => dispatch(actions.fetchDataExportList(params))
 
   const handlePageChange = (pageNumber) => {
     fetchList(pageNumber)
@@ -20,16 +23,16 @@ const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
 
   const fetchList = (pageIndex) => {
     const pageIndexZeroBased = pageIndex - 1
-    fetchDataExportList({pageIndex: pageIndexZeroBased});
+    fetchDataExportList({ pageIndex: pageIndexZeroBased })
   }
 
   const onActionComplete = () => {
-    fetchDataExportList();
-  };
+    fetchDataExportList()
+  }
 
   const onActionCompleteNoPageChange = () => {
-    fetchDataExportList({pageIndex: dataExportList.pageIndex});
-  };
+    fetchDataExportList({ pageIndex: dataExportList.pageIndex })
+  }
 
   return (
     <>
@@ -41,19 +44,7 @@ const DataExport = ({ dataExportList, fetchDataExportList, isFetching }) => {
       <ListPagination list={dataExportList} handlePageChange={handlePageChange} />
       {isFetching && !dataExportList.length && <LoadingSpinner loading={isFetching} message={'Hämtar data exporter'} />}
     </>
-  );
-}
-
-const mapStateToProps = (state) => {
-  return {
-    dataExportList: getDataExportList(state),
-    isFetching: getIsFetching(state),
-  };
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    actions
   )
-)(DataExport);
+}
+
+export default DataExport

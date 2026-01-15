@@ -1,5 +1,4 @@
 import React from 'react'
-import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 import IaColors from './iaColors'
 import { Button } from 'reactstrap'
@@ -29,10 +28,6 @@ const IaButton4 = ({ label, ...rest }) => {
       </svg>
     </ButtonType4>
   )
-}
-
-IaButton4.propTypes = {
-  label: PropTypes.string,
 }
 
 export default IaButton4
