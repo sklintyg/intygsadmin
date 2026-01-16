@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TableSortHead from '../styles/TableSortHead'
@@ -21,13 +21,6 @@ const Wrapper = styled.div`
   & th:last-child {
     width: 1%;
   }
-
-  .emailAddress {
-    max-width: 125px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 `
 
 const DataExportList = () => {
@@ -35,13 +28,13 @@ const DataExportList = () => {
   const dataExportList = useSelector(getDataExportList)
   const errorMessage = useSelector(getErrorMessageFetchDataExportList)
 
-  const fetchDataExportList = (params) => dispatch(actions.fetchDataExportList(params))
+  const fetchDataExportList = useCallback((params) => dispatch(actions.fetchDataExportList(params)), [dispatch])
   const openModal = (modalId, props) => dispatch(modalActions.openModal(modalId, props))
 
   useEffect(() => {
     const { sortColumn, sortDirection } = dataExportList
     fetchDataExportList({ sortColumn, sortDirection })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchDataExportList, dataExportList.sortColumn, dataExportList.sortDirection])
 
   if (errorMessage) {
     return (
