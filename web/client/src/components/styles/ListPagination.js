@@ -6,18 +6,7 @@ import iaColors from './iaColors'
 const Wrapper = styled.div`
   padding: 20px 0 10px 0;
 
-  & .pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
   & .page-item {
-    margin: 0 2px;
-  }
-
-  & .page-item .page-link {
     text-decoration: none;
     color: ${iaColors.IA_COLOR_06};
     background-color: ${iaColors.IA_COLOR_07};
@@ -27,22 +16,22 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
 
-  & .page-item .page-link:hover {
+  & .page-item {
     background-color: transparent;
     color: ${iaColors.IA_COLOR_05};
   }
 
-  & .page-item.active .page-link:hover {
+  & .page-item.active {
     color: ${iaColors.IA_COLOR_05};
     background-color: transparent;
   }
 
-  & .page-item.active .page-link {
+  & .page-item.active {
     background-color: transparent;
     color: ${iaColors.IA_COLOR_05};
   }
 
-  & .page-item.disabled .page-link {
+  & .page-item.disabled {
     color: ${iaColors.IA_COLOR_10};
     background-color: ${iaColors.IA_COLOR_07};
     cursor: not-allowed;
