@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import {
+  Button,
+  FormGroup,
+  Input,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader
+} from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
-import * as actions from '../../../store/actions/dataExport'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateDataExport } from '../../../store/actions/dataExport'
 import styled from 'styled-components'
 import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
 import IaAlert, { alertType } from '../../alert/Alert'
 import { IaTypo04 } from '../../styles/iaTypography'
 import { getMessage } from '../../../messages/messages'
-import { getErrorMessageUpdateDataExport } from '../../../store/reducers/dataExport'
+import {
+  getErrorMessageUpdateDataExport
+} from '../../../store/reducers/dataExport'
 
 const StyledBody = styled(ModalBody)`
-  .form-control {
-    width: 100%;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
   input[type='text']:disabled {
     color: #6a6a6a;
     background-color: #f2f2f2;
@@ -50,7 +53,9 @@ const defaultDataExport = {
   phoneNumber: '',
 }
 
-const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, errorMessage, data }) => {
+const UpdateDataExport = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useDispatch()
+  const errorMessage = useSelector(getErrorMessageUpdateDataExport)
   const originalDataExport = data ? data.dataExport : defaultDataExport
   const [updatedDataExport, setUpdatedDataExport] = useState(originalDataExport)
 
@@ -68,7 +73,7 @@ const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, e
   }
 
   const sendUpdatedDataExport = () => {
-    updateDataExport(updatedDataExport)
+    dispatch(updateDataExport(updatedDataExport))
       .then(() => {
         cancel()
         onComplete()
@@ -186,12 +191,6 @@ const UpdateDataExport = ({ handleClose, isOpen, onComplete, updateDataExport, e
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    errorMessage: getErrorMessageUpdateDataExport(state),
-  }
-}
-
 export const UpdateDataExportId = 'changeDataExport'
 
-export default connect(mapStateToProps, { ...actions })(modalContainer(UpdateDataExportId)(UpdateDataExport))
+export default modalContainer(UpdateDataExportId)(UpdateDataExport)

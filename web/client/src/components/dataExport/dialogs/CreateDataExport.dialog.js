@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
-import * as actions from '../../../store/actions/dataExport'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { createDataExport } from '../../../store/actions/dataExport'
 import styled from 'styled-components'
 import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
 import IaAlert, { alertType } from '../../alert/Alert'
@@ -11,14 +11,6 @@ import { getMessage } from '../../../messages/messages'
 import { getErrorMessageCreateDataExport } from '../../../store/reducers/dataExport'
 
 const StyledBody = styled(ModalBody)`
-  .form-control {
-    width: 100%;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
   h5 {
     padding: 12px 0 4px;
     &:first-of-type {
@@ -39,7 +31,9 @@ const initialDataExport = {
   phoneNumber: '',
 }
 
-const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, errorMessage, _clearError }) => {
+const CreateDataExport = ({ handleClose, isOpen, onComplete }) => {
+  const dispatch = useDispatch()
+  const errorMessage = useSelector(getErrorMessageCreateDataExport)
   const [newDataExport, setNewDataExport] = useState(initialDataExport)
 
   const onChange = (prop) => (value) => {
@@ -57,7 +51,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
   }
 
   const sendCreateDataExport = () => {
-    const func = createDataExport(createSendObject())
+    const func = dispatch(createDataExport(createSendObject()))
 
     func
       .then(() => {
@@ -75,11 +69,9 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
   const enableSaveBtn = () => {
     const fields = ['hsaId', 'organizationNumber', 'personId', 'emailAddress', 'phoneNumber']
 
-    let enable = fields.reduce((accumulator, currentValue) => {
+    return fields.reduce((accumulator, currentValue) => {
       return accumulator && newDataExport[currentValue]
     }, true)
-
-    return enable
   }
 
   return (
@@ -141,7 +133,7 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
           </Label>
           <Input
             id="phoneNumber"
-            value={newDataExport.telephoneNUmber}
+            value={newDataExport.phoneNumber}
             placeholder={getMessage(`dataExport.create.representativePhoneNumberPlaceholder`)}
             maxLength={200}
             onChange={(e) => onChange('phoneNumber')(e.target.value)}
@@ -178,10 +170,6 @@ const CreateDataExport = ({ handleClose, isOpen, onComplete, createDataExport, e
   )
 }
 
-const mapStateToProps = (state) => {
-  return { errorMessage: getErrorMessageCreateDataExport(state) }
-}
-
 export const CreateDataExportId = 'createDataExport'
 
-export default connect(mapStateToProps, { ...actions })(modalContainer(CreateDataExportId)(CreateDataExport))
+export default modalContainer(CreateDataExportId)(CreateDataExport)

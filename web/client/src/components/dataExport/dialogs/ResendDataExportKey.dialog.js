@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
-import * as actions from '../../../store/actions/dataExport'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { resendDataExportKey } from '../../../store/actions/dataExport'
 import styled from 'styled-components'
 import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
 import IaAlert, { alertType } from '../../alert/Alert'
@@ -10,14 +10,6 @@ import { getErrorMessageResendDataExportKey } from '../../../store/reducers/data
 import { getMessage } from '../../../messages/messages'
 
 const StyledBody = styled(ModalBody)`
-  .form-control {
-    width: 100%;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
   h5 {
     padding: 12px 0 4px;
     &:first-of-type {
@@ -30,9 +22,12 @@ const StyledBody = styled(ModalBody)`
   }
 `
 
-const ResendDataExportKey = ({ handleClose, isOpen, onComplete, resendDataExportKey, errorMessage, data }) => {
+const ResendDataExportKey = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useDispatch()
+  const errorMessage = useSelector(getErrorMessageResendDataExportKey)
+
   const sendResendDataExportKey = () => {
-    const func = resendDataExportKey(data.terminationId)
+    const func = dispatch(resendDataExportKey(data.terminationId))
 
     func
       .then(() => {
@@ -82,10 +77,6 @@ const ResendDataExportKey = ({ handleClose, isOpen, onComplete, resendDataExport
   )
 }
 
-const mapStateToProps = (state) => {
-  return { errorMessage: getErrorMessageResendDataExportKey(state) }
-}
-
 export const ResendDataExportKeyId = 'resendDataExportKey'
 
-export default connect(mapStateToProps, { ...actions })(modalContainer(ResendDataExportKeyId)(ResendDataExportKey))
+export default modalContainer(ResendDataExportKeyId)(ResendDataExportKey)
