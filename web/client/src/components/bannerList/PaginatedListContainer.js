@@ -1,18 +1,21 @@
 import React from 'react'
-import * as actions from '../../store/actions/bannerList.actions'
+import { fetchBannerList } from '../../store/actions/bannerList.actions'
 import BannerListContainer from './BannerListContainer'
-import { connect } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import ListPagination from '../styles/ListPagination'
 import { getBannerList } from '../../store/reducers/bannerList.reducer'
 
-const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
+const PaginatedListContainer = () => {
+  const dispatch = useAppDispatch()
+  const bannerList = useAppSelector(getBannerList)
+
   const handlePageChange = (pageNumber) => {
     fetchList(pageNumber)
   }
 
   const fetchList = (pageIndex) => {
     const pageIndexZeroBased = pageIndex - 1
-    fetchBannerList({ pageIndex: pageIndexZeroBased })
+    dispatch(fetchBannerList({ pageIndex: pageIndexZeroBased }))
   }
 
   return (
@@ -23,10 +26,4 @@ const PaginatedListContainer = ({ bannerList, fetchBannerList }) => {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    bannerList: getBannerList(state),
-  }
-}
-
-export default connect(mapStateToProps, actions)(PaginatedListContainer)
+export default PaginatedListContainer

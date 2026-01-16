@@ -1,9 +1,10 @@
-import { connect } from 'react-redux'
+import React from 'react'
+import { useAppSelector } from '../../store/hooks'
 import Header from './Header'
 
-const mapStateToProps = (state, _ownProps) => {
-  return {
-    ...state.user,
-  }
+const HeaderContainer = () => {
+  const user = useAppSelector((state) => state.user)
+  return <Header {...user} />
 }
-export default connect(mapStateToProps, null)(Header)
+
+export default HeaderContainer

@@ -5,9 +5,9 @@ import styled from 'styled-components'
 import colors from '../styles/iaColors'
 import { getMessage } from '../../messages/messages'
 import { getErrorMessage, getIntygInfo, getIsFetching } from '../../store/reducers/intygInfo'
-import { connect } from 'react-redux'
-import * as actions from '../../store/actions/intygInfo'
-import * as modalActions from '../../store/actions/modal'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { fetchIntygInfo } from '../../store/actions/intygInfo'
+import { openModal } from '../../store/actions/modal'
 import IntygInfoDialog, { intygInfoDialogId } from './IntygInfoDialog'
 import LoadingSpinner from '../loadingSpinner'
 
@@ -52,7 +52,11 @@ const searchInput = {
   width: '300px',
 }
 
-const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, errorMessage }) => {
+const IntygInfoSearch = () => {
+  const dispatch = useAppDispatch()
+  const intygInfo = useAppSelector(getIntygInfo)
+  const isFetching = useAppSelector(getIsFetching)
+  const errorMessage = useAppSelector(getErrorMessage)
   const [searchString, setSearchString] = useState('')
   const [validationSearchMessage, setValidationSearchMessage] = useState(errorMessage)
   const [searchResult, setSearchResult] = useState(undefined)
@@ -65,7 +69,7 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
       setValidationSearchMessage(getMessage('intygInfo.intygsId.wrongformat'))
     } else {
       setValidationSearchMessage(undefined)
-      fetchIntygInfo(intygsId)
+      dispatch(fetchIntygInfo(intygsId))
     }
   }
 
@@ -81,10 +85,10 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
 
   useEffect(() => {
     if (searchResult !== undefined && !validationSearchMessage) {
-      openModal(intygInfoDialogId, { intygInfo })
+      dispatch(openModal(intygInfoDialogId, { intygInfo }))
       setSearchString('')
     }
-  }, [searchResult, intygInfo, validationSearchMessage, openModal])
+  }, [searchResult, intygInfo, validationSearchMessage, dispatch])
 
   return (
     <>
@@ -120,12 +124,4 @@ const IntygInfoSearch = ({ openModal, fetchIntygInfo, intygInfo, isFetching, err
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    intygInfo: getIntygInfo(state),
-    isFetching: getIsFetching(state),
-    errorMessage: getErrorMessage(state),
-  }
-}
-
-export default connect(mapStateToProps, { ...actions, ...modalActions })(IntygInfoSearch)
+export default IntygInfoSearch

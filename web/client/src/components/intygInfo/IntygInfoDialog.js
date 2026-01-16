@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import { useAppDispatch } from '../../store/hooks'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import styled from 'styled-components'
 import { getMessage } from '../../messages/messages'
-import * as actions from '../../store/actions/intygInfo'
+import { fetchIntygInfoList } from '../../store/actions/intygInfo'
 import DisplayDateTime from '../displayDateTime/DisplayDateTime'
 import modalContainer from '../modalContainer/modalContainer'
 import colors from '../styles/iaColors'
@@ -158,10 +158,10 @@ const AdminQuestionsReceived = ({ intygInfo }) => {
   )
 }
 
-const IntygEventRow = ({ event, fetchIntygInfo, setMessage }) => {
+const IntygEventRow = ({ event, handleRefresh, setMessage }) => {
   const VisaIntyg = () => {
     const openIntyg = () => {
-      fetchIntygInfo(event.data.intygsId)
+      handleRefresh(event.data.intygsId)
     }
 
     const btnId = event.source + '-' + event.data.intygsId
@@ -224,7 +224,8 @@ const getEventStatus = (status) => {
   return ' (' + convertedStatus + ')'
 }
 
-const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
+const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
+  const dispatch = useAppDispatch()
   const [message, setMessage] = useState('')
 
   if (!data) {
@@ -238,6 +239,10 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
       return !intygInfo.testCertificate
     }
     return true
+  }
+
+  const handleRefresh = () => {
+    dispatch(fetchIntygInfoList(intygInfo.intygId))
   }
 
   return (
@@ -279,7 +284,7 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
                   .filter((row) => {
                     return displayEvent(row)
                   })
-                  .map((row, index) => <IntygEventRow key={index} event={row} fetchIntygInfo={fetchIntygInfo} setMessage={setMessage} />)}
+                  .map((row, index) => <IntygEventRow key={index} event={row} handleRefresh={handleRefresh} setMessage={setMessage} />)}
             </tbody>
           </Table>
         </RowWrapper>
@@ -380,4 +385,4 @@ const handleOnClose = (handleClose, setMessage) => {
 
 export const intygInfoDialogId = 'intygInfoDialog'
 
-export default connect(null, actions)(modalContainer(intygInfoDialogId)(IntygInfoDialog))
+export default modalContainer(intygInfoDialogId)(IntygInfoDialog)

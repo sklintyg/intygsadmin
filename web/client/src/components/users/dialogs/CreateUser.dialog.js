@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
-import * as actions from '../../../store/actions/users'
-import { connect } from 'react-redux'
+import {
+  clearError as clearErrorAction,
+  createUser as createUserAction,
+  updateUser as updateUserAction,
+} from '../../../store/actions/users'
+import { useAppDispatch, useAppSelector } from '../../../store/hooks'
 import styled from 'styled-components'
 import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
 import IaAlert, { alertType } from '../../alert/Alert'
@@ -15,14 +19,6 @@ import { getErrorMessageModal } from '../../../store/reducers/users'
 import { getMessage } from '../../../messages/messages'
 
 const StyledBody = styled(ModalBody)`
-  .form-control {
-    width: 100%;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
   h5 {
     padding: 12px 0 4px;
     &:first-of-type {
@@ -49,7 +45,9 @@ const initialUser = {
   intygsadminRole: undefined,
 }
 
-const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, data, errorMessage, clearError }) => {
+const CreateUser = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useAppDispatch()
+  const errorMessage = useAppSelector(getErrorMessageModal)
   const [update, setUpdate] = useState(false)
   const [messagePrefix, setMessagePrefix] = useState('user.create')
   const [newUser, setNewUser] = useState(initialUser)
@@ -78,7 +76,7 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
   }
 
   const send = () => {
-    const func = update ? updateUser(createSendObject(), data.user.id) : createUser(createSendObject())
+    const func = update ? dispatch(updateUserAction(createSendObject(), data.user.id)) : dispatch(createUserAction(createSendObject()))
 
     func
       .then(() => {
@@ -89,7 +87,7 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
   }
 
   const cancel = () => {
-    clearError()
+    dispatch(clearErrorAction())
     setNewUser(initialUser)
     handleClose()
   }
@@ -174,12 +172,6 @@ const CreateUser = ({ handleClose, isOpen, onComplete, createUser, updateUser, d
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    errorMessage: getErrorMessageModal(state),
-  }
-}
-
 export const CreateUserId = 'createUser'
 
-export default connect(mapStateToProps, { ...actions })(modalContainer(CreateUserId)(CreateUser))
+export default modalContainer(CreateUserId)(CreateUser)

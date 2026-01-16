@@ -11,8 +11,6 @@ import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap'
 import styled from 'styled-components'
 import TimePicker from '../components/timePicker'
 import { validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat } from '../utils/validation'
-import { connect } from 'react-redux'
-import * as actions from '../store/actions/intygInfo'
 import { resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus } from '../api/intygInfo.api'
 import IaAlert, { alertType } from '../components/alert/Alert'
 import ResendStatusCountError from '../components/ResendStatusCount/ResendStatusCount'
@@ -58,7 +56,6 @@ const FlexDiv = styled.div`
 
 const DateDiv = styled.div`
   display: flex;
-  align-items: top;
   margin-bottom: 8px;
   > label {
     flex: 0 0 50px;
@@ -509,4 +506,4 @@ const ResendPage = () => {
   )
 }
 
-export default connect(null, actions)(ResendPage)
+export default ResendPage

@@ -5,9 +5,8 @@ import styled from 'styled-components'
 import DisplayDate from '../displayDateTime/DisplayDate'
 import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
 import IaAlert, { alertType } from '../alert/Alert'
-import { getErrorMessageUnregisterPrivatePractitioner } from '../../store/reducers/privatePractitioner'
-import { connect } from 'react-redux'
-import * as actions from '../../store/actions/privatePractitioner'
+import { useAppDispatch } from '../../store/hooks'
+import { unregisterPrivatePractitioner } from '../../store/actions/privatePractitioner'
 
 const FlexDiv = styled.div`
   display: flex;
@@ -17,7 +16,8 @@ const FlexDiv = styled.div`
   }
 `
 
-const PrivatePractitionerSearchResult = ({ unregisterPrivatePractitioner, handleClose, isOpen, data }) => {
+const PrivatePractitionerSearchResult = ({ handleClose, isOpen, data }) => {
+  const dispatch = useAppDispatch()
   const [errorActive, setErrorActive] = useState(false)
 
   if (!data) {
@@ -28,7 +28,7 @@ const PrivatePractitionerSearchResult = ({ unregisterPrivatePractitioner, handle
 
   const unregister = (hsaId) => {
     setErrorActive(false)
-    unregisterPrivatePractitioner(hsaId)
+    dispatch(unregisterPrivatePractitioner(hsaId))
       .then(() => {
         cancel()
       })
@@ -100,12 +100,6 @@ const PrivatePractitionerSearchResult = ({ unregisterPrivatePractitioner, handle
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    errorMessage: getErrorMessageUnregisterPrivatePractitioner(state),
-  }
-}
-
 export const PrivatePractitionerSearchResultId = 'privatePractitionerSearchResult'
 
-export default connect(mapStateToProps, { ...actions })(modalContainer(PrivatePractitionerSearchResultId)(PrivatePractitionerSearchResult))
+export default modalContainer(PrivatePractitionerSearchResultId)(PrivatePractitionerSearchResult)

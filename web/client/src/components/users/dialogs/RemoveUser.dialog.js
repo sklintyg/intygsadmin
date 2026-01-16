@@ -3,10 +3,11 @@ import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
 import IaAlert, { alertType } from '../../alert/Alert'
 import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
-import { connect } from 'react-redux'
-import * as actions from '../../../store/actions/users'
+import { useAppDispatch } from '../../../store/hooks'
+import { removeUser as removeUserAction } from '../../../store/actions/users'
 
-const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
+const RemoveUser = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useAppDispatch()
   const [errorActive, setErrorActive] = useState(false)
 
   if (!data) {
@@ -17,7 +18,7 @@ const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
 
   const remove = () => {
     setErrorActive(false)
-    removeUser(userId)
+    dispatch(removeUserAction(userId))
       .then(() => {
         handleClose()
         onComplete()
@@ -71,4 +72,4 @@ const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
 
 export const RemoveUserId = 'removeUser'
 
-export default connect(null, { ...actions })(modalContainer(RemoveUserId)(RemoveUser))
+export default modalContainer(RemoveUserId)(RemoveUser)

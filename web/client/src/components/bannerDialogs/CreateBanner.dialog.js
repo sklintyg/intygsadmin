@@ -4,8 +4,12 @@ import modalContainer from '../modalContainer/modalContainer'
 import { RadioWrapper } from '../radioButton'
 import CustomTextarea from '../CustomTextarea'
 import DatePicker from '../datePicker'
-import * as actions from '../../store/actions/banner'
-import { connect } from 'react-redux'
+import {
+  createBanner as createBannerAction,
+  fetchFutureBanners as fetchFutureBannersAction,
+  updateBanner as updateBannerAction,
+} from '../../store/actions/banner'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import TimePicker from '../timePicker'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
@@ -68,17 +72,10 @@ const prioButtons = Object.entries(AppConstants.prio).map(([key, value]) => {
   }
 })
 
-const CreateBanner = ({
-  handleClose,
-  isOpen,
-  onComplete,
-  createBanner,
-  updateBanner,
-  data,
-  fetchFutureBanners,
-  futureBanners,
-  errorMessage,
-}) => {
+const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useAppDispatch()
+  const futureBanners = useAppSelector(getFutureBanners)
+  const errorMessage = useAppSelector(getErrorMessage)
   const [validationMessages, setValidationMessages] = useState({})
   const [update, setUpdate] = useState(false)
   const [newBanner, setNewBanner] = useState(initialBanner)
@@ -87,7 +84,7 @@ const CreateBanner = ({
   const [initialMessageValue, setInitialMessageValue] = useState('')
 
   const setApplicationAndCheckFuture = (application) => {
-    fetchFutureBanners(application).finally(() => {
+    dispatch(fetchFutureBannersAction(application)).finally(() => {
       setNewBanner({ ...newBanner, application })
     })
   }
@@ -150,7 +147,9 @@ const CreateBanner = ({
   }
 
   const send = () => {
-    const func = update ? updateBanner(createSendObject(), data.banner.id) : createBanner(createSendObject())
+    const func = update
+      ? dispatch(updateBannerAction(createSendObject(), data.banner.id))
+      : dispatch(createBannerAction(createSendObject()))
 
     func
       .then(() => {
@@ -311,13 +310,6 @@ const CreateBanner = ({
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    futureBanners: getFutureBanners(state),
-    errorMessage: getErrorMessage(state),
-  }
-}
-
 export const CreateBannerId = 'createBanner'
 
-export default connect(mapStateToProps, { ...actions })(modalContainer(CreateBannerId)(CreateBanner))
+export default modalContainer(CreateBannerId)(CreateBanner)
