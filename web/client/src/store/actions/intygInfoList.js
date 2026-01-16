@@ -1,9 +1,8 @@
 import * as api from '../../api/intygInfo.api'
 import { getIsFetching, getSortOrder } from '../reducers/intygInfoList'
+import { FETCH_INTYG_INFO_LIST_FAILURE, FETCH_INTYG_INFO_LIST_REQUEST, FETCH_INTYG_INFO_LIST_SUCCESS } from './intygInfoList.constants'
 
-export const FETCH_INTYG_INFO_LIST_REQUEST = 'FETCH_INTYG_INFO_LIST_REQUEST'
-export const FETCH_INTYG_INFO_LIST_SUCCESS = 'FETCH_INTYG_INFO_LIST_SUCCESS'
-export const FETCH_INTYG_INFO_LIST_FAILURE = 'FETCH_INTYG_INFO_LIST_FAILURE'
+export { FETCH_INTYG_INFO_LIST_REQUEST, FETCH_INTYG_INFO_LIST_SUCCESS, FETCH_INTYG_INFO_LIST_FAILURE }
 
 export const fetchIntygInfoList = (request) => (dispatch, getState) => {
   if (getIsFetching(getState())) {
@@ -14,14 +13,14 @@ export const fetchIntygInfoList = (request) => (dispatch, getState) => {
     type: FETCH_INTYG_INFO_LIST_REQUEST,
   })
 
-  let requestParams = request;
+  let requestParams = request
 
   if (!request || !request.sortColumn) {
     const sortOrder = getSortOrder(getState())
 
     requestParams = {
       ...request,
-      ...sortOrder
+      ...sortOrder,
     }
   }
 
@@ -31,7 +30,7 @@ export const fetchIntygInfoList = (request) => (dispatch, getState) => {
         type: FETCH_INTYG_INFO_LIST_SUCCESS,
         response: response,
         sortColumn: requestParams.sortColumn,
-        sortDirection: requestParams.sortDirection
+        sortDirection: requestParams.sortDirection,
       })
     },
     (errorResponse) => {

@@ -1,23 +1,36 @@
 import * as api from '../../api/users.api'
-import {getIsFetching, getSortOrder} from '../reducers/users'
+import { getIsFetching, getSortOrder } from '../reducers/users'
+import {
+  CREATE_USER_FAILURE,
+  CREATE_USER_REQUEST,
+  CREATE_USER_SUCCESS,
+  FETCH_USERS_LIST_FAILURE,
+  FETCH_USERS_LIST_REQUEST,
+  FETCH_USERS_LIST_SUCCESS,
+  REMOVE_USER_FAILURE,
+  REMOVE_USER_REQUEST,
+  REMOVE_USER_SUCCESS,
+  UPDATE_USER_FAILURE,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  USER_CLEAR_ERROR,
+} from './users.constants'
 
-export const FETCH_USERS_LIST_REQUEST = 'FETCH_USERS_LIST_REQUEST'
-export const FETCH_USERS_LIST_SUCCESS = 'FETCH_USERS_LIST_SUCCESS'
-export const FETCH_USERS_LIST_FAILURE = 'FETCH_USERS_LIST_FAILURE'
-
-export const REMOVE_USER_REQUEST = 'REMOVE_USER_REQUEST'
-export const REMOVE_USER_SUCCESS = 'REMOVE_USER_SUCCESS'
-export const REMOVE_USER_FAILURE = 'REMOVE_USER_FAILURE'
-
-export const CREATE_USER_REQUEST = 'CREATE_USER_REQUEST'
-export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS'
-export const CREATE_USER_FAILURE = 'CREATE_USER_FAILURE'
-
-export const UPDATE_USER_REQUEST = 'UPDATE_USER_REQUEST'
-export const UPDATE_USER_SUCCESS = 'UPDATE_USER_SUCCESS'
-export const UPDATE_USER_FAILURE = 'UPDATE_USER_FAILURE'
-
-export const USER_CLEAR_ERROR = 'USER_CLEAR_ERROR'
+export {
+  FETCH_USERS_LIST_REQUEST,
+  FETCH_USERS_LIST_SUCCESS,
+  FETCH_USERS_LIST_FAILURE,
+  REMOVE_USER_REQUEST,
+  REMOVE_USER_SUCCESS,
+  REMOVE_USER_FAILURE,
+  CREATE_USER_REQUEST,
+  CREATE_USER_SUCCESS,
+  CREATE_USER_FAILURE,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAILURE,
+  USER_CLEAR_ERROR,
+}
 
 export const fetchUsersList = (request) => (dispatch, getState) => {
   if (getIsFetching(getState())) {
@@ -28,14 +41,14 @@ export const fetchUsersList = (request) => (dispatch, getState) => {
     type: FETCH_USERS_LIST_REQUEST,
   })
 
-  let requestParams = request;
+  let requestParams = request
 
   if (!request || !request.sortColumn) {
     const sortOrder = getSortOrder(getState())
 
     requestParams = {
       ...request,
-      ...sortOrder
+      ...sortOrder,
     }
   }
 
@@ -45,7 +58,7 @@ export const fetchUsersList = (request) => (dispatch, getState) => {
         type: FETCH_USERS_LIST_SUCCESS,
         response: response,
         sortColumn: requestParams.sortColumn,
-        sortDirection: requestParams.sortDirection
+        sortDirection: requestParams.sortDirection,
       })
     },
     (errorResponse) => {
@@ -105,7 +118,7 @@ export const createUser = (user) => (dispatch, getState) => {
         type: CREATE_USER_FAILURE,
         payload: errorResponse,
       })
-      return Promise.reject();
+      return Promise.reject()
     }
   )
 }
@@ -132,11 +145,11 @@ export const updateUser = (user, id) => (dispatch, getState) => {
         payload: errorResponse,
       })
 
-      return Promise.reject();
+      return Promise.reject()
     }
   )
 }
 
 export const clearError = () => ({
-  type: USER_CLEAR_ERROR
+  type: USER_CLEAR_ERROR,
 })

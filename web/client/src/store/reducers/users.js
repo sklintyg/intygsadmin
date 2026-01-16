@@ -1,6 +1,6 @@
-import {combineReducers} from 'redux'
-import {buildClientError} from "./util";
-import * as ActionConstants from '../actions/users'
+import { combineReducers } from 'redux'
+import { buildClientError } from './util'
+import * as ActionConstants from '../actions/users.constants'
 
 export const UsersListDefaultState = {
   content: [],
@@ -16,7 +16,8 @@ export const UsersListDefaultState = {
 const usersList = (state = UsersListDefaultState, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_USERS_LIST_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         content: action.response.content,
         numberOfElements: action.response.content.length,
         pageIndex: action.response.page.number,
@@ -59,18 +60,18 @@ const errorMessage = (state = null, action) => {
 
 const errorMessageCreateUpdate = (state = null, action) => {
   switch (action.type) {
-  case ActionConstants.UPDATE_USER_FAILURE:
-    return buildClientError(action.payload, 'error.userUpdate').message
-  case ActionConstants.CREATE_USER_FAILURE:
-    return buildClientError(action.payload, 'error.userCreate').message
-  case ActionConstants.UPDATE_USER_REQUEST:
-  case ActionConstants.UPDATE_USER_SUCCESS:
-  case ActionConstants.CREATE_USER_REQUEST:
-  case ActionConstants.CREATE_USER_SUCCESS:
-  case ActionConstants.USER_CLEAR_ERROR:
-    return null
-  default:
-    return state
+    case ActionConstants.UPDATE_USER_FAILURE:
+      return buildClientError(action.payload, 'error.userUpdate').message
+    case ActionConstants.CREATE_USER_FAILURE:
+      return buildClientError(action.payload, 'error.userCreate').message
+    case ActionConstants.UPDATE_USER_REQUEST:
+    case ActionConstants.UPDATE_USER_SUCCESS:
+    case ActionConstants.CREATE_USER_REQUEST:
+    case ActionConstants.CREATE_USER_SUCCESS:
+    case ActionConstants.USER_CLEAR_ERROR:
+      return null
+    default:
+      return state
   }
 }
 
@@ -78,7 +79,7 @@ export default combineReducers({
   usersList,
   isFetching,
   errorMessage,
-  errorMessageCreateUpdate
+  errorMessageCreateUpdate,
 })
 
 export const getUsersList = (state) => state.users.usersList
@@ -92,6 +93,6 @@ export const getErrorMessageModal = (state) => state.users.errorMessageCreateUpd
 export const getSortOrder = (state) => {
   return {
     sortColumn: state.users.usersList.sortColumn,
-    sortDirection: state.users.usersList.sortDirection
+    sortDirection: state.users.usersList.sortDirection,
   }
 }

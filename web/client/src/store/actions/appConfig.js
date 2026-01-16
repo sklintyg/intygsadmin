@@ -1,9 +1,8 @@
 import * as api from '../../api/appConfigApi'
 import { getIsFetching } from '../reducers/appConfig'
+import { FETCH_APPCONFIG_FAILURE, FETCH_APPCONFIG_REQUEST, FETCH_APPCONFIG_SUCCESS } from './appConfig.constants'
 
-export const FETCH_APPCONFIG_REQUEST = 'FETCH_APPCONFIG_REQUEST'
-export const FETCH_APPCONFIG_SUCCESS = 'FETCH_APPCONFIG_SUCCESS'
-export const FETCH_APPCONFIG_FAILURE = 'FETCH_APPCONFIG_FAILURE'
+export { FETCH_APPCONFIG_REQUEST, FETCH_APPCONFIG_SUCCESS, FETCH_APPCONFIG_FAILURE }
 
 export const fetchAppConfig = () => (dispatch, getState) => {
   if (getIsFetching(getState())) {

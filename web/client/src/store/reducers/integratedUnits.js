@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { buildClientError } from "./util";
-import * as ActionConstants from '../actions/integratedUnits'
+import { buildClientError } from './util'
+import * as ActionConstants from '../actions/integratedUnits.constants'
 
 const integratedUnit = (state = {}, action) => {
   switch (action.type) {
@@ -66,7 +66,7 @@ export default combineReducers({
   isFetching,
   errorMessage,
   isFetchingIntegratedUnitsFile,
-  errorMessageIntegratedUnitsFile
+  errorMessageIntegratedUnitsFile,
 })
 
 export const getIntegratedUnit = (state) => state.integratedUnits.integratedUnit

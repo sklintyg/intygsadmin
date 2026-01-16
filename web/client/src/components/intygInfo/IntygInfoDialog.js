@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useAppDispatch } from '../../store/hooks'
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from 'reactstrap'
-import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table, UncontrolledTooltip } from 'reactstrap'
 import styled from 'styled-components'
 import { getMessage } from '../../messages/messages'
-import { fetchIntygInfoList } from '../../store/actions/intygInfo'
+import { fetchIntygInfo } from '../../store/actions/intygInfo'
 import DisplayDateTime from '../displayDateTime/DisplayDateTime'
 import modalContainer from '../modalContainer/modalContainer'
 import colors from '../styles/iaColors'
@@ -241,8 +240,8 @@ const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
     return true
   }
 
-  const handleRefresh = () => {
-    dispatch(fetchIntygInfoList(intygInfo.intygId))
+  const handleRefresh = (intygsId) => {
+    dispatch(fetchIntygInfo(intygsId))
   }
 
   return (

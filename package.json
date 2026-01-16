@@ -12,6 +12,7 @@
     "dev": "pnpm start",
     "build": "pnpm --filter intygsadmin build",
     "test": "pnpm --filter intygsadmin test",
+    "test:ci": "pnpm --filter intygsadmin test:ci",
     "client": "pnpm --filter intygsadmin",
     "install:client": "cd web/client && pnpm install",
     "clean": "pnpm --filter intygsadmin exec rm -rf node_modules && rm -rf node_modules"

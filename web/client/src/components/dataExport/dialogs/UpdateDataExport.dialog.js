@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  Button,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader
-} from 'reactstrap'
+import { Button, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateDataExport } from '../../../store/actions/dataExport'
@@ -17,9 +8,7 @@ import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
 import IaAlert, { alertType } from '../../alert/Alert'
 import { IaTypo04 } from '../../styles/iaTypography'
 import { getMessage } from '../../../messages/messages'
-import {
-  getErrorMessageUpdateDataExport
-} from '../../../store/reducers/dataExport'
+import { getErrorMessageUpdateDataExport } from '../../../store/reducers/dataExport'
 
 const StyledBody = styled(ModalBody)`
   input[type='text']:disabled {
