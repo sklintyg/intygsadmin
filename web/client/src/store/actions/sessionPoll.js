@@ -1,4 +1,4 @@
-import { pollSession } from '../../api/userApi'
+import { pollSession } from '@/api/userApi'
 import AppConstants from '../../AppConstants'
 
 export const GET_POLL_REQUEST = 'GET_POLL_REQUEST'
@@ -56,7 +56,7 @@ export const startPoll = () => {
 }
 export const requestPollUpdate = () => {
   return (dispatch) => {
-    executePollRequest(dispatch)
+    return executePollRequest(dispatch)
   }
 }
 export const stopPoll = () => {

@@ -1,4 +1,5 @@
-import { functionToTest, mockStore } from '../../testUtils/actionUtils'
+import { vi } from 'vitest'
+import { functionToTest, mockStore } from '@/testUtils/actionUtils'
 import * as actions from './banner'
 import * as api from '../../api/banner.api'
 
@@ -11,14 +12,16 @@ describe('Banner actions', () => {
     })
   })
 
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   describe('removeBanner', () => {
     test('success', () => {
       const id = 'userId'
       const response = [{}]
 
-      api.removeBanner = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'removeBanner').mockResolvedValue(response)
 
       const expectedActions = [{ type: actions.REMOVE_BANNER_REQUEST }, { type: actions.REMOVE_BANNER_SUCCESS, response }]
 
@@ -29,9 +32,7 @@ describe('Banner actions', () => {
       const id = 'userId'
       const response = [{}]
 
-      api.removeBanner = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'removeBanner').mockRejectedValue(response)
 
       const expectedActions = [{ type: actions.REMOVE_BANNER_REQUEST }, { type: actions.REMOVE_BANNER_FAILURE, payload: response }]
 
@@ -43,9 +44,7 @@ describe('Banner actions', () => {
     test('success', () => {
       const response = { id: 'userId' }
 
-      api.createBanner = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'createBanner').mockResolvedValue(response)
 
       const expectedActions = [{ type: actions.CREATE_BANNER_REQUEST }, { type: actions.CREATE_BANNER_SUCCESS, response }]
 
@@ -55,9 +54,7 @@ describe('Banner actions', () => {
     test('failure', () => {
       const response = { id: 'userId' }
 
-      api.createBanner = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'createBanner').mockRejectedValue(response)
 
       const expectedActions = [{ type: actions.CREATE_BANNER_REQUEST }, { type: actions.CREATE_BANNER_FAILURE, payload: response }]
 
@@ -71,9 +68,7 @@ describe('Banner actions', () => {
     test('success', () => {
       const response = { name: 'userId' }
 
-      api.updateBanner = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'updateBanner').mockResolvedValue(response)
 
       const expectedActions = [{ type: actions.UPDATE_BANNER_REQUEST }, { type: actions.UPDATE_BANNER_SUCCESS, response }]
 
@@ -83,9 +78,7 @@ describe('Banner actions', () => {
     test('failure', () => {
       const response = { name: 'userId' }
 
-      api.updateBanner = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'updateBanner').mockRejectedValue(response)
 
       const expectedActions = [{ type: actions.UPDATE_BANNER_REQUEST }, { type: actions.UPDATE_BANNER_FAILURE, payload: response }]
 
@@ -97,9 +90,7 @@ describe('Banner actions', () => {
     test('success', () => {
       const response = { name: 'userId' }
 
-      api.fetchFutureBanners = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'fetchFutureBanners').mockResolvedValue(response)
 
       const expectedActions = [{ type: actions.FETCH_FUTURE_REQUEST }, { type: actions.FETCH_FUTURE_SUCCESS, response }]
 
@@ -109,9 +100,7 @@ describe('Banner actions', () => {
     test('failure', () => {
       const response = { name: 'userId' }
 
-      api.fetchFutureBanners = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'fetchFutureBanners').mockRejectedValue(response)
 
       const expectedActions = [{ type: actions.FETCH_FUTURE_REQUEST }, { type: actions.FETCH_FUTURE_FAILURE, payload: response }]
 

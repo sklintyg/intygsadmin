@@ -1,17 +1,19 @@
+import { vi } from 'vitest'
 import React from 'react'
-import { renderWithRedux, waitFor } from './testUtils'
+import { renderWithRedux } from './testUtils'
+import { waitFor } from '@testing-library/react'
 import App from './App'
 
-const mockFetchAnvandare = jest.fn()
-const mockFetchAppConfig = jest.fn()
-const mockPollSession = jest.fn()
+const mockFetchAnvandare = vi.fn()
+const mockFetchAppConfig = vi.fn()
+const mockPollSession = vi.fn()
 
-jest.mock('./api/userApi', () => ({
+vi.mock('./api/userApi', () => ({
   fetchAnvandare: () => mockFetchAnvandare(),
   pollSession: () => mockPollSession(),
 }))
 
-jest.mock('./api/appConfigApi', () => ({
+vi.mock('./api/appConfigApi', () => ({
   fetchAppConfig: () => mockFetchAppConfig(),
 }))
 
@@ -33,7 +35,7 @@ describe('<App />', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('renders without crashing', async () => {

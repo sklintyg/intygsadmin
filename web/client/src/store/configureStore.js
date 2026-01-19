@@ -11,7 +11,7 @@ export const configureApplicationStore = (customMiddleware = []) =>
       getDefaultMiddleware({
         serializableCheck: false,
       }).concat(customMiddleware),
-    devTools: process.env.NODE_ENV !== 'production',
+    devTools: !import.meta.env.PROD,
   })
 
 export const store = configureApplicationStore()

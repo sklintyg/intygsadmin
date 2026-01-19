@@ -30,6 +30,8 @@ migration.
 6. [Rollback Plan](#6-rollback-plan)
 7. [Post-Migration Validation](#7-post-migration-validation)
 8. [React 19 Upgrade](#8-react-19-upgrade)
+9. [Vite Migration](#9-vite-migration)
+10. [Appendices](#10-appendices)
 
 ---
 
@@ -2540,7 +2542,955 @@ npm run build
 
 ---
 
-## 9. Appendices
+## 9. Vite Migration
+
+**Status:** Optional - Can be performed after React 19 upgrade is complete and stable  
+**Prerequisites:** All Phase 1-8 increments completed and validated  
+**Target:** Vite 5.x (from Create React App / react-scripts)  
+**Risk Level:** Medium-High (Major build tool change)
+
+### 9.1 Overview
+
+Vite is a modern build tool that provides significantly faster development experience compared to
+Create React App (react-scripts). This migration involves replacing the Webpack-based build system
+with Vite's native ES module approach.
+
+**Key Benefits:**
+
+1. **Lightning-fast cold starts** - Instant dev server startup (vs. minutes with CRA)
+2. **Instant Hot Module Replacement (HMR)** - Changes reflect immediately without page reloads
+3. **Optimized production builds** - Rollup-based builds with automatic code splitting
+4. **TypeScript support out-of-the-box** - No additional configuration needed
+5. **Modern standards** - Built on native ES modules
+6. **Better monorepo support** - Works seamlessly with pnpm workspaces
+
+**Migration Considerations:**
+
+- **Breaking change**: Completely replaces build system
+- **Environment variables**: Must prefix with `VITE_` for client exposure
+- **Import changes**: Some import patterns need adjustment
+- **Testing**: May need to adjust test configuration
+- **Build scripts**: npm scripts need updating
+
+### 9.2 Phase 9 Increments
+
+#### Increment 9.1: Install Vite Dependencies
+
+**Goal:** Install Vite and related plugins
+
+**Files to Modify:**
+
+- `web/client/package.json`
+
+**Dependencies to Add:**
+
+```json
+{
+  "devDependencies": {
+    "vite": "^5.4.21",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-legacy": "^5.4.3"
+  }
+}
+```
+
+**Dependencies to Remove:**
+
+```json
+{
+  "devDependencies": {
+    "react-scripts": "removed"
+  }
+}
+```
+
+**Steps:**
+
+1. Update package.json
+2. Run `npm install` or `pnpm install`
+3. Verify installation completes successfully
+
+**Validation:**
+
+```bash
+npm list vite @vitejs/plugin-react
+npx vite --version
+```
+
+---
+
+#### Increment 9.2: Create Vite Configuration
+
+**Goal:** Create vite.config.js with appropriate settings
+
+**Files to Create:**
+
+- `web/client/vite.config.js`
+
+**Configuration:**
+
+```javascript
+import legacy from '@vitejs/plugin-legacy'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import {defineConfig, loadEnv} from 'vite'
+
+export default ({mode}) => {
+  process.env = {...process.env, ...loadEnv(mode ?? 'development', process.cwd())}
+
+  final
+  hmr = !(process.env.VITE_HMR === 'false')
+  final
+  host = process.env.VITE_HOST ?? 'localhost'
+
+  final
+  proxy = [
+    '/api',
+    '/fake',
+    '/logout',
+    '/login',
+    '/error.jsp',
+  ].reduce((result, route) => ({
+    ...result,
+    [route]: {
+      secure: false,
+      target: process.env.VITE_API_TARGET ?? 'http://localhost:8080',
+      cookieDomainRewrite: {'*': ''},
+      changeOrigin: true,
+      autoRewrite: true,
+    },
+  }), {})
+
+  return defineConfig({
+    plugins: [react()].concat(
+        process.env.LEGACY_SUPPORT !== 'false'
+            ? legacy({
+              targets: ['defaults', 'not IE 11'],
+            })
+            : []
+    ),
+    server: {
+      host,
+      port: 3000,
+      proxy,
+      strictPort: true,
+      allowedHosts: true,
+      hmr: hmr
+          ? {
+            host: process.env.VITE_WS_HOST ?? host,
+            protocol: process.env.VITE_WS_PROTOCOL ?? 'ws',
+          }
+          : false,
+    },
+    build: {
+      outDir: 'build',
+      sourcemap: true,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'],
+            redux: ['redux', 'react-redux'],
+          },
+        },
+      },
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
+  })
+}
+```
+
+**OBSERVE:**
+
+- Adjust proxy routes based on actual backend API endpoints
+- Port 3000 matches current development setup
+- Legacy plugin included for IE 11 if needed (check browserslist)
+
+---
+
+#### Increment 9.3: Move and Update index.html
+
+**Goal:** Move index.html to project root and update for Vite
+
+**Files to Modify:**
+
+- `web/client/public/index.html` → `web/client/index.html`
+
+**Changes Required:**
+
+1. Move `public/index.html` to project root (`web/client/index.html`)
+2. Add ES module script tag for entry point
+3. Remove %PUBLIC_URL% placeholders
+
+**Updated index.html:**
+
+```html
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8"/>
+  <link rel="icon" href="/favicon.ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#000000"/>
+  <meta name="description" content="Intygsadmin - Administration av Intygstjänster"/>
+  <title>Intygsadmin</title>
+</head>
+<body>
+<noscript>Du måste aktivera JavaScript för att köra den här appen.</noscript>
+<div id="root"></div>
+<script type="module" src="/src/index.js"></script>
+</body>
+</html>
+```
+
+**Key Changes:**
+
+- Removed `%PUBLIC_URL%` (Vite handles asset paths automatically)
+- Added `<script type="module" src="/src/index.js"></script>` (Vite entry point)
+- Moved to project root
+
+**OBSERVE:**
+
+- Verify all asset paths still work (favicon, manifest, etc.)
+- Check if manifest.json is needed and reference it correctly
+
+---
+
+#### Increment 9.4: Create Environment Variable Files
+
+**Goal:** Create .env files for Vite environment variables
+
+**Files to Create:**
+
+- `web/client/.env.development`
+- `web/client/.env.production`
+- `web/client/.env.development.local.example`
+
+**`.env.development`:**
+
+```env
+VITE_API_TARGET=http://localhost:8080
+VITE_HOST=localhost
+```
+
+**`.env.production`:**
+
+```env
+VITE_API_TARGET=
+```
+
+**`.env.development.local.example`:**
+
+```env
+# Copy this file to .env.development.local and adjust for your local setup
+VITE_HTTPS=false
+VITE_API_TARGET=http://localhost:8080
+VITE_HOST=0.0.0.0
+VITE_HMR=true
+```
+
+**Update `.gitignore`:**
+
+```gitignore
+.env.local
+.env.development.local
+.env.production.local
+```
+
+**OBSERVE:**
+
+- All client-exposed environment variables MUST be prefixed with `VITE_`
+- Update any code that references `process.env.REACT_APP_*` to `import.meta.env.VITE_*`
+
+---
+
+#### Increment 9.5: Update Environment Variable References
+
+**Goal:** Replace CRA environment variables with Vite equivalents
+
+**Search Pattern:**
+
+```bash
+grep -r "process.env.REACT_APP_" web/client/src/
+grep -r "process.env.PUBLIC_URL" web/client/src/
+grep -r "process.env.NODE_ENV" web/client/src/
+```
+
+**Replacements:**
+
+| Old (CRA)                 | New (Vite)                                                               |
+|---------------------------|--------------------------------------------------------------------------|
+| `process.env.REACT_APP_*` | `import.meta.env.VITE_*`                                                 |
+| `process.env.PUBLIC_URL`  | `import.meta.env.BASE_URL` or just `/`                                   |
+| `process.env.NODE_ENV`    | `import.meta.env.MODE` or `import.meta.env.DEV` / `import.meta.env.PROD` |
+
+**Example Changes:**
+
+```javascript
+final
+isDev = import.meta.env.DEV
+final
+isProd = import.meta.env.PROD
+final
+mode = import.meta.env.MODE
+
+final
+apiTarget = import.meta.env.VITE_API_TARGET
+```
+
+**OBSERVE:**
+
+- Check all files that use environment variables
+- NODE_ENV usage may need different approach (DEV/PROD booleans)
+- Update any build scripts that set environment variables
+
+---
+
+#### Increment 9.6: Update Package Scripts
+
+**Goal:** Replace react-scripts commands with Vite commands
+
+**Files to Modify:**
+
+- `web/client/package.json`
+
+**Script Changes:**
+
+```json
+{
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+**Remove:**
+
+```json
+{
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+**OBSERVE:**
+
+- Consider keeping separate `start` and `dev` scripts for compatibility
+- Build output location is now configurable (defaults to `dist`, we set to `build`)
+
+---
+
+#### Increment 9.7: Update Test Configuration for Vitest
+
+**Goal:** Migrate from Jest (CRA) to Vitest
+
+**Files to Create:**
+
+- `web/client/vitest.config.js`
+
+**Configuration:**
+
+```javascript
+import react from '@vitejs/plugin-react'
+import path from 'path'
+import {defineConfig} from 'vitest/config'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/setupTests.js'],
+    css: false,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html', 'lcov'],
+      exclude: [
+        'node_modules/',
+        'src/setupTests.js',
+        '**/*.test.{js,jsx}',
+        '**/*.spec.{js,jsx}',
+      ],
+      thresholds: {
+        branches: 60,
+        lines: 60,
+        functions: 60,
+        statements: 60,
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
+})
+```
+
+**Dependencies to Add:**
+
+```json
+{
+  "devDependencies": {
+    "vitest": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "jsdom": "^24.0.0"
+  }
+}
+```
+
+**Update setupTests.js** (if needed):
+
+```javascript
+import '@testing-library/jest-dom'
+
+global.expect = expect
+```
+
+**OBSERVE:**
+
+- Vitest is mostly Jest-compatible, but check for any custom Jest configuration
+- Some Jest-specific patterns may need adjustment
+- Coverage thresholds match post-migration targets
+
+---
+
+#### Increment 9.8: Handle CSS/SASS Imports
+
+**Goal:** Ensure CSS preprocessing works with Vite
+
+**Dependencies (Already Added Earlier):**
+
+```json
+{
+  "devDependencies": {
+    "sass": "^1.70.0"
+  }
+}
+```
+
+**Vite Auto-Detection:**
+
+- Vite automatically processes `.scss` files with sass installed
+- No additional configuration needed
+- CSS modules work with `.module.scss` naming
+
+**Verify Imports:**
+
+```bash
+grep -r "@import.*~" web/client/src/
+```
+
+**If found, update Webpack-style imports:**
+
+```scss
+@import '~bootstrap/scss/bootstrap';
+```
+
+**To:**
+
+```scss
+@import 'bootstrap/scss/bootstrap';
+```
+
+**OBSERVE:**
+
+- Vite doesn't need the `~` prefix for node_modules imports
+- Check for any custom webpack loaders that need Vite equivalents
+
+---
+
+#### Increment 9.9: Handle Asset Imports
+
+**Goal:** Update asset import patterns for Vite
+
+**Vite Asset Handling:**
+
+```javascript
+import logoUrl from './logo.png'
+
+<
+img
+src = {logoUrl}
+alt = "Logo" / >
+```
+
+**For SVG as React Components (if needed):**
+
+Install plugin:
+
+```json
+{
+  "devDependencies": {
+    "vite-plugin-svgr": "^4.2.0"
+  }
+}
+```
+
+Update `vite.config.js`:
+
+```javascript
+import svgr from 'vite-plugin-svgr'
+
+plugins: [
+  react(),
+  svgr(),
+]
+```
+
+Usage:
+
+```javascript
+import {ReactComponent as Logo} from './logo.svg'
+
+<
+Logo / >
+```
+
+**OBSERVE:**
+
+- Check how SVGs are currently imported
+- Verify all asset types work correctly (images, fonts, etc.)
+
+---
+
+#### Increment 9.10: Update Backend Integration
+
+**Goal:** Ensure proxy configuration works with backend
+
+**Review proxy configuration in `vite.config.js`:**
+
+```javascript
+final
+proxy = [
+  '/api',
+  '/fake',
+  '/logout',
+  '/login',
+  '/error.jsp',
+].reduce((result, route) => ({
+  ...result,
+  [route]: {
+    secure: false,
+    target: process.env.VITE_API_TARGET ?? 'http://localhost:8080',
+    cookieDomainRewrite: {'*': ''},
+    changeOrigin: true,
+    autoRewrite: true,
+  },
+}), {})
+```
+
+**Test Requirements:**
+
+1. Verify all API routes are proxied correctly
+2. Test authentication flow (cookies should work)
+3. Verify session management
+4. Test file uploads/downloads if applicable
+
+**OBSERVE:**
+
+- Add any missing backend routes to proxy configuration
+- Test with actual backend server running
+- Verify cookie handling works correctly
+
+---
+
+#### Increment 9.11: First Build and Validation
+
+**Goal:** Build the application with Vite for the first time
+
+**Commands:**
+
+```bash
+cd web/client
+npm run build
+```
+
+**Expected Output:**
+
+```
+vite v5.4.21 building for production...
+✓ 234 modules transformed.
+build/index.html                   0.52 kB │ gzip:  0.31 kB
+build/assets/index-abc123.css     45.20 kB │ gzip: 12.34 kB
+build/assets/index-def456.js     128.45 kB │ gzip: 45.67 kB
+build/assets/vendor-ghi789.js    156.78 kB │ gzip: 52.34 kB
+✓ built in 8.52s
+```
+
+**Validation Checklist:**
+
+- [ ] Build completes without errors
+- [ ] Build output in `build/` directory
+- [ ] index.html contains script tags with hashed filenames
+- [ ] Asset files have content hashes
+- [ ] Source maps generated (if configured)
+- [ ] Bundle sizes reasonable (compare to CRA build)
+
+**OBSERVE:**
+
+- Note any build warnings
+- Check bundle sizes vs. previous CRA build
+- Verify chunk splitting is working
+
+---
+
+#### Increment 9.12: Development Server Testing
+
+**Goal:** Test development server with HMR
+
+**Commands:**
+
+```bash
+cd web/client
+npm run dev
+```
+
+**Expected Output:**
+
+```
+VITE v5.4.21  ready in 543 ms
+
+➜  Local:   http://localhost:3000/
+➜  Network: use --host to expose
+➜  press h + enter to show help
+```
+
+**Testing Checklist:**
+
+- [ ] Server starts in < 5 seconds
+- [ ] Application loads in browser
+- [ ] No console errors
+- [ ] Edit a component → HMR updates instantly
+- [ ] Edit a CSS file → Styles update without reload
+- [ ] Redux state preserved during HMR
+- [ ] API proxy works (test login, data fetching)
+- [ ] Session management works
+
+**HMR Test:**
+
+1. Open application in browser
+2. Open DevTools console
+3. Edit a component file and save
+4. Verify: Component updates without page reload
+5. Verify: Redux state NOT reset
+6. Edit CSS file and save
+7. Verify: Styles update instantly
+
+**OBSERVE:**
+
+- Note HMR speed compared to CRA
+- Check for any HMR errors in console
+- Verify all features work the same as before
+
+---
+
+#### Increment 9.13: Update CI/CD Pipeline
+
+**Goal:** Update build and deployment scripts for Vite
+
+**Files to Modify:**
+
+- `Jenkins.properties` (if applicable)
+- `.github/workflows/*` (if using GitHub Actions)
+- Any CI/CD configuration files
+
+**Build Script Updates:**
+
+```bash
+cd web/client
+npm ci
+npm run build
+```
+
+**Environment Variables in CI:**
+
+```bash
+VITE_API_TARGET=https://api.production.com
+VITE_HOST=0.0.0.0
+```
+
+**Docker Updates (if applicable):**
+
+Update Dockerfile to use Vite:
+
+```dockerfile
+FROM node:18 AS build
+
+WORKDIR /app
+COPY web/client/package*.json ./
+RUN npm ci
+
+COPY web/client/ ./
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+```
+
+**OBSERVE:**
+
+- Update any deployment documentation
+- Test build in CI environment
+- Verify environment variables are properly injected
+
+---
+
+#### Increment 9.14: Update Documentation
+
+**Goal:** Document Vite setup and development workflow
+
+**Files to Update:**
+
+- `web/client/README.md`
+- Developer setup guides
+- Contribution guidelines
+
+**README.md Updates:**
+
+```markdown
+## Development
+
+This project uses Vite as the build tool.
+
+### Prerequisites
+
+- Node.js 18+
+- npm or pnpm
+
+### Getting Started
+
+```bash
+cd web/client
+npm install
+npm run dev
+```
+
+The application will be available at http://localhost:3000
+
+### Environment Variables
+
+Create `.env.development.local` for local overrides:
+
+```env
+VITE_API_TARGET=http://localhost:8080
+VITE_HOST=localhost
+```
+
+All client-exposed variables must be prefixed with `VITE_`.
+
+### Available Scripts
+
+- `npm run dev` - Start development server with HMR
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+- `npm run test` - Run tests with Vitest
+- `npm run test:ui` - Run tests with UI
+- `npm run test:coverage` - Generate coverage report
+
+### Build Tool
+
+This project uses [Vite](https://vitejs.dev/) for:
+
+- Lightning-fast dev server startup
+- Instant Hot Module Replacement (HMR)
+- Optimized production builds
+- Native ES modules in development
+
+See `vite.config.js` for configuration details.
+
+```
+
+**OBSERVE:**
+
+- Update any screenshots showing build output
+- Document any Vite-specific patterns used
+- Note differences from previous CRA setup
+
+---
+
+### 9.3 Vite Migration Validation
+
+**Comprehensive Testing Checklist:**
+
+#### Development Experience
+
+- [ ] Dev server starts in < 5 seconds (vs. CRA: 30-60+ seconds)
+- [ ] HMR updates in < 100ms
+- [ ] No console errors or warnings
+- [ ] All environment variables work
+- [ ] API proxy works correctly
+- [ ] Session management works
+- [ ] File watching works
+
+#### Build Quality
+
+- [ ] Production build completes successfully
+- [ ] Bundle sizes reasonable or smaller than CRA
+- [ ] Code splitting working correctly
+- [ ] Source maps generated
+- [ ] Assets hashed correctly
+- [ ] No build warnings
+
+#### Functionality
+
+- [ ] All application features work
+- [ ] Authentication/login works
+- [ ] All routes accessible
+- [ ] Forms submit correctly
+- [ ] Modals work
+- [ ] Date pickers work
+- [ ] All CRUD operations work
+- [ ] Error handling works
+- [ ] Logout works
+
+#### Testing
+
+- [ ] All tests pass with Vitest
+- [ ] Test coverage maintained or improved
+- [ ] Tests run faster than with Jest
+- [ ] Coverage reports generate correctly
+
+#### Browser Testing
+
+- [ ] Chrome (latest)
+- [ ] Firefox (latest)
+- [ ] Safari (latest)
+- [ ] Edge (latest)
+- [ ] IE 11 (if required) - with legacy plugin
+
+#### Performance
+
+- [ ] Initial load time same or better
+- [ ] Bundle size same or smaller
+- [ ] Time to interactive same or better
+- [ ] No performance regressions
+
+**Verification Commands:**
+
+```bash
+grep -r "react-scripts" web/client/
+grep -r "process.env.REACT_APP_" web/client/src/
+grep -r "@import.*~" web/client/src/
+grep -r "process.env.PUBLIC_URL" web/client/src/
+```
+
+All should return 0 results.
+
+---
+
+### 9.4 Vite Migration Rollback Plan
+
+If critical issues are discovered after Vite migration:
+
+**Quick Rollback:**
+
+```bash
+git stash
+git checkout main
+npm install
+npm start
+```
+
+**Partial Rollback (keep React 19, revert to CRA):**
+
+1. Restore `package.json` with `react-scripts`
+2. Restore original build scripts
+3. Move `index.html` back to `public/`
+4. Restore environment variable references
+5. Run `npm install`
+6. Test thoroughly
+
+**Files to Revert:**
+
+- `web/client/package.json`
+- `web/client/index.html` (location and content)
+- `web/client/vite.config.js` (delete)
+- `web/client/vitest.config.js` (delete)
+- `web/client/.env.*` files
+- Any files with `import.meta.env` changes
+
+---
+
+### 9.5 Vite Migration Resources
+
+**Official Documentation:**
+
+- Vite Guide: https://vitejs.dev/guide/
+- Vite Configuration: https://vitejs.dev/config/
+- Vite Plugin React: https://github.com/vitejs/vite-plugin-react
+- Migrating from CRA: https://vitejs.dev/guide/migration.html
+
+**Key Concepts:**
+
+- **Native ES Modules**: Vite serves source files as ES modules in development
+- **Dependency Pre-bundling**: Vite pre-bundles dependencies with esbuild
+- **Hot Module Replacement**: Updates modules without page reload
+- **Build Optimization**: Rollup-based production builds with tree-shaking
+
+**Common Patterns:**
+
+- Environment variables: `import.meta.env.VITE_*`
+- Asset imports: `import assetUrl from './asset.png'`
+- JSON imports: `import data from './data.json'`
+- Dynamic imports: `const module = await import('./module.js')`
+
+**Troubleshooting:**
+
+- **Slow HMR**: Check for circular dependencies
+- **Module not found**: Verify import paths (no webpack aliases without config)
+- **CSS not loading**: Check sass is installed for .scss files
+- **Proxy not working**: Verify proxy configuration and API target
+
+---
+
+### 9.6 Post-Vite Migration Benefits
+
+**Measured Improvements (Expected):**
+
+| Metric                | CRA      | Vite            | Improvement     |
+|-----------------------|----------|-----------------|-----------------|
+| Dev server cold start | 30-60s   | 2-5s            | **90% faster**  |
+| Dev server warm start | 15-30s   | 1-2s            | **95% faster**  |
+| HMR update time       | 1-5s     | 50-100ms        | **95% faster**  |
+| Build time            | 60-120s  | 30-60s          | **50% faster**  |
+| Bundle size           | Baseline | Same or smaller | 0-10% reduction |
+
+**Developer Experience:**
+
+- Near-instant feedback during development
+- No waiting for rebuilds
+- State preservation during HMR
+- Modern tooling and patterns
+- Better error messages
+- Simpler configuration
+
+**Production Benefits:**
+
+- Optimized bundle splitting
+- Better tree-shaking
+- Smaller bundle sizes
+- Faster build times in CI/CD
+- Modern output (ES modules + legacy fallback)
+
+---
+
+## 10. Appendices
 
 ### Appendix A: Complete File Inventory
 

@@ -1,17 +1,18 @@
-/// <reference types="jest" />
+/// <reference types="vitest/globals" />
 /// <reference types="@testing-library/jest-dom" />
 
-const { TextEncoder, TextDecoder } = require('util')
-const { ReadableStream, TransformStream } = require('stream/web')
-const { cleanup } = require('@testing-library/react')
+import { cleanup } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { afterEach, vi } from 'vitest'
+import './testUtils/suppressConsoleErrors'
+
+const { TextEncoder, TextDecoder } = await import('util')
+const { ReadableStream, TransformStream } = await import('stream/web')
 
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
 global.ReadableStream = ReadableStream
 global.TransformStream = TransformStream
-
-require('@testing-library/jest-dom')
-require('./testUtils/suppressConsoleErrors')
 
 afterEach(() => {
   cleanup()
@@ -21,20 +22,20 @@ global.setImmediate = global.setImmediate || ((fn, ...args) => global.setTimeout
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 })
 
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }))

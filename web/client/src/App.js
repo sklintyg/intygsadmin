@@ -36,7 +36,7 @@ const AppContent = () => {
   return (
     <Fragment>
       <SessionPoller />
-      {process.env.NODE_ENV !== 'production' && <TestLinks />}
+      {import.meta.env.DEV && <TestLinks />}
       <Header />
       <ErrorModal />
       <Routes>

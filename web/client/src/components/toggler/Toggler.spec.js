@@ -1,5 +1,7 @@
+import { vi } from 'vitest'
 import React from 'react'
-import { render, screen, userEvent } from '../../testUtils'
+import { render, screen } from '@/testUtils'
+import userEvent from '@testing-library/user-event'
 import Toggler from './Toggler'
 
 describe('<Toggler />', () => {
@@ -17,7 +19,7 @@ describe('<Toggler />', () => {
 
   it('calls handleToggle when clicked', async () => {
     const user = userEvent.setup()
-    const handleToggle = jest.fn()
+    const handleToggle = vi.fn()
     render(<Toggler handleToggle={handleToggle} />)
     const button = screen.getByRole('button')
 

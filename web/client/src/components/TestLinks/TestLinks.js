@@ -7,11 +7,8 @@ const TestLinks = () => {
 
   return (
     <nav>
-      <a href="/welcome.html">welcome</a> |{' '}
-      <NavLink exact to="/">
-        start
-      </NavLink>{' '}
-      | <NavLink to="/banner">banners</NavLink> |<span> session-status: {JSON.stringify(sessionState)}</span>
+      <a href="/welcome.html">welcome</a> | <NavLink to="/">start</NavLink> | <NavLink to="/banner">banners</NavLink> |
+      <span> session-status: {JSON.stringify(sessionState)}</span>
     </nav>
   )
 }
