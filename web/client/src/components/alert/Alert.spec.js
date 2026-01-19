@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '../../testUtils'
+import { render, screen } from '@/testUtils'
 import IaAlert, { alertType } from './Alert'
 
 describe('<IaAlert />', () => {
