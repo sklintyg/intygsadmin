@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { buildClientError } from './util'
-import * as ActionConstants from '../actions/bannerList.actions'
+import * as ActionConstants from '../actions/bannerList.constants'
 
 export const BannerListDefaultState = {
   content: [],
@@ -16,7 +16,8 @@ export const BannerListDefaultState = {
 const bannerList = (state = { ...BannerListDefaultState }, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_BANNERLIST_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         content: action.response.content,
         numberOfElements: action.response.content.length,
         pageIndex: action.response.page.number,
@@ -32,7 +33,6 @@ const bannerList = (state = { ...BannerListDefaultState }, action) => {
 }
 
 const isFetching = (state = false, action) => {
-
   switch (action.type) {
     case ActionConstants.FETCH_BANNERLIST_REQUEST:
       return true
@@ -45,7 +45,6 @@ const isFetching = (state = false, action) => {
 }
 
 const errorMessage = (state = null, action) => {
-
   switch (action.type) {
     case ActionConstants.FETCH_BANNERLIST_FAILURE:
       return buildClientError(action.payload, 'error.bannerlist').message
@@ -69,7 +68,9 @@ export default bannerListReducer
 
 export const getBannerList = (state) => state.bannerList.bannerList
 
-export const getSortOrder = (state) => {return {sortColumn: state.bannerList.bannerList.sortColumn, sortDirection: state.bannerList.bannerList.sortDirection}}
+export const getSortOrder = (state) => {
+  return { sortColumn: state.bannerList.bannerList.sortColumn, sortDirection: state.bannerList.bannerList.sortDirection }
+}
 
 export const getIsFetching = (state) => state.bannerList.isFetching
 

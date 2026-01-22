@@ -2,10 +2,9 @@ import * as api from '../../api/intygInfo.api'
 import { createAPIReducer } from '../../api/utils'
 import { getIsFetching } from '../reducers/intygInfo'
 import { fetchIntygInfoList } from './intygInfoList'
+import { FETCH_INTYG_INFO_FAILURE, FETCH_INTYG_INFO_REQUEST, FETCH_INTYG_INFO_SUCCESS } from './intygInfo.constants'
 
-export const FETCH_INTYG_INFO_REQUEST = 'FETCH_INTYG_INFO_REQUEST'
-export const FETCH_INTYG_INFO_SUCCESS = 'FETCH_INTYG_INFO_SUCCESS'
-export const FETCH_INTYG_INFO_FAILURE = 'FETCH_INTYG_INFO_FAILURE'
+export { FETCH_INTYG_INFO_REQUEST, FETCH_INTYG_INFO_SUCCESS, FETCH_INTYG_INFO_FAILURE }
 
 export const fetchIntygInfo = (intygsId) => (dispatch, getState) => {
   if (getIsFetching(getState())) {

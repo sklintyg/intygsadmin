@@ -1,25 +1,16 @@
 import React from 'react'
-import {NavLink} from 'react-router-dom'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
+import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-// Links to easily navigate between sections in dev mode
-const TestLinks = ({ sessionState }) => {
+const TestLinks = () => {
+  const sessionState = useSelector((state) => state.sessionPoll.sessionState)
 
   return (
     <nav>
-      <a href="/welcome.html">welcome</a> | <NavLink exact to="/">start</NavLink> | <NavLink to="/banner">banners</NavLink> |
+      <a href="/welcome.html">welcome</a> | <NavLink to="/">start</NavLink> | <NavLink to="/banner">banners</NavLink> |
       <span> session-status: {JSON.stringify(sessionState)}</span>
     </nav>
   )
 }
-const mapStateToProps = (state) => ({
-  sessionState: state.sessionPoll.sessionState,
-})
 
-export default compose(
-  connect(
-    mapStateToProps,
-    null
-  )
-)(TestLinks)
+export default TestLinks

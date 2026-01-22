@@ -1,14 +1,13 @@
-import React, {useState} from 'react'
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
+import React, { useState } from 'react'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../../modalContainer/modalContainer'
-import {compose} from 'recompose'
-import IaAlert, {alertType} from '../../alert/Alert'
-import {ErrorSection, ErrorWrapper} from '../../styles/iaLayout'
-import {connect} from "react-redux";
-import * as actions from "../../../store/actions/users";
+import IaAlert, { alertType } from '../../alert/Alert'
+import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
+import { useAppDispatch } from '../../../store/hooks'
+import { removeUser as removeUserAction } from '../../../store/actions/users'
 
-const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
-
+const RemoveUser = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useAppDispatch()
   const [errorActive, setErrorActive] = useState(false)
 
   if (!data) {
@@ -19,12 +18,14 @@ const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
 
   const remove = () => {
     setErrorActive(false)
-    removeUser(userId).then(() => {
-      handleClose()
-      onComplete()
-    }).catch(() => {
-      setErrorActive(true)
-    })
+    dispatch(removeUserAction(userId))
+      .then(() => {
+        handleClose()
+        onComplete()
+      })
+      .catch(() => {
+        setErrorActive(true)
+      })
   }
 
   return (
@@ -33,7 +34,8 @@ const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
         <ModalHeader toggle={handleClose}>Ta bort administratör</ModalHeader>
         <ModalBody>
           <div>
-            Att ta bort en administratör innebär att personen inte längre har tillgång till Intygsadmin. Personen kommer också att tas bort från översikten.
+            Att ta bort en administratör innebär att personen inte längre har tillgång till Intygsadmin. Personen kommer också att tas bort
+            från översikten.
           </div>
         </ModalBody>
         <ErrorSection>
@@ -47,7 +49,7 @@ const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
         </ErrorSection>
         <ModalFooter className="no-border">
           <Button
-            id='confirmBtn'
+            id="confirmBtn"
             color={'primary'}
             onClick={() => {
               remove()
@@ -70,10 +72,4 @@ const RemoveUser = ({ handleClose, isOpen, onComplete, data, removeUser }) => {
 
 export const RemoveUserId = 'removeUser'
 
-export default compose(
-  connect(
-    null,
-    { ...actions }
-  ),
-  modalContainer(RemoveUserId)
-)(RemoveUser)
+export default modalContainer(RemoveUserId)(RemoveUser)

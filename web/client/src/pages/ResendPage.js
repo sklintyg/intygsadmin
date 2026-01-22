@@ -1,22 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import MenuBar from '../components/iaMenu/MenuBar';
-import PageHeader from '../components/styles/PageHeader';
-import IaColors from '../components/styles/iaColors';
-import {CustomScrollingContainer, FlexColumnContainer, PageContainer} from '../components/styles/iaLayout';
-import {DocIcon} from '../components/styles/iaSvgIcons';
-import {IaTypo03} from '../components/styles/iaTypography';
-import {RadioWrapper} from '../components/radioButton';
-import DatePicker from '../components/datePicker';
-import {Button, FormFeedback, Input, UncontrolledTooltip} from 'reactstrap';
-import styled from 'styled-components';
-import TimePicker from '../components/timePicker';
-import {validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat} from '../utils/validation';
-import {connect} from 'react-redux';
-import {compose} from 'recompose';
-import * as actions from '../store/actions/intygInfo';
-import {resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus} from "../api/intygInfo.api";
-import IaAlert, {alertType} from "../components/alert/Alert";
-import ResendStatusCountError from "../components/ResendStatusCount/ResendStatusCount";
+import React, { useEffect, useState } from 'react'
+import MenuBar from '../components/iaMenu/MenuBar'
+import PageHeader from '../components/styles/PageHeader'
+import IaColors from '../components/styles/iaColors'
+import { CustomScrollingContainer, FlexColumnContainer, PageContainer } from '../components/styles/iaLayout'
+import { DocIcon } from '../components/styles/iaSvgIcons'
+import { IaTypo03 } from '../components/styles/iaTypography'
+import { RadioWrapper } from '../components/radioButton'
+import DatePicker from '../components/datePicker'
+import { Button, FormFeedback, Input, UncontrolledTooltip } from 'reactstrap'
+import styled from 'styled-components'
+import TimePicker from '../components/timePicker'
+import { validateDateFormat, validateFromDateBeforeToDate, validateTimeFormat } from '../utils/validation'
+import { resendCaregiverStatus, resendCertificateStatus, resendUnitsStatus } from '../api/intygInfo.api'
+import IaAlert, { alertType } from '../components/alert/Alert'
+import ResendStatusCountError from '../components/ResendStatusCount/ResendStatusCount'
 
 const resentOptions = [
   {
@@ -59,7 +56,6 @@ const FlexDiv = styled.div`
 
 const DateDiv = styled.div`
   display: flex;
-  align-items: top;
   margin-bottom: 8px;
   > label {
     flex: 0 0 50px;
@@ -80,7 +76,7 @@ const PreviewDiv = styled.div`
 const ResendPage = () => {
   const [preview, setPreview] = useState(false)
   const [statusFor, setStatusFor] = useState('0')
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState('')
   const [caregiver, setCaregiver] = useState('')
   const [unit, setUnit] = useState('')
   const [certificates, setCertificates] = useState('')
@@ -108,7 +104,7 @@ const ResendPage = () => {
       result.unit = 'Ange vårdenhetens HSA-ID'
     }
 
-    if (status === "") {
+    if (status === '') {
       result.status = 'Välj status att skicka'
     }
 
@@ -164,12 +160,12 @@ const ResendPage = () => {
   ])
 
   const handleResend = () => {
-    let request;
+    let request
     if (statusFor === '0') {
       request = resendCertificateStatus({
         certificateIds: certificates.split(',').map((id) => id.trim()),
         statuses: status.split(',').map((id) => id.trim()),
-      });
+      })
     } else if (statusFor === '1') {
       request = resendCaregiverStatus({
         careGiverId: caregiver,
@@ -177,7 +173,7 @@ const ResendPage = () => {
         end: `${toDate}T${toTime}`,
         statuses: status.split(',').map((id) => id.trim()),
         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
-      });
+      })
     } else if (statusFor === '2') {
       request = resendUnitsStatus({
         unitIds: [unit],
@@ -185,23 +181,20 @@ const ResendPage = () => {
         end: `${toDate}T${toTime}`,
         statuses: status.split(',').map((id) => id.trim()),
         activationTime: schedule ? `${scheduleDate}T${scheduleTime}` : null,
-      });
+      })
     }
 
-    request.then((response) => {
-      if(response.count !== 0) {
-        setMessage('Skapandet av omsändningen lyckades.')
-        setShowSend(false)
-
-      }
-      else(
-      setMessage('Omsändningen misslyckades. Försök igen.')
-      )
-    })
-    .catch(() => {
-      setMessage('Omsändningen misslyckades. Försök igen.');
-    });
-  };
+    request
+      .then((response) => {
+        if (response.count !== 0) {
+          setMessage('Skapandet av omsändningen lyckades.')
+          setShowSend(false)
+        } else setMessage('Omsändningen misslyckades. Försök igen.')
+      })
+      .catch(() => {
+        setMessage('Omsändningen misslyckades. Försök igen.')
+      })
+  }
 
   return (
     <FlexColumnContainer>
@@ -217,10 +210,10 @@ const ResendPage = () => {
             <FormContainer>
               <IaTypo03 style={{ marginBottom: '20px' }}>Skapa omsändning</IaTypo03>
 
-              <div>
-                <label>Omsändning av status för</label>
+              <fieldset>
+                <legend>Omsändning av status för</legend>
                 <RadioWrapper radioButtons={resentOptions} onChange={(event) => setStatusFor(event.target.value)} selected={statusFor} />
-              </div>
+              </fieldset>
 
               {statusFor === '0' && (
                 <FlexDiv>
@@ -266,16 +259,17 @@ const ResendPage = () => {
               )}
 
               <FlexDiv>
-                <label>Välj status att skicka</label>
+                <label htmlFor="statusSelect">Välj status att skicka</label>
                 <StyledInput
+                  id="statusSelect"
                   className="form-select"
                   type="select"
                   value={status}
                   onChange={(event) => setStatus(event.target.value)}
                   invalid={Boolean(showValidation && validationMessages.status)}>
-                  <option value={""}>Välj</option>
-                  <option value={"SUCCESS,FAILURE"}>Alla</option>
-                  <option value={"FAILURE"}>Misslyckade</option>
+                  <option value={''}>Välj</option>
+                  <option value={'SUCCESS,FAILURE'}>Alla</option>
+                  <option value={'FAILURE'}>Misslyckade</option>
                 </StyledInput>
                 <FormFeedback>{validationMessages.status}</FormFeedback>
               </FlexDiv>
@@ -340,8 +334,8 @@ const ResendPage = () => {
               )}
 
               {['1', '2'].includes(statusFor) && (
-                <div>
-                  <label>Tid för omsändning</label>
+                <fieldset>
+                  <legend>Tid för omsändning</legend>
                   <RadioWrapper
                     radioButtons={[
                       {
@@ -358,12 +352,13 @@ const ResendPage = () => {
                     onChange={(event) => (event.target.value === '0' ? setSchedule(false) : setSchedule(true))}
                     selected={schedule === false ? '0' : '1'}
                   />
-                </div>
+                </fieldset>
               )}
 
               {['0'].includes(statusFor) && (
                 <div>
-                  <strong>Tid för omsändning: </strong><span>Skicka nu</span>
+                  <strong>Tid för omsändning: </strong>
+                  <span>Skicka nu</span>
                 </div>
               )}
 
@@ -439,7 +434,7 @@ const ResendPage = () => {
                 start={`${fromDate}T${fromTime}`}
                 end={`${toDate}T${toTime}`}
               />
-              <br/>
+              <br />
               <PreviewDiv>
                 <strong>Omsändning av status för</strong>
                 <span>{resentOptions.find(({ value }) => statusFor === value).label}</span>
@@ -466,7 +461,7 @@ const ResendPage = () => {
 
               <PreviewDiv>
                 <strong>Välj status att skicka</strong>
-                <span>{status === "FAILURE" ? 'Misslyckade' : 'Alla'}</span>
+                <span>{status === 'FAILURE' ? 'Misslyckade' : 'Alla'}</span>
               </PreviewDiv>
 
               {statusFor !== '0' && (
@@ -480,13 +475,11 @@ const ResendPage = () => {
               {['0', '1', '2'].includes(statusFor) && (
                 <PreviewDiv>
                   <strong>Tid för omsändning</strong>
-                  <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : "Skicka nu"}</span>
+                  <span>{schedule ? `Schemalägg: ${scheduleDate}, ${scheduleTime}` : 'Skicka nu'}</span>
                 </PreviewDiv>
               )}
               {message && (
-                <IaAlert type={message === 'Skapandet av omsändningen lyckades.' ? alertType.CONFIRM : alertType.ERROR }>
-                  {message}
-                </IaAlert>
+                <IaAlert type={message === 'Skapandet av omsändningen lyckades.' ? alertType.CONFIRM : alertType.ERROR}>{message}</IaAlert>
               )}
 
               <ActionsContainer>
@@ -500,11 +493,9 @@ const ResendPage = () => {
                   Tillbaka
                 </Button>
                 {showSend && (
-                <Button
-                  color={'primary'}
-                  onClick={handleResend}>
-                  Skicka
-                </Button>
+                  <Button color={'primary'} onClick={handleResend}>
+                    Skicka
+                  </Button>
                 )}
               </ActionsContainer>
             </>
@@ -515,9 +506,4 @@ const ResendPage = () => {
   )
 }
 
-export default compose(
-  connect(
-    null,
-    actions
-  )
-)(ResendPage)
+export default ResendPage

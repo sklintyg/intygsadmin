@@ -1,21 +1,34 @@
 import * as api from '../../api/banner.api'
-import {getIsFetching} from '../reducers/banner'
+import { getIsFetching } from '../reducers/banner'
+import {
+  CREATE_BANNER_FAILURE,
+  CREATE_BANNER_REQUEST,
+  CREATE_BANNER_SUCCESS,
+  FETCH_FUTURE_FAILURE,
+  FETCH_FUTURE_REQUEST,
+  FETCH_FUTURE_SUCCESS,
+  REMOVE_BANNER_FAILURE,
+  REMOVE_BANNER_REQUEST,
+  REMOVE_BANNER_SUCCESS,
+  UPDATE_BANNER_FAILURE,
+  UPDATE_BANNER_REQUEST,
+  UPDATE_BANNER_SUCCESS,
+} from './banner.constants'
 
-export const CREATE_BANNER_REQUEST = 'CREATE_BANNER_REQUEST'
-export const CREATE_BANNER_SUCCESS = 'CREATE_BANNER_SUCCESS'
-export const CREATE_BANNER_FAILURE = 'CREATE_BANNER_FAILURE'
-
-export const REMOVE_BANNER_REQUEST = 'REMOVE_BANNER_REQUEST'
-export const REMOVE_BANNER_SUCCESS = 'REMOVE_BANNER_SUCCESS'
-export const REMOVE_BANNER_FAILURE = 'REMOVE_BANNER_FAILURE'
-
-export const UPDATE_BANNER_REQUEST = 'UPDATE_BANNER_REQUEST'
-export const UPDATE_BANNER_SUCCESS = 'UPDATE_BANNER_SUCCESS'
-export const UPDATE_BANNER_FAILURE = 'UPDATE_BANNER_FAILURE'
-
-export const FETCH_FUTURE_REQUEST = 'FETCH_FUTURE_REQUEST'
-export const FETCH_FUTURE_SUCCESS = 'FETCH_FUTURE_SUCCESS'
-export const FETCH_FUTURE_FAILURE = 'FETCH_FUTURE_FAILURE'
+export {
+  CREATE_BANNER_REQUEST,
+  CREATE_BANNER_SUCCESS,
+  CREATE_BANNER_FAILURE,
+  REMOVE_BANNER_REQUEST,
+  REMOVE_BANNER_SUCCESS,
+  REMOVE_BANNER_FAILURE,
+  UPDATE_BANNER_REQUEST,
+  UPDATE_BANNER_SUCCESS,
+  UPDATE_BANNER_FAILURE,
+  FETCH_FUTURE_REQUEST,
+  FETCH_FUTURE_SUCCESS,
+  FETCH_FUTURE_FAILURE,
+}
 
 export const createBanner = (banner) => (dispatch, getState) => {
   if (getIsFetching(getState())) {
@@ -38,7 +51,7 @@ export const createBanner = (banner) => (dispatch, getState) => {
         type: CREATE_BANNER_FAILURE,
         payload: errorResponse,
       })
-      return Promise.reject();
+      return Promise.reject()
     }
   )
 }
@@ -92,7 +105,7 @@ export const updateBanner = (banner, id) => (dispatch, getState) => {
         payload: errorResponse,
       })
 
-      return Promise.reject();
+      return Promise.reject()
     }
   )
 }
@@ -119,7 +132,7 @@ export const fetchFutureBanners = (application) => (dispatch, getState) => {
         payload: errorResponse,
       })
 
-      return Promise.reject();
+      return Promise.reject()
     }
   )
 }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Button, Spinner } from 'reactstrap'
-import PropTypes from 'prop-types'
 
 const StyledButton = styled(Button)`
   position: relative;
@@ -39,13 +38,6 @@ const SpinnerButton = ({ accept, color, children, disabled }) => {
       <StyledSpan hide={showSpinner ? 'hidden' : 'visible'}>{children}</StyledSpan>
     </StyledButton>
   )
-}
-
-SpinnerButton.propTypes = {
-  accept: PropTypes.func.isRequired,
-  color: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-  disabled: PropTypes.bool,
 }
 
 export default SpinnerButton

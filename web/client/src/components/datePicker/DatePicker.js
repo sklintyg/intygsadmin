@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { Calendar } from '../styles/iaSvgIcons'
 import colors from '../styles/iaColors'
-import DatePickerPopup from "./DatePickerPopup";
+import DatePickerPopup from './DatePickerPopup'
 
 const StyledButton = styled(Button)`
-  margin-left: 0px !important
+  margin-left: 0 !important;
   border-radius: 0 4px 4px 0 !important;
 `
 
@@ -61,11 +61,11 @@ const DatePicker = ({ date, onChange, className, inputId }) => {
     const value = event.target.value
 
     if (!value) {
-      setHasLostFocus(false);
+      setHasLostFocus(false)
     }
 
     setInternalValue(value)
-    if (hasLostFocus){
+    if (hasLostFocus) {
       onChange(value)
     }
   }

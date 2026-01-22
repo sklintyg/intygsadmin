@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { buildClientError } from "./util";
-import * as ActionConstants from '../actions/intygInfo'
+import { buildClientError } from './util'
+import * as ActionConstants from '../actions/intygInfo.constants'
 
 const intygInfo = (state = {}, action) => {
   switch (action.type) {
@@ -38,11 +38,10 @@ const errorMessage = (state = null, action) => {
   }
 }
 
-
 export default combineReducers({
   intygInfo,
   isFetching,
-  errorMessage
+  errorMessage,
 })
 
 export const getIntygInfo = (state) => state.intygInfo.intygInfo

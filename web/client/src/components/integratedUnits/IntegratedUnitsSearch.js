@@ -1,27 +1,26 @@
-import React, {createRef, useEffect, useState} from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'recompose'
-import {Button, Form, UncontrolledTooltip} from 'reactstrap'
+import React, { createRef, useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Form, UncontrolledTooltip } from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
-import IntegratedUnitSearchResult, {IntegratedUnitSearchResultId} from './IntegratedUnitSearchResult.dialog'
-import {IaTypo03} from "../styles/iaTypography"
-import styled from "styled-components"
+import IntegratedUnitSearchResult, { IntegratedUnitSearchResultId } from './IntegratedUnitSearchResult.dialog'
+import { IaTypo03 } from '../styles/iaTypography'
+import styled from 'styled-components'
 import * as actions from '../../store/actions/integratedUnits'
-import {getErrorMessage, getIntegratedUnit, getIsFetching} from "../../store/reducers/integratedUnits";
-import colors from "../styles/iaColors";
-import LoadingSpinner from "../loadingSpinner";
-import {COULD_NOT_FIND_UNIT, validateIntegratedUnit} from "./IntegratedUnitsValidator";
-import HsaInput from "../styles/HsaInput";
+import { getErrorMessage, getIntegratedUnit, getIsFetching } from '../../store/reducers/integratedUnits'
+import colors from '../styles/iaColors'
+import LoadingSpinner from '../loadingSpinner'
+import { COULD_NOT_FIND_UNIT, validateIntegratedUnit } from './IntegratedUnitsValidator'
+import HsaInput from '../styles/HsaInput'
 
 const SpinnerWrapper = styled.div`
   position: relative;
 `
 
 const PageHeader = styled.div`
-    padding: 12px 0 4px;
-    &:first-of-type {
-      padding: 4px 0;
-    }
+  padding: 12px 0 4px;
+  &:first-of-type {
+    padding: 4px 0;
+  }
 `
 
 const PageSearchRow = styled.div`
@@ -54,11 +53,19 @@ const Container = styled.div`
   }
 `
 
-const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit, isFetching, errorMessage }) => {
+const IntegratedUnitsSearch = () => {
+  const dispatch = useDispatch()
+  const integratedUnit = useSelector(getIntegratedUnit)
+  const isFetching = useSelector(getIsFetching)
+  const errorMessage = useSelector(getErrorMessage)
+
+  const fetchIntegratedUnit = (hsaId) => dispatch(actions.fetchIntegratedUnit(hsaId))
+  const openModal = useCallback((modalId, props) => dispatch(modalActions.openModal(modalId, props)), [dispatch])
+
   const [searchString, setSearchString] = useState('')
   const [validationSearchMessage, setValidationSearchMessage] = useState(undefined)
   const [searchResult, setSearchResult] = useState(undefined)
-  const inputRef = createRef();
+  const inputRef = createRef()
 
   const searchIntegratedUnit = (event, hsaId) => {
     event.preventDefault()
@@ -70,7 +77,7 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
     }
   }
 
-  useEffect(() => inputRef.current.focus(), [inputRef]);
+  useEffect(() => inputRef.current.focus(), [inputRef])
 
   useEffect(() => {
     setValidationSearchMessage(validateIntegratedUnit(integratedUnit.enhetsId, errorMessage))
@@ -81,17 +88,16 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
   }, [integratedUnit])
 
   useEffect(() => {
-    if (searchResult !== undefined
-      && validationSearchMessage === undefined) {
+    if (searchResult !== undefined && validationSearchMessage === undefined) {
       let text = {
         unit: integratedUnit.enhetsId,
         unitName: integratedUnit.enhetsNamn,
         healthcareProvidersId: integratedUnit.vardgivarId,
         healthcareProvidersName: integratedUnit.vardgivarNamn,
         addedDate: integratedUnit.skapadDatum,
-        checkedDate: integratedUnit.senasteKontrollDatum
+        checkedDate: integratedUnit.senasteKontrollDatum,
       }
-      openModal(IntegratedUnitSearchResultId, {text})
+      openModal(IntegratedUnitSearchResultId, { text })
       setSearchString('')
     }
   }, [searchResult, integratedUnit, validationSearchMessage, openModal])
@@ -101,7 +107,7 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
       <SpinnerWrapper>
         <LoadingSpinner loading={isFetching} message={'Söker'} />
       </SpinnerWrapper>
-      <IntegratedUnitSearchResult/>
+      <IntegratedUnitSearchResult />
       <PageSearchRow>
         <PageHeader>
           <IaTypo03>Ange HSA-id för enhet</IaTypo03>
@@ -109,12 +115,12 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
         <Form onSubmit={(event) => searchIntegratedUnit(event, searchString)}>
           <FlexDiv>
             <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
-              <HsaInput id='searchInput' value={searchString} inputRef={inputRef} onChange={setSearchString} />
+              <HsaInput id="searchInput" value={searchString} inputRef={inputRef} onChange={setSearchString} />
             </Container>
             <Button id={'searchBtn'} color={'success'}>
               Sök enhet
             </Button>
-            <UncontrolledTooltip trigger='hover' placement='auto' target='searchBtn'>
+            <UncontrolledTooltip trigger="hover" placement="auto" target="searchBtn">
               Öppnar ett modalfönster med information om enheten.
             </UncontrolledTooltip>
           </FlexDiv>
@@ -125,17 +131,4 @@ const IntegratedUnitsSearch = ({ openModal, fetchIntegratedUnit, integratedUnit,
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    integratedUnit: getIntegratedUnit(state),
-    isFetching: getIsFetching(state),
-    errorMessage: getErrorMessage(state)
-  }
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions, ...modalActions }
-  )
-)(IntegratedUnitsSearch)
+export default IntegratedUnitsSearch

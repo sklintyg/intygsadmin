@@ -1,16 +1,14 @@
-import React, {useState} from 'react'
-import {connect} from 'react-redux'
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader, Table} from 'reactstrap'
-import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
-import {compose} from 'recompose'
+import React, { useState } from 'react'
+import { useAppDispatch } from '../../store/hooks'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table, UncontrolledTooltip } from 'reactstrap'
 import styled from 'styled-components'
-import {getMessage} from '../../messages/messages'
-import * as actions from '../../store/actions/intygInfo'
+import { getMessage } from '../../messages/messages'
+import { fetchIntygInfo } from '../../store/actions/intygInfo'
 import DisplayDateTime from '../displayDateTime/DisplayDateTime'
 import modalContainer from '../modalContainer/modalContainer'
 import colors from '../styles/iaColors'
-import {IaTypo02, IaTypo03, IaTypo05} from '../styles/iaTypography'
-import {resendCertificateStatus, resendNotificationStatus} from "../../api/intygInfo.api";
+import { IaTypo02, IaTypo03, IaTypo05 } from '../styles/iaTypography'
+import { resendCertificateStatus, resendNotificationStatus } from '../../api/intygInfo.api'
 
 const BodyHeight = styled(ModalBody)`
   height: 60vh;
@@ -159,10 +157,10 @@ const AdminQuestionsReceived = ({ intygInfo }) => {
   )
 }
 
-const IntygEventRow = ({ event, fetchIntygInfo, setMessage}) => {
+const IntygEventRow = ({ event, handleRefresh, setMessage }) => {
   const VisaIntyg = () => {
     const openIntyg = () => {
-      fetchIntygInfo(event.data.intygsId)
+      handleRefresh(event.data.intygsId)
     }
 
     const btnId = event.source + '-' + event.data.intygsId
@@ -185,16 +183,23 @@ const IntygEventRow = ({ event, fetchIntygInfo, setMessage}) => {
         <DisplayDateTime date={event.date} />
       </TableTD>
       <TableTD>{getMessage(`intygInfo.source.${event.source}`)}</TableTD>
-      <TableTD>{getMessage(`intygInfo.eventType.${event.type}`, event.data) + (event.data && event.data.status ? getEventStatus(event.data.status) : "")}</TableTD>
-      <TableTD>{(event.data && event.data.status && event.data.status !== "RESEND" && event.data.notificationId ?
-        <Button
-          id={'closeBtn'}
-          onClick={() => {
-            handleResend('notification', event.data.notificationId, setMessage)
-          }}
-          color={'default'}>
-          Skicka om
-        </Button> : "")}
+      <TableTD>
+        {getMessage(`intygInfo.eventType.${event.type}`, event.data) +
+          (event.data && event.data.status ? getEventStatus(event.data.status) : '')}
+      </TableTD>
+      <TableTD>
+        {event.data && event.data.status && event.data.status !== 'RESEND' && event.data.notificationId ? (
+          <Button
+            id={'closeBtn'}
+            onClick={() => {
+              handleResend('notification', event.data.notificationId, setMessage)
+            }}
+            color={'default'}>
+            Skicka om
+          </Button>
+        ) : (
+          ''
+        )}
       </TableTD>
       <TableTD>{event.data && event.data.intygsId ? <VisaIntyg /> : ''}</TableTD>
     </tr>
@@ -203,24 +208,23 @@ const IntygEventRow = ({ event, fetchIntygInfo, setMessage}) => {
 
 const getEventStatus = (status) => {
   if (status === undefined) {
-      return ""
+    return ''
   }
 
-  let convertedStatus = "misslyckad"
-  if (status === "SUCCESS") {
-    convertedStatus = "lyckad"
+  let convertedStatus = 'misslyckad'
+  if (status === 'SUCCESS') {
+    convertedStatus = 'lyckad'
   }
 
-  if (status === "RESEND") {
-    convertedStatus = "omsändning"
+  if (status === 'RESEND') {
+    convertedStatus = 'omsändning'
   }
 
-
-  return " (" + convertedStatus + ")"
+  return ' (' + convertedStatus + ')'
 }
 
-const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
-
+const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
+  const dispatch = useAppDispatch()
   const [message, setMessage] = useState('')
 
   if (!data) {
@@ -234,6 +238,10 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
       return !intygInfo.testCertificate
     }
     return true
+  }
+
+  const handleRefresh = (intygsId) => {
+    dispatch(fetchIntygInfo(intygsId))
   }
 
   return (
@@ -275,9 +283,7 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
                   .filter((row) => {
                     return displayEvent(row)
                   })
-                .map((row, index) => (
-                  <IntygEventRow key={index} event={row} fetchIntygInfo={fetchIntygInfo} setMessage={setMessage} />
-                ))}
+                  .map((row, index) => <IntygEventRow key={index} event={row} handleRefresh={handleRefresh} setMessage={setMessage} />)}
             </tbody>
           </Table>
         </RowWrapper>
@@ -334,11 +340,7 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
           <Button id={'closeBtn'} onClick={() => handleOnClose(handleClose, setMessage)} color={'default'}>
             Stäng
           </Button>
-          {message && (
-            <p style={{ color: message === 'Omsändningen lyckades.' ? 'green' : 'red' }}>
-              {message}
-            </p>
-          )}
+          {message && <p style={{ color: message === 'Omsändningen lyckades.' ? 'green' : 'red' }}>{message}</p>}
           <Button
             id={'resendEvents'}
             onClick={() => {
@@ -354,30 +356,26 @@ const IntygInfoDialog = ({ handleClose, isOpen, data, fetchIntygInfo }) => {
 }
 
 const handleResend = (type, id, setMessage) => {
-  let request;
+  let request
   if (type === 'certificate') {
     request = resendCertificateStatus({
       certificateIds: id.split(',').map((i) => i.trim()),
       statuses: ['SUCCESS', 'FAILURE'],
-    });
+    })
   } else if (type === 'notification') {
-    request = resendNotificationStatus(
-      id
-    );
+    request = resendNotificationStatus(id)
   }
 
-  request.then((response) => {
-    if(response.count === 0) {
-      setMessage('Omsändningen misslyckades. Försök igen.');
-    }
-    else(
-      setMessage('Omsändningen lyckades.')
-    )
-  })
-  .catch(() => {
-    setMessage('Omsändningen misslyckades. Försök igen.');
-  });
-};
+  request
+    .then((response) => {
+      if (response.count === 0) {
+        setMessage('Omsändningen misslyckades. Försök igen.')
+      } else setMessage('Omsändningen lyckades.')
+    })
+    .catch(() => {
+      setMessage('Omsändningen misslyckades. Försök igen.')
+    })
+}
 
 const handleOnClose = (handleClose, setMessage) => {
   handleClose()
@@ -386,10 +384,4 @@ const handleOnClose = (handleClose, setMessage) => {
 
 export const intygInfoDialogId = 'intygInfoDialog'
 
-export default compose(
-  modalContainer(intygInfoDialogId),
-  connect(
-    null,
-    actions
-  )
-)(IntygInfoDialog)
+export default modalContainer(intygInfoDialogId)(IntygInfoDialog)

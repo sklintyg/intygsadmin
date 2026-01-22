@@ -1,24 +1,15 @@
-import React from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
-import modalContainer from '../../modalContainer/modalContainer';
-import { compose } from 'recompose';
-import * as actions from '../../../store/actions/dataExport';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout';
-import IaAlert, { alertType } from '../../alert/Alert';
-import { getErrorMessageEraseDataExport } from "../../../store/reducers/dataExport";
-import { getMessage } from '../../../messages/messages';
+import React from 'react'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
+import modalContainer from '../../modalContainer/modalContainer'
+import { useDispatch, useSelector } from 'react-redux'
+import { eraseDataExport } from '../../../store/actions/dataExport'
+import styled from 'styled-components'
+import { ErrorSection, ErrorWrapper } from '../../styles/iaLayout'
+import IaAlert, { alertType } from '../../alert/Alert'
+import { getErrorMessageEraseDataExport } from '../../../store/reducers/dataExport'
+import { getMessage } from '../../../messages/messages'
 
 const StyledBody = styled(ModalBody)`
-  .form-control {
-    width: 100%;
-  }
-
-  .form-group {
-    margin-bottom: 15px;
-  }
-
   h5 {
     padding: 12px 0 4px;
     &:first-of-type {
@@ -29,24 +20,26 @@ const StyledBody = styled(ModalBody)`
   label {
     display: block;
   }
-`;
+`
 
-const EraseDataExport = ({ handleClose, isOpen, onComplete, eraseDataExport, errorMessage, data }) => {
+const EraseDataExport = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useDispatch()
+  const errorMessage = useSelector(getErrorMessageEraseDataExport)
 
   const sendEraseDataExport = () => {
-    const func = eraseDataExport(data.terminationId);
+    const func = dispatch(eraseDataExport(data.terminationId))
 
     func
       .then(() => {
-        cancel();
-        onComplete();
+        cancel()
+        onComplete()
       })
-      .catch(() => {});
-  };
+      .catch(() => {})
+  }
 
   const cancel = () => {
-    handleClose();
-  };
+    handleClose()
+  }
 
   return (
     <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
@@ -54,10 +47,7 @@ const EraseDataExport = ({ handleClose, isOpen, onComplete, eraseDataExport, err
       <StyledBody>
         <p>
           Observera! Säkerställ med mottagaren av dataexporten att den mottagit både exporten och kryptonyckeln innan intygen raderas.
-
-          Raderade intyg kan ej återskapas.
-
-          Sker raderingen av intyg för en privatläkare raderas även privatläkarkontot.
+          Raderade intyg kan ej återskapas. Sker raderingen av intyg för en privatläkare raderas även privatläkarkontot.
         </p>
         <div>{getMessage(`dataExport.erase.careProviderHsaId`, data)}</div>
         <div>{getMessage(`dataExport.erase.organizationNumber`, data)}</div>
@@ -67,9 +57,7 @@ const EraseDataExport = ({ handleClose, isOpen, onComplete, eraseDataExport, err
       <ErrorSection>
         {errorMessage !== null && (
           <ErrorWrapper>
-            <IaAlert type={alertType.ERROR}>
-              Kunde inte radera på grund av ett tekniskt fel. Prova igen om en stund.
-            </IaAlert>
+            <IaAlert type={alertType.ERROR}>Kunde inte radera på grund av ett tekniskt fel. Prova igen om en stund.</IaAlert>
           </ErrorWrapper>
         )}
       </ErrorSection>
@@ -92,19 +80,9 @@ const EraseDataExport = ({ handleClose, isOpen, onComplete, eraseDataExport, err
         </Button>
       </ModalFooter>
     </Modal>
-  );
+  )
 }
 
-const mapStateToProps = (state) => {
-  return { errorMessage: getErrorMessageEraseDataExport(state) };
-};
+export const EraseDataExportId = 'eraseDataExport'
 
-export const EraseDataExportId = 'eraseDataExport';
-
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions }
-  ),
-  modalContainer(EraseDataExportId)
-)(EraseDataExport);
+export default modalContainer(EraseDataExportId)(EraseDataExport)

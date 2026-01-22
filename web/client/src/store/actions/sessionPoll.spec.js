@@ -1,5 +1,6 @@
+import { vi } from 'vitest'
 import * as actions from './sessionPoll'
-import { mockStore, syncronousActionTester } from '../../testUtils/actionUtils'
+import { mockStore, syncronousActionTester } from '@/testUtils/actionUtils'
 import * as sinon from 'sinon'
 import AppConstants from '../../AppConstants'
 import * as api from '../../api/userApi'
@@ -12,11 +13,11 @@ describe('session poll actions', () => {
     clock = sinon.useFakeTimers()
   })
   afterEach(() => {
-    // Restore the default sandbox here
     sinon.restore()
+    vi.restoreAllMocks()
   })
 
-  describe('startPoll ', () => {
+  describe('startPoll', () => {
     it('should do nothing when already started', () => {
       store = mockStore({
         sessionPoll: {
@@ -28,8 +29,7 @@ describe('session poll actions', () => {
     })
 
     it('should schedule interval when not started', () => {
-      let setIntervalFake = sinon.fake.returns(12345)
-      sinon.replace(window, 'setInterval', setIntervalFake)
+      const setIntervalSpy = vi.spyOn(window, 'setInterval').mockReturnValue(12345)
 
       store = mockStore({
         sessionPoll: {
@@ -40,117 +40,88 @@ describe('session poll actions', () => {
       const expectedActions = [{ payload: { handle: 12345 }, type: 'SET_POLL_HANDLE' }]
       const tested = () => actions.startPoll()
       syncronousActionTester(store, tested, expectedActions)
-      expect(setIntervalFake.lastCall.lastArg).toEqual(AppConstants.POLL_SESSION_INTERVAL_MS)
+      expect(setIntervalSpy.mock.lastCall[1]).toEqual(AppConstants.POLL_SESSION_INTERVAL_MS)
     })
 
-    it('should schedule interval when not started', () => {
-      let setIntervalFake = sinon.fake.returns(12345)
-      sinon.replace(window, 'setInterval', setIntervalFake)
-
+    it('should fetch after scheduled interval is passed', async () => {
       store = mockStore({
         sessionPoll: {
           handle: null,
         },
       })
 
-      const expectedActions = [{ payload: { handle: 12345 }, type: 'SET_POLL_HANDLE' }]
-      const tested = () => actions.startPoll()
-      syncronousActionTester(store, tested, expectedActions)
-      expect(setIntervalFake.lastCall.lastArg).toEqual(AppConstants.POLL_SESSION_INTERVAL_MS)
-    })
+      vi.spyOn(api, 'pollSession').mockResolvedValue({ sessionState: { authenticated: true } })
 
-    it('should fetch after scheduled interval is passed', (done) => {
-      store = mockStore({
-        sessionPoll: {
-          handle: null,
-        },
-      })
-
-      let pollSessionFake = sinon.fake.resolves({ sessionState: { authenticated: true } })
-      sinon.replace(api, 'pollSession', pollSessionFake)
-
-      let setIntervalSpy = sinon.spy(window, 'setInterval')
+      const setIntervalSpy = vi.spyOn(window, 'setInterval')
 
       const dispatchedActions = syncronousActionTester(store, actions.startPoll)
 
-      expect(dispatchedActions).toEqual([{ payload: { handle: setIntervalSpy.returnValues[0] }, type: 'SET_POLL_HANDLE' }])
+      expect(dispatchedActions).toEqual([{ payload: { handle: setIntervalSpy.mock.results[0].value }, type: 'SET_POLL_HANDLE' }])
 
       store.clearActions()
-      clock.tick(AppConstants.POLL_SESSION_INTERVAL_MS + 1000)
+      await clock.tickAsync(AppConstants.POLL_SESSION_INTERVAL_MS + 1000)
 
-      //Need to wrap in promise so that
-      Promise.resolve().then(() => {
-        expect(store.getActions()).toEqual([
-          { type: 'GET_POLL_REQUEST' },
-          { type: 'GET_POLL_SUCCESS', payload: { sessionState: { authenticated: true } } },
-        ])
-        done()
-      })
+      expect(store.getActions()).toEqual([
+        { type: 'GET_POLL_REQUEST' },
+        { type: 'GET_POLL_SUCCESS', payload: { sessionState: { authenticated: true } } },
+      ])
     })
   })
 
-  describe('requestPollUpdate ', () => {
-    it('should execute update directly', (done) => {
-      let pollSessionFake = sinon.fake.resolves({ sessionState: { authenticated: true } })
-      sinon.replace(api, 'pollSession', pollSessionFake)
+  describe('requestPollUpdate', () => {
+    it('should execute update directly', async () => {
+      vi.spyOn(api, 'pollSession').mockResolvedValue({ sessionState: { authenticated: true } })
 
-      syncronousActionTester(store, actions.requestPollUpdate)
+      const promise = store.dispatch(actions.requestPollUpdate())
+      await promise
 
-      //Need to wrap in promise so that
-      Promise.resolve().then(() => {
-        expect(store.getActions()).toEqual([
-          { type: 'GET_POLL_REQUEST' },
-          { type: 'GET_POLL_SUCCESS', payload: { sessionState: { authenticated: true } } },
-        ])
-        done()
-      })
+      expect(store.getActions()).toEqual([
+        { type: 'GET_POLL_REQUEST' },
+        { type: 'GET_POLL_SUCCESS', payload: { sessionState: { authenticated: true } } },
+      ])
     })
 
-    it('should redirect if no longer authenticated', (done) => {
-      sinon.stub(window.location, 'href')
-      sinon.stub(window.location, 'reload')
+    it('should redirect if no longer authenticated', async () => {
+      const originalLocation = window.location
+      delete window.location
+      window.location = { href: '', reload: sinon.fake() }
 
-      let pollSessionFake = sinon.fake.resolves({ sessionState: { authenticated: false } })
-      sinon.replace(api, 'pollSession', pollSessionFake)
+      vi.spyOn(api, 'pollSession').mockResolvedValue({ sessionState: { authenticated: false } })
 
-      syncronousActionTester(store, actions.requestPollUpdate)
+      const promise = store.dispatch(actions.requestPollUpdate())
+      await promise
 
-      //Need to wrap in promise so that the promise inside setInterval callback is invoked before asserting
-      Promise.resolve().then(() => {
-        expect(store.getActions()).toEqual([
-          { type: 'GET_POLL_REQUEST' },
-          { type: 'GET_POLL_SUCCESS', payload: { sessionState: { authenticated: false } } },
-        ])
-        expect(window.location.href).toContain(AppConstants.TIMEOUT_REDIRECT_URL)
-        sinon.assert.calledOnce(window.location.reload)
-        done()
-      })
+      expect(store.getActions()).toEqual([
+        { type: 'GET_POLL_REQUEST' },
+        { type: 'GET_POLL_SUCCESS', payload: { sessionState: { authenticated: false } } },
+      ])
+      expect(window.location.href).toContain(AppConstants.TIMEOUT_REDIRECT_URL)
+      sinon.assert.calledOnce(window.location.reload)
+
+      window.location = originalLocation
     })
 
-    it('should redirect if api call is rejected', (done) => {
-      sinon.stub(window.location, 'href')
-      sinon.stub(window.location, 'reload')
+    it('should redirect if api call is rejected', async () => {
+      const originalLocation = window.location
+      delete window.location
+      window.location = { href: '', reload: sinon.fake() }
 
-      let pollSessionFake = sinon.fake.rejects(Error('some error'))
-      sinon.replace(api, 'pollSession', pollSessionFake)
+      vi.spyOn(api, 'pollSession').mockRejectedValue(Error('some error'))
 
-      syncronousActionTester(store, actions.requestPollUpdate)
+      const promise = store.dispatch(actions.requestPollUpdate())
+      await promise
 
-      Promise.resolve().then(() => {
-        Promise.resolve().then(() => {
-          expect(store.getActions()).toEqual([{ type: 'GET_POLL_REQUEST' }, { type: 'GET_POLL_FAIL', payload: expect.any(Error) }])
-          expect(window.location.href).toContain(AppConstants.TIMEOUT_REDIRECT_URL)
-          sinon.assert.calledOnce(window.location.reload)
-          done()
-        })
-      })
+      expect(store.getActions()).toEqual([{ type: 'GET_POLL_REQUEST' }, { type: 'GET_POLL_FAIL', payload: expect.any(Error) }])
+      expect(window.location.href).toContain(AppConstants.TIMEOUT_REDIRECT_URL)
+      sinon.assert.calledOnce(window.location.reload)
+
+      window.location = originalLocation
     })
   })
 
-  describe('stopPoll ', () => {
+  describe('stopPoll', () => {
     it('should cancel any pending interval', () => {
-      let clearIntervalFake = sinon.fake.returns(true)
-      sinon.replace(window, 'clearInterval', clearIntervalFake)
+      const clearIntervalSpy = vi.spyOn(window, 'clearInterval').mockReturnValue(true)
 
       store = mockStore({
         sessionPoll: {
@@ -161,7 +132,7 @@ describe('session poll actions', () => {
       const expectedActions = [{ payload: { handle: null }, type: 'SET_POLL_HANDLE' }]
       const tested = () => actions.stopPoll()
       syncronousActionTester(store, tested, expectedActions)
-      expect(clearIntervalFake.lastCall.lastArg).toEqual(1111)
+      expect(clearIntervalSpy.mock.lastCall[0]).toEqual(1111)
     })
   })
 })

@@ -1,30 +1,22 @@
-import React from 'react';
-import {Redirect, Route} from 'react-router-dom';
-import {connect} from 'react-redux'
-import Loading from './Loading';
-import AppConstants from "../../AppConstants";
+import React from 'react'
+import { Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import Loading from './Loading'
+import AppConstants from '../../AppConstants'
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.user.isAuthenticated,
-    isLoading: state.user.isLoading
-  };
-};
+const UnsecuredRoute = ({ component: Component, isErrorPage, ...rest }) => {
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated)
+  const isLoading = useSelector((state) => state.user.isLoading)
 
-const UnsecuredRoute = ({component: Component, isAuthenticated, isErrorPage, isLoading, ...rest}) => {
-
-  if (isLoading){
+  if (isLoading) {
     return <Loading />
   }
 
-  return (
-    <Route {...rest} render={(props) => {
-      if (isAuthenticated && !isErrorPage) {
-        return <Redirect to={AppConstants.DEFAULT_PAGE} />;
-      }
-      return (<Component {...props}/>)
-    }} />
-  );
+  if (isAuthenticated && !isErrorPage) {
+    return <Navigate to={AppConstants.DEFAULT_PAGE} replace />
+  }
+
+  return <Component {...rest} />
 }
 
-export default connect(mapStateToProps)(UnsecuredRoute);
+export default UnsecuredRoute

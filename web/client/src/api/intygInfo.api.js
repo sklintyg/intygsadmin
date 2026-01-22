@@ -2,8 +2,7 @@ import * as utils from './utils'
 
 export const fetchIntygInfo = (intygsId) => utils.makeServerRequest(`intygInfo/${intygsId}`)
 
-export const resendNotificationStatus = (notificationId) =>
-  utils.makeServerPost(`status/${notificationId}`, { notificationId })
+export const resendNotificationStatus = (notificationId) => utils.makeServerPost(`status/${notificationId}`, { notificationId })
 
 export const resendCertificateStatus = ({ certificateIds, statuses }) =>
   utils.makeServerPost(`status/certificates`, { certificateIds, statuses })
@@ -24,23 +23,15 @@ export const resendCaregiverStatusCount = ({ careGiverId, start, end, statuses }
   utils.makeServerPost(`status/count/caregiver/${careGiverId}`, { start, end, statuses })
 
 export const fetchIntygInfoList = ({ pageIndex, sortColumn, sortDirection }) => {
-  if (!pageIndex) {
-    pageIndex = 0
-  }
-
-  if (!sortColumn) {
-    sortColumn = 'createdAt'
-  }
-
-  if (!sortDirection) {
-    sortDirection = 'DESC'
-  }
+  const finalPageIndex = pageIndex ?? 0
+  const finalSortColumn = sortColumn ?? 'createdAt'
+  const finalSortDirection = sortDirection ?? 'DESC'
 
   return utils.makeServerRequest(
     utils.buildUrlFromParams('intygInfo', {
-      page: pageIndex,
+      page: finalPageIndex,
       size: 10,
-      sort: `${sortColumn},${sortDirection}`,
+      sort: `${finalSortColumn},${finalSortDirection}`,
     })
   )
 }

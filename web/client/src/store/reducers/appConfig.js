@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { buildClientError } from './util'
-import * as ActionConstants from '../actions/appConfig'
+import * as ActionConstants from '../actions/appConfig.constants'
 
 export const CONFIG_DEFAULT_STATE = {
   versionInfo: {

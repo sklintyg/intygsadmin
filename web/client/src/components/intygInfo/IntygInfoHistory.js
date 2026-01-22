@@ -1,18 +1,19 @@
-import React from 'react';
-import IntygInfoHistoryList from "./IntygInfoHistoryList";
-import {IaTypo03} from "../styles/iaTypography";
-import ListPagination from "../styles/ListPagination";
-import {compose} from "recompose";
-import {connect} from "react-redux";
-import * as actions from "../../store/actions/intygInfoList";
-import {getIntygInfoList} from "../../store/reducers/intygInfoList";
-import styled from "styled-components";
+import React from 'react'
+import IntygInfoHistoryList from './IntygInfoHistoryList'
+import { IaTypo03 } from '../styles/iaTypography'
+import ListPagination from '../styles/ListPagination'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { fetchIntygInfoList } from '../../store/actions/intygInfoList'
+import { getIntygInfoList } from '../../store/reducers/intygInfoList'
+import styled from 'styled-components'
 
 const Wrapper = styled.div`
   margin: 45px 0 0 0;
 `
 
-const IntygInfoHistory = ({intygInfoList, fetchIntygInfoList}) => {
+const IntygInfoHistory = () => {
+  const dispatch = useAppDispatch()
+  const intygInfoList = useAppSelector(getIntygInfoList)
 
   const handlePageChange = (pageNumber) => {
     fetchList(pageNumber)
@@ -20,7 +21,7 @@ const IntygInfoHistory = ({intygInfoList, fetchIntygInfoList}) => {
 
   const fetchList = (pageIndex) => {
     const pageIndexZeroBased = pageIndex - 1
-    fetchIntygInfoList({pageIndex: pageIndexZeroBased});
+    dispatch(fetchIntygInfoList({ pageIndex: pageIndexZeroBased }))
   }
 
   return (
@@ -29,18 +30,7 @@ const IntygInfoHistory = ({intygInfoList, fetchIntygInfoList}) => {
       <IntygInfoHistoryList />
       <ListPagination list={intygInfoList} handlePageChange={handlePageChange} />
     </Wrapper>
-  );
+  )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    intygInfoList: getIntygInfoList(state)
-  };
-};
-
-export default compose(
-  connect(
-    mapStateToProps,
-    actions
-  )
-)(IntygInfoHistory);
+export default IntygInfoHistory

@@ -1,16 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
-import { AddIcon } from '../styles/iaSvgIcons';
-import IaColors from '../styles/iaColors';
-import { Button, UncontrolledTooltip } from 'reactstrap';
-import * as modalActions from '../../store/actions/modal';
-import { CreateDataExportId } from './dialogs/CreateDataExport.dialog';
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import IaColors from '../styles/iaColors'
+import { Button, UncontrolledTooltip } from 'reactstrap'
+import * as modalActions from '../../store/actions/modal'
+import { CreateDataExportId } from './dialogs/CreateDataExport.dialog'
+import { AddIcon } from '../styles/iaSvgIcons'
 
-const DataExportActionBar = ({ openModal }) => {
+const DataExportActionBar = () => {
+  const dispatch = useDispatch()
+
   const createDataExport = () => {
-    openModal(CreateDataExportId, { dataExport: undefined })
-  };
+    dispatch(modalActions.openModal(CreateDataExportId, { dataExport: undefined }))
+  }
 
   return (
     <>
@@ -22,11 +23,6 @@ const DataExportActionBar = ({ openModal }) => {
       </UncontrolledTooltip>
     </>
   )
-};
+}
 
-export default compose(
-  connect(
-    null,
-    { ...modalActions }
-  )
-)(DataExportActionBar);
+export default DataExportActionBar

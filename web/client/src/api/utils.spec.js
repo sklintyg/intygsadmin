@@ -1,186 +1,210 @@
-import *  as utils from "./utils";
+import * as utils from './utils'
 import fetchMock from 'fetch-mock'
 
 describe('api utils test', () => {
+  beforeAll(() => {
+    fetchMock.mockGlobal()
+  })
 
   afterEach(() => {
-    fetchMock.restore()
+    fetchMock.removeRoutes()
+  })
+
+  afterAll(() => {
+    fetchMock.unmockGlobal()
   })
 
   describe('buildUrlFromParams', () => {
-    const path = 'path';
+    const path = 'path'
 
     it('empty state', () => {
-      const result = utils.buildUrlFromParams(path, {});
+      const result = utils.buildUrlFromParams(path, {})
 
       expect(result).toEqual(path + '')
     })
 
     it('no parameters state', () => {
-      const result = utils.buildUrlFromParams(path);
+      const result = utils.buildUrlFromParams(path)
 
       expect(result).toEqual(path)
     })
 
-    it('don\'t include empty parameter values', () => {
+    it("don't include empty parameter values", () => {
       const state = {
         page: '1',
         sort: 'p',
         value: '',
-        nullValue: null
-      };
-      const result = utils.buildUrlFromParams(path, state);
+        nullValue: null,
+      }
+      const result = utils.buildUrlFromParams(path, state)
 
       expect(result).toEqual(`${path}?page=1&sort=p`)
     })
   })
 
   describe('handleResponse', () => {
-
     describe('success', () => {
       const reponse = {
         ok: true,
-        json: () => ('json')
-      };
+        json: () => 'json',
+      }
 
       it('empty config', () => {
-        const result = utils.handleResponse({})(reponse);
+        const result = utils.handleResponse({})(reponse)
 
         expect(result).toEqual('json')
       })
 
       it('no config', () => {
-        const result = utils.handleResponse()(reponse);
+        const result = utils.handleResponse()(reponse)
 
         expect(result).toEqual('json')
       })
 
       it('config, noBody', () => {
-        const result = utils.handleResponse({emptyBody: true})(reponse);
+        const result = utils.handleResponse({ emptyBody: true })(reponse)
 
         expect(result).toEqual({})
       })
-    });
+    })
 
-    const methods = [ {
-      method: 'makeServerRequestTest',
-      fetch: 'getOnce'
-    }, {
-      method: 'makeServerPost',
-      fetch: 'postOnce'
-    }, {
-      method: 'makeServerPut',
-      fetch: 'putOnce'
-    }, {
-      method: 'makeServerDelete',
-      fetch: 'deleteOnce'
-    }];
+    const methods = [
+      {
+        method: 'makeServerRequestTest',
+        fetch: 'get',
+      },
+      {
+        method: 'makeServerPost',
+        fetch: 'post',
+      },
+      {
+        method: 'makeServerPut',
+        fetch: 'put',
+      },
+      {
+        method: 'makeServerDelete',
+        fetch: 'delete',
+      },
+    ]
 
     utils.makeServerRequestTest = (path, body, config) => utils.makeServerRequest(path, config)
 
-    methods.map(method => {
-      const path = 'path:/api/test'
+    methods.forEach((method) => {
+      const path = 'end:/api/test'
 
-      describe(method.method, () => {
-        it('success', (done) => {
-          fetchMock[method.fetch](path, {
-            body: {
-              name: 'test'
+      describe(`${method.method}`, () => {
+        it('success', async () => {
+          fetchMock[method.fetch](
+            path,
+            {
+              body: {
+                name: 'test',
+              },
+              headers: { 'content-type': 'application/json' },
             },
-            headers: { 'content-type': 'application/json' }
-          })
+            { repeat: 1 }
+          )
 
-          utils[method.method]('test', {}).then((response) => {
-            expect(response.name).toEqual('test');
+          const response = await utils[method.method]('test', {})
+          expect(response.name).toEqual('test')
+        })
 
-            done();
-          });
-        });
+        it('success noBody', async () => {
+          fetchMock[method.fetch](
+            path,
+            {
+              headers: { 'content-type': 'application/json' },
+            },
+            { repeat: 1 }
+          )
 
-        it('success noBody', (done) => {
-          fetchMock[method.fetch](path, {
-            headers: { 'content-type': 'application/json' }
-          })
+          const response = await utils[method.method]('test', {}, { emptyBody: true })
+          expect(response).toEqual({})
+        })
 
-          utils[method.method]('test', {}, {emptyBody: true}).then((response) => {
-            expect(response).toEqual({});
+        it('error - network problems', async () => {
+          fetchMock[method.fetch](
+            path,
+            {
+              throws: { message: 'failed' },
+            },
+            { repeat: 1 }
+          )
 
-            done();
-          });
-        });
+          const error = {
+            statusCode: -1,
+            error: {
+              errorCode: 'NETWORK_ERROR',
+              message: { message: 'failed' },
+              logId: null,
+            },
+          }
 
-        it('error - network problems', (done) => {
-          fetchMock[method.fetch](path, {
-            throws: {message: 'failed'}
-          })
+          await expect(utils[method.method]('test', {})).rejects.toEqual(error)
+        })
 
-          utils[method.method]('test', {}).then().catch((response) => {
-            const error = {
-              statusCode: -1,
+        it('error - from server', async () => {
+          fetchMock[method.fetch](
+            path,
+            {
+              body: {
+                name: 'failed',
+              },
+              status: 500,
+              headers: { 'content-type': 'application/json' },
+            },
+            { repeat: 1 }
+          )
+
+          await expect(utils[method.method]('test', {})).rejects.toEqual(
+            expect.objectContaining({
+              error: { name: 'failed' },
+            })
+          )
+        })
+
+        it('error - from server noBody', async () => {
+          fetchMock[method.fetch](
+            path,
+            {
+              status: 500,
+              headers: { 'content-type': 'application/json' },
+            },
+            { repeat: 1 }
+          )
+
+          await expect(utils[method.method]('test', {})).rejects.toEqual(
+            expect.objectContaining({
               error: {
-                errorCode: 'NETWORK_ERROR',
-                message: {message: 'failed'},
-                logId: null
-              }
-            };
+                errorCode: 'UNKNOWN_INTERNAL_PROBLEM',
+                logId: null,
+                message: 'Invalid or missing JSON',
+              },
+            })
+          )
+        })
 
-            expect(response).toEqual(error);
-
-            done();
-          });
-        });
-
-        it('error - from server', (done) => {
-          fetchMock[method.fetch](path, {
-            body: {
-              name: 'failed'
+        it('error - not found', async () => {
+          fetchMock[method.fetch](
+            path,
+            {
+              status: 404,
+              headers: { 'content-type': 'application/json' },
             },
-            status: 500,
-            headers: { 'content-type': 'application/json' }
-          })
+            { repeat: 1 }
+          )
 
-          utils[method.method]('test', {}).then().catch((response) => {
-            expect(response.error).toEqual({name: 'failed'});
-
-            done();
-          });
-        });
-
-        it('error - from server noBody', (done) => {
-          fetchMock[method.fetch](path, {
-            status: 500,
-            headers: { 'content-type': 'application/json' }
-          })
-
-          utils[method.method]('test', {}).then().catch((response) => {
-            expect(response.error).toEqual({
-              errorCode: 'UNKNOWN_INTERNAL_PROBLEM',
-              logId: null,
-              message: 'Invalid or missing JSON'
-            });
-
-            done();
-          });
-        });
-
-        it('error - not found', (done) => {
-          fetchMock[method.fetch](path, {
-            status: 404,
-            headers: { 'content-type': 'application/json' }
-          })
-
-          utils[method.method]('test', {}).then().catch((response) => {
-            expect(response.error).toEqual({
-              errorCode: 'NOT_FOUND',
-              logId: null,
-              message: 'Resource not found'
-            });
-
-            done();
-          });
-        });
-      });
+          await expect(utils[method.method]('test', {})).rejects.toEqual(
+            expect.objectContaining({
+              error: {
+                errorCode: 'NOT_FOUND',
+                logId: null,
+                message: 'Resource not found',
+              },
+            })
+          )
+        })
+      })
     })
   })
-
-});
+})

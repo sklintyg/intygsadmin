@@ -1,23 +1,26 @@
-import React, {useEffect, useRef, useState} from 'react'
-import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap'
+import React, { useEffect, useRef, useState } from 'react'
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap'
 import modalContainer from '../modalContainer/modalContainer'
-import {compose} from 'recompose'
-import {RadioWrapper} from '../radioButton'
+import { RadioWrapper } from '../radioButton'
 import CustomTextarea from '../CustomTextarea'
 import DatePicker from '../datePicker'
-import * as actions from '../../store/actions/banner'
-import {connect} from 'react-redux'
+import {
+  createBanner as createBannerAction,
+  fetchFutureBanners as fetchFutureBannersAction,
+  updateBanner as updateBannerAction,
+} from '../../store/actions/banner'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import TimePicker from '../timePicker'
 import styled from 'styled-components'
 import isEqual from 'lodash/isEqual'
 import isEmpty from 'lodash/isEmpty'
-import {validateBanner} from './BannerValidator'
+import { validateBanner } from './BannerValidator'
 import HelpChevron from '../helpChevron'
 import colors from '../styles/iaColors'
-import {ErrorSection, ErrorWrapper} from '../styles/iaLayout'
-import IaAlert, {alertType} from '../alert/Alert'
-import {getErrorMessage, getFutureBanners} from '../../store/reducers/banner'
-import AppConstants from "../../AppConstants";
+import { ErrorSection, ErrorWrapper } from '../styles/iaLayout'
+import IaAlert, { alertType } from '../alert/Alert'
+import { getErrorMessage, getFutureBanners } from '../../store/reducers/banner'
+import AppConstants from '../../AppConstants'
 
 const StyledBody = styled(ModalBody)`
   h5 {
@@ -57,7 +60,7 @@ const tjanstButtons = Object.entries(AppConstants.service).map(([key, value]) =>
   return {
     id: `tjanst${key}`,
     label: value,
-    value: key
+    value: key,
   }
 })
 
@@ -65,11 +68,14 @@ const prioButtons = Object.entries(AppConstants.prio).map(([key, value]) => {
   return {
     id: `prio${key}`,
     label: value,
-    value: key
+    value: key,
   }
 })
 
-const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBanner, data, fetchFutureBanners, futureBanners, errorMessage }) => {
+const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
+  const dispatch = useAppDispatch()
+  const futureBanners = useAppSelector(getFutureBanners)
+  const errorMessage = useAppSelector(getErrorMessage)
   const [validationMessages, setValidationMessages] = useState({})
   const [update, setUpdate] = useState(false)
   const [newBanner, setNewBanner] = useState(initialBanner)
@@ -78,7 +84,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   const [initialMessageValue, setInitialMessageValue] = useState('')
 
   const setApplicationAndCheckFuture = (application) => {
-    fetchFutureBanners(application).finally(() => {
+    dispatch(fetchFutureBannersAction(application)).finally(() => {
       setNewBanner({ ...newBanner, application })
     })
   }
@@ -114,8 +120,8 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
       return
     }
     if (errorMessage != null && 'ALREADY_EXISTS' === errorMessage.code) {
-      const message = 'Ändra visningsperioden. Det finns redan en driftbanner som infaller i denna period.';
-      setValidationMessages({displayTo: message, displayFrom: '', displayToTime: '', displayFromTime: ''})
+      const message = 'Ändra visningsperioden. Det finns redan en driftbanner som infaller i denna period.'
+      setValidationMessages({ displayTo: message, displayFrom: '', displayToTime: '', displayFromTime: '' })
     } else {
       setErrorActive(true)
     }
@@ -141,14 +147,16 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }
 
   const send = () => {
-    const func = update ? updateBanner(createSendObject(), data.banner.id) : createBanner(createSendObject());
+    const func = update
+      ? dispatch(updateBannerAction(createSendObject(), data.banner.id))
+      : dispatch(createBannerAction(createSendObject()))
 
     func
       .then(() => {
         cancel()
         onComplete()
       })
-      .catch((data) => {
+      .catch((_data) => {
         setServerErrorActive(true)
       })
   }
@@ -162,16 +170,14 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }
 
   const enableSaveBtn = () => {
-
     const fields = ['application', 'message', 'displayFrom', 'displayTo', 'priority']
-    const fieldsEdit = fields.concat(['displayFromTime','displayToTime'])
+    const fieldsEdit = fields.concat(['displayFromTime', 'displayToTime'])
 
     let enable = fieldsEdit.reduce((accumulator, currentValue) => {
       return accumulator && newBanner[currentValue]
     }, true)
 
-    enable = enable &&
-      isEmpty(validationMessages)
+    enable = enable && isEmpty(validationMessages)
 
     if (update) {
       let changed = fields.reduce((accumulator, currentValue) => {
@@ -192,125 +198,118 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, createBanner, updateBan
   }
 
   return (
-      <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
-        <ModalHeader toggle={cancel}>{update ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
-        <StyledBody>
-          <h5>Välj tjänst</h5>
-          <RadioWrapper
-            radioButtons={tjanstButtons}
-            onChange={(event) => setApplicationAndCheckFuture(event.target.value)}
-            selected={newBanner.application}
-          />
-          <h5>Skriv meddelandetext</h5>
-          <CustomTextarea inputId='bannerMessage' className='show-external-link' onChange={(value) => onChange(value, 'message')} value={initialMessageValue} limit={200} />
-          <h5>Ange visningsperiod</h5>
-          <FlexDiv>
-            <span>Från</span>
-            <span>
-              <DatePicker
-                inputId='displayFromDate'
-                date={newBanner.displayFrom}
-                onChange={(value) => onChange(value, 'displayFrom')}
-                className={validationMessages.displayFrom !== undefined ? 'error' : ''}
-              />
-            </span>
-            <span>
-              <TimePicker
-                inputId='displayFromTime'
-                value={newBanner.displayFromTime}
-                onChange={(value) => onChange(value, 'displayFromTime')}
-                className={validationMessages.displayFromTime !== undefined ? 'error' : ''}
-              />
-            </span>
-          </FlexDiv>
-          <ValidationMessage>{validationMessages.displayFrom}</ValidationMessage>
-          <ValidationMessage>{validationMessages.displayFromTime}</ValidationMessage>
-          <FlexDiv>
-            <span>till</span>
-            <span>
-              <DatePicker
-                inputId='displayToDate'
-                date={newBanner.displayTo}
-                onChange={(value) => onChange(value, 'displayTo')}
-                className={validationMessages.displayTo !== undefined ? 'error' : ''}
-              />
-            </span>
-            <span>
-              <TimePicker
-                inputId='displayToTime'
-                value={newBanner.displayToTime}
-                onChange={(value) => onChange(value, 'displayToTime')}
-                className={validationMessages.displayToTime !== undefined ? 'error' : ''}
-              />
-            </span>
-          </FlexDiv>
-          <ValidationMessage>{validationMessages.displayTo}</ValidationMessage>
-          <ValidationMessage>{validationMessages.displayToTime}</ValidationMessage>
-          <HelpChevron label={'Välj prioritet'}>
-            <h5>Låg prioritet</h5>
-            <p>Används för information som inte påverkar användandet av tjänsten. En blå driftbanner visas.</p>
-            <h5>Medel prioritet</h5>
-            <p>
-              Används för information som användaren bör uppmärksamma och för händelser som inte påverkar användandet av tjänsten, till
-              exempel vid kommande driftstörningar. En gul driftbanner visas.
-            </p>
-            <h5>Hög prioritet</h5>
-            <p>
-              Används för information som användaren behöver uppmärksamma och för händelser som påverkar användandet av tjänsten, till
-              exempel vid pågående driftstörningar. En röd driftbanner visas.
-            </p>
-          </HelpChevron>
-          <RadioWrapper
-            radioButtons={prioButtons}
-            onChange={(event) => onChange(event.target.value, 'priority')}
-            selected={newBanner.priority}
-          />
-        </StyledBody>
-        <ErrorSection>
-          {errorActive && (
-            <ErrorWrapper>
-              <IaAlert type={alertType.ERROR}>
-                Driftbannern kunde inte {update ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
-              </IaAlert>
-            </ErrorWrapper>
-          )}
-        </ErrorSection>
-        <ModalFooter className="no-border">
-          <Button
-            id="saveBanner"
-            disabled={!enableSaveBtn()}
-            color={'primary'}
-            onClick={() => {
-              send()
-            }}>
-            {update ? 'Ändra' : 'Skapa'}
-          </Button>
-          <Button
-            id="closeBanner"
-            color={'default'}
-            onClick={() => {
-              cancel()
-            }}>
-            Avbryt
-          </Button>
-        </ModalFooter>
-      </Modal>
+    <Modal isOpen={isOpen} size={'md'} backdrop={true} toggle={cancel}>
+      <ModalHeader toggle={cancel}>{update ? 'Ändra driftbannerns innehåll' : 'Skapa driftbanner'}</ModalHeader>
+      <StyledBody>
+        <h5>Välj tjänst</h5>
+        <RadioWrapper
+          radioButtons={tjanstButtons}
+          onChange={(event) => setApplicationAndCheckFuture(event.target.value)}
+          selected={newBanner.application}
+        />
+        <h5>Skriv meddelandetext</h5>
+        <CustomTextarea
+          inputId="bannerMessage"
+          className="show-external-link"
+          onChange={(value) => onChange(value, 'message')}
+          value={initialMessageValue}
+          limit={200}
+        />
+        <h5>Ange visningsperiod</h5>
+        <FlexDiv>
+          <span>Från</span>
+          <span>
+            <DatePicker
+              inputId="displayFromDate"
+              date={newBanner.displayFrom}
+              onChange={(value) => onChange(value, 'displayFrom')}
+              className={validationMessages.displayFrom !== undefined ? 'error' : ''}
+            />
+          </span>
+          <span>
+            <TimePicker
+              inputId="displayFromTime"
+              value={newBanner.displayFromTime}
+              onChange={(value) => onChange(value, 'displayFromTime')}
+              className={validationMessages.displayFromTime !== undefined ? 'error' : ''}
+            />
+          </span>
+        </FlexDiv>
+        <ValidationMessage>{validationMessages.displayFrom}</ValidationMessage>
+        <ValidationMessage>{validationMessages.displayFromTime}</ValidationMessage>
+        <FlexDiv>
+          <span>till</span>
+          <span>
+            <DatePicker
+              inputId="displayToDate"
+              date={newBanner.displayTo}
+              onChange={(value) => onChange(value, 'displayTo')}
+              className={validationMessages.displayTo !== undefined ? 'error' : ''}
+            />
+          </span>
+          <span>
+            <TimePicker
+              inputId="displayToTime"
+              value={newBanner.displayToTime}
+              onChange={(value) => onChange(value, 'displayToTime')}
+              className={validationMessages.displayToTime !== undefined ? 'error' : ''}
+            />
+          </span>
+        </FlexDiv>
+        <ValidationMessage>{validationMessages.displayTo}</ValidationMessage>
+        <ValidationMessage>{validationMessages.displayToTime}</ValidationMessage>
+        <HelpChevron label={'Välj prioritet'}>
+          <h5>Låg prioritet</h5>
+          <p>Används för information som inte påverkar användandet av tjänsten. En blå driftbanner visas.</p>
+          <h5>Medel prioritet</h5>
+          <p>
+            Används för information som användaren bör uppmärksamma och för händelser som inte påverkar användandet av tjänsten, till
+            exempel vid kommande driftstörningar. En gul driftbanner visas.
+          </p>
+          <h5>Hög prioritet</h5>
+          <p>
+            Används för information som användaren behöver uppmärksamma och för händelser som påverkar användandet av tjänsten, till exempel
+            vid pågående driftstörningar. En röd driftbanner visas.
+          </p>
+        </HelpChevron>
+        <RadioWrapper
+          radioButtons={prioButtons}
+          onChange={(event) => onChange(event.target.value, 'priority')}
+          selected={newBanner.priority}
+        />
+      </StyledBody>
+      <ErrorSection>
+        {errorActive && (
+          <ErrorWrapper>
+            <IaAlert type={alertType.ERROR}>
+              Driftbannern kunde inte {update ? 'ändras' : 'skapas'} på grund av ett tekniskt fel. Prova igen om en stund.
+            </IaAlert>
+          </ErrorWrapper>
+        )}
+      </ErrorSection>
+      <ModalFooter className="no-border">
+        <Button
+          id="saveBanner"
+          disabled={!enableSaveBtn()}
+          color={'primary'}
+          onClick={() => {
+            send()
+          }}>
+          {update ? 'Ändra' : 'Skapa'}
+        </Button>
+        <Button
+          id="closeBanner"
+          color={'default'}
+          onClick={() => {
+            cancel()
+          }}>
+          Avbryt
+        </Button>
+      </ModalFooter>
+    </Modal>
   )
 }
 
 export const CreateBannerId = 'createBanner'
 
-const mapStateToProps = (state) => {
-  return {
-    futureBanners: getFutureBanners(state),
-    errorMessage: getErrorMessage(state)
-  }
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions }
-  ),
-  modalContainer(CreateBannerId)
-)(CreateBanner)
+export default modalContainer(CreateBannerId)(CreateBanner)

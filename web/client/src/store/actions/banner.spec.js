@@ -1,4 +1,5 @@
-import {functionToTest, mockStore} from '../../testUtils/actionUtils'
+import { vi } from 'vitest'
+import { functionToTest, mockStore } from '@/testUtils/actionUtils'
 import * as actions from './banner'
 import * as api from '../../api/banner.api'
 
@@ -11,171 +12,99 @@ describe('Banner actions', () => {
     })
   })
 
-  describe('removeBanner', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
 
+  describe('removeBanner', () => {
     test('success', () => {
       const id = 'userId'
       const response = [{}]
 
-      api.removeBanner = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'removeBanner').mockResolvedValue(response)
 
-      const expectedActions = [
-        { type: actions.REMOVE_BANNER_REQUEST },
-        { type: actions.REMOVE_BANNER_SUCCESS, response },
-      ]
+      const expectedActions = [{ type: actions.REMOVE_BANNER_REQUEST }, { type: actions.REMOVE_BANNER_SUCCESS, response }]
 
-      return functionToTest(
-        store,
-        () => actions.removeBanner(id),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.removeBanner(id), expectedActions)
     })
 
     test('failure', () => {
       const id = 'userId'
       const response = [{}]
 
-      api.removeBanner = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'removeBanner').mockRejectedValue(response)
 
-      const expectedActions = [
-        { type: actions.REMOVE_BANNER_REQUEST },
-        { type: actions.REMOVE_BANNER_FAILURE, payload: response },
-      ]
+      const expectedActions = [{ type: actions.REMOVE_BANNER_REQUEST }, { type: actions.REMOVE_BANNER_FAILURE, payload: response }]
 
-      return functionToTest(
-        store,
-        () => actions.removeBanner(id),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.removeBanner(id), expectedActions)
     })
   })
 
   describe('createBanner', () => {
-
     test('success', () => {
-      const response = {id: 'userId'}
+      const response = { id: 'userId' }
 
-      api.createBanner = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'createBanner').mockResolvedValue(response)
 
-      const expectedActions = [
-        { type: actions.CREATE_BANNER_REQUEST },
-        { type: actions.CREATE_BANNER_SUCCESS, response },
-      ]
+      const expectedActions = [{ type: actions.CREATE_BANNER_REQUEST }, { type: actions.CREATE_BANNER_SUCCESS, response }]
 
-      return functionToTest(
-        store,
-        () => actions.createBanner({name: 'name'}),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.createBanner({ name: 'name' }), expectedActions)
     })
 
     test('failure', () => {
-      const response = {id: 'userId'}
+      const response = { id: 'userId' }
 
-      api.createBanner = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'createBanner').mockRejectedValue(response)
 
-      const expectedActions = [
-        { type: actions.CREATE_BANNER_REQUEST },
-        { type: actions.CREATE_BANNER_FAILURE, payload: response },
-      ]
+      const expectedActions = [{ type: actions.CREATE_BANNER_REQUEST }, { type: actions.CREATE_BANNER_FAILURE, payload: response }]
 
-      return functionToTest(
-        store,
-        () => actions.createBanner({name: 'name'}),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.createBanner({ name: 'name' }), expectedActions)
     })
   })
 
   describe('updateBanner', () => {
-    const bannerId = 'userId';
+    const bannerId = 'userId'
 
     test('success', () => {
-      const response = {name: 'userId'}
+      const response = { name: 'userId' }
 
-      api.updateBanner = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'updateBanner').mockResolvedValue(response)
 
-      const expectedActions = [
-        { type: actions.UPDATE_BANNER_REQUEST },
-        { type: actions.UPDATE_BANNER_SUCCESS, response },
-      ]
+      const expectedActions = [{ type: actions.UPDATE_BANNER_REQUEST }, { type: actions.UPDATE_BANNER_SUCCESS, response }]
 
-      return functionToTest(
-        store,
-        () => actions.updateBanner({name: 'name'}, bannerId),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.updateBanner({ name: 'name' }, bannerId), expectedActions)
     })
 
     test('failure', () => {
-      const response = {name: 'userId'}
+      const response = { name: 'userId' }
 
-      api.updateBanner = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'updateBanner').mockRejectedValue(response)
 
-      const expectedActions = [
-        { type: actions.UPDATE_BANNER_REQUEST },
-        { type: actions.UPDATE_BANNER_FAILURE, payload: response },
-      ]
+      const expectedActions = [{ type: actions.UPDATE_BANNER_REQUEST }, { type: actions.UPDATE_BANNER_FAILURE, payload: response }]
 
-      return functionToTest(
-        store,
-        () => actions.updateBanner({name: 'name'}, bannerId),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.updateBanner({ name: 'name' }, bannerId), expectedActions)
     })
   })
 
   describe('fetchFutureBanners', () => {
-    const bannerId = 'userId';
-
     test('success', () => {
-      const response = {name: 'userId'}
+      const response = { name: 'userId' }
 
-      api.fetchFutureBanners = () => {
-        return Promise.resolve(response)
-      }
+      vi.spyOn(api, 'fetchFutureBanners').mockResolvedValue(response)
 
-      const expectedActions = [
-        { type: actions.FETCH_FUTURE_REQUEST },
-        { type: actions.FETCH_FUTURE_SUCCESS, response },
-      ]
+      const expectedActions = [{ type: actions.FETCH_FUTURE_REQUEST }, { type: actions.FETCH_FUTURE_SUCCESS, response }]
 
-      return functionToTest(
-        store,
-        () => actions.fetchFutureBanners('WEBCERT'),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.fetchFutureBanners('WEBCERT'), expectedActions)
     })
 
     test('failure', () => {
-      const response = {name: 'userId'}
+      const response = { name: 'userId' }
 
-      api.fetchFutureBanners = () => {
-        return Promise.reject(response)
-      }
+      vi.spyOn(api, 'fetchFutureBanners').mockRejectedValue(response)
 
-      const expectedActions = [
-        { type: actions.FETCH_FUTURE_REQUEST },
-        { type: actions.FETCH_FUTURE_FAILURE, payload: response },
-      ]
+      const expectedActions = [{ type: actions.FETCH_FUTURE_REQUEST }, { type: actions.FETCH_FUTURE_FAILURE, payload: response }]
 
-      return functionToTest(
-        store,
-        () => actions.fetchFutureBanners('WEBCERT'),
-        expectedActions
-      )
+      return functionToTest(store, () => actions.fetchFutureBanners('WEBCERT'), expectedActions)
     })
   })
 })

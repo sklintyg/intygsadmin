@@ -1,20 +1,19 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {compose} from 'recompose'
+import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import TableSortHead from '../styles/TableSortHead'
-import {Button, Table, UncontrolledTooltip} from 'reactstrap'
+import { Button, Table, UncontrolledTooltip } from 'reactstrap'
 import FetchError from './FetchError'
-import {CreateBannerId, RemoveBannerId} from '../bannerDialogs'
+import { CreateBannerId, RemoveBannerId } from '../bannerDialogs'
 import * as modalActions from '../../store/actions/modal'
 import * as actions from '../../store/actions/banner'
-import IaAlert, {alertType} from '../alert/Alert'
-import StatusText from "./StatusText";
-import AppConstants from "../../AppConstants";
-import {ClearIcon, Create} from '../styles/iaSvgIcons'
-import DisplayDateTime from '../displayDateTime/DisplayDateTime';
-import {NoWrapTd} from "../styles/iaLayout";
-import DisplayDate from "../displayDateTime/DisplayDate";
+import IaAlert, { alertType } from '../alert/Alert'
+import StatusText from './StatusText'
+import AppConstants from '../../AppConstants'
+import { ClearIcon, Create } from '../styles/iaSvgIcons'
+import DisplayDateTime from '../displayDateTime/DisplayDateTime'
+import { NoWrapTd } from '../styles/iaLayout'
+import DisplayDate from '../displayDateTime/DisplayDate'
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
@@ -30,11 +29,14 @@ const MessageColumn = styled.td`
   word-break: break-all;
 `
 
-const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner, fetchFutureBanners }) => {
+const BannerList = ({ bannerList, errorMessage, onSort }) => {
+  const dispatch = useDispatch()
+
+  const openModal = (modalId, props) => dispatch(modalActions.openModal(modalId, props))
+  const removeBanner = (bannerId) => dispatch(actions.removeBanner(bannerId))
+  const fetchFutureBanners = (application) => dispatch(actions.fetchFutureBanners(application))
   if (errorMessage) {
-    return (
-      <FetchError message={errorMessage} />
-    )
+    return <FetchError message={errorMessage} />
   }
 
   if (bannerList.content && bannerList.content.length === 0) {
@@ -86,8 +88,6 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
       })
     })
   }
-
-
 
   return (
     <Wrapper>
@@ -150,10 +150,12 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
           </tr>
         </thead>
         <tbody id={'BannerListTable'}>
-          { bannerList.content &&
+          {bannerList.content &&
             bannerList.content.map((banner) => (
               <tr key={banner.id}>
-                <NoWrapTd><DisplayDate date={banner.createdAt} /></NoWrapTd>
+                <NoWrapTd>
+                  <DisplayDate date={banner.createdAt} />
+                </NoWrapTd>
                 <td>{AppConstants.service[banner.application]}</td>
                 <td>
                   <DisplayDateTime date={banner.displayFrom} />
@@ -161,11 +163,13 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                   <DisplayDateTime date={banner.displayTo} />
                 </td>
                 <td>{AppConstants.prio[banner.priority]}</td>
-                <MessageColumn className='banner-message show-external-link' dangerouslySetInnerHTML={{ __html: banner.message }} />
-                <td><StatusText status={banner.status} /></td>
+                <MessageColumn className="banner-message show-external-link" dangerouslySetInnerHTML={{ __html: banner.message }} />
+                <td>
+                  <StatusText status={banner.status} />
+                </td>
                 <td>
                   <Button
-                    className='change-btn'
+                    className="change-btn"
                     id={`changeBtn${banner.id}`}
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
@@ -174,13 +178,13 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                     color="primary">
                     <Create /> Ändra
                   </Button>
-                  <UncontrolledTooltip trigger='hover' placement="top" target={`changeBtn${banner.id}`}>
+                  <UncontrolledTooltip trigger="hover" placement="top" target={`changeBtn${banner.id}`}>
                     Öppnar ett dialogfönster där du kan ändra driftbannerns innehåll.
                   </UncontrolledTooltip>
                 </td>
                 <td>
                   <Button
-                    className='end-btn'
+                    className="end-btn"
                     id={`endBtn${banner.id}`}
                     disabled={banner.status === 'FINISHED'}
                     onClick={() => {
@@ -189,7 +193,7 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
                     color="default">
                     <ClearIcon /> Avsluta
                   </Button>
-                  <UncontrolledTooltip trigger='hover' placement="top" target={`endBtn${banner.id}`}>
+                  <UncontrolledTooltip trigger="hover" placement="top" target={`endBtn${banner.id}`}>
                     Öppnar ett dialogfönster där du kan avsluta driftbannern.
                   </UncontrolledTooltip>
                 </td>
@@ -201,9 +205,4 @@ const BannerList = ({ bannerList, onSort, errorMessage, openModal, removeBanner,
   )
 }
 
-export default compose(
-  connect(
-    null,
-    { ...actions, ...modalActions }
-  )
-)(BannerList)
+export default BannerList

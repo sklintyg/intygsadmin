@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { buildClientError } from "./util";
-import * as ActionConstants from '../actions/intygInfoList'
+import { buildClientError } from './util'
+import * as ActionConstants from '../actions/intygInfoList.constants'
 
 export const IntygInfoListDefaultState = {
   content: [],
@@ -16,7 +16,8 @@ export const IntygInfoListDefaultState = {
 const intygInfoList = (state = IntygInfoListDefaultState, action) => {
   switch (action.type) {
     case ActionConstants.FETCH_INTYG_INFO_LIST_SUCCESS:
-      return { ...state,
+      return {
+        ...state,
         content: action.response.content,
         numberOfElements: action.response.content.length,
         pageIndex: action.response.page.number,
@@ -60,7 +61,7 @@ const errorMessage = (state = null, action) => {
 export default combineReducers({
   intygInfoList,
   isFetching,
-  errorMessage
+  errorMessage,
 })
 
 export const getIntygInfoList = (state) => state.intygInfoList.intygInfoList
@@ -69,4 +70,6 @@ export const getIsFetching = (state) => state.intygInfoList.isFetching
 
 export const getErrorMessage = (state) => state.intygInfoList.errorMessage
 
-export const getSortOrder = (state) => {return {sortColumn: state.intygInfoList.intygInfoList.sortColumn, sortDirection: state.intygInfoList.intygInfoList.sortDirection}}
+export const getSortOrder = (state) => {
+  return { sortColumn: state.intygInfoList.intygInfoList.sortColumn, sortDirection: state.intygInfoList.intygInfoList.sortDirection }
+}

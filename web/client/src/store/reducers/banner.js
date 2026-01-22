@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { buildClientError } from './util'
-import * as ActionConstants from '../actions/banner'
+import * as ActionConstants from '../actions/banner.constants'
 
 const banner = (state = {}, action) => {
   switch (action.type) {
@@ -42,7 +42,7 @@ const errorMessage = (state = null, action) => {
     case ActionConstants.FETCH_FUTURE_FAILURE:
       return {
         code: action.payload.error.errorCode,
-        error: buildClientError(action.payload, 'error.banner').message
+        error: buildClientError(action.payload, 'error.banner').message,
       }
     case ActionConstants.REMOVE_BANNER_REQUEST:
     case ActionConstants.REMOVE_BANNER_SUCCESS:

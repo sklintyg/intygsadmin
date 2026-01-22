@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import { buildClientError } from "./util";
-import * as ActionConstants from '../actions/privatePractitioner'
+import { buildClientError } from './util'
+import * as ActionConstants from '../actions/privatePractitioner.constants'
 
 const privatePractitioner = (state = {}, action) => {
   switch (action.type) {
@@ -39,15 +39,15 @@ const errorMessage = (state = null, action) => {
 
 const errorMessageUnregisterPrivatePractitioner = (state = null, action) => {
   switch (action.type) {
-  case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_FAILURE:
-    return buildClientError(action.payload, 'error.privatePractitioner.unregister').message
-  case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_REQUEST:
-  case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_SUCCESS:
-    return null;
-  default:
-    return state;
+    case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_FAILURE:
+      return buildClientError(action.payload, 'error.privatePractitioner.unregister').message
+    case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_REQUEST:
+    case ActionConstants.UNREGISTER_PRIVATE_PRACTITIONER_SUCCESS:
+      return null
+    default:
+      return state
   }
-};
+}
 
 const isFetchingPrivatePractitionerFile = (state = false, action) => {
   switch (action.type) {
@@ -79,7 +79,7 @@ export default combineReducers({
   errorMessage,
   isFetchingPrivatePractitionerFile,
   errorMessagePrivatePractitionerFile,
-  errorMessageUnregisterPrivatePractitioner
+  errorMessageUnregisterPrivatePractitioner,
 })
 
 export const getPrivatePractitioner = (state) => state.privatePractitioner.privatePractitioner

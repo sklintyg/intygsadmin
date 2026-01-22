@@ -1,11 +1,7 @@
-import React, {useEffect} from 'react'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
-import * as actions from '../../store/actions/intygInfo'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import {getErrorMessage, getIsFetching} from '../../store/reducers/countStatus.reducer'
-import IaAlert, {alertType} from "../alert/Alert";
-import {resendCaregiverStatusCount, resendCertificateStatusCount, resendUnitsStatusCount} from "../../api/intygInfo.api";
+import IaAlert, { alertType } from '../alert/Alert'
+import { resendCaregiverStatusCount, resendCertificateStatusCount, resendUnitsStatusCount } from '../../api/intygInfo.api'
 
 const PreviewDiv = styled.div`
   display: flex;
@@ -13,19 +9,13 @@ const PreviewDiv = styled.div`
   margin-bottom: 32px;
 `
 
-const ResendStatusCount = ({ statusFor,
-  certificateIds,
-  unitIds,
-  careGiverId,
-  statuses,
-  start,
-  end }) => {
+const ResendStatusCount = ({ statusFor, certificateIds, unitIds, careGiverId, statuses, start, end }) => {
   const [error, setError] = React.useState(false)
   const [count, setCount] = React.useState(undefined)
   const [max, setMax] = React.useState(undefined)
 
   useEffect(() => {
-    let request;
+    let request
     if (statusFor === '0') {
       request = resendCertificateStatusCount({ certificateIds, statuses })
     }
@@ -46,16 +36,18 @@ const ResendStatusCount = ({ statusFor,
       })
     }
 
-    request.then((response) => {
+    request
+      .then((response) => {
         setError(false)
         setCount(response.count)
         setMax(response.max)
-    }).catch(() => {
-      setError(true)
-      setCount(undefined)
-      setMax(undefined)
-    });
-  }, [statusFor, careGiverId, unitIds, start, end, statuses, certificateIds]);
+      })
+      .catch(() => {
+        setError(true)
+        setCount(undefined)
+        setMax(undefined)
+      })
+  }, [statusFor, careGiverId, unitIds, start, end, statuses, certificateIds])
 
   if (count === 0 && !error) {
     return <IaAlert type={alertType.ERROR}>Det finns inga händelser att skicka om</IaAlert>
@@ -66,7 +58,9 @@ const ResendStatusCount = ({ statusFor,
   }
 
   if (count > max) {
-    return <IaAlert type={alertType.ERROR}>Det finns för många händelser att skicka om. Begränsa perioden. Antal händelser: {count}</IaAlert>
+    return (
+      <IaAlert type={alertType.ERROR}>Det finns för många händelser att skicka om. Begränsa perioden. Antal händelser: {count}</IaAlert>
+    )
   }
 
   return (
@@ -77,16 +71,4 @@ const ResendStatusCount = ({ statusFor,
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isFetching: getIsFetching,
-    errorMessage: getErrorMessage,
-  }
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    actions
-  )
-)(ResendStatusCount)
+export default ResendStatusCount

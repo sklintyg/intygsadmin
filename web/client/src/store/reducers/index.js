@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 import user from './user'
-import { connectRouter } from 'connected-react-router'
 import modal from './modal'
 import sessionPoll from './sessionPoll'
 import appConfig from './appConfig'
@@ -14,29 +13,27 @@ import users from './users'
 import dataExport from './dataExport'
 import countStatus from './countStatus.reducer'
 
-const appReducer = (history) =>
-  combineReducers({
-    user,
-    router: connectRouter(history),
-    modal,
-    sessionPoll,
-    appConfig,
-    bannerList,
-    banner,
-    integratedUnits,
-    privatePractitioner,
-    intygInfo,
-    intygInfoList,
-    users,
-    dataExport,
-    countStatus,
-  })
+const appReducer = combineReducers({
+  user,
+  modal,
+  sessionPoll,
+  appConfig,
+  bannerList,
+  banner,
+  integratedUnits,
+  privatePractitioner,
+  intygInfo,
+  intygInfoList,
+  users,
+  dataExport,
+  countStatus,
+})
 
-const reducers = (history) => (state, action) => {
+const rootReducer = (state, action) => {
   if (action.payload && action.payload.response && action.payload.response.status === 401) {
     state = undefined
   }
-  return appReducer(history)(state, action)
+  return appReducer(state, action)
 }
 
-export default reducers
+export default rootReducer

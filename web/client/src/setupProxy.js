@@ -1,12 +1,19 @@
-const proxy = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
-module.exports = function(app) {
-  const url = 'http://localhost:8070/';
+module.exports = function (app) {
+  const url = 'http://localhost:8070/'
 
-  app.use(proxy('/services', { target: url, changeOrigin: false }));
-  app.use(proxy('/fake', { target: url, changeOrigin: false }));
-  app.use(proxy('/api', { target: url, changeOrigin: false }));
-  app.use(proxy('/maillink', { target: url, changeOrigin: false }));
-  app.use(proxy('/public-api', { target: url, changeOrigin: false }));
-  app.use(proxy('/logout', { target: url, changeOrigin: false }));
-};
+  const proxyOptions = {
+    target: url,
+    changeOrigin: false,
+    logLevel: 'debug',
+    secure: false,
+  }
+
+  app.use(createProxyMiddleware('/services', proxyOptions))
+  app.use(createProxyMiddleware('/fake', proxyOptions))
+  app.use(createProxyMiddleware('/api', proxyOptions))
+  app.use(createProxyMiddleware('/maillink', proxyOptions))
+  app.use(createProxyMiddleware('/public-api', proxyOptions))
+  app.use(createProxyMiddleware('/logout', proxyOptions))
+}

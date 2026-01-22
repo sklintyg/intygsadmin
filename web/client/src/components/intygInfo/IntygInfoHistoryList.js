@@ -1,19 +1,31 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import React, { useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import TableSortHead from '../styles/TableSortHead'
 import { Table } from 'reactstrap'
 import * as actions from '../../store/actions/intygInfoList'
-import DisplayDateTime from '../displayDateTime/DisplayDateTime';
-import IaAlert, {alertType} from "../alert/Alert";
-import {getErrorMessage, getIntygInfoList, getIsFetching} from "../../store/reducers/intygInfoList";
+import DisplayDateTime from '../displayDateTime/DisplayDateTime'
+import IaAlert, { alertType } from '../alert/Alert'
+import { getErrorMessage, getIntygInfoList } from '../../store/reducers/intygInfoList'
 
 const ResultLine = styled.div`
   padding: 20px 0 10px 0;
 `
 
-const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => {
+const IntygInfoHistoryList = () => {
+  const dispatch = useDispatch()
+  const intygInfoList = useSelector(getIntygInfoList)
+  const errorMessage = useSelector(getErrorMessage)
+
+  const fetchIntygInfoList = useCallback((params) => dispatch(actions.fetchIntygInfoList(params)), [dispatch])
+
+  useEffect(() => {
+    const { sortColumn, sortDirection } = intygInfoList
+    if (sortColumn !== undefined) {
+      fetchIntygInfoList({ sortColumn, sortDirection })
+    }
+  }, [fetchIntygInfoList, intygInfoList])
+
   if (errorMessage) {
     return (
       <ResultLine>
@@ -24,9 +36,7 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
 
   if (intygInfoList.content && intygInfoList.content.length === 0) {
     if (intygInfoList.totalElements === 0) {
-      return (
-        <ResultLine></ResultLine>
-      )
+      return <ResultLine></ResultLine>
     }
   }
 
@@ -38,7 +48,7 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
       sortColumn = newSortColumn
     }
 
-    fetchData({ ...otherProps, sortColumn, sortDirection })
+    fetchIntygInfoList({ sortColumn, sortDirection })
   }
 
   return (
@@ -46,7 +56,7 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
       <ResultLine>
         Visar {intygInfoList.start}-{intygInfoList.end} av {intygInfoList.totalElements} sökningar
       </ResultLine>
-      <Table striped id='intygInfoHistoryTable'>
+      <Table striped id="intygInfoHistoryTable">
         <thead>
           <tr>
             <TableSortHead
@@ -73,41 +83,20 @@ const IntygInfoHistoryList = ({ intygInfoList, errorMessage, ...otherProps}) => 
           </tr>
         </thead>
         <tbody id={'IntygInfoListTable'}>
-        { intygInfoList.content && intygInfoList.content.map((intygInfo) => (
-          <tr key={intygInfo.id}>
-            <td><DisplayDateTime date={intygInfo.createdAt} includeSeconds={true} /></td>
-            <td>{intygInfo.employeeName}</td>
-            <td>{intygInfo.intygId}</td>
-          </tr>
-        ))}
+          {intygInfoList.content &&
+            intygInfoList.content.map((intygInfo) => (
+              <tr key={intygInfo.id}>
+                <td>
+                  <DisplayDateTime date={intygInfo.createdAt} includeSeconds={true} />
+                </td>
+                <td>{intygInfo.employeeName}</td>
+                <td>{intygInfo.intygId}</td>
+              </tr>
+            ))}
         </tbody>
       </Table>
     </>
   )
 }
 
-const fetchData = ({ fetchIntygInfoList, sortColumn, sortDirection }) => {
-  fetchIntygInfoList({ sortColumn, sortDirection })
-}
-
-const lifeCycleValues = {
-  componentDidMount() {
-    fetchData(this.props)
-  },
-}
-
-const mapStateToProps = (state) => {
-  return {
-    intygInfoList: getIntygInfoList(state),
-    isFetching: getIsFetching(state),
-    errorMessage: getErrorMessage(state)
-  }
-}
-
-export default compose(
-  connect(
-    mapStateToProps,
-    { ...actions }
-  ),
-  lifecycle(lifeCycleValues)
-)(IntygInfoHistoryList)
+export default IntygInfoHistoryList
