@@ -135,15 +135,30 @@ export default combineReducers({
 
 export const getIsFetching = (state) => state.dataExport.isFetching
 
-export const getErrorMessageCreateDataExport = (state) => state.dataExport.errorMessageCreateDataExport
+export const getErrorMessageCreateDataExport = (state) => {
+  const error = state.dataExport.errorMessageCreateDataExport
+  return error ? error.error : null
+}
 
-export const getErrorMessageUpdateDataExport = (state) => state.dataExport.errorMessageUpdateDataExport
+export const getErrorMessageUpdateDataExport = (state) => {
+  const error = state.dataExport.errorMessageUpdateDataExport
+  return error ? error.error : null
+}
 
-export const getErrorMessageEraseDataExport = (state) => state.dataExport.errorMessageEraseDataExport
+export const getErrorMessageEraseDataExport = (state) => {
+  const error = state.dataExport.errorMessageEraseDataExport
+  return error ? error.error : null
+}
 
-export const getErrorMessageResendDataExportKey = (state) => state.dataExport.errorMessageResendDataExportKey
+export const getErrorMessageResendDataExportKey = (state) => {
+  const error = state.dataExport.errorMessageResendDataExportKey
+  return error ? error.error : null
+}
 
-export const getErrorMessageFetchDataExportList = (state) => state.dataExport.errorMessageFetchDataExportList
+export const getErrorMessageFetchDataExportList = (state) => {
+  const error = state.dataExport.errorMessageFetchDataExportList
+  return error ? error.error : null
+}
 
 export const getDataExportList = (state) => state.dataExport.dataExportList
 

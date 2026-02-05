@@ -21,6 +21,10 @@ const StyledBody = styled(ModalBody)`
   label {
     display: block;
   }
+
+  input {
+    width: 100%;
+  }
 `
 
 const initialDataExport = {

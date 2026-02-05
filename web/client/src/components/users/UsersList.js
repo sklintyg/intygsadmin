@@ -170,7 +170,7 @@ const UsersList = () => {
               currentSortDirection={usersList.sortDirection}
               text="Namn"
               tooltip="Visar administratörens namn."
-              sortId="intygId"
+              sortId="name"
               onSort={handleSort}
             />
             <TableSortHead

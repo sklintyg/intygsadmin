@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 `
 
 const MenuBar = () => {
-  const userRole = useSelector((state) => state.user.role)
+  const userRole = useSelector((state) => state.user.userRole)
   const menu = [
     {
       id: 'intyginfo',

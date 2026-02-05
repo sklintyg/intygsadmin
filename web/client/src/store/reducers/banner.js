@@ -80,6 +80,9 @@ export const getBanner = (state) => state.banner.banner
 
 export const getIsFetching = (state) => state.banner.isFetching
 
-export const getErrorMessage = (state) => state.banner.errorMessage
+export const getErrorMessage = (state) => {
+  const error = state.banner.errorMessage
+  return error ? error.error : null
+}
 
 export const getFutureBanners = (state) => state.banner.futureBanners
