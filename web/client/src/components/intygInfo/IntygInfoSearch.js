@@ -60,15 +60,18 @@ const IntygInfoSearch = () => {
   const [searchString, setSearchString] = useState('')
   const [validationSearchMessage, setValidationSearchMessage] = useState(errorMessage)
   const [searchResult, setSearchResult] = useState(undefined)
+  const [shouldOpenModal, setShouldOpenModal] = useState(false)
   const inputRef = createRef()
 
   const searchIntygInfo = (event, intygsId) => {
     event.preventDefault()
     setSearchResult(undefined)
+    setShouldOpenModal(false)
     if (intygsId === '') {
       setValidationSearchMessage(getMessage('intygInfo.intygsId.wrongformat'))
     } else {
       setValidationSearchMessage(undefined)
+      setShouldOpenModal(true)
       dispatch(fetchIntygInfo(intygsId))
     }
   }
@@ -84,11 +87,19 @@ const IntygInfoSearch = () => {
   }, [intygInfo])
 
   useEffect(() => {
-    if (searchResult !== undefined && !validationSearchMessage) {
+    if (searchResult !== undefined && !validationSearchMessage && shouldOpenModal) {
       dispatch(openModal(intygInfoDialogId, { intygInfo }))
       setSearchString('')
+      setShouldOpenModal(false)
     }
-  }, [searchResult, intygInfo, validationSearchMessage, dispatch])
+  }, [searchResult, intygInfo, validationSearchMessage, shouldOpenModal, dispatch])
+
+  useEffect(() => {
+    return () => {
+      setSearchResult(undefined)
+      setShouldOpenModal(false)
+    }
+  }, [])
 
   return (
     <>

@@ -21,10 +21,10 @@ const IntygInfoHistoryList = () => {
 
   useEffect(() => {
     const { sortColumn, sortDirection } = intygInfoList
-    if (sortColumn !== undefined) {
+    if (sortColumn !== undefined && intygInfoList.content.length === 0) {
       fetchIntygInfoList({ sortColumn, sortDirection })
     }
-  }, [fetchIntygInfoList, intygInfoList])
+  }, [fetchIntygInfoList, intygInfoList.sortColumn, intygInfoList.sortDirection])
 
   if (errorMessage) {
     return (
@@ -41,14 +41,14 @@ const IntygInfoHistoryList = () => {
   }
 
   const handleSort = (newSortColumn) => {
-    let { sortColumn, sortDirection } = intygInfoList
+    let { sortColumn, sortDirection, pageIndex } = intygInfoList
     if (sortColumn === newSortColumn) {
       sortDirection = intygInfoList.sortDirection === 'DESC' ? 'ASC' : 'DESC'
     } else {
       sortColumn = newSortColumn
     }
 
-    fetchIntygInfoList({ sortColumn, sortDirection })
+    fetchIntygInfoList({ sortColumn, sortDirection, pageIndex })
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, { Fragment, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../store/actions/bannerList.actions'
-import { getBannerList, getErrorMessage, getIsFetching } from '../../store/reducers/bannerList.reducer'
+import { getBannerList, getErrorMessage, getIsFetching } from '@/store/reducers/bannerList.reducer'
 import CreateBanner from '../bannerDialogs/CreateBanner.dialog'
 import RemoveBanner from '../bannerDialogs/RemoveBanner.dialog'
 import BannerList from './BannerList'
@@ -22,20 +22,20 @@ const BannerListContainer = () => {
 
   useEffect(() => {
     const { sortColumn, sortDirection } = bannerList
-    if (sortColumn !== undefined) {
+    if (sortColumn !== undefined && bannerList.content.length === 0) {
       fetchBannerList({ sortColumn, sortDirection })
     }
-  }, [fetchBannerList, bannerList])
+  }, [fetchBannerList, bannerList.sortColumn, bannerList.sortDirection])
 
   const handleSort = (newSortColumn) => {
-    let { sortColumn, sortDirection } = bannerList
+    let { sortColumn, sortDirection, pageIndex } = bannerList
     if (sortColumn === newSortColumn) {
       sortDirection = bannerList.sortDirection === 'DESC' ? 'ASC' : 'DESC'
     } else {
       sortColumn = newSortColumn
     }
 
-    fetchBannerList({ sortColumn, sortDirection })
+    fetchBannerList({ sortColumn, sortDirection, pageIndex })
   }
 
   const onActionComplete = () => {

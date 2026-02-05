@@ -6,9 +6,14 @@ import iaColors from './iaColors'
 const Wrapper = styled.div`
   padding: 20px 0 10px 0;
 
+  & .pagination {
+    --bs-pagination-active-bg: ${iaColors.IA_COLOR_05};
+    --bs-pagination-active-border-color: ${iaColors.IA_COLOR_05};
+  }
+
   & .page-item {
     text-decoration: none;
-    color: ${iaColors.IA_COLOR_06};
+    color: ${iaColors.IA_COLOR_00};
     background-color: ${iaColors.IA_COLOR_07};
     padding: 0.375rem 0.75rem;
     display: block;
@@ -22,13 +27,13 @@ const Wrapper = styled.div`
   }
 
   & .page-item.active {
-    color: ${iaColors.IA_COLOR_05};
-    background-color: transparent;
+    color: ${iaColors.IA_COLOR_00};
+    background-color: ${iaColors.IA_COLOR_05};
   }
 
   & .page-item.active {
-    background-color: transparent;
-    color: ${iaColors.IA_COLOR_05};
+    background-color: ${iaColors.IA_COLOR_05};
+    color: ${iaColors.IA_COLOR_00};
   }
 
   & .page-item.disabled {

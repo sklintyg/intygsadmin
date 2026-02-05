@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Spinner } from 'reactstrap'
 
@@ -32,7 +32,7 @@ const LoadingSpinner = ({ loading, message }) => {
     return (
       <SpinnerWrapper>
         <SpinnerBox>
-          <Spinner color="secondary" />
+          <Spinner color="secondary" children="" />
           <div>{message}</div>
         </SpinnerBox>
       </SpinnerWrapper>

@@ -99,10 +99,10 @@ const UsersList = () => {
 
   useEffect(() => {
     const { sortColumn, sortDirection } = usersList
-    if (sortColumn !== undefined) {
+    if (sortColumn !== undefined && usersList.content.length === 0) {
       fetchUsersList({ sortColumn, sortDirection })
     }
-  }, [fetchUsersList, usersList])
+  }, [fetchUsersList, usersList.sortColumn, usersList.sortDirection])
 
   if (errorMessage) {
     return (
@@ -119,14 +119,14 @@ const UsersList = () => {
   }
 
   const handleSort = (newSortColumn) => {
-    let { sortColumn, sortDirection } = usersList
+    let { sortColumn, sortDirection, pageIndex } = usersList
     if (sortColumn === newSortColumn) {
       sortDirection = usersList.sortDirection === 'DESC' ? 'ASC' : 'DESC'
     } else {
       sortColumn = newSortColumn
     }
 
-    fetchUsersList({ sortColumn, sortDirection })
+    fetchUsersList({ sortColumn, sortDirection, pageIndex })
   }
 
   const openRemoveModal = (userId) => {
