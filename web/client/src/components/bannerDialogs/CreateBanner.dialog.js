@@ -81,7 +81,6 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
   const [newBanner, setNewBanner] = useState(initialBanner)
   const [errorActive, setErrorActive] = useState(false)
   const [serverErrorActive, setServerErrorActive] = useState(false)
-  const [initialMessageValue, setInitialMessageValue] = useState('')
 
   const setApplicationAndCheckFuture = (application) => {
     dispatch(fetchFutureBannersAction(application)).finally(() => {
@@ -92,7 +91,6 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
   useEffect(() => {
     if (data && data.banner) {
       setUpdate(true)
-      setInitialMessageValue(data.banner.message)
       let displayFrom = new Date(data.banner.displayFrom)
       let displayTo = new Date(data.banner.displayTo)
       setNewBanner({
@@ -165,7 +163,6 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
     setErrorActive(false)
     setServerErrorActive(false)
     setNewBanner(initialBanner)
-    setInitialMessageValue('')
     handleClose()
   }
 
@@ -212,7 +209,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
           inputId="bannerMessage"
           className="show-external-link"
           onChange={(value) => onChange(value, 'message')}
-          value={initialMessageValue}
+          value={newBanner.message}
           limit={200}
         />
         <h5>Ange visningsperiod</h5>

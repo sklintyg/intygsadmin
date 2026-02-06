@@ -9,6 +9,7 @@ export const UsersListDefaultState = {
   end: 0,
   numberOfElements: 0,
   totalElements: 0,
+  limit: 10,
   sortColumn: 'createdAt',
   sortDirection: 'DESC',
 }

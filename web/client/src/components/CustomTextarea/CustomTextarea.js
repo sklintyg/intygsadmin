@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import colors from '../styles/iaColors'
@@ -11,7 +11,9 @@ const CustomDiv = styled.div`
   min-height: 100px;
   border: 1px solid ${colors.IA_COLOR_08};
   border-radius: 0 0 4px 4px;
-  transition: border-color 0.36s ease-in-out, box-shadow 0.36s ease-in-out;
+  transition:
+    border-color 0.36s ease-in-out,
+    box-shadow 0.36s ease-in-out;
 
   &:focus {
     outline: none;
@@ -102,6 +104,18 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
   const textArea = useRef()
   const popup = useRef()
   const [popupOpen, setPopupOpen] = useState(false)
+  const isInitialized = useRef(false)
+
+  useEffect(() => {
+    if (textArea.current && !isInitialized.current && value) {
+      textArea.current.innerHTML = value
+      isInitialized.current = true
+    }
+  }, [value])
+
+  const onInput = () => {
+    onChange(textArea.current.innerHTML)
+  }
 
   const onBlur = () => {
     onChange(textArea.current.innerHTML)
@@ -245,8 +259,8 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
         onSelect={handleSelect}
         onPaste={handlePaste}
         onKeyPress={handleKeyPress}
+        onInput={onInput}
         onBlur={onBlur}
-        dangerouslySetInnerHTML={{ __html: value }}
       />
       {textArea.current && limit ? <TextLimit>Tecken kvar: {limit - textArea.current.innerText.length}</TextLimit> : null}
       <Popup ref={popup} className={popupOpen ? 'open' : 'closed'}>

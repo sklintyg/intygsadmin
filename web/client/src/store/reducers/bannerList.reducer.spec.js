@@ -78,6 +78,7 @@ describe('bannerlist reducer', () => {
             status: 'FINISHED',
           },
         ],
+        limit: 10,
         numberOfElements: 1,
         pageIndex: 0,
         sortColumn: 'createdAt',

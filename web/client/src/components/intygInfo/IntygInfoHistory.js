@@ -2,9 +2,9 @@ import React from 'react'
 import IntygInfoHistoryList from './IntygInfoHistoryList'
 import { IaTypo03 } from '../styles/iaTypography'
 import ListPagination from '../styles/ListPagination'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { fetchIntygInfoList } from '../../store/actions/intygInfoList'
-import { getIntygInfoList } from '../../store/reducers/intygInfoList'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { fetchIntygInfoList } from '@/store/actions/intygInfoList'
+import { getIntygInfoList } from '@/store/reducers/intygInfoList'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -21,7 +21,8 @@ const IntygInfoHistory = () => {
 
   const fetchList = (pageIndex) => {
     const pageIndexZeroBased = pageIndex - 1
-    dispatch(fetchIntygInfoList({ pageIndex: pageIndexZeroBased }))
+    const { sortColumn, sortDirection } = intygInfoList
+    dispatch(fetchIntygInfoList({ pageIndex: pageIndexZeroBased, sortColumn, sortDirection }))
   }
 
   return (

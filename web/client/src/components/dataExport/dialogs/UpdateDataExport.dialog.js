@@ -17,6 +17,10 @@ const StyledBody = styled(ModalBody)`
     cursor: not-allowed;
   }
 
+  input {
+    width: 100%;
+  }
+
   h5 {
     padding: 12px 0 4px;
     &:first-of-type {

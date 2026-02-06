@@ -16,7 +16,12 @@ describe('actions', () => {
 
   describe('getUser', () => {
     it('success', () => {
-      const reponse = [{ name: 'test' }]
+      const reponse = {
+        employeeHsaId: 'TEST123',
+        name: 'Test User',
+        intygsadminRole: 'FULL',
+        logoutUrl: '/logout',
+      }
 
       vi.spyOn(api, 'fetchAnvandare').mockResolvedValue(reponse)
 
