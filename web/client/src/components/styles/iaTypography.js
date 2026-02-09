@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import colors from './iaColors';
+import colors from './iaColors'
 
 /*
 100 = Roboto Thin
@@ -23,7 +23,7 @@ if not specified as something else.
  */
 
 const Div = styled.div`
-  color: ${props => props.color || colors.IA_COLOR_99};
+  color: ${(props) => props.color || colors.IA_COLOR_99};
 `
 
 export const IaTypo01 = styled(Div)`
@@ -37,7 +37,7 @@ export const IaTypo02 = styled(Div)`
 `
 
 export const IaTypo03 = styled(Div)`
-  font-weight: 500;
+  font-weight: 600;
   font-size: 16px;
 `
 

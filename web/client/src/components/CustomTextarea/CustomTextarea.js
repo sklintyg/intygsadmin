@@ -111,7 +111,7 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
       textArea.current.innerHTML = value
       isInitialized.current = true
     }
-  }, [value])
+  }, [])
 
   const onInput = () => {
     onChange(textArea.current.innerHTML)
