@@ -8,15 +8,13 @@ const SessionPollerContainer = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(startPoll())
-    }
-    return () => dispatch(stopPoll())
-  }, [isAuthenticated, dispatch])
-
-  useEffect(() => {
-    if (isAuthenticated) {
       dispatch(requestPollUpdate())
       dispatch(startPoll())
+    }
+    return () => {
+      if (isAuthenticated) {
+        dispatch(stopPoll())
+      }
     }
   }, [isAuthenticated, dispatch])
 

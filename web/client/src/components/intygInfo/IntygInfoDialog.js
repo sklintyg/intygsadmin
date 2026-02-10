@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAppDispatch } from '../../store/hooks'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table, UncontrolledTooltip } from 'reactstrap'
 import styled from 'styled-components'
 import { getMessage } from '../../messages/messages'
@@ -9,6 +9,7 @@ import modalContainer from '../modalContainer/modalContainer'
 import colors from '../styles/iaColors'
 import { IaTypo02, IaTypo03, IaTypo05 } from '../styles/iaTypography'
 import { resendCertificateStatus, resendNotificationStatus } from '../../api/intygInfo.api'
+import { getIntygInfo } from '../../store/reducers/intygInfo'
 
 const BodyHeight = styled(ModalBody)`
   height: 60vh;
@@ -225,6 +226,7 @@ const getEventStatus = (status) => {
 
 const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
   const dispatch = useAppDispatch()
+  const intygInfoFromStore = useAppSelector(getIntygInfo)
   const [message, setMessage] = useState('')
 
   if (!data) {
@@ -232,10 +234,11 @@ const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
   }
 
   const { intygInfo } = data
+  const currentIntygInfo = intygInfoFromStore && Object.keys(intygInfoFromStore).length > 0 ? intygInfoFromStore : intygInfo
 
   function displayEvent(event) {
     if (event.type === 'IS005') {
-      return !intygInfo.testCertificate
+      return !currentIntygInfo.testCertificate
     }
     return true
   }
@@ -246,23 +249,23 @@ const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
 
   return (
     <Modal id={'intygInfoDialogId'} isOpen={isOpen} size={'xl'} backdrop={true} toggle={() => handleOnClose(handleClose, setMessage)}>
-      <ModalHeader toggle={() => handleOnClose(handleClose, setMessage)}>Intygsinformation för ID: {intygInfo.intygId}</ModalHeader>
+      <ModalHeader toggle={() => handleOnClose(handleClose, setMessage)}>Intygsinformation för ID: {currentIntygInfo.intygId}</ModalHeader>
       <BodyHeight>
         <RowWrapper>
           <IaTypo03 color={colors.IA_COLOR_01}>
-            {intygInfo.intygType}
-            <IntygVersion>{intygInfo.intygVersion}</IntygVersion>
+            {currentIntygInfo.intygType}
+            <IntygVersion>{currentIntygInfo.intygVersion}</IntygVersion>
           </IaTypo03>
         </RowWrapper>
 
         <RowWrapperBox>
-          <InfoBox title="Utkastet skapades" value={intygInfo.draftCreated} noValue="Okänt" />
-          <InfoBox title="Intyget signerades" value={intygInfo.signedDate} noValue="Ej signerat" />
-          <InfoBox title="Intygstjänsten tog emot intyget" value={intygInfo.receivedDate} noValue="Ej mottagit" />
+          <InfoBox title="Utkastet skapades" value={currentIntygInfo.draftCreated} noValue="Okänt" />
+          <InfoBox title="Intyget signerades" value={currentIntygInfo.signedDate} noValue="Ej signerat" />
+          <InfoBox title="Intygstjänsten tog emot intyget" value={currentIntygInfo.receivedDate} noValue="Ej mottagit" />
           <InfoBox
             title="Intyget skickades till intygsmottagaren"
-            value={intygInfo.sentToRecipient}
-            noValue={intygInfo.numberOfRecipients > 0 ? 'Ej skickat' : 'Finns ingen mottagare'}
+            value={currentIntygInfo.sentToRecipient}
+            noValue={currentIntygInfo.numberOfRecipients > 0 ? 'Ej skickat' : 'Finns ingen mottagare'}
           />
         </RowWrapperBox>
 
@@ -278,8 +281,8 @@ const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
               </tr>
             </thead>
             <tbody>
-              {intygInfo.events &&
-                intygInfo.events
+              {currentIntygInfo.events &&
+                currentIntygInfo.events
                   .filter((row) => {
                     return displayEvent(row)
                   })
@@ -294,41 +297,41 @@ const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
             <tbody>
               <tr>
                 <TableTH>Signerat av</TableTH>
-                <TableTD>{intygInfo.signedByName}</TableTD>
-                <TableTD>HSA-ID: {intygInfo.signedByHsaId}</TableTD>
+                <TableTD>{currentIntygInfo.signedByName}</TableTD>
+                <TableTD>HSA-ID: {currentIntygInfo.signedByHsaId}</TableTD>
               </tr>
               <tr>
                 <TableTH>Utfärdande Vårdenhet/enhet</TableTH>
-                <TableTD>{intygInfo.careUnitName}</TableTD>
-                <TableTD>HSA-ID: {intygInfo.careUnitHsaId}</TableTD>
+                <TableTD>{currentIntygInfo.careUnitName}</TableTD>
+                <TableTD>HSA-ID: {currentIntygInfo.careUnitHsaId}</TableTD>
               </tr>
               <tr>
                 <TableTH>Vårdgivare</TableTH>
-                <TableTD>{intygInfo.careGiverName}</TableTD>
-                <TableTD>HSA-ID: {intygInfo.careGiverHsaId}</TableTD>
+                <TableTD>{currentIntygInfo.careGiverName}</TableTD>
+                <TableTD>HSA-ID: {currentIntygInfo.careGiverHsaId}</TableTD>
               </tr>
               <tr>
                 <TableTH>Kompletteringsbegäran</TableTH>
                 <TableTD>
-                  <Kompletteringar intygInfo={intygInfo} />
+                  <Kompletteringar intygInfo={currentIntygInfo} />
                 </TableTD>
                 <TableTD />
               </tr>
               <tr>
                 <TableTH>Administrativa frågor</TableTH>
                 <TableTD>
-                  <AdminQuestions intygInfo={intygInfo} />{' '}
+                  <AdminQuestions intygInfo={currentIntygInfo} />{' '}
                 </TableTD>
                 <TableTD />
               </tr>
               <tr>
                 <TableTH>Utfärdande system</TableTH>
-                <TableTD>{intygInfo.createdInWC ? 'Webcert' : 'Annat än Webcert'}</TableTD>
+                <TableTD>{currentIntygInfo.createdInWC ? 'Webcert' : 'Annat än Webcert'}</TableTD>
                 <TableTD />
               </tr>
               <tr>
                 <TableTH>Valideringsperson</TableTH>
-                <TableTD>{intygInfo.testCertificate ? 'Ja' : 'Nej'}</TableTD>
+                <TableTD>{currentIntygInfo.testCertificate ? 'Ja' : 'Nej'}</TableTD>
                 <TableTD />
               </tr>
             </tbody>
@@ -344,7 +347,7 @@ const IntygInfoDialog = ({ handleClose, isOpen, data }) => {
           <Button
             id={'resendEvents'}
             onClick={() => {
-              handleResend('certificate', intygInfo.intygId, setMessage)
+              handleResend('certificate', currentIntygInfo.intygId, setMessage)
             }}
             color={'default'}>
             Skicka om alla
