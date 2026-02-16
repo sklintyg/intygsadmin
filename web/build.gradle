@@ -64,8 +64,7 @@ tasks.register('appRunDebug') {
     doFirst {
         bootRun.configure {
             jvmArgs = [
-                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort",
-                    "-Dlogging.config=${applicationDir}/config/logback-spring.xml",
+                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort"
             ]
         }
     }
@@ -74,13 +73,6 @@ tasks.register('appRunDebug') {
 
 tasks.register('appRun') {
     println 'Running in normal mode'
-    doFirst {
-        bootRun.configure {
-            jvmArgs = [
-                    "-Dlogging.config=${applicationDir}/config/logback-spring.xml",
-            ]
-        }
-    }
     finalizedBy("bootRun")
 }
 
