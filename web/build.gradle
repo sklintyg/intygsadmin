@@ -1,5 +1,8 @@
-apply plugin: "org.springframework.boot"
-apply plugin: "com.netflix.nebula.node"
+plugins {
+    id 'com.netflix.nebula.node'
+    id 'org.cyclonedx.bom'
+    id 'org.springframework.boot'
+}
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
 def instance = System.properties['instance'] ?: '0'
@@ -23,10 +26,6 @@ springBoot { buildInfo() }
 tasks.named("jar") {
     enabled = false
     archiveClassifier.set("")
-}
-
-tasks.named('startScripts') {
-    dependsOn bootJar
 }
 
 tasks.register('buildReactApp', NpmTask) {
@@ -65,8 +64,7 @@ tasks.register('appRunDebug') {
     doFirst {
         bootRun.configure {
             jvmArgs = [
-                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort",
-                    "-Dlogging.config=${applicationDir}/config/logback-spring.xml",
+                    "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=$debugPort"
             ]
         }
     }
@@ -75,13 +73,6 @@ tasks.register('appRunDebug') {
 
 tasks.register('appRun') {
     println 'Running in normal mode'
-    doFirst {
-        bootRun.configure {
-            jvmArgs = [
-                    "-Dlogging.config=${applicationDir}/config/logback-spring.xml",
-            ]
-        }
-    }
     finalizedBy("bootRun")
 }
 
@@ -104,7 +95,7 @@ clean {
     delete "client/build"
 }
 
-bootJar {
+tasks.named('bootJar') {
     manifest {
         attributes(
                 "Main-Class": "org.springframework.boot.loader.launch.PropertiesLauncher",
@@ -113,7 +104,7 @@ bootJar {
     }
 }
 
-bootRun {
+tasks.named('bootRun') {
     systemProperty "dev.http.port", devPort
     systemProperty "dev.http.port.internal", devPortInternal
     systemProperty "spring.profiles.active", "dev, fake, caching-enabled"
@@ -139,27 +130,29 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
-    implementation "co.elastic.logging:logback-ecs-encoder:${logbackEcsEncoderVersion}"
+    implementation "ch.qos.logback:logback-classic"
+    implementation "co.elastic.logging:logback-ecs-encoder"
     implementation "com.querydsl:querydsl-core"
     implementation "jakarta.servlet:jakarta.servlet-api"
     implementation "jakarta.annotation:jakarta.annotation-api"
-    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
-    implementation "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-    implementation "org.apache.poi:poi-ooxml:${apachePoiVersion}"
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocVersion}"
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springDocVersion}"
+    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
+    implementation "net.javacrumbs.shedlock:shedlock-spring"
+    implementation "org.apache.poi:poi-ooxml"
+    implementation "org.mapstruct:mapstruct"
+    implementation "org.springdoc:springdoc-openapi-ui"
+    implementation "org.springdoc:springdoc-openapi-data-rest"
     implementation "org.springframework.session:spring-session-data-redis"
     implementation "redis.clients:jedis"
 
-    compileOnly("org.projectlombok:lombok")
     annotationProcessor "jakarta.servlet:jakarta.servlet-api"
 
     annotationProcessor("org.projectlombok:lombok")
-    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
-    testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+    annotationProcessor("org.mapstruct:mapstruct-processor")
+    testAnnotationProcessor("org.mapstruct:mapstruct-processor")
 
-    testImplementation("commons-io:commons-io:${commonsIOVersion}")
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation("commons-io:commons-io")
     testImplementation("io.rest-assured:json-path")
     testImplementation("io.rest-assured:json-schema-validator")
     testImplementation("io.rest-assured:rest-assured")
