@@ -7,13 +7,11 @@ plugins {
 }
 
 ext {
-    infraVersion = System.properties['infraVersion'] ?: '4.0.0-SNAPSHOT'
+    infraVersion = System.properties['infraVersion'] ?: '4.1.0-SNAPSHOT'
 
     randomBeansVersion = "3.9.0"
-    nodeVersion = "18.20.0"
-    npmVersion = "10.8.2"
-
-    ineraMavenRepository = 'https://nexus.drift.inera.se/repository/it-public/'
+    nodeVersion = "22.22.0"
+    npmVersion = "10.9.2"
 }
 
 apply from: 'gradle/configureIntygBom.gradle'
@@ -29,11 +27,9 @@ allprojects {
     group = 'se.inera.intyg.intygsadmin'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
 
-    test { useJUnitPlatform() }
-
     repositories {
         mavenLocal()
-        maven { url "${ineraMavenRepository}" }
+        maven { url 'https://nexus.drift.inera.se/repository/it-public/' }
         mavenCentral()
     }
 }
@@ -105,18 +101,12 @@ subprojects {
     tasks.matching { it.name == "cyclonedxDirectBom" }.configureEach { t ->
         t.includeConfigs = ['^runtimeClasspath$']
     }
-
-    tasks.withType(Test).configureEach {
-        jvmArgs '-Xshare:off'
-    }
 }
 
 sonar {
     properties {
         property "sonar.projectKey", "intyg-intygsadmin"
         property "sonar.projectName", "intyg-intygsadmin"
-        property "sonar.dependencyCheck.jsonReportPath", "${layout.buildDirectory.get()}/reports/dependency-check-report.json" as String
-        property "sonar.dependencyCheck.htmlReportPath", "${layout.buildDirectory.get()}/reports/dependency-check-report.html" as String
     }
 }
 

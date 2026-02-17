@@ -9,7 +9,6 @@ dependencies {
   implementation "se.inera.intyg.infra:driftbanner-dto:${infraVersion}"
 
   runtimeOnly "com.mysql:mysql-connector-j"
-  runtimeOnly "com.h2database:h2"
 
   testImplementation "io.github.benas:random-beans:${randomBeansVersion}"
   testImplementation "org.springframework.boot:spring-boot-starter-test"
@@ -17,4 +16,6 @@ dependencies {
   annotationProcessor("com.querydsl:querydsl-apt") { artifact { classifier = "jakarta" }}
   annotationProcessor "jakarta.persistence:jakarta.persistence-api"
   annotationProcessor 'org.projectlombok:lombok'
+
+  testRuntimeOnly "com.h2database:h2"
 }
