@@ -2,10 +2,23 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import { configureApplicationStore } from '../store/configureStore'
+import { configureStore } from '@reduxjs/toolkit'
+import rootReducer from '../store/reducers'
 
 const createTestStore = (preloadedState = {}) => {
-  return configureApplicationStore()
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+        immutableCheck: false,
+        actionCreatorCheck: false,
+        thunk: true,
+      }),
+    devTools: false,
+    enhancers: (getDefaultEnhancers) => getDefaultEnhancers(),
+  })
 }
 
 export const renderWithProviders = (ui, { preloadedState = {}, store = createTestStore(preloadedState), ...renderOptions } = {}) => {

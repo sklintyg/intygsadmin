@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
-import sv from 'date-fns/locale/sv'
+import { sv } from 'date-fns/locale'
 
 const ButtonContainer = styled.div`
   display: flex;

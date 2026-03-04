@@ -21,11 +21,11 @@ const BannerListContainer = () => {
   const fetchBannerList = useCallback((params) => dispatch(actions.fetchBannerList(params)), [dispatch])
 
   useEffect(() => {
-    const { sortColumn, sortDirection } = bannerList
-    if (sortColumn !== undefined && bannerList.content.length === 0) {
+    const { sortColumn, sortDirection, content } = bannerList
+    if (sortColumn !== undefined && content.length === 0) {
       fetchBannerList({ sortColumn, sortDirection })
     }
-  }, [fetchBannerList, bannerList.sortColumn, bannerList.sortDirection])
+  }, [fetchBannerList, bannerList])
 
   const handleSort = (newSortColumn) => {
     let { sortColumn, sortDirection, pageIndex } = bannerList

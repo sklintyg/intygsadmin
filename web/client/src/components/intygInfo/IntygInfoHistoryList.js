@@ -19,12 +19,13 @@ const IntygInfoHistoryList = () => {
 
   const fetchIntygInfoList = useCallback((params) => dispatch(actions.fetchIntygInfoList(params)), [dispatch])
 
+  const { sortColumn, sortDirection, content } = intygInfoList
+
   useEffect(() => {
-    const { sortColumn, sortDirection } = intygInfoList
-    if (sortColumn !== undefined && intygInfoList.content.length === 0) {
+    if (sortColumn !== undefined && content.length === 0) {
       fetchIntygInfoList({ sortColumn, sortDirection })
     }
-  }, [fetchIntygInfoList, intygInfoList.sortColumn, intygInfoList.sortDirection])
+  }, [fetchIntygInfoList, sortColumn, sortDirection, content.length])
 
   if (errorMessage) {
     return (
