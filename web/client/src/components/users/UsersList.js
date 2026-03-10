@@ -98,11 +98,11 @@ const UsersList = () => {
   const openModal = (modalId, props) => dispatch(modalActions.openModal(modalId, props))
 
   useEffect(() => {
-    const { sortColumn, sortDirection } = usersList
-    if (sortColumn !== undefined && usersList.content.length === 0) {
+    const { sortColumn, sortDirection, content } = usersList
+    if (sortColumn !== undefined && content.length === 0) {
       fetchUsersList({ sortColumn, sortDirection })
     }
-  }, [fetchUsersList, usersList.sortColumn, usersList.sortDirection])
+  }, [fetchUsersList, usersList.sortColumn, usersList.sortDirection, usersList.sortDirection])
 
   if (errorMessage) {
     return (

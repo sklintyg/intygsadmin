@@ -11,7 +11,7 @@ ext {
 
     randomBeansVersion = "3.9.0"
     nodeVersion = "22.22.0"
-    npmVersion = "10.9.2"
+    npmVersion = "10.9.4"
 }
 
 apply from: 'gradle/configureIntygBom.gradle'

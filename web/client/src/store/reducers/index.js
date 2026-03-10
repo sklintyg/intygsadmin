@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from '@reduxjs/toolkit'
 import user from './user'
 import modal from './modal'
 import sessionPoll from './sessionPoll'
@@ -31,7 +31,7 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.payload && action.payload.response && action.payload.response.status === 401) {
-    state = undefined
+    return appReducer(undefined, action)
   }
   return appReducer(state, action)
 }
