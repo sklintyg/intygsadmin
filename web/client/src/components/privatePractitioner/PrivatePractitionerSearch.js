@@ -1,4 +1,4 @@
-import React, { createRef, useCallback, useEffect, useState } from 'react'
+import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Form, UncontrolledTooltip } from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
@@ -65,6 +65,7 @@ const PrivatePractitionerSearch = () => {
   const [searchString, setSearchString] = useState('')
   const [validationSearchMessage, setValidationSearchMessage] = useState(undefined)
   const [searchResult, setSearchResult] = useState(undefined)
+  const searchInitiated = useRef(false)
   const inputRef = createRef()
 
   const searchPrivatePractitioner = (event, hsaId) => {
@@ -73,6 +74,7 @@ const PrivatePractitionerSearch = () => {
     if (hsaId === '') {
       setValidationSearchMessage(COULD_NOT_FIND_PRIVATE_PRACTITIONER)
     } else {
+      searchInitiated.current = true
       fetchPrivatePractitioner(hsaId)
     }
   }
@@ -88,7 +90,8 @@ const PrivatePractitionerSearch = () => {
   }, [privatePractitioner])
 
   useEffect(() => {
-    if (searchResult !== undefined && validationSearchMessage === undefined) {
+    if (searchResult !== undefined && validationSearchMessage === undefined && searchInitiated.current) {
+      searchInitiated.current = false
       let text = {
         hsaId: privatePractitioner.hsaId,
         name: privatePractitioner.name,

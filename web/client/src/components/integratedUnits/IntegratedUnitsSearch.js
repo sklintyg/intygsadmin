@@ -1,4 +1,4 @@
-import React, { createRef, useCallback, useEffect, useState } from 'react'
+import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Form, UncontrolledTooltip } from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
@@ -65,6 +65,7 @@ const IntegratedUnitsSearch = () => {
   const [searchString, setSearchString] = useState('')
   const [validationSearchMessage, setValidationSearchMessage] = useState(undefined)
   const [searchResult, setSearchResult] = useState(undefined)
+  const searchInitiated = useRef(false)
   const inputRef = createRef()
 
   const searchIntegratedUnit = (event, hsaId) => {
@@ -73,6 +74,7 @@ const IntegratedUnitsSearch = () => {
     if (hsaId === '') {
       setValidationSearchMessage(COULD_NOT_FIND_UNIT)
     } else {
+      searchInitiated.current = true
       fetchIntegratedUnit(hsaId)
     }
   }
@@ -88,7 +90,8 @@ const IntegratedUnitsSearch = () => {
   }, [integratedUnit])
 
   useEffect(() => {
-    if (searchResult !== undefined && validationSearchMessage === undefined) {
+    if (searchResult !== undefined && validationSearchMessage === undefined && searchInitiated.current) {
+      searchInitiated.current = false
       let text = {
         unit: integratedUnit.enhetsId,
         unitName: integratedUnit.enhetsNamn,
