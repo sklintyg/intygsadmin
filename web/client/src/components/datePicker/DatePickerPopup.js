@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ReactDatePicker from 'react-datepicker'
+import DatePicker from 'react-datepicker'
 import styled from 'styled-components'
 import { Button } from 'reactstrap'
 import { sv } from 'date-fns/locale'
@@ -44,7 +44,15 @@ const DatePickerPopup = ({ onChange, date, open, onSelect }) => {
 
   return (
     <>
-      <ReactDatePicker selected={internalDate} dateFormat={'yyyy-MM-dd'} locale={sv} showWeekNumbers inline onSelect={handleSelect} />
+      <DatePicker
+        selected={internalDate}
+        dateFormat={'yyyy-MM-dd'}
+        locale={sv}
+        showWeekNumbers
+        useWeekdaysShort
+        inline
+        onSelect={handleSelect}
+      />
       <ButtonContainer>
         <Button color={'default'} onClick={clear}>
           Rensa

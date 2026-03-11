@@ -5,11 +5,16 @@ const INITIAL_STATE = {}
 
 const modalReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case OPEN_MODAL:
+    case OPEN_MODAL: {
       const { id, ...data } = action.payload
-      return { ...state, [action.payload.id]: true, ...(isEmpty(data) ? {} : { [id + 'Data']: data }) }
-    case CLOSE_MODAL:
-      return { ...state, [action.payload.id]: false }
+      return { ...state, [id]: true, ...(isEmpty(data) ? {} : { [id + 'Data']: data }) }
+    }
+    case CLOSE_MODAL: {
+      const next = { ...state }
+      delete next[action.payload.id + 'Data']
+      next[action.payload.id] = false
+      return next
+    }
     case CLOSE_ALL_MODALS:
       return INITIAL_STATE
     default:
