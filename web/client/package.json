@@ -21,7 +21,7 @@
     "react-router-dom": "^7.13.1",
     "reactstrap": "^9.2.3",
     "redux": "^5.0.1",
-    "sass": "^1.97.3",
+    "sass": "^1.98.0",
     "styled-components": "^6.3.11"
   },
   "scripts": {
