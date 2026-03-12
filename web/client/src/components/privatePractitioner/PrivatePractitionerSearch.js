@@ -115,7 +115,7 @@ const PrivatePractitionerSearch = () => {
         <Form onSubmit={(event) => searchPrivatePractitioner(event, searchString)}>
           <FlexDiv>
             <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
-              <HsaInput id="searchInput" value={searchString} inputRef={inputRef} onChange={setSearchString} />
+              <HsaInput id="searchInput" value={searchString} inputRef={inputRef} onChange={setSearchString} placeholder="ÅÅMMDDXXXX" />
             </Container>
             <Button id={'searchBtn'} color={'success'}>
               Sök privatläkare
