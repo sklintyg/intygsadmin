@@ -1,6 +1,7 @@
 plugins {
     id "com.netflix.nebula.node" version "3.0.0" apply false
     alias(libs.plugins.com.github.ben.manes.versions)
+    alias(libs.plugins.com.diffplug.spotless)
     alias(libs.plugins.org.cyclonedx.bom)
     alias(libs.plugins.org.sonarqube)
     alias(libs.plugins.org.springframework.boot)
@@ -35,11 +36,24 @@ allprojects {
 }
 
 subprojects {
+    apply plugin: 'com.diffplug.spotless'
     apply plugin: 'jacoco'
 
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
+
+    spotless {
+        enforceCheck = false
+        java {
+            target 'src/*/java/**/*.java'
+            licenseHeaderFile(rootProject.file('spotless.license.txt'), 'package ')
+            removeUnusedImports()
+            forbidWildcardImports()
+            googleJavaFormat(googleJavaFormatVersion)
+            formatAnnotations()
         }
     }
 
