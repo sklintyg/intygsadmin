@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,10 +27,10 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, UUID>,
-    QuerydslPredicateExecutor<UserEntity> {
+public interface UserRepository
+    extends JpaRepository<UserEntity, UUID>, QuerydslPredicateExecutor<UserEntity> {
 
-    Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
+  Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId);
 
-    long countByIntygsadminRoleEqualsAndIdNot(IntygsadminRole role, UUID id);
+  long countByIntygsadminRoleEqualsAndIdNot(IntygsadminRole role, UUID id);
 }

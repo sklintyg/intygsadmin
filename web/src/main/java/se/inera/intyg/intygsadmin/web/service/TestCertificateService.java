@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 
 public interface TestCertificateService {
 
-    void eraseTestCertificates();
+  void eraseTestCertificates();
 
-    void eraseTestCertificates(int eraseAfterDays);
+  void eraseTestCertificates(int eraseAfterDays);
 
-    void eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+  void eraseTestCertificates(LocalDateTime from, LocalDateTime to);
 }

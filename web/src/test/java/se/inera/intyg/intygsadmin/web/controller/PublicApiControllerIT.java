@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,46 +31,53 @@ import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class PublicApiControllerIT extends BaseRestIntegrationTest {
 
-    @Test
-    public void testGetAppConfig() {
-        given().expect().statusCode(OK)
-            .when()
-            .get(PUBLIC_API_REQUEST_MAPPING + "/appconfig")
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-appconfig-response-schema.json"));
-    }
+  @Test
+  public void testGetAppConfig() {
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(PUBLIC_API_REQUEST_MAPPING + "/appconfig")
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-appconfig-response-schema.json"));
+  }
 
-    @Test
-    public void testGetVersionInfo() {
-        given().expect().statusCode(OK)
-            .when()
-            .get(PUBLIC_API_REQUEST_MAPPING + "/version")
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-version-response-schema.json"));
-    }
+  @Test
+  public void testGetVersionInfo() {
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(PUBLIC_API_REQUEST_MAPPING + "/version")
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-version-response-schema.json"));
+  }
 
-    @Test
-    public void testGetSessionStatus() {
+  @Test
+  public void testGetSessionStatus() {
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(SESSION_STAT_REQUEST_MAPPING)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
-            .body("sessionState.hasSession", is(false))
-            .body("sessionState.authenticated", is(false))
-            .body("sessionState.secondsUntilExpire", is(0));
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(SESSION_STAT_REQUEST_MAPPING)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
+        .body("sessionState.hasSession", is(false))
+        .body("sessionState.authenticated", is(false))
+        .body("sessionState.secondsUntilExpire", is(0));
 
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(SESSION_STAT_REQUEST_MAPPING)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
-            .body("sessionState.hasSession", is(true))
-            .body("sessionState.authenticated", is(true))
-            .body("sessionState.secondsUntilExpire", greaterThan(0));
-    }
-
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(SESSION_STAT_REQUEST_MAPPING)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-sessionstatus-response-schema.json"))
+        .body("sessionState.hasSession", is(true))
+        .body("sessionState.authenticated", is(true))
+        .body("sessionState.secondsUntilExpire", greaterThan(0));
+  }
 }

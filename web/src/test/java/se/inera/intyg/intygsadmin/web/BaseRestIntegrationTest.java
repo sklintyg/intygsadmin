@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,54 +36,62 @@ import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;
 
 public abstract class BaseRestIntegrationTest {
 
-    public static final int OK = HttpStatus.OK.value();
-    public static final int NOT_FOUND = HttpStatus.NOT_FOUND.value();
-    public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
-    public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
-    public static final int NOT_CONTENT = HttpStatus.NO_CONTENT.value();
+  public static final int OK = HttpStatus.OK.value();
+  public static final int NOT_FOUND = HttpStatus.NOT_FOUND.value();
+  public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
+  public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
+  public static final int NOT_CONTENT = HttpStatus.NO_CONTENT.value();
 
-    private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
-    private static final String SESSION_COOKIE = "SESSION";
+  private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
+  private static final String SESSION_COOKIE = "SESSION";
 
-    protected final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    protected String baseUrl = System.getProperty("integration.tests.baseUrl", "http://localhost:8070");
+  protected final ObjectMapper objectMapper =
+      new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  protected String baseUrl =
+      System.getProperty("integration.tests.baseUrl", "http://localhost:8070");
 
-    protected static final FakeUser ADMIN_USER = new FakeUser(
-        "TSTNMT2321000156-10KK",
-        "FULL",
-        "Karl Nilsson");
-    protected static final FakeUser BASIC_USER = new FakeUser(
-        "TSTNMT2321000156-10KL",
-        "BAS",
-        "Lena Svensson");
+  protected static final FakeUser ADMIN_USER =
+      new FakeUser("TSTNMT2321000156-10KK", "FULL", "Karl Nilsson");
+  protected static final FakeUser BASIC_USER =
+      new FakeUser("TSTNMT2321000156-10KL", "BAS", "Lena Svensson");
 
-    /**
-     * Common setup for all tests.
-     */
-    @BeforeEach
-    public void setup() {
-        RestAssured.reset();
-        RestAssured.config = RestAssured.config().sessionConfig(new SessionConfig().sessionIdName(SESSION_COOKIE));
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.baseURI = baseUrl;
+  /** Common setup for all tests. */
+  @BeforeEach
+  public void setup() {
+    RestAssured.reset();
+    RestAssured.config =
+        RestAssured.config().sessionConfig(new SessionConfig().sessionIdName(SESSION_COOKIE));
+    RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    RestAssured.baseURI = baseUrl;
+  }
+
+  protected String getAuthSession(FakeUser fakeUser) {
+    String credentialsJson;
+    try {
+      credentialsJson = objectMapper.writeValueAsString(fakeUser);
+      return getAuthSession(credentialsJson);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    protected String getAuthSession(FakeUser fakeUser) {
-        String credentialsJson;
-        try {
-            credentialsJson = objectMapper.writeValueAsString(fakeUser);
-            return getAuthSession(credentialsJson);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String getAuthSession(String credentialsJson) {
-        Response response = given().contentType(ContentType.JSON).and().redirects().follow(false).and()
-            .body(credentialsJson).expect()
-            .statusCode(HttpServletResponse.SC_OK).when()
-            .post(FAKE_LOGIN_ENDPOINT).then().extract().response();
-        assertNotNull(response.sessionId());
-        return response.sessionId();
-    }
+  private String getAuthSession(String credentialsJson) {
+    Response response =
+        given()
+            .contentType(ContentType.JSON)
+            .and()
+            .redirects()
+            .follow(false)
+            .and()
+            .body(credentialsJson)
+            .expect()
+            .statusCode(HttpServletResponse.SC_OK)
+            .when()
+            .post(FAKE_LOGIN_ENDPOINT)
+            .then()
+            .extract()
+            .response();
+    assertNotNull(response.sessionId());
+    return response.sessionId();
+  }
 }

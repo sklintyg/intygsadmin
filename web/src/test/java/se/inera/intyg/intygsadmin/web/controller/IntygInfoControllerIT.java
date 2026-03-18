@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,41 +27,46 @@ import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class IntygInfoControllerIT extends BaseRestIntegrationTest {
 
-    private static final String INTYG_INFO_API_ENDPOINT = "/api/intygInfo";
+  private static final String INTYG_INFO_API_ENDPOINT = "/api/intygInfo";
 
-    @Test
-    public void testGetIntygInfoOk() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetIntygInfoOk() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String existingIntygId = "f63c813d-a13a-4b4b-965f-419dfe98fffe";
+    final String existingIntygId = "f63c813d-a13a-4b4b-965f-419dfe98fffe";
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(INTYG_INFO_API_ENDPOINT + "/" + existingIntygId)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-intyg-info-response-schema.json"));
-    }
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(INTYG_INFO_API_ENDPOINT + "/" + existingIntygId)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-intyg-info-response-schema.json"));
+  }
 
-    @Test
-    public void testGetIntygInfotNotFound() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetIntygInfotNotFound() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String nonExistingIntygId = "9ae0c3b4-3d80-46f3-acde-b332970ba0ea";
+    final String nonExistingIntygId = "9ae0c3b4-3d80-46f3-acde-b332970ba0ea";
 
-        given().expect().statusCode(NOT_FOUND)
-            .when()
-            .get(INTYG_INFO_API_ENDPOINT + "/" + nonExistingIntygId);
-    }
+    given()
+        .expect()
+        .statusCode(NOT_FOUND)
+        .when()
+        .get(INTYG_INFO_API_ENDPOINT + "/" + nonExistingIntygId);
+  }
 
-    @Test
-    public void testGetList() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetList() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(INTYG_INFO_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-intyg-info-list-response-schema.json"));
-    }
-
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(INTYG_INFO_API_ENDPOINT)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-intyg-info-list-response-schema.json"));
+  }
 }

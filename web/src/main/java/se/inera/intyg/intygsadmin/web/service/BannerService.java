@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,13 +28,13 @@ import se.inera.intyg.intygsadmin.web.controller.dto.BannerDTO;
 
 public interface BannerService {
 
-    Page<BannerDTO> getBanners(Pageable pageable);
+  Page<BannerDTO> getBanners(Pageable pageable);
 
-    List<Banner> getActiveAndFutureBanners(Application application);
+  List<Banner> getActiveAndFutureBanners(Application application);
 
-    BannerDTO createBanner(BannerDTO bannerDTO);
+  BannerDTO createBanner(BannerDTO bannerDTO);
 
-    BannerDTO save(BannerDTO bannerDTO);
+  BannerDTO save(BannerDTO bannerDTO);
 
-    boolean deleteBanner(UUID id);
+  boolean deleteBanner(UUID id);
 }

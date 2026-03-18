@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,16 +24,16 @@ import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 
 public interface ITIntegrationRestService {
 
-    ItIntygInfo getIntygInfo(String intygId);
+  ItIntygInfo getIntygInfo(String intygId);
 
-    /**
-     * Service for erasing of test certificates.
-     *
-     * @param from Created after from datetime
-     * @param to Create before to datetime
-     * @return Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+  /**
+   * Service for erasing of test certificates.
+   *
+   * @param from Created after from datetime
+   * @param to Create before to datetime
+   * @return Result of the erase operation
+   */
+  TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
 
-    Integer getCertificateCount(String hsaId);
+  Integer getCertificateCount(String hsaId);
 }

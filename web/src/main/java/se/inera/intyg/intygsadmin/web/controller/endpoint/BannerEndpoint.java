@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,14 +19,11 @@
 package se.inera.intyg.intygsadmin.web.controller.endpoint;
 
 import java.util.List;
-import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.intygsadmin.web.service.BannerService;
@@ -35,16 +32,16 @@ import se.inera.intyg.intygsadmin.web.service.BannerService;
 @WebEndpoint(id = "banner")
 public class BannerEndpoint {
 
-    private final BannerService bannerService;
+  private final BannerService bannerService;
 
-    public BannerEndpoint(BannerService bannerService) {
-        this.bannerService = bannerService;
-    }
+  public BannerEndpoint(BannerService bannerService) {
+    this.bannerService = bannerService;
+  }
 
-    @ReadOperation
-    public ResponseEntity<List<Banner>> getActiveAndFutureBanners(@Selector Application application) {
-        List<Banner> banners = bannerService.getActiveAndFutureBanners(application);
+  @ReadOperation
+  public ResponseEntity<List<Banner>> getActiveAndFutureBanners(@Selector Application application) {
+    List<Banner> banners = bannerService.getActiveAndFutureBanners(application);
 
-        return ResponseEntity.ok(banners);
-    }
+    return ResponseEntity.ok(banners);
+  }
 }

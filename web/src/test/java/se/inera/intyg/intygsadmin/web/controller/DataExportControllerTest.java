@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,13 +24,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.data.domain.Sort;
 import se.inera.intyg.intygsadmin.web.controller.dto.CreateDataExportDTO;
 import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
@@ -39,64 +39,61 @@ import se.inera.intyg.intygsadmin.web.service.TerminationService;
 @ExtendWith(MockitoExtension.class)
 class DataExportControllerTest {
 
-    @Mock
-    private TerminationService terminationService;
+  @Mock private TerminationService terminationService;
 
-    @InjectMocks
-    private DataExportController dataExportController;
+  @InjectMocks private DataExportController dataExportController;
 
-    @Test
-    void listDataExports() {
-        final var pageable = PageRequest.of(0, 10, Sort.unsorted());
-        final var page = new PageImpl<DataExportResponse>(Collections.emptyList(), pageable, 0);
-        when(terminationService.getDataExports(pageable)).thenReturn(page);
+  @Test
+  void listDataExports() {
+    final var pageable = PageRequest.of(0, 10, Sort.unsorted());
+    final var page = new PageImpl<DataExportResponse>(Collections.emptyList(), pageable, 0);
+    when(terminationService.getDataExports(pageable)).thenReturn(page);
 
-        assertNotNull(dataExportController.listDataExports(pageable));
+    assertNotNull(dataExportController.listDataExports(pageable));
 
-        verify(terminationService, times(1)).getDataExports(pageable);
-    }
+    verify(terminationService, times(1)).getDataExports(pageable);
+  }
 
-    @Test
-    void createDataExport() {
-        CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
-        when(terminationService.createDataExport(createDataExportDTO)).thenReturn(new DataExportResponse());
+  @Test
+  void createDataExport() {
+    CreateDataExportDTO createDataExportDTO = new CreateDataExportDTO();
+    when(terminationService.createDataExport(createDataExportDTO))
+        .thenReturn(new DataExportResponse());
 
-        assertNotNull(dataExportController.createDataExport(createDataExportDTO));
+    assertNotNull(dataExportController.createDataExport(createDataExportDTO));
 
-        verify(terminationService, times(1)).createDataExport(createDataExportDTO);
-    }
+    verify(terminationService, times(1)).createDataExport(createDataExportDTO);
+  }
 
-    @Test
-    void changeDataExport() {
-        final var dataExportResponse = new DataExportResponse();
-        when(terminationService.updateDataExport(dataExportResponse)).thenReturn(dataExportResponse);
+  @Test
+  void changeDataExport() {
+    final var dataExportResponse = new DataExportResponse();
+    when(terminationService.updateDataExport(dataExportResponse)).thenReturn(dataExportResponse);
 
-        assertNotNull(dataExportController.updateDataExport(dataExportResponse));
+    assertNotNull(dataExportController.updateDataExport(dataExportResponse));
 
-        verify(terminationService, times(1)).updateDataExport(dataExportResponse);
-    }
+    verify(terminationService, times(1)).updateDataExport(dataExportResponse);
+  }
 
+  @Test
+  void eraseDataExport() {
+    String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+    String responseStatus = "Avslutad";
+    when(terminationService.eraseDataExport(terminationId)).thenReturn(responseStatus);
 
-    @Test
-    void eraseDataExport() {
-        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
-        String responseStatus = "Avslutad";
-        when(terminationService.eraseDataExport(terminationId)).thenReturn(responseStatus);
+    assertNotNull(dataExportController.eraseDataExport(terminationId));
 
-        assertNotNull(dataExportController.eraseDataExport(terminationId));
+    verify(terminationService, times(1)).eraseDataExport(terminationId);
+  }
 
-        verify(terminationService, times(1)).eraseDataExport(terminationId);
-    }
+  @Test
+  void resendDataExportKey() {
+    String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
+    String responseStatus = "Kryptonyckel skickad igen";
+    when(terminationService.resendDataExportKey(terminationId)).thenReturn(responseStatus);
 
-    @Test
-    void resendDataExportKey() {
-        String terminationId = "201d403d-7bcb-4017-a529-0309bb6693a2";
-        String responseStatus = "Kryptonyckel skickad igen";
-        when(terminationService.resendDataExportKey(terminationId)).thenReturn(responseStatus);
+    assertNotNull(dataExportController.resendDataExportKey(terminationId));
 
-        assertNotNull(dataExportController.resendDataExportKey(terminationId));
-
-        verify(terminationService, times(1)).resendDataExportKey(terminationId);
-    }
-
+    verify(terminationService, times(1)).resendDataExportKey(terminationId);
+  }
 }

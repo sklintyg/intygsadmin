@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,15 +21,16 @@ package se.inera.intyg.intygsadmin.web.service.monitoring;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 
 /**
- * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform and easy to parse.
+ * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform
+ * and easy to parse.
  */
 public interface MonitoringLogService {
 
-    void logUserLogin(String userId, AuthenticationMethod authMethod);
+  void logUserLogin(String userId, AuthenticationMethod authMethod);
 
-    void logUserLogout(String userId, AuthenticationMethod authMethod);
+  void logUserLogout(String userId, AuthenticationMethod authMethod);
 
-    void logUserSessionExpired(String userId, AuthenticationMethod authMethod);
+  void logUserSessionExpired(String userId, AuthenticationMethod authMethod);
 
-    void logFailedLogin(String exceptionMessage);
+  void logFailedLogin(String exceptionMessage);
 }

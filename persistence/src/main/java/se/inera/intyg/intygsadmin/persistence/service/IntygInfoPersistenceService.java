@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,18 +30,18 @@ import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 @Transactional
 public class IntygInfoPersistenceService {
 
-    private IntygInfoRepository intygInfoRepository;
+  private IntygInfoRepository intygInfoRepository;
 
-    public IntygInfoPersistenceService(IntygInfoRepository intygInfoRepository) {
-        this.intygInfoRepository = intygInfoRepository;
-    }
+  public IntygInfoPersistenceService(IntygInfoRepository intygInfoRepository) {
+    this.intygInfoRepository = intygInfoRepository;
+  }
 
-    public Page<IntygInfoEntity> findAll(Pageable pageable) {
-        return intygInfoRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
-    }
+  public Page<IntygInfoEntity> findAll(Pageable pageable) {
+    return intygInfoRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
+  }
 
-    public IntygInfoEntity create(IntygInfoEntity intygInfoEntity) {
-        intygInfoEntity.setId(null);
-        return intygInfoRepository.save(intygInfoEntity);
-    }
+  public IntygInfoEntity create(IntygInfoEntity intygInfoEntity) {
+    intygInfoEntity.setId(null);
+    return intygInfoRepository.save(intygInfoEntity);
+  }
 }

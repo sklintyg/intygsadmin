@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,17 +29,17 @@ import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoDTO;
 import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
 
-@Mapper(componentModel = "spring",
+@Mapper(
+    componentModel = "spring",
     unmappedTargetPolicy = ReportingPolicy.IGNORE,
-    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-)
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface IntygInfoMapper {
 
-    void updateIntygInfoFromIT(ItIntygInfo s, @MappingTarget IntygInfoDTO target);
+  void updateIntygInfoFromIT(ItIntygInfo s, @MappingTarget IntygInfoDTO target);
 
-    void updateIntygInfoFromWC(WcIntygInfo s, @MappingTarget IntygInfoDTO target);
+  void updateIntygInfoFromWC(WcIntygInfo s, @MappingTarget IntygInfoDTO target);
 
-    List<IntygInfoListDTO> toListDTO(List<IntygInfoEntity> s);
+  List<IntygInfoListDTO> toListDTO(List<IntygInfoEntity> s);
 
-    IntygInfoListDTO map(IntygInfoEntity value);
+  IntygInfoListDTO map(IntygInfoEntity value);
 }

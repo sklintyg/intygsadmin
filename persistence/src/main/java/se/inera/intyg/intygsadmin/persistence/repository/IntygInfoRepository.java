@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,7 +25,5 @@ import org.springframework.stereotype.Repository;
 import se.inera.intyg.intygsadmin.persistence.entity.IntygInfoEntity;
 
 @Repository
-public interface IntygInfoRepository extends JpaRepository<IntygInfoEntity, UUID>,
-    QuerydslPredicateExecutor<IntygInfoEntity> {
-
-}
+public interface IntygInfoRepository
+    extends JpaRepository<IntygInfoEntity, UUID>, QuerydslPredicateExecutor<IntygInfoEntity> {}

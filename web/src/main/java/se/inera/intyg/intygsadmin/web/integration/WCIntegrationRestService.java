@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,40 +27,46 @@ import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCareGiverI
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO;
-import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrationRequestDTO;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO;
+import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationResponseDTO;
 
 public interface WCIntegrationRestService {
 
-    IntegratedUnitDTO getIntegratedUnit(String hsaId);
+  IntegratedUnitDTO getIntegratedUnit(String hsaId);
 
-    List<IntegratedUnitDTO> getAllIntegratedUnits();
+  List<IntegratedUnitDTO> getAllIntegratedUnits();
 
-    WcIntygInfo getIntygInfo(String intygId);
+  WcIntygInfo getIntygInfo(String intygId);
 
-    /**
-     * Service for erasing of test certificates.
-     *
-     * @param from Created after from datetime
-     * @param to Create before to datetime
-     * @return Result of the erase operation
-     */
-    TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
+  /**
+   * Service for erasing of test certificates.
+   *
+   * @param from Created after from datetime
+   * @param to Create before to datetime
+   * @return Result of the erase operation
+   */
+  TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to);
 
-    SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request);
+  SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request);
 
-    SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request);
+  SendStatusIntegrationResponseDTO sendStatusForCertificates(
+      SendStatusForCertificatesIntegrationRequestDTO request);
 
-    CountStatusesIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request);
+  CountStatusesIntegrationResponseDTO countStatusesForCertificates(
+      CountStatusesForCertificatesIntegrationRequestDTO request);
 
-    SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request);
+  SendStatusIntegrationResponseDTO sendStatusForUnits(
+      SendStatusForUnitsIntegrationRequestDTO request);
 
-    CountStatusesIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request);
+  CountStatusesIntegrationResponseDTO countStatusesForUnits(
+      CountStatusesForUnitsIntegrationRequestDTO request);
 
-    SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request);
+  SendStatusIntegrationResponseDTO sendStatusForCareGiver(
+      SendStatusForCareGiverIntegrationRequestDTO request);
 
-    CountStatusesIntegrationResponseDTO countStatusesForCareGiver(CountStatusesForCareGiverIntegrationRequestDTO request);
+  CountStatusesIntegrationResponseDTO countStatusesForCareGiver(
+      CountStatusesForCareGiverIntegrationRequestDTO request);
 }

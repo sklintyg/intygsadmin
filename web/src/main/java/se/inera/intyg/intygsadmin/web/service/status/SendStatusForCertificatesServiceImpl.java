@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import lombok.RequiredArgsConstructor;
@@ -32,33 +31,32 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCertificatesI
 @RequiredArgsConstructor
 public class SendStatusForCertificatesServiceImpl implements SendStatusForCertificatesService {
 
-    private final WCIntegrationRestService wcIntegrationRestService;
-    private final SendNotificationRequestValidator sendNotificationRequestValidator;
+  private final WCIntegrationRestService wcIntegrationRestService;
+  private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @Override
-    public Integer send(SendStatusForCertificatesRequestDTO request) {
-        sendNotificationRequestValidator.validateIds(request.getCertificateIds());
+  @Override
+  public Integer send(SendStatusForCertificatesRequestDTO request) {
+    sendNotificationRequestValidator.validateIds(request.getCertificateIds());
 
-        final var integrationRequest = SendStatusForCertificatesIntegrationRequestDTO.builder()
+    final var integrationRequest =
+        SendStatusForCertificatesIntegrationRequestDTO.builder()
             .certificateIds(request.getCertificateIds())
             .statuses(request.getStatuses())
             .build();
 
-        final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);
-        return response.getCount();
-    }
+    final var response = wcIntegrationRestService.sendStatusForCertificates(integrationRequest);
+    return response.getCount();
+  }
 
-    @Override
-    public CountStatusesDTO count(CountStatusesForCertificatesRequestDTO request) {
-        final var integrationRequest = CountStatusesForCertificatesIntegrationRequestDTO.builder()
+  @Override
+  public CountStatusesDTO count(CountStatusesForCertificatesRequestDTO request) {
+    final var integrationRequest =
+        CountStatusesForCertificatesIntegrationRequestDTO.builder()
             .certificateIds(request.getCertificateIds())
             .statuses(request.getStatuses())
             .build();
 
-        final var response = wcIntegrationRestService.countStatusesForCertificates(integrationRequest);
-        return CountStatusesDTO.builder()
-            .count(response.getCount())
-            .max(response.getMax())
-            .build();
-    }
+    final var response = wcIntegrationRestService.countStatusesForCertificates(integrationRequest);
+    return CountStatusesDTO.builder().count(response.getCount()).max(response.getMax()).build();
+  }
 }

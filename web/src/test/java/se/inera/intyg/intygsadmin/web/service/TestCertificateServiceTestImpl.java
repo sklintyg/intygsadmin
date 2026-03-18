@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,45 +36,54 @@ import se.inera.intyg.intygsadmin.web.integration.WCIntegrationRestService;
 @ExtendWith(MockitoExtension.class)
 public class TestCertificateServiceTestImpl {
 
-    @Mock
-    private ITIntegrationRestService itIntegrationRestService;
+  @Mock private ITIntegrationRestService itIntegrationRestService;
 
-    @Mock
-    private WCIntegrationRestService wcIntegrationRestService;
+  @Mock private WCIntegrationRestService wcIntegrationRestService;
 
-    @InjectMocks
-    private TestCertificateServiceImpl testCertificateService;
+  @InjectMocks private TestCertificateServiceImpl testCertificateService;
 
-    @Test
-    public void testEraseTestCertificates() {
-        doReturn(TestCertificateEraseResult.create(1, 0)).when(itIntegrationRestService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(2, 0)).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
+  @Test
+  public void testEraseTestCertificates() {
+    doReturn(TestCertificateEraseResult.create(1, 0))
+        .when(itIntegrationRestService)
+        .eraseTestCertificates(any(), any());
+    doReturn(TestCertificateEraseResult.create(2, 0))
+        .when(wcIntegrationRestService)
+        .eraseTestCertificates(any(), any());
 
-        testCertificateService.eraseTestCertificates();
+    testCertificateService.eraseTestCertificates();
 
-        verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
-        verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
-    }
+    verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+    verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+  }
 
-    @Test
-    public void testEraseTestCertificatesFailedWCSuccessIT() {
-        doThrow(new RuntimeException()).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(1, 0)).when(itIntegrationRestService).eraseTestCertificates(any(), any());
+  @Test
+  public void testEraseTestCertificatesFailedWCSuccessIT() {
+    doThrow(new RuntimeException())
+        .when(wcIntegrationRestService)
+        .eraseTestCertificates(any(), any());
+    doReturn(TestCertificateEraseResult.create(1, 0))
+        .when(itIntegrationRestService)
+        .eraseTestCertificates(any(), any());
 
-        testCertificateService.eraseTestCertificates();
+    testCertificateService.eraseTestCertificates();
 
-        verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
-        verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
-    }
+    verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+    verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+  }
 
-    @Test
-    public void testEraseTestCertificatesFailedITSuccessWC() {
-        doThrow(new RuntimeException()).when(itIntegrationRestService).eraseTestCertificates(any(), any());
-        doReturn(TestCertificateEraseResult.create(2, 0)).when(wcIntegrationRestService).eraseTestCertificates(any(), any());
+  @Test
+  public void testEraseTestCertificatesFailedITSuccessWC() {
+    doThrow(new RuntimeException())
+        .when(itIntegrationRestService)
+        .eraseTestCertificates(any(), any());
+    doReturn(TestCertificateEraseResult.create(2, 0))
+        .when(wcIntegrationRestService)
+        .eraseTestCertificates(any(), any());
 
-        testCertificateService.eraseTestCertificates();
+    testCertificateService.eraseTestCertificates();
 
-        verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
-        verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
-    }
+    verify(itIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+    verify(wcIntegrationRestService, times(1)).eraseTestCertificates(any(), any());
+  }
 }

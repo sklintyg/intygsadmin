@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,40 +31,40 @@ import se.inera.intyg.infra.intyginfo.dto.IntygInfoEvent;
 @JsonInclude(Include.NON_NULL)
 public class IntygInfoDTO {
 
-    private String intygId;
-    private String intygType;
-    private String intygVersion;
+  private String intygId;
+  private String intygType;
+  private String intygVersion;
 
-    private LocalDateTime draftCreated;
-    private LocalDateTime receivedDate;
-    private LocalDateTime signedDate;
-    private LocalDateTime sentToRecipient;
-    private LocalDateTime receivedByRecipient;
+  private LocalDateTime draftCreated;
+  private LocalDateTime receivedDate;
+  private LocalDateTime signedDate;
+  private LocalDateTime sentToRecipient;
+  private LocalDateTime receivedByRecipient;
 
-    private int numberOfRecipients;
+  private int numberOfRecipients;
 
-    private String signedByName;
-    private String signedByHsaId;
-    private String signedByEmail;
+  private String signedByName;
+  private String signedByHsaId;
+  private String signedByEmail;
 
-    private String careUnitName;
-    private String careUnitHsaId;
+  private String careUnitName;
+  private String careUnitHsaId;
 
-    private String careGiverName;
-    private String careGiverHsaId;
+  private String careGiverName;
+  private String careGiverHsaId;
 
-    private boolean createdInWC;
+  private boolean createdInWC;
 
-    private int kompletteringar;
-    private int kompletteringarAnswered;
+  private int kompletteringar;
+  private int kompletteringarAnswered;
 
-    private int administrativaFragorSent;
-    private int administrativaFragorSentAnswered;
+  private int administrativaFragorSent;
+  private int administrativaFragorSentAnswered;
 
-    private int administrativaFragorReceived;
-    private int administrativaFragorReceivedAnswered;
+  private int administrativaFragorReceived;
+  private int administrativaFragorReceivedAnswered;
 
-    private boolean testCertificate;
+  private boolean testCertificate;
 
-    private List<IntygInfoEvent> events;
+  private List<IntygInfoEvent> events;
 }

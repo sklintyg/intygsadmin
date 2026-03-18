@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -41,71 +41,78 @@ import se.inera.intyg.intygsadmin.web.service.TerminationService;
 @PreAuthorize("hasRole('FULL')")
 @Tag(
     name = "Data export service",
-    description = "The export service API that is used for exporting and removing all data tied to a Care Provider and Organization."
-)
+    description =
+        "The export service API that is used for exporting and removing all data tied to a Care Provider and Organization.")
 public class DataExportController {
 
-    private final TerminationService terminationService;
+  private final TerminationService terminationService;
 
-    public DataExportController(TerminationService terminationService) {
-        this.terminationService = terminationService;
-    }
+  public DataExportController(TerminationService terminationService) {
+    this.terminationService = terminationService;
+  }
 
-    /**
-     * List a page of data exports.
-     *
-     * @param pageable with page number, page size and sort parameters.
-     * @return ResponseEntity carrying a Page of terminations for display.
-     */
-    @Operation(summary = "List a page of data exports.", description = "List a page of data exports.")
-    @GetMapping
-    public ResponseEntity<Page<DataExportResponse>> listDataExports(
-        @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
+  /**
+   * List a page of data exports.
+   *
+   * @param pageable with page number, page size and sort parameters.
+   * @return ResponseEntity carrying a Page of terminations for display.
+   */
+  @Operation(summary = "List a page of data exports.", description = "List a page of data exports.")
+  @GetMapping
+  public ResponseEntity<Page<DataExportResponse>> listDataExports(
+      @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable) {
 
-        return ResponseEntity.ok(terminationService.getDataExports(pageable));
-    }
+    return ResponseEntity.ok(terminationService.getDataExports(pageable));
+  }
 
-    /**
-     * Create a data export.
-     */
-    @Operation(summary = "Create the data export", description = "Returns the data export that was saved.")
-    @PostMapping
-    public ResponseEntity<DataExportResponse> createDataExport(@RequestBody CreateDataExportDTO createDataExportDTO) {
-        final DataExportResponse savedDTO = terminationService.createDataExport(createDataExportDTO);
+  /** Create a data export. */
+  @Operation(
+      summary = "Create the data export",
+      description = "Returns the data export that was saved.")
+  @PostMapping
+  public ResponseEntity<DataExportResponse> createDataExport(
+      @RequestBody CreateDataExportDTO createDataExportDTO) {
+    final DataExportResponse savedDTO = terminationService.createDataExport(createDataExportDTO);
 
-        return ResponseEntity.ok(savedDTO);
-    }
+    return ResponseEntity.ok(savedDTO);
+  }
 
-    /**
-     * Update a data export.
-     *
-     * @param dataExportResponse Object containing the updates to be introduced.
-     * @return ResponseEntity holding the updated object.
-     */
-    @Operation(summary = "Update a data export", description = "Returns the data export that was updated.")
-    @PostMapping("/update")
-    public ResponseEntity<DataExportResponse> updateDataExport(@RequestBody DataExportResponse dataExportResponse) {
-        final var updatedDataExport = terminationService.updateDataExport(dataExportResponse);
-        return ResponseEntity.ok(updatedDataExport);
-    }
+  /**
+   * Update a data export.
+   *
+   * @param dataExportResponse Object containing the updates to be introduced.
+   * @return ResponseEntity holding the updated object.
+   */
+  @Operation(
+      summary = "Update a data export",
+      description = "Returns the data export that was updated.")
+  @PostMapping("/update")
+  public ResponseEntity<DataExportResponse> updateDataExport(
+      @RequestBody DataExportResponse dataExportResponse) {
+    final var updatedDataExport = terminationService.updateDataExport(dataExportResponse);
+    return ResponseEntity.ok(updatedDataExport);
+  }
 
-    /**
-     * Erase the information regarding a data export.
-     */
-    @Operation(summary = "Erase all data tied to a data export", description = "Returns the status of the export")
-    @PostMapping("/{terminationId}/erase")
-    public ResponseEntity<String> eraseDataExport(@PathVariable("terminationId") String terminationId) {
-        final String status = terminationService.eraseDataExport(terminationId);
+  /** Erase the information regarding a data export. */
+  @Operation(
+      summary = "Erase all data tied to a data export",
+      description = "Returns the status of the export")
+  @PostMapping("/{terminationId}/erase")
+  public ResponseEntity<String> eraseDataExport(
+      @PathVariable("terminationId") String terminationId) {
+    final String status = terminationService.eraseDataExport(terminationId);
 
-        return ResponseEntity.ok(status);
-    }
+    return ResponseEntity.ok(status);
+  }
 
-    @Operation(summary = "Erase all data tied to a data export", description = "Returns the status of the export")
-    @PostMapping("/{terminationId}/resendkey")
-    public ResponseEntity<String> resendDataExportKey(@PathVariable("terminationId") String terminationId) {
-        final String status = terminationService.resendDataExportKey(terminationId);
+  @Operation(
+      summary = "Erase all data tied to a data export",
+      description = "Returns the status of the export")
+  @PostMapping("/{terminationId}/resendkey")
+  public ResponseEntity<String> resendDataExportKey(
+      @PathVariable("terminationId") String terminationId) {
+    final String status = terminationService.resendDataExportKey(terminationId);
 
-        return ResponseEntity.ok(status);
-    }
+    return ResponseEntity.ok(status);
+  }
 }
-

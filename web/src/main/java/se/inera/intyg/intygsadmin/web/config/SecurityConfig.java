@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -71,30 +71,36 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @EnableConfigurationProperties(value = {IdpProperties.class})
 public class SecurityConfig {
 
-    private final UserPersistenceService userPersistenceService;
-    private final IdpProperties idpProperties;
-    private final List<String> profiles;
+  private final UserPersistenceService userPersistenceService;
+  private final IdpProperties idpProperties;
+  private final List<String> profiles;
 
-    public SecurityConfig(UserPersistenceService userPersistenceService, IdpProperties idpProperties, Environment environment) {
-        this.userPersistenceService = userPersistenceService;
-        this.idpProperties = idpProperties;
-        this.profiles = Arrays.asList(environment.getActiveProfiles());
-    }
+  public SecurityConfig(
+      UserPersistenceService userPersistenceService,
+      IdpProperties idpProperties,
+      Environment environment) {
+    this.userPersistenceService = userPersistenceService;
+    this.idpProperties = idpProperties;
+    this.profiles = Arrays.asList(environment.getActiveProfiles());
+  }
 
-    @Bean
-    public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter(MonitoringLogService monitoringLogService) {
-        final SessionTimeoutFilter sessionTimeoutFilter = new SessionTimeoutFilter(monitoringLogService);
+  @Bean
+  public FilterRegistrationBean<SessionTimeoutFilter> sessionTimeoutFilter(
+      MonitoringLogService monitoringLogService) {
+    final SessionTimeoutFilter sessionTimeoutFilter =
+        new SessionTimeoutFilter(monitoringLogService);
 
-        FilterRegistrationBean<SessionTimeoutFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(sessionTimeoutFilter);
-        registrationBean.addUrlPatterns("/*");
+    FilterRegistrationBean<SessionTimeoutFilter> registrationBean = new FilterRegistrationBean<>();
+    registrationBean.setFilter(sessionTimeoutFilter);
+    registrationBean.addUrlPatterns("/*");
 
-        return registrationBean;
-    }
+    return registrationBean;
+  }
 
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        final var registration = ClientRegistrations.fromOidcIssuerLocation(idpProperties.getIssuerUri())
+  @Bean
+  public ClientRegistrationRepository clientRegistrationRepository() {
+    final var registration =
+        ClientRegistrations.fromOidcIssuerLocation(idpProperties.getIssuerUri())
             .registrationId(idpProperties.getClientRegistrationId())
             .clientId(idpProperties.getClientId())
             .clientSecret(idpProperties.getClientSecret())
@@ -104,121 +110,158 @@ public class SecurityConfig {
             .userNameAttributeName(idpProperties.getUserNameAttributeName())
             .scope(idpProperties.getScope())
             .build();
-        return new InMemoryClientRegistrationRepository(registration);
+    return new InMemoryClientRegistrationRepository(registration);
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(
+      HttpSecurity http, CustomLogoutSuccessHandler customLogoutSuccessHandler) throws Exception {
+
+    configureFakeLogin(http, profiles);
+    configureOpenApi(http);
+
+    http.authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/")
+                    .permitAll()
+                    .requestMatchers("/version.html")
+                    .permitAll()
+                    .requestMatchers("/public-api/version")
+                    .permitAll()
+                    .requestMatchers("/version-assets/**")
+                    .permitAll()
+                    .requestMatchers("/favicon*")
+                    .permitAll()
+                    .requestMatchers("/index.html")
+                    .permitAll()
+                    .requestMatchers("/images/**")
+                    .permitAll()
+                    .requestMatchers("/app/**")
+                    .permitAll()
+                    .requestMatchers("/assets/**")
+                    .permitAll()
+                    .requestMatchers("/components/**")
+                    .permitAll()
+                    .requestMatchers("/actuator/**")
+                    .permitAll()
+                    .requestMatchers("/static/**")
+                    .permitAll()
+                    .requestMatchers(API_ANVANDARE)
+                    .permitAll()
+                    .requestMatchers(IA_SPRING_SEC_ERROR_CONTROLLER_PATH)
+                    .permitAll()
+                    .requestMatchers(PUBLIC_API_REQUEST_MAPPING + "/**")
+                    .permitAll()
+                    .anyRequest()
+                    .fullyAuthenticated())
+        .oauth2Client(
+            httpSecurityOAuth2ClientConfigurer ->
+                httpSecurityOAuth2ClientConfigurer.authorizationCodeGrant(
+                    authorizationCodeGrantConfigurer ->
+                        authorizationCodeGrantConfigurer.authorizationRequestResolver(
+                            new CustomAuthorizationResolver(clientRegistrationRepository()))))
+        .oauth2Login(
+            httpSecurityOAuth2LoginConfigurer ->
+                httpSecurityOAuth2LoginConfigurer
+                    .failureHandler(
+                        new ForwardAuthenticationFailureHandler(
+                            IA_SPRING_SEC_ERROR_CONTROLLER_PATH))
+                    .redirectionEndpoint(
+                        redirectionEndpointConfig ->
+                            redirectionEndpointConfig.baseUri(LOGIN_REDIRECT_URL))
+                    .userInfoEndpoint(userInfo -> userInfo.oidcUserService(this.oidcUserService())))
+        .logout(
+            httpSecurityLogoutConfigurer ->
+                httpSecurityLogoutConfigurer
+                    .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
+                    .logoutSuccessHandler(customLogoutSuccessHandler)
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true))
+        .exceptionHandling(
+            exceptionHandler ->
+                exceptionHandler.defaultAuthenticationEntryPointFor(
+                    new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE))
+        .csrf(AbstractHttpConfigurer::disable)
+        .requestCache(
+            cacheConfigurer -> cacheConfigurer.requestCache(new HttpSessionRequestCache()));
+
+    return http.build();
+  }
+
+  private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
+    return userRequest -> {
+      final var oidcIdToken = userRequest.getIdToken();
+      final var claims = oidcIdToken.getClaims();
+      final var userHsaId = String.valueOf(claims.get(idpProperties.getUserNameAttributeName()));
+      final var userEntity = getUserEntity(userHsaId);
+      final var grantedAuthority =
+          new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name());
+      final var providerDetails = userRequest.getClientRegistration().getProviderDetails();
+      final var userNameAttributeName =
+          providerDetails.getUserInfoEndpoint().getUserNameAttributeName();
+
+      return new IntygsadminUser(
+          userEntity,
+          AuthenticationMethod.OIDC,
+          oidcIdToken,
+          Set.of(grantedAuthority),
+          userNameAttributeName);
+    };
+  }
+
+  private UserEntity getUserEntity(String userHsaId) {
+    return userPersistenceService
+        .findByEmployeeHsaId(userHsaId)
+        .orElseThrow(
+            () ->
+                new BadCredentialsException(
+                    "Authentication failed. No IntygsadminUser for employeeHsaId " + userHsaId));
+  }
+
+  private void configureFakeLogin(HttpSecurity http, List<String> profiles) throws Exception {
+    if (profiles.contains(FAKE_PROFILE)) {
+      allowFakeLogin(http);
+    } else {
+      denyFakeLogin(http);
     }
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http,
-        CustomLogoutSuccessHandler customLogoutSuccessHandler) throws Exception {
+  private void denyFakeLogin(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(
+        auth ->
+            auth.requestMatchers(FAKE_LOGIN_URL)
+                .denyAll()
+                .requestMatchers("/welcome-assets/**")
+                .denyAll()
+                .requestMatchers("/h2-console/**")
+                .denyAll()
+                .requestMatchers(FAKE_API_REQUEST_MAPPING + "/**")
+                .denyAll());
+  }
 
-        configureFakeLogin(http, profiles);
-        configureOpenApi(http);
+  private void allowFakeLogin(HttpSecurity http) throws Exception {
+    http.authorizeHttpRequests(
+        auth ->
+            auth.requestMatchers(FAKE_LOGIN_URL)
+                .permitAll()
+                .requestMatchers("/welcome-assets/**")
+                .permitAll()
+                .requestMatchers("/h2-console/**")
+                .permitAll()
+                .requestMatchers(FAKE_API_REQUEST_MAPPING + "/**")
+                .permitAll());
+  }
 
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/version.html").permitAll()
-                .requestMatchers("/public-api/version").permitAll()
-                .requestMatchers("/version-assets/**").permitAll()
-                .requestMatchers("/favicon*").permitAll()
-                .requestMatchers("/index.html").permitAll()
-                .requestMatchers("/images/**").permitAll()
-                .requestMatchers("/app/**").permitAll()
-                .requestMatchers("/assets/**").permitAll()
-                .requestMatchers("/components/**").permitAll()
-                .requestMatchers("/actuator/**").permitAll()
-                .requestMatchers("/static/**").permitAll()
-                .requestMatchers(API_ANVANDARE).permitAll()
-                .requestMatchers(IA_SPRING_SEC_ERROR_CONTROLLER_PATH).permitAll()
-                .requestMatchers(PUBLIC_API_REQUEST_MAPPING + "/**").permitAll()
-                .anyRequest().fullyAuthenticated()
-            )
-            .oauth2Client(httpSecurityOAuth2ClientConfigurer -> httpSecurityOAuth2ClientConfigurer
-                .authorizationCodeGrant(authorizationCodeGrantConfigurer -> authorizationCodeGrantConfigurer
-                    .authorizationRequestResolver(new CustomAuthorizationResolver(clientRegistrationRepository()))
-                )
-            )
-            .oauth2Login(httpSecurityOAuth2LoginConfigurer -> httpSecurityOAuth2LoginConfigurer
-                .failureHandler(new ForwardAuthenticationFailureHandler(IA_SPRING_SEC_ERROR_CONTROLLER_PATH))
-                .redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig
-                    .baseUri(LOGIN_REDIRECT_URL)
-                )
-                .userInfoEndpoint(userInfo -> userInfo
-                    .oidcUserService(this.oidcUserService()))
-            )
-            .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
-                .logoutSuccessHandler(customLogoutSuccessHandler)
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-            )
-            .exceptionHandling(exceptionHandler -> exceptionHandler
-                .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), AnyRequestMatcher.INSTANCE)
-            )
-            .csrf(AbstractHttpConfigurer::disable)
-            .requestCache(cacheConfigurer -> cacheConfigurer
-                .requestCache(new HttpSessionRequestCache())
-            );
-
-        return http.build();
+  private void configureOpenApi(HttpSecurity http) throws Exception {
+    if (profiles.contains("dev")) {
+      http.authorizeHttpRequests(
+          auth ->
+              auth.requestMatchers("/swagger-ui.html")
+                  .permitAll()
+                  .requestMatchers("/swagger-ui/**")
+                  .permitAll()
+                  .requestMatchers("/v3/api-docs/**")
+                  .permitAll());
     }
-
-    private OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
-        return userRequest -> {
-            final var oidcIdToken = userRequest.getIdToken();
-            final var claims = oidcIdToken.getClaims();
-            final var userHsaId = String.valueOf(claims.get(idpProperties.getUserNameAttributeName()));
-            final var userEntity = getUserEntity(userHsaId);
-            final var grantedAuthority = new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name());
-            final var providerDetails = userRequest.getClientRegistration().getProviderDetails();
-            final var userNameAttributeName = providerDetails.getUserInfoEndpoint().getUserNameAttributeName();
-
-            return new IntygsadminUser(userEntity, AuthenticationMethod.OIDC, oidcIdToken, Set.of(grantedAuthority),
-                userNameAttributeName);
-        };
-    }
-
-    private UserEntity getUserEntity(String userHsaId) {
-        return userPersistenceService.findByEmployeeHsaId(userHsaId)
-            .orElseThrow(() -> new BadCredentialsException("Authentication failed. No IntygsadminUser for employeeHsaId " + userHsaId));
-    }
-
-    private void configureFakeLogin(HttpSecurity http, List<String> profiles) throws Exception {
-        if (profiles.contains(FAKE_PROFILE)) {
-            allowFakeLogin(http);
-        } else {
-            denyFakeLogin(http);
-        }
-    }
-
-    private void denyFakeLogin(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(FAKE_LOGIN_URL).denyAll()
-                .requestMatchers("/welcome-assets/**").denyAll()
-                .requestMatchers("/h2-console/**").denyAll()
-                .requestMatchers(FAKE_API_REQUEST_MAPPING + "/**").denyAll()
-            );
-    }
-
-    private void allowFakeLogin(HttpSecurity http) throws Exception {
-        http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(FAKE_LOGIN_URL).permitAll()
-                .requestMatchers("/welcome-assets/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers(FAKE_API_REQUEST_MAPPING + "/**").permitAll()
-            );
-    }
-
-    private void configureOpenApi(HttpSecurity http) throws Exception {
-        if (profiles.contains("dev")) {
-            http
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/swagger-ui.html").permitAll()
-                    .requestMatchers("/swagger-ui/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**").permitAll()
-                );
-        }
-    }
+  }
 }

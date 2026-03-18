@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,23 +32,25 @@ import se.inera.intyg.intygsadmin.web.service.UserService;
 @RequestMapping(UserController.API_ANVANDARE)
 public class UserController {
 
-    public static final String API_ANVANDARE = "/api/anvandare";
+  public static final String API_ANVANDARE = "/api/anvandare";
 
-    private UserService userService;
+  private UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+  @Autowired
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
+
+  @GetMapping
+  public ResponseEntity<UserResponseDTO> getUser() {
+    IntygsadminUser user = userService.getActiveUser();
+
+    if (user == null) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    } else {
+      return ResponseEntity.ok(
+          new UserResponseDTO(
+              user.getEmployeeHsaId(), user.getIntygsadminRole().name(), user.getName()));
     }
-
-    @GetMapping
-    public ResponseEntity<UserResponseDTO> getUser() {
-        IntygsadminUser user = userService.getActiveUser();
-
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else {
-            return ResponseEntity.ok(new UserResponseDTO(user.getEmployeeHsaId(), user.getIntygsadminRole().name(), user.getName()));
-        }
-    }
+  }
 }

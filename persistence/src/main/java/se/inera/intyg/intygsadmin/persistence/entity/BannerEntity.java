@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -43,17 +43,18 @@ import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 @NoArgsConstructor
 public class BannerEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JdbcTypeCode(SqlTypes.CHAR)
+  private UUID id;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    @Enumerated(EnumType.STRING)
-    private Application application;
-    private String message;
-    private LocalDateTime displayFrom;
-    private LocalDateTime displayTo;
-    private BannerPriority priority;
+  @CreationTimestamp private LocalDateTime createdAt;
+
+  @Enumerated(EnumType.STRING)
+  private Application application;
+
+  private String message;
+  private LocalDateTime displayFrom;
+  private LocalDateTime displayTo;
+  private BannerPriority priority;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,28 +34,24 @@ import se.inera.intyg.intygsadmin.persistence.repository.IntygInfoRepository;
 @TestContext
 public class IntygInfoPersistenceServiceTest extends TestSupport {
 
-    @Autowired
-    private IntygInfoRepository intygInfoRepository;
+  @Autowired private IntygInfoRepository intygInfoRepository;
 
-    @Autowired
-    private IntygInfoPersistenceService intygInfoPersistenceService;
+  @Autowired private IntygInfoPersistenceService intygInfoPersistenceService;
 
-    private final int total = 10;
-    private final int pageSize = 20;
+  private final int total = 10;
+  private final int pageSize = 20;
 
-    @BeforeEach
-    public void before() {
-        intygInfoRepository.deleteAll();
-        randomizer()
-            .objects(IntygInfoEntity.class, total)
-            .forEach(intygInfoPersistenceService::create);
-    }
+  @BeforeEach
+  public void before() {
+    intygInfoRepository.deleteAll();
+    randomizer().objects(IntygInfoEntity.class, total).forEach(intygInfoPersistenceService::create);
+  }
 
-    @Test
-    public void findAllTest() {
-        Pageable pageable = PageRequest.of(0, pageSize);
-        Page<IntygInfoEntity> list = intygInfoPersistenceService.findAll(pageable);
+  @Test
+  public void findAllTest() {
+    Pageable pageable = PageRequest.of(0, pageSize);
+    Page<IntygInfoEntity> list = intygInfoPersistenceService.findAll(pageable);
 
-        assertEquals(total, list.getTotalElements());
-    }
+    assertEquals(total, list.getTotalElements());
+  }
 }

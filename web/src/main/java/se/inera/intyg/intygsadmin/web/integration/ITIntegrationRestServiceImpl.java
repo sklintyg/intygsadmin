@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,8 +20,8 @@ package se.inera.intyg.intygsadmin.web.integration;
 
 import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_SESSION_ID_HEADER;
 import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
-import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
 import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
 
 import java.time.LocalDateTime;
 import net.minidev.json.JSONObject;
@@ -44,66 +44,66 @@ import se.inera.intyg.infra.testcertificate.dto.TestCertificateEraseResult;
 @Service
 public class ITIntegrationRestServiceImpl implements ITIntegrationRestService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ITIntegrationRestServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ITIntegrationRestServiceImpl.class);
 
-    private final RestClient restClient;
+  private final RestClient restClient;
 
-    @Value("${intygstjansten.internalapi}")
-    private String intygstjanstenUrl;
+  @Value("${intygstjansten.internalapi}")
+  private String intygstjanstenUrl;
 
-    @Autowired
-    public ITIntegrationRestServiceImpl(RestClient restClient) {
-        this.restClient = restClient;
+  @Autowired
+  public ITIntegrationRestServiceImpl(RestClient restClient) {
+    this.restClient = restClient;
+  }
+
+  @Override
+  public ItIntygInfo getIntygInfo(String intygId) {
+    try {
+      return restClient
+          .get()
+          .uri(intygstjanstenUrl + "/internalapi/intygInfo/" + intygId)
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .retrieve()
+          .body(ItIntygInfo.class);
+    } catch (HttpClientErrorException ex) {
+      if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+        throw ex;
+      }
+      return null;
     }
+  }
 
-    @Override
-    public ItIntygInfo getIntygInfo(String intygId) {
-        try {
-            return restClient
-                .get()
-                .uri(intygstjanstenUrl + "/internalapi/intygInfo/" + intygId)
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .retrieve()
-                .body(ItIntygInfo.class);
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return null;
-        }
+  @Override
+  public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+    final var eraseJSON = new JSONObject();
+    eraseJSON.put("from", from);
+    eraseJSON.put("to", to);
+
+    return restClient
+        .post()
+        .uri(intygstjanstenUrl + "/internalapi/testCertificate/erase")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(eraseJSON)
+        .retrieve()
+        .body(TestCertificateEraseResult.class);
+  }
+
+  @Override
+  public Integer getCertificateCount(String hsaId) {
+    try {
+      return restClient
+          .get()
+          .uri(intygstjanstenUrl + "/internalapi/intygInfo/" + hsaId + "/count")
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .retrieve()
+          .body(Integer.class);
+    } catch (RestClientException e) {
+      LOG.error("Failure fetching certificate count for private practitioner {}.", hsaId, e);
+      return null;
     }
-
-    @Override
-    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        final var eraseJSON = new JSONObject();
-        eraseJSON.put("from", from);
-        eraseJSON.put("to", to);
-
-        return restClient
-            .post()
-            .uri(intygstjanstenUrl + "/internalapi/testCertificate/erase")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(eraseJSON)
-            .retrieve()
-            .body(TestCertificateEraseResult.class);
-    }
-
-    @Override
-    public Integer getCertificateCount(String hsaId) {
-        try {
-            return restClient
-                .get()
-                .uri(intygstjanstenUrl + "/internalapi/intygInfo/" + hsaId + "/count")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .retrieve()
-                .body(Integer.class);
-        } catch (RestClientException e) {
-            LOG.error("Failure fetching certificate count for private practitioner {}.", hsaId, e);
-            return null;
-        }
-    }
+  }
 }

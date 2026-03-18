@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,10 +26,9 @@ import org.springframework.security.test.context.support.WithSecurityContext;
 @WithSecurityContext(factory = WithMockIntygsadminUserSecurityContextFactory.class)
 public @interface WithMockIntygsadminUser {
 
-    String employeeHsaId() default "HSA1";
+  String employeeHsaId() default "HSA1";
 
-    String intygsadminRole() default "FULL";
+  String intygsadminRole() default "FULL";
 
-    String name() default "Karl Nilsson";
-
+  String name() default "Karl Nilsson";
 }

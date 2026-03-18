@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,25 +19,27 @@
 package se.inera.intyg.intygsadmin.persistence.enums;
 
 public enum BannerPriority {
-    LAG("1"), MEDEL("2"), HOG("3");
+  LAG("1"),
+  MEDEL("2"),
+  HOG("3");
 
-    private String dbValue;
+  private String dbValue;
 
-    BannerPriority(String dbValue) {
-        this.dbValue = dbValue;
+  BannerPriority(String dbValue) {
+    this.dbValue = dbValue;
+  }
+
+  public String getDbValue() {
+    return dbValue;
+  }
+
+  public static BannerPriority fromDbValue(String dbValue) {
+    for (BannerPriority bannerPriority : values()) {
+      if (bannerPriority.getDbValue().equalsIgnoreCase(dbValue)) {
+        return bannerPriority;
+      }
     }
 
-    public String getDbValue() {
-        return dbValue;
-    }
-
-    public static BannerPriority fromDbValue(String dbValue) {
-        for (BannerPriority bannerPriority : values()) {
-            if (bannerPriority.getDbValue().equalsIgnoreCase(dbValue)) {
-                return bannerPriority;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,42 +32,41 @@ import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 @Transactional
 public class UserPersistenceService {
 
-    private UserRepository userRepository;
+  private UserRepository userRepository;
 
-    public UserPersistenceService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public UserPersistenceService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
-        return userRepository.findByEmployeeHsaId(employeeHsaId);
-    }
+  public Optional<UserEntity> findByEmployeeHsaId(String employeeHsaId) {
+    return userRepository.findByEmployeeHsaId(employeeHsaId);
+  }
 
-    public void delete(UUID id) {
-        userRepository.deleteById(id);
-    }
+  public void delete(UUID id) {
+    userRepository.deleteById(id);
+  }
 
-    public UserEntity add(UserEntity newUserEntity) {
-        UserEntity userEntity = new UserEntity();
+  public UserEntity add(UserEntity newUserEntity) {
+    UserEntity userEntity = new UserEntity();
 
-        return upsert(userEntity, newUserEntity);
-    }
+    return upsert(userEntity, newUserEntity);
+  }
 
-    public UserEntity update(UserEntity newUserEntity) {
-        UserEntity userEntity = userRepository.getOne(newUserEntity.getId());
+  public UserEntity update(UserEntity newUserEntity) {
+    UserEntity userEntity = userRepository.getOne(newUserEntity.getId());
 
-        return upsert(userEntity, newUserEntity);
-    }
+    return upsert(userEntity, newUserEntity);
+  }
 
-    private UserEntity upsert(UserEntity userEntity, UserEntity newUserEntity) {
-        userEntity.setEmployeeHsaId(newUserEntity.getEmployeeHsaId());
-        userEntity.setIntygsadminRole(newUserEntity.getIntygsadminRole());
-        userEntity.setName(newUserEntity.getName());
+  private UserEntity upsert(UserEntity userEntity, UserEntity newUserEntity) {
+    userEntity.setEmployeeHsaId(newUserEntity.getEmployeeHsaId());
+    userEntity.setIntygsadminRole(newUserEntity.getIntygsadminRole());
+    userEntity.setName(newUserEntity.getName());
 
-        return userRepository.save(userEntity);
-    }
+    return userRepository.save(userEntity);
+  }
 
-    public Page<UserEntity> findAll(Pageable pageable) {
-        return userRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
-    }
-
+  public Page<UserEntity> findAll(Pageable pageable) {
+    return userRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
+  }
 }

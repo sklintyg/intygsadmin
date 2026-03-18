@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -41,117 +41,121 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 @ExtendWith(MockitoExtension.class)
 class PrivatePractitionerServiceImplTest {
 
-    @Mock
-    private PPIntegrationRestService ppIntegrationRestService;
-    @Mock
-    private ITIntegrationRestService itIntegrationRestService;
+  @Mock private PPIntegrationRestService ppIntegrationRestService;
+  @Mock private ITIntegrationRestService itIntegrationRestService;
 
-    @InjectMocks
-    private PrivatePractitionerServiceImpl privatePractitionerService;
+  @InjectMocks private PrivatePractitionerServiceImpl privatePractitionerService;
 
-    private static final String YES = "Ja";
-    private static final String NO = "Nej";
-    private static final String COUNT_FAILURE_MESSAGE = "Uppgift om utfärdade intyg kunde inte hämtas. Prova igen om en stund.";
+  private static final String YES = "Ja";
+  private static final String NO = "Nej";
+  private static final String COUNT_FAILURE_MESSAGE =
+      "Uppgift om utfärdade intyg kunde inte hämtas. Prova igen om en stund.";
 
-    private static final String NAME = "Steve Vessla";
-    private static final String EMAIL = "email@example.se";
-    private static final String PERSON_ID = "191212121212";
-    private static final String HSA_ID = "SE23210000055-TEST5";
-    private static final String CARE_PROVIDER_NAME = "Vårdgivare Vesslan";
-    private static final LocalDateTime REGISTRATION_DATE = LocalDateTime.now();
+  private static final String NAME = "Steve Vessla";
+  private static final String EMAIL = "email@example.se";
+  private static final String PERSON_ID = "191212121212";
+  private static final String HSA_ID = "SE23210000055-TEST5";
+  private static final String CARE_PROVIDER_NAME = "Vårdgivare Vesslan";
+  private static final LocalDateTime REGISTRATION_DATE = LocalDateTime.now();
 
+  @Nested
+  public class testGetPrivatePractitioner {
 
-    @Nested
-    public class testGetPrivatePractitioner {
+    @Test
+    public void shouldReturnNullWhenNoPrivatePractitioner() {
+      when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(null);
 
-        @Test
-        public void shouldReturnNullWhenNoPrivatePractitioner() {
-            when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(null);
+      final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
 
-            final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
-
-            assertNull(response);
-        }
-
-        @Test
-        public void shouldReturnHasCertificatesNoWhenCertificateCountIsZero() {
-            when(ppIntegrationRestService.getPrivatePractitioner(PERSON_ID)).thenReturn(getPrivatePractitioner());
-            when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(0);
-
-            final var response = privatePractitionerService.getPrivatePractitioner(PERSON_ID);
-
-            assertEquals(NO, response.getHasCertificates());
-        }
-
-        @Test
-        public void shouldReturnHasCertificatesYesWhenCertificateCountIsNotZero() {
-            when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(getPrivatePractitioner());
-            when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(1);
-
-            final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
-
-            assertEquals(YES, response.getHasCertificates());
-        }
-
-        @Test
-        public void shouldReturnErrorMessageStringWhenCertificateCountIsNull() {
-            when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(getPrivatePractitioner());
-            when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(null);
-
-            final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
-
-            assertEquals(COUNT_FAILURE_MESSAGE, response.getHasCertificates());
-        }
-
-        @Test
-        public void shouldCopyAllFieldsFromPrivatePractitionerToDto() {
-            when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(getPrivatePractitioner());
-            when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(null);
-
-            final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
-
-            assertAll(
-                () -> assertEquals(HSA_ID, response.getHsaId()),
-                () -> assertEquals(PERSON_ID, response.getPersonId()),
-                () -> assertEquals(EMAIL, response.getEmail()),
-                () -> assertEquals(NAME, response.getName()),
-                () -> assertEquals(CARE_PROVIDER_NAME, response.getCareproviderName()),
-                () -> assertEquals(REGISTRATION_DATE, response.getRegistrationDate())
-            );
-        }
+      assertNull(response);
     }
 
-    @Nested
-    public class testGetPrivatePractitionerFile {
+    @Test
+    public void shouldReturnHasCertificatesNoWhenCertificateCountIsZero() {
+      when(ppIntegrationRestService.getPrivatePractitioner(PERSON_ID))
+          .thenReturn(getPrivatePractitioner());
+      when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(0);
 
-        @Test
-        public void shouldReturnNullIfListEmptyList() {
-            when(ppIntegrationRestService.getAllPrivatePractitioners()).thenReturn(Collections.emptyList());
+      final var response = privatePractitionerService.getPrivatePractitioner(PERSON_ID);
 
-            final var response = assertDoesNotThrow(() -> privatePractitionerService.getPrivatePractitionerFile());
-
-            assertNull(response);
-        }
-
-        @Test
-        public void shouldReturnByteArrayOfPrivatePractitonerFile() {
-            final var privatePractitionerList = List.of(getPrivatePractitioner());
-            when(ppIntegrationRestService.getAllPrivatePractitioners()).thenReturn(privatePractitionerList);
-
-            final var response = assertDoesNotThrow(() -> privatePractitionerService.getPrivatePractitionerFile());
-
-            assertNotNull(response);
-        }
+      assertEquals(NO, response.getHasCertificates());
     }
 
-    private PrivatePractitioner getPrivatePractitioner() {
-        final var privatePractitioner = new PrivatePractitioner();
-        privatePractitioner.setHsaId(HSA_ID);
-        privatePractitioner.setPersonId(PERSON_ID);
-        privatePractitioner.setEmail(EMAIL);
-        privatePractitioner.setName(NAME);
-        privatePractitioner.setCareproviderName(CARE_PROVIDER_NAME);
-        privatePractitioner.setRegistrationDate(REGISTRATION_DATE);
-        return privatePractitioner;
+    @Test
+    public void shouldReturnHasCertificatesYesWhenCertificateCountIsNotZero() {
+      when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID))
+          .thenReturn(getPrivatePractitioner());
+      when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(1);
+
+      final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
+
+      assertEquals(YES, response.getHasCertificates());
     }
+
+    @Test
+    public void shouldReturnErrorMessageStringWhenCertificateCountIsNull() {
+      when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID))
+          .thenReturn(getPrivatePractitioner());
+      when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(null);
+
+      final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
+
+      assertEquals(COUNT_FAILURE_MESSAGE, response.getHasCertificates());
+    }
+
+    @Test
+    public void shouldCopyAllFieldsFromPrivatePractitionerToDto() {
+      when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID))
+          .thenReturn(getPrivatePractitioner());
+      when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(null);
+
+      final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
+
+      assertAll(
+          () -> assertEquals(HSA_ID, response.getHsaId()),
+          () -> assertEquals(PERSON_ID, response.getPersonId()),
+          () -> assertEquals(EMAIL, response.getEmail()),
+          () -> assertEquals(NAME, response.getName()),
+          () -> assertEquals(CARE_PROVIDER_NAME, response.getCareproviderName()),
+          () -> assertEquals(REGISTRATION_DATE, response.getRegistrationDate()));
+    }
+  }
+
+  @Nested
+  public class testGetPrivatePractitionerFile {
+
+    @Test
+    public void shouldReturnNullIfListEmptyList() {
+      when(ppIntegrationRestService.getAllPrivatePractitioners())
+          .thenReturn(Collections.emptyList());
+
+      final var response =
+          assertDoesNotThrow(() -> privatePractitionerService.getPrivatePractitionerFile());
+
+      assertNull(response);
+    }
+
+    @Test
+    public void shouldReturnByteArrayOfPrivatePractitonerFile() {
+      final var privatePractitionerList = List.of(getPrivatePractitioner());
+      when(ppIntegrationRestService.getAllPrivatePractitioners())
+          .thenReturn(privatePractitionerList);
+
+      final var response =
+          assertDoesNotThrow(() -> privatePractitionerService.getPrivatePractitionerFile());
+
+      assertNotNull(response);
+    }
+  }
+
+  private PrivatePractitioner getPrivatePractitioner() {
+    final var privatePractitioner = new PrivatePractitioner();
+    privatePractitioner.setHsaId(HSA_ID);
+    privatePractitioner.setPersonId(PERSON_ID);
+    privatePractitioner.setEmail(EMAIL);
+    privatePractitioner.setName(NAME);
+    privatePractitioner.setCareproviderName(CARE_PROVIDER_NAME);
+    privatePractitioner.setRegistrationDate(REGISTRATION_DATE);
+    return privatePractitioner;
+  }
 }

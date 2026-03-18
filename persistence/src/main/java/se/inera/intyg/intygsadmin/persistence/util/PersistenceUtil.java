@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,7 +23,7 @@ import com.querydsl.core.types.dsl.Expressions;
 
 public final class PersistenceUtil {
 
-    public static BooleanExpression alwaysTrue() {
-        return Expressions.asBoolean(true).isTrue();
-    }
+  public static BooleanExpression alwaysTrue() {
+    return Expressions.asBoolean(true).isTrue();
+  }
 }

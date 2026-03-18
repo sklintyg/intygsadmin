@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,91 +38,88 @@ import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
 @TestContext
 public class UserPersistenceServiceTest extends TestSupport {
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private UserPersistenceService userPersistenceService;
+  @Autowired private UserPersistenceService userPersistenceService;
 
-    private final int total = 10;
-    private final int pageSize = 20;
+  private final int total = 10;
+  private final int pageSize = 20;
 
-    @BeforeEach
-    public void before() {
-        userRepository.deleteAll();
-        randomizer()
-            .objects(UserEntity.class, total)
-            .forEach(userPersistenceService::add);
-    }
+  @BeforeEach
+  public void before() {
+    userRepository.deleteAll();
+    randomizer().objects(UserEntity.class, total).forEach(userPersistenceService::add);
+  }
 
-    @Test
-    public void findByEmployeeHsaIdTest() {
-        Pageable pageable = PageRequest.of(0, pageSize);
-        Page<UserEntity> list = userPersistenceService.findAll(pageable);
-        assertEquals(total, list.getTotalElements());
-        UserEntity userEntityFromList = list.getContent().getFirst();
+  @Test
+  public void findByEmployeeHsaIdTest() {
+    Pageable pageable = PageRequest.of(0, pageSize);
+    Page<UserEntity> list = userPersistenceService.findAll(pageable);
+    assertEquals(total, list.getTotalElements());
+    UserEntity userEntityFromList = list.getContent().getFirst();
 
-        Optional<UserEntity> byEmployeeHsaId = userPersistenceService.findByEmployeeHsaId(userEntityFromList.getEmployeeHsaId());
-        assertTrue(byEmployeeHsaId.isPresent());
+    Optional<UserEntity> byEmployeeHsaId =
+        userPersistenceService.findByEmployeeHsaId(userEntityFromList.getEmployeeHsaId());
+    assertTrue(byEmployeeHsaId.isPresent());
 
-        UserEntity userEntity = byEmployeeHsaId.get();
-        assertEquals(userEntityFromList.getEmployeeHsaId(), userEntity.getEmployeeHsaId());
-        assertEquals(userEntityFromList.getIntygsadminRole(), userEntity.getIntygsadminRole());
-        assertEquals(userEntityFromList.getId(), userEntity.getId());
-    }
+    UserEntity userEntity = byEmployeeHsaId.get();
+    assertEquals(userEntityFromList.getEmployeeHsaId(), userEntity.getEmployeeHsaId());
+    assertEquals(userEntityFromList.getIntygsadminRole(), userEntity.getIntygsadminRole());
+    assertEquals(userEntityFromList.getId(), userEntity.getId());
+  }
 
-    @Test
-    public void deleteTest() {
-        Pageable pageable = PageRequest.of(0, pageSize);
-        Page<UserEntity> list = userPersistenceService.findAll(pageable);
-        assertEquals(total, list.getTotalElements());
-        UserEntity userEntity = list.getContent().get(0);
+  @Test
+  public void deleteTest() {
+    Pageable pageable = PageRequest.of(0, pageSize);
+    Page<UserEntity> list = userPersistenceService.findAll(pageable);
+    assertEquals(total, list.getTotalElements());
+    UserEntity userEntity = list.getContent().get(0);
 
-        userPersistenceService.delete(userEntity.getId());
-        list = userPersistenceService.findAll(pageable);
-        assertEquals(total - 1, list.getTotalElements());
+    userPersistenceService.delete(userEntity.getId());
+    list = userPersistenceService.findAll(pageable);
+    assertEquals(total - 1, list.getTotalElements());
 
-        Optional<UserEntity> byEmployeeHsaId = userPersistenceService.findByEmployeeHsaId(userEntity.getEmployeeHsaId());
-        assertTrue(byEmployeeHsaId.isEmpty());
-    }
+    Optional<UserEntity> byEmployeeHsaId =
+        userPersistenceService.findByEmployeeHsaId(userEntity.getEmployeeHsaId());
+    assertTrue(byEmployeeHsaId.isEmpty());
+  }
 
-    @Test
-    public void upsertTest() {
-        Pageable pageable = PageRequest.of(0, pageSize);
-        userRepository.deleteAll();
+  @Test
+  public void upsertTest() {
+    Pageable pageable = PageRequest.of(0, pageSize);
+    userRepository.deleteAll();
 
-        Page<UserEntity> list = userPersistenceService.findAll(pageable);
-        assertEquals(0, list.getTotalElements());
+    Page<UserEntity> list = userPersistenceService.findAll(pageable);
+    assertEquals(0, list.getTotalElements());
 
-        UserEntity newUser = new UserEntity(null, null, "TEST-HSA-1", "name", IntygsadminRole.FULL);
-        userPersistenceService.add(newUser);
+    UserEntity newUser = new UserEntity(null, null, "TEST-HSA-1", "name", IntygsadminRole.FULL);
+    userPersistenceService.add(newUser);
 
-        list = userPersistenceService.findAll(pageable);
-        assertEquals(1, list.getTotalElements());
+    list = userPersistenceService.findAll(pageable);
+    assertEquals(1, list.getTotalElements());
 
-        UserEntity newUserEntity = list.getContent().get(0);
-        assertEquals(newUser.getEmployeeHsaId(), newUserEntity.getEmployeeHsaId());
-        assertEquals(newUser.getIntygsadminRole(), newUserEntity.getIntygsadminRole());
-        assertNotNull(newUserEntity.getId());
+    UserEntity newUserEntity = list.getContent().get(0);
+    assertEquals(newUser.getEmployeeHsaId(), newUserEntity.getEmployeeHsaId());
+    assertEquals(newUser.getIntygsadminRole(), newUserEntity.getIntygsadminRole());
+    assertNotNull(newUserEntity.getId());
 
-        newUserEntity.setIntygsadminRole(IntygsadminRole.BAS);
-        userPersistenceService.update(newUserEntity);
+    newUserEntity.setIntygsadminRole(IntygsadminRole.BAS);
+    userPersistenceService.update(newUserEntity);
 
-        list = userPersistenceService.findAll(pageable);
-        assertEquals(1, list.getTotalElements());
+    list = userPersistenceService.findAll(pageable);
+    assertEquals(1, list.getTotalElements());
 
-        UserEntity updatedUserEntity = list.getContent().get(0);
-        assertEquals(newUserEntity.getEmployeeHsaId(), updatedUserEntity.getEmployeeHsaId());
-        assertEquals(newUserEntity.getIntygsadminRole(), updatedUserEntity.getIntygsadminRole());
-        assertEquals(newUserEntity.getId(), updatedUserEntity.getId());
+    UserEntity updatedUserEntity = list.getContent().get(0);
+    assertEquals(newUserEntity.getEmployeeHsaId(), updatedUserEntity.getEmployeeHsaId());
+    assertEquals(newUserEntity.getIntygsadminRole(), updatedUserEntity.getIntygsadminRole());
+    assertEquals(newUserEntity.getId(), updatedUserEntity.getId());
+  }
 
-    }
+  @Test
+  public void findAllTest() {
+    Pageable pageable = PageRequest.of(0, pageSize);
+    Page<UserEntity> list = userPersistenceService.findAll(pageable);
 
-    @Test
-    public void findAllTest() {
-        Pageable pageable = PageRequest.of(0, pageSize);
-        Page<UserEntity> list = userPersistenceService.findAll(pageable);
-
-        assertEquals(total, list.getTotalElements());
-    }
+    assertEquals(total, list.getTotalElements());
+  }
 }

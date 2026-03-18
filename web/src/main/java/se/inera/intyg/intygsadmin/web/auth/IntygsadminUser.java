@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,21 +33,25 @@ import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 @EqualsAndHashCode(callSuper = true)
 public class IntygsadminUser extends DefaultOidcUser implements Serializable {
 
-    private final UUID id;
-    private final String employeeHsaId;
-    private final String name;
-    private final OidcIdToken token;
-    private final IntygsadminRole intygsadminRole;
-    private final AuthenticationMethod authenticationMethod;
+  private final UUID id;
+  private final String employeeHsaId;
+  private final String name;
+  private final OidcIdToken token;
+  private final IntygsadminRole intygsadminRole;
+  private final AuthenticationMethod authenticationMethod;
 
-    public IntygsadminUser(UserEntity userEntity, AuthenticationMethod authenticationMethod, OidcIdToken token,
-        Set<GrantedAuthority> authorities, String nameAttributeKey) {
-        super(authorities, token, nameAttributeKey);
-        this.id = userEntity.getId();
-        this.employeeHsaId = userEntity.getEmployeeHsaId();
-        this.intygsadminRole = userEntity.getIntygsadminRole();
-        this.authenticationMethod = authenticationMethod;
-        this.token = token;
-        this.name = userEntity.getName();
-    }
+  public IntygsadminUser(
+      UserEntity userEntity,
+      AuthenticationMethod authenticationMethod,
+      OidcIdToken token,
+      Set<GrantedAuthority> authorities,
+      String nameAttributeKey) {
+    super(authorities, token, nameAttributeKey);
+    this.id = userEntity.getId();
+    this.employeeHsaId = userEntity.getEmployeeHsaId();
+    this.intygsadminRole = userEntity.getIntygsadminRole();
+    this.authenticationMethod = authenticationMethod;
+    this.token = token;
+    this.name = userEntity.getName();
+  }
 }

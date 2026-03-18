@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,51 +31,77 @@ import se.inera.intyg.intygsadmin.web.integration.model.in.DataExportResponse;
 
 public class DataExportControllerIT extends BaseRestIntegrationTest {
 
-    private static final String API_DATAEXPORT = "/api/dataExport";
+  private static final String API_DATAEXPORT = "/api/dataExport";
 
-    @Test
-    public void shouldFetchSortedTerminations() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void shouldFetchSortedTerminations() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final var pageDescending = given()
-            .when().get(API_DATAEXPORT)
-            .then().statusCode(OK).extract().body().jsonPath().getList("content", DataExportResponse.class);
+    final var pageDescending =
+        given()
+            .when()
+            .get(API_DATAEXPORT)
+            .then()
+            .statusCode(OK)
+            .extract()
+            .body()
+            .jsonPath()
+            .getList("content", DataExportResponse.class);
 
-        final var pageAscending = given()
+    final var pageAscending =
+        given()
             .queryParam("page", "0")
             .queryParam("size", 10)
             .queryParam("sort", "createdAt,ASC")
-            .when().get(API_DATAEXPORT)
-            .then().statusCode(OK).extract().body().jsonPath().getList("content", DataExportResponse.class);
+            .when()
+            .get(API_DATAEXPORT)
+            .then()
+            .statusCode(OK)
+            .extract()
+            .body()
+            .jsonPath()
+            .getList("content", DataExportResponse.class);
 
-        assertAll(
-            () -> assertTrue(pageDescending.size() > 1),
-            () -> assertTrue(pageAscending.size() > 1),
-            () -> assertNotEquals(pageDescending.get(0), pageAscending.get(0)),
-            () -> assertNotEquals(pageDescending.get(1), pageAscending.get(1))
-        );
-    }
+    assertAll(
+        () -> assertTrue(pageDescending.size() > 1),
+        () -> assertTrue(pageAscending.size() > 1),
+        () -> assertNotEquals(pageDescending.get(0), pageAscending.get(0)),
+        () -> assertNotEquals(pageDescending.get(1), pageAscending.get(1)));
+  }
 
-    @Test
-    public void shouldFetchPagedTerminations() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void shouldFetchPagedTerminations() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final var page1 = given()
+    final var page1 =
+        given()
             .queryParam("page", "0")
             .queryParam("size", 1)
-            .when().get(API_DATAEXPORT)
-            .then().statusCode(OK).extract().body().jsonPath().getList("content", DataExportResponse.class);
+            .when()
+            .get(API_DATAEXPORT)
+            .then()
+            .statusCode(OK)
+            .extract()
+            .body()
+            .jsonPath()
+            .getList("content", DataExportResponse.class);
 
-        final var page2 = given()
+    final var page2 =
+        given()
             .queryParam("page", "1")
             .queryParam("size", 1)
-            .when().get(API_DATAEXPORT)
-            .then().statusCode(OK).extract().body().jsonPath().getList("content", DataExportResponse.class);
+            .when()
+            .get(API_DATAEXPORT)
+            .then()
+            .statusCode(OK)
+            .extract()
+            .body()
+            .jsonPath()
+            .getList("content", DataExportResponse.class);
 
-        assertAll(
-            () -> assertEquals(1, page1.size()),
-            () -> assertEquals(1, page2.size()),
-            () -> assertNotEquals(page1.get(0), page2.get(0))
-        );
-    }
+    assertAll(
+        () -> assertEquals(1, page1.size()),
+        () -> assertEquals(1, page2.size()),
+        () -> assertNotEquals(page1.get(0), page2.get(0)));
+  }
 }

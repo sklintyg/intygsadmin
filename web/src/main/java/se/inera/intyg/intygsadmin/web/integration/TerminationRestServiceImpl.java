@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,129 +42,129 @@ import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 @Service
 public class TerminationRestServiceImpl implements TerminationRestService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TerminationRestServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TerminationRestServiceImpl.class);
 
-    private final RestClient restClient;
+  private final RestClient restClient;
 
-    @Value("${terminationservice.api}")
-    private String terminationServiceUrl;
+  @Value("${terminationservice.api}")
+  private String terminationServiceUrl;
 
-    public TerminationRestServiceImpl(RestClient restClient) {
-        this.restClient = restClient;
+  public TerminationRestServiceImpl(RestClient restClient) {
+    this.restClient = restClient;
+  }
+
+  /**
+   * Get all data exports.
+   *
+   * @return List of available data exports.
+   */
+  @Override
+  public List<DataExportResponse> getDataExports() {
+    try {
+      return restClient
+          .get()
+          .uri(terminationServiceUrl + "/api/v1/terminations")
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .retrieve()
+          .body(new ParameterizedTypeReference<>() {});
+    } catch (RestClientException | NullPointerException e) {
+      LOG.error("Failure fetching terminations from cts.", e);
+      throw e;
     }
+  }
 
-    /**
-     * Get all data exports.
-     *
-     * @return List of available data exports.
-     */
-    @Override
-    public List<DataExportResponse> getDataExports() {
-        try {
-            return restClient
-                .get()
-                .uri(terminationServiceUrl + "/api/v1/terminations")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {
-                });
-        } catch (RestClientException | NullPointerException e) {
-            LOG.error("Failure fetching terminations from cts.", e);
-            throw e;
-        }
+  /**
+   * Create a data export.
+   *
+   * @param createDataExport Information for the creation of a new termination.
+   * @return The created data export.
+   */
+  @Override
+  public DataExportResponse createDataExport(CreateDataExport createDataExport) {
+    try {
+      return restClient
+          .post()
+          .uri(terminationServiceUrl + "/api/v1/terminations")
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(createDataExport)
+          .retrieve()
+          .body(DataExportResponse.class);
+    } catch (RestClientException e) {
+      LOG.error(e.getMessage());
+      throw e;
     }
+  }
 
-    /**
-     * Create a data export.
-     *
-     * @param createDataExport Information for the creation of a new termination.
-     * @return The created data export.
-     */
-    @Override
-    public DataExportResponse createDataExport(CreateDataExport createDataExport) {
-        try {
-            return restClient
-                .post()
-                .uri(terminationServiceUrl + "/api/v1/terminations")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(createDataExport)
-                .retrieve()
-                .body(DataExportResponse.class);
-        } catch (RestClientException e) {
-            LOG.error(e.getMessage());
-            throw e;
-        }
+  /**
+   * Trigger the deletion of all data tied to a data export.
+   *
+   * @param terminationId Termination id of the termination to be deleted.
+   */
+  @Override
+  public String eraseDataExport(String terminationId) {
+    try {
+      return restClient
+          .post()
+          .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/erase")
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .contentType(MediaType.APPLICATION_JSON)
+          .retrieve()
+          .body(String.class);
+    } catch (RestClientException e) {
+      LOG.error(e.getMessage());
+      throw e;
     }
+  }
 
-    /**
-     * Trigger the deletion of all data tied to a data export.
-     *
-     * @param terminationId Termination id of the termination to be deleted.
-     */
-    @Override
-    public String eraseDataExport(String terminationId) {
-        try {
-            return restClient
-                .post()
-                .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/erase")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .body(String.class);
-        } catch (RestClientException e) {
-            LOG.error(e.getMessage());
-            throw e;
-        }
+  /**
+   * Trigger update of a data export.
+   *
+   * @param terminationId Id of the termination to be updated.
+   * @param updateDataExportDTO Information for the update.
+   * @return The updated data export.
+   */
+  @Override
+  public DataExportResponse updateDataExport(
+      String terminationId, UpdateDataExportDTO updateDataExportDTO) {
+    try {
+      return restClient
+          .post()
+          .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId)
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(updateDataExportDTO)
+          .retrieve()
+          .body(DataExportResponse.class);
+    } catch (RestClientException e) {
+      LOG.error("Failure updating termination.", e);
+      throw e;
     }
+  }
 
-    /**
-     * Trigger update of a data export.
-     *
-     * @param terminationId Id of the termination to be updated.
-     * @param updateDataExportDTO Information for the update.
-     * @return The updated data export.
-     */
-    @Override
-    public DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO updateDataExportDTO) {
-        try {
-            return restClient
-                .post()
-                .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId)
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(updateDataExportDTO)
-                .retrieve()
-                .body(DataExportResponse.class);
-        } catch (RestClientException e) {
-            LOG.error("Failure updating termination.", e);
-            throw e;
-        }
+  /**
+   * Trigger a resend of the kryptokey for the provided termination.
+   *
+   * @param terminationId Id of termination for which crypto key should be re-sent.
+   */
+  @Override
+  public String resendDataExportKey(String terminationId) {
+    try {
+      return restClient
+          .post()
+          .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/resendpassword")
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .contentType(MediaType.APPLICATION_JSON)
+          .retrieve()
+          .body(String.class);
+    } catch (RestClientException e) {
+      LOG.error(e.getMessage());
+      throw e;
     }
-
-    /**
-     * Trigger a resend of the kryptokey for the provided termination.
-     *
-     * @param terminationId Id of termination for which crypto key should be re-sent.
-     */
-    @Override
-    public String resendDataExportKey(String terminationId) {
-        try {
-            return restClient
-                .post()
-                .uri(terminationServiceUrl + "/api/v1/terminations/" + terminationId + "/resendpassword")
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .body(String.class);
-        } catch (RestClientException e) {
-            LOG.error(e.getMessage());
-            throw e;
-        }
-    }
+  }
 }

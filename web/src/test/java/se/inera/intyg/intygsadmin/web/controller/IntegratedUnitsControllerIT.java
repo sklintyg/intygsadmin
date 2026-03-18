@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,41 +29,46 @@ import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class IntegratedUnitsControllerIT extends BaseRestIntegrationTest {
 
-    private static final String INTEGRATED_UNITS_API_ENDPOINT = "/api/integratedUnits";
+  private static final String INTEGRATED_UNITS_API_ENDPOINT = "/api/integratedUnits";
 
-    @Test
-    public void testGetIntegratedUnitOk() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetIntegratedUnitOk() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String existingUnitId = "SE4815162344-1A01";
+    final String existingUnitId = "SE4815162344-1A01";
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + existingUnitId)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-integrated-unit-response-schema.json"));
-    }
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + existingUnitId)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-integrated-unit-response-schema.json"));
+  }
 
-    @Test
-    public void testGetIntegratedUnitNotFound() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetIntegratedUnitNotFound() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String nonExistingUnitId = "SE4815162344-XXXX";
+    final String nonExistingUnitId = "SE4815162344-XXXX";
 
-        given().expect().statusCode(NOT_FOUND)
-            .when()
-            .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + nonExistingUnitId);
-    }
+    given()
+        .expect()
+        .statusCode(NOT_FOUND)
+        .when()
+        .get(INTEGRATED_UNITS_API_ENDPOINT + "/" + nonExistingUnitId);
+  }
 
-    @Test
-    public void testGetIntegratedUnitsFile() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetIntegratedUnitsFile() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(INTEGRATED_UNITS_API_ENDPOINT + "/file")
-            .then()
-            .contentType(is(MediaType.APPLICATION_OCTET_STREAM.toString()));
-    }
-
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(INTEGRATED_UNITS_API_ENDPOINT + "/file")
+        .then()
+        .contentType(is(MediaType.APPLICATION_OCTET_STREAM.toString()));
+  }
 }

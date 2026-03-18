@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -53,156 +53,162 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @Service
 public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
-    private RestClient restClient;
+  private RestClient restClient;
 
-    @Value("${webcert.internalapi}")
-    private String webcertUrl;
+  @Value("${webcert.internalapi}")
+  private String webcertUrl;
 
-    @Autowired
-    public WCIntegrationRestServiceImpl(RestClient restClient) {
-        this.restClient = restClient;
+  @Autowired
+  public WCIntegrationRestServiceImpl(RestClient restClient) {
+    this.restClient = restClient;
+  }
+
+  @Override
+  public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
+    try {
+      return restClient
+          .get()
+          .uri(webcertUrl + "/internalapi/integratedUnits/" + hsaId)
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .retrieve()
+          .body(IntegratedUnitDTO.class);
+    } catch (HttpClientErrorException ex) {
+      if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+        throw ex;
+      }
+      return null;
     }
+  }
 
-    @Override
-    public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
-        try {
-            return restClient
-                .get()
-                .uri(webcertUrl + "/internalapi/integratedUnits/" + hsaId)
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .retrieve()
-                .body(IntegratedUnitDTO.class);
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return null;
-        }
+  @Override
+  public List<IntegratedUnitDTO> getAllIntegratedUnits() {
+    return restClient
+        .get()
+        .uri(webcertUrl + "/internalapi/integratedUnits/all")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .retrieve()
+        .body(new ParameterizedTypeReference<>() {});
+  }
+
+  @Override
+  public WcIntygInfo getIntygInfo(String intygId) {
+    try {
+      return restClient
+          .get()
+          .uri(webcertUrl + "/internalapi/intygInfo/" + intygId)
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .retrieve()
+          .body(WcIntygInfo.class);
+    } catch (HttpClientErrorException ex) {
+      if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+        throw ex;
+      }
+      return null;
     }
+  }
 
-    @Override
-    public List<IntegratedUnitDTO> getAllIntegratedUnits() {
-        return restClient
-            .get()
-            .uri(webcertUrl + "/internalapi/integratedUnits/all")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .retrieve()
-            .body(new ParameterizedTypeReference<>() {
-            });
-    }
+  @Override
+  public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+    final var eraseJSON = new JSONObject();
+    eraseJSON.put("from", from);
+    eraseJSON.put("to", to);
 
-    @Override
-    public WcIntygInfo getIntygInfo(String intygId) {
-        try {
-            return restClient
-                .get()
-                .uri(webcertUrl + "/internalapi/intygInfo/" + intygId)
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .retrieve()
-                .body(WcIntygInfo.class);
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
-                throw ex;
-            }
-            return null;
-        }
-    }
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/testCertificate/erase")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(eraseJSON)
+        .retrieve()
+        .body(TestCertificateEraseResult.class);
+  }
 
-    @Override
-    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        final var eraseJSON = new JSONObject();
-        eraseJSON.put("from", from);
-        eraseJSON.put("to", to);
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/" + request.getStatusId())
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(SendStatusIntegrationResponseDTO.class);
+  }
 
-        return restClient
-            .post()
-            .uri(webcertUrl + "/internalapi/testCertificate/erase")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(eraseJSON)
-            .retrieve()
-            .body(TestCertificateEraseResult.class);
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatusForCertificates(
+      SendStatusForCertificatesIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/certificates")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(SendStatusIntegrationResponseDTO.class);
+  }
 
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
-        return restClient
-            .post()
-            .uri(webcertUrl + "/internalapi/notification/" + request.getStatusId())
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(request)
-            .retrieve()
-            .body(SendStatusIntegrationResponseDTO.class);
-    }
+  @Override
+  public CountStatusesIntegrationResponseDTO countStatusesForCertificates(
+      CountStatusesForCertificatesIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/count/certificates")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(CountStatusesIntegrationResponseDTO.class);
+  }
 
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request) {
-        return restClient
-            .post()
-            .uri(webcertUrl + "/internalapi/notification/certificates")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(request)
-            .retrieve()
-            .body(SendStatusIntegrationResponseDTO.class);
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatusForUnits(
+      SendStatusForUnitsIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/units")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(SendStatusIntegrationResponseDTO.class);
+  }
 
-    @Override
-    public CountStatusesIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request) {
-        return restClient.post()
-            .uri(webcertUrl + "/internalapi/notification/count/certificates")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(request)
-            .retrieve()
-            .body(CountStatusesIntegrationResponseDTO.class);
-    }
+  @Override
+  public CountStatusesIntegrationResponseDTO countStatusesForUnits(
+      CountStatusesForUnitsIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/count/units")
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(CountStatusesIntegrationResponseDTO.class);
+  }
 
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request) {
-        return restClient
-            .post()
-            .uri(webcertUrl + "/internalapi/notification/units")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(request)
-            .retrieve()
-            .body(SendStatusIntegrationResponseDTO.class);
-    }
-
-    @Override
-    public CountStatusesIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request) {
-        return restClient.post()
-            .uri(webcertUrl + "/internalapi/notification/count/units")
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(request)
-            .retrieve()
-            .body(CountStatusesIntegrationResponseDTO.class);
-    }
-
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
-        return restClient
-            .post()
-            .uri(webcertUrl + "/internalapi/notification/caregiver/" + request.getCareGiverId())
-            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(request)
-            .retrieve()
-            .body(SendStatusIntegrationResponseDTO.class);
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatusForCareGiver(
+      SendStatusForCareGiverIntegrationRequestDTO request) {
+    return restClient
+        .post()
+        .uri(webcertUrl + "/internalapi/notification/caregiver/" + request.getCareGiverId())
+        .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+        .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(request)
+        .retrieve()
+        .body(SendStatusIntegrationResponseDTO.class);
+  }
 
   @Override
   public CountStatusesIntegrationResponseDTO countStatusesForCareGiver(

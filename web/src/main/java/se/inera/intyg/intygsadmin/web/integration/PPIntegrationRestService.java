@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,26 +23,25 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 public interface PPIntegrationRestService {
 
-    /**
-     * Searches Privatlakarportalen for a given PrivatePractitioner
-     *
-     * @param personOrHsaId PNR or HSAid
-     * @return PrivatePractioner or <code>null</code> when not found
-     */
-    PrivatePractitioner getPrivatePractitioner(String personOrHsaId);
+  /**
+   * Searches Privatlakarportalen for a given PrivatePractitioner
+   *
+   * @param personOrHsaId PNR or HSAid
+   * @return PrivatePractioner or <code>null</code> when not found
+   */
+  PrivatePractitioner getPrivatePractitioner(String personOrHsaId);
 
-    /**
-     * Get a list of all registered Private Practitioners in Privatlakarportalen
-     *
-     * @return A list of all PrivatePractitioners from Privatlakarportalen or empty list
-     */
-    List<PrivatePractitioner> getAllPrivatePractitioners();
+  /**
+   * Get a list of all registered Private Practitioners in Privatlakarportalen
+   *
+   * @return A list of all PrivatePractitioners from Privatlakarportalen or empty list
+   */
+  List<PrivatePractitioner> getAllPrivatePractitioners();
 
-    /**
-     * Unregister private practitioner.
-     *
-     * @param hsaId Private practitioner HSA-ID.
-     */
-    void unregisterPrivatePractitioner(String hsaId);
-
+  /**
+   * Unregister private practitioner.
+   *
+   * @param hsaId Private practitioner HSA-ID.
+   */
+  void unregisterPrivatePractitioner(String hsaId);
 }

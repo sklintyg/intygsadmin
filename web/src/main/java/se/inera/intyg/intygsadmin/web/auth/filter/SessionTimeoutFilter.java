@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,61 +38,66 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @RequiredArgsConstructor
 public class SessionTimeoutFilter extends OncePerRequestFilter {
 
-    public static final String SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY = SessionTimeoutFilter.class.getName() + ".secondsToLive";
-    private static final String LAST_ACCESS_TIME_ATTRIBUTE_NAME = SessionTimeoutFilter.class.getName() + ".SessionLastAccessTime";
-    private static final long MILLISECONDS_PER_SECONDS = 1000;
+  public static final String SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY =
+      SessionTimeoutFilter.class.getName() + ".secondsToLive";
+  private static final String LAST_ACCESS_TIME_ATTRIBUTE_NAME =
+      SessionTimeoutFilter.class.getName() + ".SessionLastAccessTime";
+  private static final long MILLISECONDS_PER_SECONDS = 1000;
 
-    private final MonitoringLogService monitoringLogService;
+  private final MonitoringLogService monitoringLogService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-        checkSessionValidity(request);
+    checkSessionValidity(request);
 
-        filterChain.doFilter(request, response);
-    }
+    filterChain.doFilter(request, response);
+  }
 
-    private void checkSessionValidity(HttpServletRequest request) {
-        // Get existing session - if any
-        final var session = request.getSession(false);
+  private void checkSessionValidity(HttpServletRequest request) {
+    // Get existing session - if any
+    final var session = request.getSession(false);
 
-        // Is it a request that should not prolong the expiration?
-        boolean isSessionStatusRequest = request.getRequestURI().contains(SESSION_STAT_REQUEST_MAPPING);
-        if (session != null) {
-            final var  lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
+    // Is it a request that should not prolong the expiration?
+    boolean isSessionStatusRequest = request.getRequestURI().contains(SESSION_STAT_REQUEST_MAPPING);
+    if (session != null) {
+      final var lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
 
-            // Set a request attribute that other parties further down the request chaing can use.
-            final var  msUntilExpire = updateTimeLeft(request, session);
-            final var context = (SecurityContext) session.getAttribute(SPRING_SECURITY_CONTEXT);
+      // Set a request attribute that other parties further down the request chaing can use.
+      final var msUntilExpire = updateTimeLeft(request, session);
+      final var context = (SecurityContext) session.getAttribute(SPRING_SECURITY_CONTEXT);
 
-            if (msUntilExpire <= 0) {
-                log.info("Session expired " + msUntilExpire + " ms ago. Invalidating it now!");
+      if (msUntilExpire <= 0) {
+        log.info("Session expired " + msUntilExpire + " ms ago. Invalidating it now!");
 
-                if (context != null && context.getAuthentication() != null
-                    && context.getAuthentication().getPrincipal() instanceof IntygsadminUser intygsadminUser) {
-                    monitoringLogService.logUserSessionExpired(intygsadminUser.getEmployeeHsaId(),
-                        intygsadminUser.getAuthenticationMethod());
-                }
-
-                session.invalidate();
-
-            } else if (!isSessionStatusRequest || lastAccess == null) {
-                // Update lastaccessed for ALL requests except status requests
-                session.setAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME, System.currentTimeMillis());
-                updateTimeLeft(request, session);
-            }
+        if (context != null
+            && context.getAuthentication() != null
+            && context.getAuthentication().getPrincipal()
+                instanceof IntygsadminUser intygsadminUser) {
+          monitoringLogService.logUserSessionExpired(
+              intygsadminUser.getEmployeeHsaId(), intygsadminUser.getAuthenticationMethod());
         }
+
+        session.invalidate();
+
+      } else if (!isSessionStatusRequest || lastAccess == null) {
+        // Update lastaccessed for ALL requests except status requests
+        session.setAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME, System.currentTimeMillis());
+        updateTimeLeft(request, session);
+      }
     }
+  }
 
-    private Long updateTimeLeft(HttpServletRequest request, HttpSession session) {
-        final var lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
-        final var inactiveTime = (lastAccess == null) ? 0 : (System.currentTimeMillis() - lastAccess);
-        final var maxInactiveTime = session.getMaxInactiveInterval() * MILLISECONDS_PER_SECONDS;
+  private Long updateTimeLeft(HttpServletRequest request, HttpSession session) {
+    final var lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
+    final var inactiveTime = (lastAccess == null) ? 0 : (System.currentTimeMillis() - lastAccess);
+    final var maxInactiveTime = session.getMaxInactiveInterval() * MILLISECONDS_PER_SECONDS;
 
-        long msUntilExpire = maxInactiveTime - inactiveTime;
-        request.setAttribute(SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY, msUntilExpire / MILLISECONDS_PER_SECONDS);
-        return msUntilExpire;
-    }
-
+    long msUntilExpire = maxInactiveTime - inactiveTime;
+    request.setAttribute(
+        SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY, msUntilExpire / MILLISECONDS_PER_SECONDS);
+    return msUntilExpire;
+  }
 }

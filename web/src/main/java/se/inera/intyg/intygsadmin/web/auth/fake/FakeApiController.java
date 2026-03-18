@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -49,42 +49,43 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @RequestMapping(FakeApiController.FAKE_API_REQUEST_MAPPING)
 public class FakeApiController {
 
-    private final FakeLoginService fakeLoginService;
-    private final MonitoringLogService monitoringLogService;
+  private final FakeLoginService fakeLoginService;
+  private final MonitoringLogService monitoringLogService;
 
-    public static final String FAKE_API_REQUEST_MAPPING = "/fake-api";
+  public static final String FAKE_API_REQUEST_MAPPING = "/fake-api";
 
-    private List<FakeUser> fakeUsers;
+  private List<FakeUser> fakeUsers;
 
-    @PostConstruct
-    public void init() throws IOException {
+  @PostConstruct
+  public void init() throws IOException {
 
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
+    PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+    Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
 
-        fakeUsers = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        for (Resource resource : resources) {
-            try (InputStream jsonUserStream = resource.getInputStream()) {
-                fakeUsers.add(objectMapper.readValue(jsonUserStream, FakeUser.class));
-            }
-        }
+    fakeUsers = new ArrayList<>();
+    ObjectMapper objectMapper = new ObjectMapper();
+    for (Resource resource : resources) {
+      try (InputStream jsonUserStream = resource.getInputStream()) {
+        fakeUsers.add(objectMapper.readValue(jsonUserStream, FakeUser.class));
+      }
     }
+  }
 
-    @GetMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FakeUser>> getFakeUsers() {
+  @GetMapping(path = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<FakeUser>> getFakeUsers() {
 
-        return ResponseEntity.ok(fakeUsers);
+    return ResponseEntity.ok(fakeUsers);
+  }
+
+  @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public void login(HttpServletRequest request, @RequestBody FakeUser fakeUser) {
+    try {
+      fakeLoginService.login(fakeUser, request);
+    } catch (Exception e) {
+      monitoringLogService.logFailedLogin(
+          "Fake login failure for user '%s'.".formatted(fakeUser.getEmployeeHsaId()));
+      log.error("Fake login failure for user '{}'.", fakeUser.getEmployeeHsaId(), e);
+      throw e;
     }
-
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void login(HttpServletRequest request, @RequestBody FakeUser fakeUser) {
-        try {
-            fakeLoginService.login(fakeUser, request);
-        } catch (Exception e) {
-            monitoringLogService.logFailedLogin("Fake login failure for user '%s'.".formatted(fakeUser.getEmployeeHsaId()));
-            log.error("Fake login failure for user '{}'.", fakeUser.getEmployeeHsaId(), e);
-            throw e;
-        }
-    }
+  }
 }

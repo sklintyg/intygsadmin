@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,40 +31,42 @@ import se.inera.intyg.intygsadmin.web.controller.dto.IdToken;
 
 public class CustomAuthorizationResolver implements OAuth2AuthorizationRequestResolver {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final OAuth2AuthorizationRequestResolver defaultResolver;
-    private final Map<String, IdToken> idToken = Map.of("id_token", new IdToken());
+  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final OAuth2AuthorizationRequestResolver defaultResolver;
+  private final Map<String, IdToken> idToken = Map.of("id_token", new IdToken());
 
-    public CustomAuthorizationResolver(ClientRegistrationRepository repo) {
-        defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
+  public CustomAuthorizationResolver(ClientRegistrationRepository repo) {
+    defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
+  }
+
+  @Override
+  public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
+    final var authRequest = defaultResolver.resolve(request);
+
+    if (authRequest == null) {
+      return null;
     }
 
-    @Override
-    public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
-        final var authRequest = defaultResolver.resolve(request);
+    return customizeAuthorizationRequest(authRequest);
+  }
 
-        if (authRequest == null) {
-            return null;
-        }
+  @Override
+  public OAuth2AuthorizationRequest resolve(
+      HttpServletRequest request, String clientRegistrationId) {
+    return defaultResolver.resolve(request, clientRegistrationId);
+  }
 
-        return customizeAuthorizationRequest(authRequest);
+  private OAuth2AuthorizationRequest customizeAuthorizationRequest(
+      OAuth2AuthorizationRequest authRequest) {
+    try {
+      final var extraParams = new HashMap<String, Object>();
+      extraParams.put("claims", objectMapper.writeValueAsString(idToken));
+      return OAuth2AuthorizationRequest.from(authRequest)
+          .additionalParameters(extraParams)
+          .scope("openid")
+          .build();
+    } catch (JsonProcessingException e) {
+      throw new IllegalArgumentException(e);
     }
-
-
-    @Override
-    public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String clientRegistrationId) {
-        return defaultResolver.resolve(request, clientRegistrationId);
-    }
-
-    private OAuth2AuthorizationRequest customizeAuthorizationRequest(OAuth2AuthorizationRequest authRequest) {
-        try {
-            final var extraParams = new HashMap<String, Object>();
-            extraParams.put("claims", objectMapper.writeValueAsString(idToken));
-            return OAuth2AuthorizationRequest.from(authRequest)
-                .additionalParameters(extraParams)
-                .scope("openid").build();
-        } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
+  }
 }

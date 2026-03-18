@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,10 +27,9 @@ import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    UserDTO toDTO(UserEntity s);
+  UserDTO toDTO(UserEntity s);
 
-    List<UserDTO> toListDTO(List<UserEntity> s);
+  List<UserDTO> toListDTO(List<UserEntity> s);
 
-    UserEntity toEntity(UserDTO s);
-
+  UserEntity toEntity(UserDTO s);
 }

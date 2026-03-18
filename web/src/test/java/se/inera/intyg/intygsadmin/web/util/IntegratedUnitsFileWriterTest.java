@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,24 +30,24 @@ import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 
 public class IntegratedUnitsFileWriterTest {
 
-    private List<IntegratedUnitDTO> createIntgratedUntis() {
-        List<IntegratedUnitDTO> integratedUnitDTOList = new ArrayList<>();
-        IntegratedUnitDTO integratedUnitDTO = new IntegratedUnitDTO();
-        integratedUnitDTO.setEnhetsId("Enhetsid");
-        integratedUnitDTO.setEnhetsNamn("Enhetsnamn");
-        integratedUnitDTO.setVardgivarId("Vardgivarid");
-        integratedUnitDTO.setVardgivarNamn("Vardgivarnamn");
-        integratedUnitDTO.setSkapadDatum(LocalDateTime.now());
-        integratedUnitDTO.setSenasteKontrollDatum(LocalDateTime.now());
-        integratedUnitDTOList.add(integratedUnitDTO);
-        return integratedUnitDTOList;
-    }
+  private List<IntegratedUnitDTO> createIntgratedUntis() {
+    List<IntegratedUnitDTO> integratedUnitDTOList = new ArrayList<>();
+    IntegratedUnitDTO integratedUnitDTO = new IntegratedUnitDTO();
+    integratedUnitDTO.setEnhetsId("Enhetsid");
+    integratedUnitDTO.setEnhetsNamn("Enhetsnamn");
+    integratedUnitDTO.setVardgivarId("Vardgivarid");
+    integratedUnitDTO.setVardgivarNamn("Vardgivarnamn");
+    integratedUnitDTO.setSkapadDatum(LocalDateTime.now());
+    integratedUnitDTO.setSenasteKontrollDatum(LocalDateTime.now());
+    integratedUnitDTOList.add(integratedUnitDTO);
+    return integratedUnitDTOList;
+  }
 
-    @Test
-    public void testWriteExcel() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new IntegratedUnitsFileWriter().writeExcel(createIntgratedUntis());
+  @Test
+  public void testWriteExcel() throws IOException {
+    ByteArrayOutputStream byteArrayOutputStream =
+        new IntegratedUnitsFileWriter().writeExcel(createIntgratedUntis());
 
-        assertTrue(byteArrayOutputStream.size() > 0);
-    }
-
+    assertTrue(byteArrayOutputStream.size() > 0);
+  }
 }

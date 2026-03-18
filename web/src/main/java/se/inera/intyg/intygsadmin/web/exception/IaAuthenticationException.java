@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,18 +26,19 @@ import org.springframework.security.core.AuthenticationException;
 @EqualsAndHashCode(callSuper = true)
 public class IaAuthenticationException extends AuthenticationException {
 
-    private IaErrorCode errorCode;
-    private String logId;
+  private IaErrorCode errorCode;
+  private String logId;
 
-    public IaAuthenticationException(IaErrorCode errorCode, String message, String logId) {
-        super(message);
-        this.errorCode = errorCode;
-        this.logId = logId;
-    }
+  public IaAuthenticationException(IaErrorCode errorCode, String message, String logId) {
+    super(message);
+    this.errorCode = errorCode;
+    this.logId = logId;
+  }
 
-    public IaAuthenticationException(IaErrorCode errorCode, String message, String logId, Throwable t) {
-        super(message, t);
-        this.errorCode = errorCode;
-        this.logId = logId;
-    }
+  public IaAuthenticationException(
+      IaErrorCode errorCode, String message, String logId, Throwable t) {
+    super(message, t);
+    this.errorCode = errorCode;
+    this.logId = logId;
+  }
 }

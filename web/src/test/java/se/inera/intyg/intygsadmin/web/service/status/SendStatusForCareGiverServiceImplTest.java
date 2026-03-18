@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,56 +40,51 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @ExtendWith(MockitoExtension.class)
 class SendStatusForCareGiverServiceImplTest {
 
-    @Mock
-    private WCIntegrationRestService wcIntegrationRestService;
+  @Mock private WCIntegrationRestService wcIntegrationRestService;
 
-    @Mock
-    private SendNotificationRequestValidator sendNotificationRequestValidator;
+  @Mock private SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @InjectMocks
-    private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
+  @InjectMocks private SendStatusForCareGiverServiceImpl sendStatusForCareGiverServiceImpl;
 
-    @Test
-    void shouldSendStatusForCareGiver() {
-        final var request = SendStatusForCareGiverRequestDTO.builder()
+  @Test
+  void shouldSendStatusForCareGiver() {
+    final var request =
+        SendStatusForCareGiverRequestDTO.builder()
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now().minusMonths(1))
             .end(LocalDateTime.now())
             .activationTime(LocalDateTime.now())
             .build();
 
-        final var expected = SendStatusIntegrationResponseDTO.builder()
-            .count(1)
-            .build();
+    final var expected = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        when(wcIntegrationRestService.sendStatusForCareGiver(any(SendStatusForCareGiverIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.sendStatusForCareGiver(
+            any(SendStatusForCareGiverIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
-        final var response = sendStatusForCareGiverServiceImpl.send("careGiverId", request);
+    final var response = sendStatusForCareGiverServiceImpl.send("careGiverId", request);
 
-        assertEquals(1, response);
-    }
+    assertEquals(1, response);
+  }
 
-    @Test
-    void shouldCountStatusForCareGiver() {
-        final var request = CountStatusesForCareGiverRequestDTO.builder()
+  @Test
+  void shouldCountStatusForCareGiver() {
+    final var request =
+        CountStatusesForCareGiverRequestDTO.builder()
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now().minusMonths(1))
             .end(LocalDateTime.now())
             .build();
 
-        final var expected = CountStatusesIntegrationResponseDTO.builder()
-            .count(1)
-            .max(1)
-            .build();
+    final var expected = CountStatusesIntegrationResponseDTO.builder().count(1).max(1).build();
 
-        when(wcIntegrationRestService.countStatusesForCareGiver(any(
-            CountStatusesForCareGiverIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.countStatusesForCareGiver(
+            any(CountStatusesForCareGiverIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
-        final var response = sendStatusForCareGiverServiceImpl.count("careGiverId", request);
+    final var response = sendStatusForCareGiverServiceImpl.count("careGiverId", request);
 
-        assertEquals(1, response.getCount());
-        assertEquals(1, response.getMax());
-    }
+    assertEquals(1, response.getCount());
+    assertEquals(1, response.getMax());
+  }
 }

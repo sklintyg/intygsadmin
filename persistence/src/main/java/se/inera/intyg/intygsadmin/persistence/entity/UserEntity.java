@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,15 +42,15 @@ import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 @NoArgsConstructor
 public class UserEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JdbcTypeCode(SqlTypes.CHAR)
+  private UUID id;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    private String employeeHsaId;
-    private String name;
-    @Enumerated(EnumType.STRING)
-    private IntygsadminRole intygsadminRole;
+  @CreationTimestamp private LocalDateTime createdAt;
+  private String employeeHsaId;
+  private String name;
+
+  @Enumerated(EnumType.STRING)
+  private IntygsadminRole intygsadminRole;
 }

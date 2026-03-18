@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,109 +33,106 @@ import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
 @Service
 public class BannerValidationServiceImpl implements BannerValidationService {
 
-    private static final String FIELD_DISPLAY_FROM = "displayFrom";
-    private static final String FIELD_DISPLAY_TO = "displayTo";
-    private static final String FIELD_APPLICATION = "application";
-    private static final String FIELD_PRIORITY = "priority";
-    private static final String FIELD_MESSAGE = "message";
+  private static final String FIELD_DISPLAY_FROM = "displayFrom";
+  private static final String FIELD_DISPLAY_TO = "displayTo";
+  private static final String FIELD_APPLICATION = "application";
+  private static final String FIELD_PRIORITY = "priority";
+  private static final String FIELD_MESSAGE = "message";
 
-    private static final String ERROR_REQUIRED = "Obligatoriskt fält";
+  private static final String ERROR_REQUIRED = "Obligatoriskt fält";
 
-    private BannerPersistenceService bannerPersistenceService;
+  private BannerPersistenceService bannerPersistenceService;
 
-    public BannerValidationServiceImpl(BannerPersistenceService bannerPersistenceService) {
-        this.bannerPersistenceService = bannerPersistenceService;
+  public BannerValidationServiceImpl(BannerPersistenceService bannerPersistenceService) {
+    this.bannerPersistenceService = bannerPersistenceService;
+  }
+
+  @Override
+  public void validateBanner(BannerDTO bannerDTO) {
+
+    ValidationInstance validationInstance = new ValidationInstance();
+
+    List<ValidationDTO> validationErrors = validationInstance.validate(bannerDTO);
+
+    if (!validationErrors.isEmpty()) {
+      throw new IaValidationException(validationErrors);
+    }
+  }
+
+  private class ValidationInstance {
+
+    private List<ValidationDTO> validations = new ArrayList<>();
+    private BannerDTO bannerDTO;
+
+    List<ValidationDTO> validate(BannerDTO bannerDTO) {
+      this.bannerDTO = bannerDTO;
+
+      checkForEmptyFields();
+      validateDates();
+      checkForExistingBanner();
+
+      return validations;
     }
 
-    @Override
-    public void validateBanner(BannerDTO bannerDTO) {
+    private void checkForEmptyFields() {
+      if (StringUtils.isEmpty(bannerDTO.getMessage())) {
+        addValidation(FIELD_MESSAGE, ERROR_REQUIRED);
+      }
 
-        ValidationInstance validationInstance = new ValidationInstance();
+      if (bannerDTO.getApplication() == null) {
+        addValidation(FIELD_APPLICATION, ERROR_REQUIRED);
+      }
 
-        List<ValidationDTO> validationErrors = validationInstance.validate(bannerDTO);
-
-        if (!validationErrors.isEmpty()) {
-            throw new IaValidationException(validationErrors);
-        }
+      if (bannerDTO.getPriority() == null) {
+        addValidation(FIELD_PRIORITY, ERROR_REQUIRED);
+      }
     }
 
-    private class ValidationInstance {
+    private void validateDates() {
+      if (bannerDTO.getDisplayFrom() == null) {
+        addValidation(FIELD_DISPLAY_FROM, ERROR_REQUIRED);
+      }
 
-        private List<ValidationDTO> validations = new ArrayList<>();
-        private BannerDTO bannerDTO;
+      if (bannerDTO.getDisplayTo() == null) {
+        addValidation(FIELD_DISPLAY_TO, ERROR_REQUIRED);
+      }
 
-        List<ValidationDTO> validate(BannerDTO bannerDTO) {
-            this.bannerDTO = bannerDTO;
+      if (!validations.isEmpty()) {
+        return;
+      }
 
-            checkForEmptyFields();
-            validateDates();
-            checkForExistingBanner();
+      LocalDateTime now = LocalDateTime.now();
 
-            return validations;
-        }
+      if (bannerDTO.getDisplayTo().isBefore(now)) {
+        addValidation(FIELD_DISPLAY_TO, "To is before today");
+      }
 
-        private void checkForEmptyFields() {
-            if (StringUtils.isEmpty(bannerDTO.getMessage())) {
-                addValidation(FIELD_MESSAGE, ERROR_REQUIRED);
-            }
-
-            if (bannerDTO.getApplication() == null) {
-                addValidation(FIELD_APPLICATION, ERROR_REQUIRED);
-            }
-
-            if (bannerDTO.getPriority() == null) {
-                addValidation(FIELD_PRIORITY, ERROR_REQUIRED);
-            }
-        }
-
-        private void validateDates() {
-            if (bannerDTO.getDisplayFrom() == null) {
-                addValidation(FIELD_DISPLAY_FROM, ERROR_REQUIRED);
-            }
-
-            if (bannerDTO.getDisplayTo() == null) {
-                addValidation(FIELD_DISPLAY_TO, ERROR_REQUIRED);
-            }
-
-            if (!validations.isEmpty()) {
-                return;
-            }
-
-            LocalDateTime now = LocalDateTime.now();
-
-            if (bannerDTO.getDisplayTo().isBefore(now)) {
-                addValidation(FIELD_DISPLAY_TO, "To is before today");
-            }
-
-            if (bannerDTO.getDisplayTo().isBefore(bannerDTO.getDisplayFrom())) {
-                addValidation(FIELD_DISPLAY_TO, "To is before from");
-                addValidation(FIELD_DISPLAY_FROM, "To is before from");
-            }
-        }
-
-        private void checkForExistingBanner() {
-            if (!validations.isEmpty()) {
-                return;
-            }
-
-            LocalDateTime from = bannerDTO.getDisplayFrom();
-
-            long count = bannerPersistenceService.countByApplicationAndTime(
-                bannerDTO.getApplication(), from, bannerDTO.getDisplayTo(),
-                bannerDTO.getId());
-
-            if (count > 0) {
-                throw new IaServiceException(IaErrorCode.ALREADY_EXISTS);
-            }
-        }
-
-
-        private void addValidation(String field, String message) {
-            ValidationDTO validationDTO = new ValidationDTO(field, message);
-
-            validations.add(validationDTO);
-        }
+      if (bannerDTO.getDisplayTo().isBefore(bannerDTO.getDisplayFrom())) {
+        addValidation(FIELD_DISPLAY_TO, "To is before from");
+        addValidation(FIELD_DISPLAY_FROM, "To is before from");
+      }
     }
 
+    private void checkForExistingBanner() {
+      if (!validations.isEmpty()) {
+        return;
+      }
 
+      LocalDateTime from = bannerDTO.getDisplayFrom();
+
+      long count =
+          bannerPersistenceService.countByApplicationAndTime(
+              bannerDTO.getApplication(), from, bannerDTO.getDisplayTo(), bannerDTO.getId());
+
+      if (count > 0) {
+        throw new IaServiceException(IaErrorCode.ALREADY_EXISTS);
+      }
+    }
+
+    private void addValidation(String field, String message) {
+      ValidationDTO validationDTO = new ValidationDTO(field, message);
+
+      validations.add(validationDTO);
+    }
+  }
 }

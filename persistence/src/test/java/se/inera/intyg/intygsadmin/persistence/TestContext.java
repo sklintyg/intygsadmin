@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.intygsadmin.persistence;
 
-
 import jakarta.transaction.Transactional;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -36,6 +35,4 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @Transactional
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface TestContext {
-
-}
+public @interface TestContext {}

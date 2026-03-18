@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -40,99 +40,105 @@ import se.inera.intyg.intygsadmin.web.mapper.BannerMapper;
 @Service
 public class BannerServiceImpl implements BannerService {
 
-    private BannerValidationService bannerValidationService;
-    private BannerPersistenceService bannerPersistenceService;
-    private BannerMapper bannerMapper;
-    private BannerApiMapper bannerApiMapper;
+  private BannerValidationService bannerValidationService;
+  private BannerPersistenceService bannerPersistenceService;
+  private BannerMapper bannerMapper;
+  private BannerApiMapper bannerApiMapper;
 
-    public BannerServiceImpl(BannerPersistenceService bannerPersistenceService, BannerMapper bannerMapper, BannerApiMapper bannerApiMapper,
-        BannerValidationService bannerValidationService) {
-        this.bannerPersistenceService = bannerPersistenceService;
-        this.bannerMapper = bannerMapper;
-        this.bannerApiMapper = bannerApiMapper;
-        this.bannerValidationService = bannerValidationService;
+  public BannerServiceImpl(
+      BannerPersistenceService bannerPersistenceService,
+      BannerMapper bannerMapper,
+      BannerApiMapper bannerApiMapper,
+      BannerValidationService bannerValidationService) {
+    this.bannerPersistenceService = bannerPersistenceService;
+    this.bannerMapper = bannerMapper;
+    this.bannerApiMapper = bannerApiMapper;
+    this.bannerValidationService = bannerValidationService;
+  }
+
+  @Override
+  public Page<BannerDTO> getBanners(Pageable pageable) {
+    Page<BannerEntity> banners = bannerPersistenceService.findAll(pageable);
+
+    List<BannerDTO> mapBanners = bannerMapper.toListDTO(banners.getContent());
+
+    return new PageImpl<>(mapBanners, pageable, banners.getTotalElements());
+  }
+
+  @Override
+  public List<Banner> getActiveAndFutureBanners(Application application) {
+    LocalDateTime today = LocalDateTime.now();
+
+    List<BannerEntity> banners = bannerPersistenceService.findActiveAndFuture(today, application);
+
+    return bannerApiMapper.toApiDTO(banners);
+  }
+
+  @Override
+  public BannerDTO createBanner(BannerDTO bannerDTO) {
+    // A new banner can't be active before now
+    if (bannerDTO.getDisplayFrom() != null
+        && LocalDateTime.now().isAfter(bannerDTO.getDisplayFrom())) {
+      bannerDTO.setDisplayFrom(LocalDateTime.now());
     }
 
-    @Override
-    public Page<BannerDTO> getBanners(Pageable pageable) {
-        Page<BannerEntity> banners = bannerPersistenceService.findAll(pageable);
+    bannerValidationService.validateBanner(bannerDTO);
 
-        List<BannerDTO> mapBanners = bannerMapper.toListDTO(banners.getContent());
+    bannerDTO.setMessage(bannerDTO.getMessage().trim());
+    BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
-        return new PageImpl<>(mapBanners, pageable, banners.getTotalElements());
+    BannerEntity createdEntity = bannerPersistenceService.create(map);
+    return bannerMapper.toDTO(createdEntity);
+  }
+
+  @Override
+  public BannerDTO save(BannerDTO bannerDTO) {
+    bannerValidationService.validateBanner(bannerDTO);
+
+    Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(bannerDTO.getId());
+
+    if (optionalBanner.isEmpty()) {
+      throw new IaServiceException(IaErrorCode.NOT_FOUND);
     }
 
-    @Override
-    public List<Banner> getActiveAndFutureBanners(Application application) {
-        LocalDateTime today = LocalDateTime.now();
+    BannerEntity banner = optionalBanner.get();
+    BannerStatus status =
+        bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
 
-        List<BannerEntity> banners = bannerPersistenceService.findActiveAndFuture(today, application);
-
-        return bannerApiMapper.toApiDTO(banners);
+    // Not allowed to update a finished banner
+    if (BannerStatus.FINISHED.equals(status)) {
+      throw new IaServiceException(IaErrorCode.BAD_STATE);
     }
 
-    @Override
-    public BannerDTO createBanner(BannerDTO bannerDTO) {
-        // A new banner can't be active before now
-        if (bannerDTO.getDisplayFrom() != null && LocalDateTime.now().isAfter(bannerDTO.getDisplayFrom())) {
-            bannerDTO.setDisplayFrom(LocalDateTime.now());
-        }
+    bannerDTO.setMessage(bannerDTO.getMessage().trim());
+    BannerEntity map = bannerMapper.toEntity(bannerDTO);
 
-        bannerValidationService.validateBanner(bannerDTO);
+    BannerEntity updatedEntity = bannerPersistenceService.update(map);
+    return bannerMapper.toDTO(updatedEntity);
+  }
 
-        bannerDTO.setMessage(bannerDTO.getMessage().trim());
-        BannerEntity map = bannerMapper.toEntity(bannerDTO);
+  @Override
+  public boolean deleteBanner(UUID id) {
+    Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(id);
 
-        BannerEntity createdEntity = bannerPersistenceService.create(map);
-        return bannerMapper.toDTO(createdEntity);
+    if (optionalBanner.isEmpty()) {
+      return false;
     }
 
-    @Override
-    public BannerDTO save(BannerDTO bannerDTO) {
-        bannerValidationService.validateBanner(bannerDTO);
+    BannerEntity banner = optionalBanner.get();
+    BannerStatus status =
+        bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
 
-        Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(bannerDTO.getId());
-
-        if (optionalBanner.isEmpty()) {
-            throw new IaServiceException(IaErrorCode.NOT_FOUND);
-        }
-
-        BannerEntity banner = optionalBanner.get();
-        BannerStatus status = bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
-
-        // Not allowed to update a finished banner
-        if (BannerStatus.FINISHED.equals(status)) {
-            throw new IaServiceException(IaErrorCode.BAD_STATE);
-        }
-
-        bannerDTO.setMessage(bannerDTO.getMessage().trim());
-        BannerEntity map = bannerMapper.toEntity(bannerDTO);
-
-        BannerEntity updatedEntity = bannerPersistenceService.update(map);
-        return bannerMapper.toDTO(updatedEntity);
+    switch (status) {
+      case FUTURE:
+        bannerPersistenceService.delete(id);
+        return true;
+      case ACTIVE:
+        banner.setDisplayTo(LocalDateTime.now().minusMinutes(1));
+        bannerPersistenceService.update(banner);
+        return true;
+      default:
+        throw new IaServiceException(IaErrorCode.BAD_STATE);
     }
-
-    @Override
-    public boolean deleteBanner(UUID id) {
-        Optional<BannerEntity> optionalBanner = bannerPersistenceService.findOne(id);
-
-        if (optionalBanner.isEmpty()) {
-            return false;
-        }
-
-        BannerEntity banner = optionalBanner.get();
-        BannerStatus status = bannerMapper.getBannerStatus(banner.getDisplayFrom(), banner.getDisplayTo());
-
-        switch (status) {
-            case FUTURE:
-                bannerPersistenceService.delete(id);
-                return true;
-            case ACTIVE:
-                banner.setDisplayTo(LocalDateTime.now().minusMinutes(1));
-                bannerPersistenceService.update(banner);
-                return true;
-            default:
-                throw new IaServiceException(IaErrorCode.BAD_STATE);
-        }
-    }
+  }
 }

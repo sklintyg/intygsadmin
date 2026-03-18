@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,59 +40,51 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @ExtendWith(MockitoExtension.class)
 class SendStatusForUnitsServiceImplTest {
 
-    @Mock
-    private WCIntegrationRestService wcIntegrationRestService;
+  @Mock private WCIntegrationRestService wcIntegrationRestService;
 
-    @Mock
-    private SendNotificationRequestValidator sendNotificationRequestValidator;
+  @Mock private SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @InjectMocks
-    private SendStatusForUnitsServiceImpl sendStatusForUnitsServiceImpl;
+  @InjectMocks private SendStatusForUnitsServiceImpl sendStatusForUnitsServiceImpl;
 
-    @Test
-    void shouldSendStatusForUnits() {
+  @Test
+  void shouldSendStatusForUnits() {
 
-        final var request = SendStatusForUnitsRequestDTO.builder()
+    final var request =
+        SendStatusForUnitsRequestDTO.builder()
             .unitIds(List.of("unit1", "unit2"))
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now())
             .build();
 
-        final var expected = SendStatusIntegrationResponseDTO.builder()
-            .count(1)
-            .build();
+    final var expected = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        when(wcIntegrationRestService.sendStatusForUnits(any(SendStatusForUnitsIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.sendStatusForUnits(
+            any(SendStatusForUnitsIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
-        final var response = sendStatusForUnitsServiceImpl.send(request);
+    final var response = sendStatusForUnitsServiceImpl.send(request);
 
-        assertEquals(1, response);
+    assertEquals(1, response);
+  }
 
-    }
-
-    @Test
-    void shouldCountStatusesForUnits(){
-        final var request = CountStatusesForUnitsRequestDTO.builder()
+  @Test
+  void shouldCountStatusesForUnits() {
+    final var request =
+        CountStatusesForUnitsRequestDTO.builder()
             .unitIds(List.of("unit1", "unit2"))
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .start(LocalDateTime.now())
             .build();
 
-        final var expected = CountStatusesIntegrationResponseDTO.builder()
-            .count(1)
-            .max(1)
-            .build();
+    final var expected = CountStatusesIntegrationResponseDTO.builder().count(1).max(1).build();
 
-        when(wcIntegrationRestService.countStatusesForUnits(any(CountStatusesForUnitsIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.countStatusesForUnits(
+            any(CountStatusesForUnitsIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
+    final var response = sendStatusForUnitsServiceImpl.count(request);
 
-        final var response = sendStatusForUnitsServiceImpl.count(request);
-
-        assertEquals(1, response.getCount());
-        assertEquals(1, response.getMax());
-    }
+    assertEquals(1, response.getCount());
+    assertEquals(1, response.getMax());
+  }
 }
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,73 +32,75 @@ import se.inera.intyg.intygsadmin.web.jobs.EraseTestCertificateJob;
 @Service
 public class TestCertificateServiceImpl implements TestCertificateService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EraseTestCertificateJob.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EraseTestCertificateJob.class);
 
-    @Autowired
-    private ITIntegrationRestService itIntegrationRestService;
+  @Autowired private ITIntegrationRestService itIntegrationRestService;
 
-    @Autowired
-    private WCIntegrationRestService wcIntegrationRestService;
+  @Autowired private WCIntegrationRestService wcIntegrationRestService;
 
-    @Value("${erasetestcertificate.erase.after.day}")
-    private int eraseAfterDay;
+  @Value("${erasetestcertificate.erase.after.day}")
+  private int eraseAfterDay;
 
-    /**
-     * Erase test certificates based on default configuration
-     */
-    public void eraseTestCertificates() {
-        eraseTestCertificates(eraseAfterDay);
+  /** Erase test certificates based on default configuration */
+  public void eraseTestCertificates() {
+    eraseTestCertificates(eraseAfterDay);
+  }
+
+  /**
+   * Erase test certificates that is older than specified number of days.
+   *
+   * @param eraseAfterDays Number of days old.
+   */
+  public void eraseTestCertificates(int eraseAfterDays) {
+    final var to = LocalDateTime.now().minusDays(eraseAfterDays);
+    eraseTestCertificates(null, to);
+  }
+
+  /**
+   * Erase test certificates that was created within a specified datetime range.
+   *
+   * @param from Created after from datetime
+   * @param to Create before to datetime
+   */
+  public void eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+    LOG.info("Erase test certificates from {} to {}", from, to);
+
+    try {
+      eraseTestCertificatesInWC(from, to);
+    } catch (Exception ex) {
+      LOG.error("Erase test certificates in Webcert failed!", ex);
     }
 
-    /**
-     * Erase test certificates that is older than specified number of days.
-     *
-     * @param eraseAfterDays Number of days old.
-     */
-    public void eraseTestCertificates(int eraseAfterDays) {
-        final var to = LocalDateTime.now().minusDays(eraseAfterDays);
-        eraseTestCertificates(null, to);
+    try {
+      eraseTestCertificatesInIT(from, to);
+    } catch (Exception ex) {
+      LOG.error("Erase test certificates in Intygstjanst failed!", ex);
     }
+  }
 
-    /**
-     * Erase test certificates that was created within a specified datetime range.
-     *
-     * @param from Created after from datetime
-     * @param to Create before to datetime
-     */
-    public void eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        LOG.info("Erase test certificates from {} to {}", from, to);
+  private void eraseTestCertificatesInWC(LocalDateTime from, LocalDateTime to) {
+    final var start = System.currentTimeMillis();
+    final var eraseResult = wcIntegrationRestService.eraseTestCertificates(from, to);
+    final var end = System.currentTimeMillis();
+    final var duration = end - start;
 
-        try {
-            eraseTestCertificatesInWC(from, to);
-        } catch (Exception ex) {
-            LOG.error("Erase test certificates in Webcert failed!", ex);
-        }
+    LOG.info(
+        "Erase test certificates in Webcert executed in {} seconds. Result: {} erased, {} failed.",
+        TimeUnit.MILLISECONDS.toSeconds(duration),
+        eraseResult.getErasedCount(),
+        eraseResult.getFailedCount());
+  }
 
-        try {
-            eraseTestCertificatesInIT(from, to);
-        } catch (Exception ex) {
-            LOG.error("Erase test certificates in Intygstjanst failed!", ex);
-        }
-    }
+  private void eraseTestCertificatesInIT(LocalDateTime from, LocalDateTime to) {
+    final var start = System.currentTimeMillis();
+    final var eraseResult = itIntegrationRestService.eraseTestCertificates(from, to);
+    final var end = System.currentTimeMillis();
+    final var duration = end - start;
 
-    private void eraseTestCertificatesInWC(LocalDateTime from, LocalDateTime to) {
-        final var start = System.currentTimeMillis();
-        final var eraseResult = wcIntegrationRestService.eraseTestCertificates(from, to);
-        final var end = System.currentTimeMillis();
-        final var duration = end - start;
-
-        LOG.info("Erase test certificates in Webcert executed in {} seconds. Result: {} erased, {} failed.",
-            TimeUnit.MILLISECONDS.toSeconds(duration), eraseResult.getErasedCount(), eraseResult.getFailedCount());
-    }
-
-    private void eraseTestCertificatesInIT(LocalDateTime from, LocalDateTime to) {
-        final var start = System.currentTimeMillis();
-        final var eraseResult = itIntegrationRestService.eraseTestCertificates(from, to);
-        final var end = System.currentTimeMillis();
-        final var duration = end - start;
-
-        LOG.info("Erase test certificates in Intygstjanst executed in {} seconds. Result: {} erased, {} failed.",
-            TimeUnit.MILLISECONDS.toSeconds(duration), eraseResult.getErasedCount(), eraseResult.getFailedCount());
-    }
+    LOG.info(
+        "Erase test certificates in Intygstjanst executed in {} seconds. Result: {} erased, {} failed.",
+        TimeUnit.MILLISECONDS.toSeconds(duration),
+        eraseResult.getErasedCount(),
+        eraseResult.getFailedCount());
+  }
 }

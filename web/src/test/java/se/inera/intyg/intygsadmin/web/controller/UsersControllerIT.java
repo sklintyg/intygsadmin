@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,76 +34,80 @@ import se.inera.intyg.intygsadmin.web.controller.dto.UserDTO;
 
 public class UsersControllerIT extends BaseRestIntegrationTest {
 
-    private static final String USER_API_ENDPOINT = "/api/user";
+  private static final String USER_API_ENDPOINT = "/api/user";
 
-    @Test
-    public void testGetUsers() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetUsers() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(USER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"));
-    }
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(USER_API_ENDPOINT)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"));
+  }
 
-    @Test
-    public void testGetUsersNoAccess() {
-        RestAssured.sessionId = getAuthSession(BASIC_USER);
+  @Test
+  public void testGetUsersNoAccess() {
+    RestAssured.sessionId = getAuthSession(BASIC_USER);
 
-        given().expect().statusCode(FORBIDDEN)
-            .when()
-            .get(USER_API_ENDPOINT);
-    }
+    given().expect().statusCode(FORBIDDEN).when().get(USER_API_ENDPOINT);
+  }
 
-    @Test
-    public void testCreateUpdateDeleteUserNoAccess() {
-        RestAssured.sessionId = getAuthSession(BASIC_USER);
+  @Test
+  public void testCreateUpdateDeleteUserNoAccess() {
+    RestAssured.sessionId = getAuthSession(BASIC_USER);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(UUID.randomUUID());
+    UserDTO userDTO = new UserDTO();
+    userDTO.setId(UUID.randomUUID());
 
+    given()
+        .contentType(ContentType.JSON)
+        .body(userDTO)
+        .expect()
+        .statusCode(FORBIDDEN)
+        .when()
+        .put(USER_API_ENDPOINT);
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(userDTO)
+        .expect()
+        .statusCode(FORBIDDEN)
+        .when()
+        .post(USER_API_ENDPOINT + "/" + userDTO.getId());
+
+    given().expect().statusCode(FORBIDDEN).when().delete(USER_API_ENDPOINT + "/" + userDTO.getId());
+  }
+
+  @Test
+  public void testCreateUpdateDeleteUser() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
+
+    LocalDateTime today = LocalDateTime.now();
+    Integer totalElementsBefore =
         given()
-            .contentType(ContentType.JSON)
-            .body(userDTO)
-            .expect().statusCode(FORBIDDEN)
-            .when()
-            .put(USER_API_ENDPOINT);
-
-        given()
-            .contentType(ContentType.JSON)
-            .body(userDTO)
-            .expect().statusCode(FORBIDDEN)
-            .when()
-            .post(USER_API_ENDPOINT + "/" + userDTO.getId());
-
-        given()
-            .expect().statusCode(FORBIDDEN)
-            .when()
-            .delete(USER_API_ENDPOINT + "/" + userDTO.getId());
-    }
-
-    @Test
-    public void testCreateUpdateDeleteUser() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
-
-        LocalDateTime today = LocalDateTime.now();
-        Integer totalElementsBefore = given().expect().statusCode(OK)
+            .expect()
+            .statusCode(OK)
             .when()
             .get(USER_API_ENDPOINT)
             .then()
             .extract()
             .path("page.totalElements");
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmployeeHsaId("hsaId-1");
-        userDTO.setIntygsadminRole(IntygsadminRole.FULL);
-        userDTO.setName("name");
+    UserDTO userDTO = new UserDTO();
+    userDTO.setEmployeeHsaId("hsaId-1");
+    userDTO.setIntygsadminRole(IntygsadminRole.FULL);
+    userDTO.setName("name");
 
-        String userId = given()
+    String userId =
+        given()
             .contentType(ContentType.JSON)
             .body(userDTO)
-            .expect().statusCode(OK)
+            .expect()
+            .statusCode(OK)
             .when()
             .put(USER_API_ENDPOINT)
             .then()
@@ -111,49 +115,54 @@ public class UsersControllerIT extends BaseRestIntegrationTest {
             .extract()
             .path("id");
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(USER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
-            .body("page.totalElements", is(totalElementsBefore + 1))
-            .body("content.find { it.id == '" + userId + "' }.name",
-                equalTo("name"));
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(USER_API_ENDPOINT)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
+        .body("page.totalElements", is(totalElementsBefore + 1))
+        .body("content.find { it.id == '" + userId + "' }.name", equalTo("name"));
 
-        // Update
-        userDTO.setName("New name");
+    // Update
+    userDTO.setName("New name");
 
-        given()
-            .contentType(ContentType.JSON)
-            .body(userDTO)
-            .expect().statusCode(OK)
-            .when()
-            .post(USER_API_ENDPOINT + "/" + userId)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/put-user-response-schema.json"));
+    given()
+        .contentType(ContentType.JSON)
+        .body(userDTO)
+        .expect()
+        .statusCode(OK)
+        .when()
+        .post(USER_API_ENDPOINT + "/" + userId)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/put-user-response-schema.json"));
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(USER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
-            .body("page.totalElements", is(totalElementsBefore + 1))
-            .body("content.find { it.id == '" + userId + "' }.name",
-                equalTo("New name"));
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(USER_API_ENDPOINT)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
+        .body("page.totalElements", is(totalElementsBefore + 1))
+        .body("content.find { it.id == '" + userId + "' }.name", equalTo("New name"));
 
-        // Delete
-        given()
-            .contentType(ContentType.JSON)
-            .expect().statusCode(OK)
-            .when()
-            .delete(USER_API_ENDPOINT + "/" + userId);
+    // Delete
+    given()
+        .contentType(ContentType.JSON)
+        .expect()
+        .statusCode(OK)
+        .when()
+        .delete(USER_API_ENDPOINT + "/" + userId);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(USER_API_ENDPOINT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
-            .body("page.totalElements", is(totalElementsBefore));
-    }
-
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(USER_API_ENDPOINT)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-users-response-schema.json"))
+        .body("page.totalElements", is(totalElementsBefore));
+  }
 }

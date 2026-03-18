@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,52 +29,57 @@ import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class PrivatePractitionerControllerIT extends BaseRestIntegrationTest {
 
-    private static final String PRIVATE_PRACTITIONER_API_ENDPOINT = "/api/privatepractitioner";
+  private static final String PRIVATE_PRACTITIONER_API_ENDPOINT = "/api/privatepractitioner";
 
-    @Test
-    public void testGetPrivatePractitionerOk() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetPrivatePractitionerOk() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String personOrHsaId = "SE123456-X0";
+    final String personOrHsaId = "SE123456-X0";
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + personOrHsaId)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-private-practitioner-response-schema.json"));
-    }
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + personOrHsaId)
+        .then()
+        .body(
+            matchesJsonSchemaInClasspath(
+                "jsonschema/get-private-practitioner-response-schema.json"));
+  }
 
-    @Test
-    public void testGetPrivatePractitionerNotFound() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetPrivatePractitionerNotFound() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String nonExistingPersonOrHsaId = "SE4815162344-XXXX";
+    final String nonExistingPersonOrHsaId = "SE4815162344-XXXX";
 
-        given().expect().statusCode(NOT_FOUND)
-            .when()
-            .get(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + nonExistingPersonOrHsaId);
-    }
+    given()
+        .expect()
+        .statusCode(NOT_FOUND)
+        .when()
+        .get(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + nonExistingPersonOrHsaId);
+  }
 
-    @Test
-    public void testGetPrivatePractitionerFile() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testGetPrivatePractitionerFile() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(PRIVATE_PRACTITIONER_API_ENDPOINT + "/file")
-            .then()
-            .contentType(is(MediaType.APPLICATION_OCTET_STREAM.toString()));
-    }
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(PRIVATE_PRACTITIONER_API_ENDPOINT + "/file")
+        .then()
+        .contentType(is(MediaType.APPLICATION_OCTET_STREAM.toString()));
+  }
 
-    @Test
-    public void testUnregisterPrivatePractitionerOk() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  public void testUnregisterPrivatePractitionerOk() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        final String hsaId = "SE123456-X3";
+    final String hsaId = "SE123456-X3";
 
-        given()
-            .when().delete(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + hsaId)
-            .then().statusCode(OK);
-    }
-
+    given().when().delete(PRIVATE_PRACTITIONER_API_ENDPOINT + "/" + hsaId).then().statusCode(OK);
+  }
 }

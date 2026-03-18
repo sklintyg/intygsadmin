@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,29 +31,28 @@ import se.inera.intyg.intygsadmin.web.controller.dto.BannerStatus;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BannerMapper {
 
-    BannerDTO toDTO(BannerEntity s);
+  BannerDTO toDTO(BannerEntity s);
 
-    List<BannerDTO> toListDTO(List<BannerEntity> s);
+  List<BannerDTO> toListDTO(List<BannerEntity> s);
 
-    BannerEntity toEntity(BannerDTO newSourceAccount);
+  BannerEntity toEntity(BannerDTO newSourceAccount);
 
+  @AfterMapping
+  default void calculateStatue(BannerEntity bannerEntity, @MappingTarget BannerDTO dto) {
+    dto.setStatus(getBannerStatus(bannerEntity.getDisplayFrom(), bannerEntity.getDisplayTo()));
+  }
 
-    @AfterMapping
-    default void calculateStatue(BannerEntity bannerEntity, @MappingTarget BannerDTO dto) {
-        dto.setStatus(getBannerStatus(bannerEntity.getDisplayFrom(), bannerEntity.getDisplayTo()));
+  default BannerStatus getBannerStatus(LocalDateTime from, LocalDateTime to) {
+    LocalDateTime today = LocalDateTime.now();
+
+    if (from.isAfter(today)) {
+      return BannerStatus.FUTURE;
     }
 
-    default BannerStatus getBannerStatus(LocalDateTime from, LocalDateTime to) {
-        LocalDateTime today = LocalDateTime.now();
-
-        if (from.isAfter(today)) {
-            return BannerStatus.FUTURE;
-        }
-
-        if (to.isBefore(today)) {
-            return BannerStatus.FINISHED;
-        }
-
-        return BannerStatus.ACTIVE;
+    if (to.isBefore(today)) {
+      return BannerStatus.FINISHED;
     }
+
+    return BannerStatus.ACTIVE;
+  }
 }

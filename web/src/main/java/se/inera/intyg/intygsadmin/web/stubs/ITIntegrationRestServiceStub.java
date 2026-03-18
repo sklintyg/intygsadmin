@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,63 +35,68 @@ import se.inera.intyg.intygsadmin.web.integration.ITIntegrationRestService;
 @Service
 public class ITIntegrationRestServiceStub implements ITIntegrationRestService {
 
-    private final Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
+  private final Map<String, ItIntygInfo> intygInfoMap = new HashMap<>();
 
-    public ITIntegrationRestServiceStub() {
-        addIntyg(WCIntegrationRestServiceStub.INTYG_ID_1);
-        addIntyg("f63c813d-a13a-4b4b-965f-419dfe98fffe"); // Only in IT
+  public ITIntegrationRestServiceStub() {
+    addIntyg(WCIntegrationRestServiceStub.INTYG_ID_1);
+    addIntyg("f63c813d-a13a-4b4b-965f-419dfe98fffe"); // Only in IT
+  }
+
+  @Override
+  public ItIntygInfo getIntygInfo(@PathVariable String intygId) {
+    if (intygInfoMap.containsKey(intygId)) {
+      return intygInfoMap.get(intygId);
     }
 
-    @Override
-    public ItIntygInfo getIntygInfo(@PathVariable String intygId) {
-        if (intygInfoMap.containsKey(intygId)) {
-            return intygInfoMap.get(intygId);
-        }
+    return null;
+  }
 
-        return null;
+  @Override
+  public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+    return TestCertificateEraseResult.create(0, 0);
+  }
+
+  @Override
+  public Integer getCertificateCount(String hsaId) {
+    try {
+      final var number = Integer.parseInt(hsaId.substring(hsaId.length() - 1));
+      return number == 4 ? null : number;
+    } catch (NumberFormatException e) {
+      return 55;
     }
+  }
 
-    @Override
-    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        return TestCertificateEraseResult.create(0, 0);
-    }
+  private void addIntyg(String intygId) {
+    LocalDateTime date = LocalDateTime.now();
 
-    @Override
-    public Integer getCertificateCount(String hsaId) {
-        try {
-            final var number = Integer.parseInt(hsaId.substring(hsaId.length() - 1));
-            return number == 4 ? null : number;
-        } catch (NumberFormatException e) {
-            return 55;
-        }
-    }
+    ItIntygInfo intygInfo = new ItIntygInfo();
+    intygInfo.setIntygId(intygId);
+    intygInfo.setNumberOfRecipients(intygInfoMap.size());
+    intygInfo.setIntygType("lisjp");
+    intygInfo.setIntygVersion("1.0");
+    intygInfo.setSignedDate(date);
+    intygInfo.setReceivedDate(date.plusMinutes(1));
+    intygInfo.setSentToRecipient(date.plusMinutes(10));
+    intygInfo.setCareGiverHsaId("vg1-id");
+    intygInfo.setCareGiverName("vg1");
+    intygInfo.setCareUnitName("ve1");
+    intygInfo.setCareUnitHsaId("ve1-id");
+    intygInfo.setSignedByName("name");
+    intygInfo.setSignedByHsaId("hsaId");
+    intygInfo.setTestCertificate(false);
 
-    private void addIntyg(String intygId) {
-        LocalDateTime date = LocalDateTime.now();
+    intygInfo
+        .getEvents()
+        .add(
+            new IntygInfoEvent(
+                Source.INTYGSTJANSTEN, date.plusMinutes(1), IntygInfoEventType.IS005));
 
-        ItIntygInfo intygInfo = new ItIntygInfo();
-        intygInfo.setIntygId(intygId);
-        intygInfo.setNumberOfRecipients(intygInfoMap.size());
-        intygInfo.setIntygType("lisjp");
-        intygInfo.setIntygVersion("1.0");
-        intygInfo.setSignedDate(date);
-        intygInfo.setReceivedDate(date.plusMinutes(1));
-        intygInfo.setSentToRecipient(date.plusMinutes(10));
-        intygInfo.setCareGiverHsaId("vg1-id");
-        intygInfo.setCareGiverName("vg1");
-        intygInfo.setCareUnitName("ve1");
-        intygInfo.setCareUnitHsaId("ve1-id");
-        intygInfo.setSignedByName("name");
-        intygInfo.setSignedByHsaId("hsaId");
-        intygInfo.setTestCertificate(false);
+    IntygInfoEvent signed =
+        new IntygInfoEvent(Source.INTYGSTJANSTEN, date, IntygInfoEventType.IS004);
+    signed.addData("name", "name");
+    signed.addData("hsaId", "hsaId");
+    intygInfo.getEvents().add(signed);
 
-        intygInfo.getEvents().add(new IntygInfoEvent(Source.INTYGSTJANSTEN, date.plusMinutes(1), IntygInfoEventType.IS005));
-
-        IntygInfoEvent signed = new IntygInfoEvent(Source.INTYGSTJANSTEN, date, IntygInfoEventType.IS004);
-        signed.addData("name", "name");
-        signed.addData("hsaId", "hsaId");
-        intygInfo.getEvents().add(signed);
-
-        intygInfoMap.put(intygInfo.getIntygId(), intygInfo);
-    }
+    intygInfoMap.put(intygInfo.getIntygId(), intygInfo);
+  }
 }
