@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,50 +36,54 @@ import se.inera.intyg.intygsadmin.web.service.PrivatePractitionerService;
 @RequestMapping("/api/privatepractitioner")
 public class PrivatePractitionerController {
 
-    private final PPIntegrationRestService ppIntegrationRestService;
-    private final PrivatePractitionerService privatePractitionerService;
+  private final PPIntegrationRestService ppIntegrationRestService;
+  private final PrivatePractitionerService privatePractitionerService;
 
-    public PrivatePractitionerController(PPIntegrationRestService ppIntegrationRestService,
-        PrivatePractitionerService privatePractitionerService) {
-        this.ppIntegrationRestService = ppIntegrationRestService;
-        this.privatePractitionerService = privatePractitionerService;
+  public PrivatePractitionerController(
+      PPIntegrationRestService ppIntegrationRestService,
+      PrivatePractitionerService privatePractitionerService) {
+    this.ppIntegrationRestService = ppIntegrationRestService;
+    this.privatePractitionerService = privatePractitionerService;
+  }
+
+  @GetMapping("/{personOrHsaId}")
+  public ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(
+      @PathVariable String personOrHsaId) {
+    final var privatePractitonerDTO =
+        privatePractitionerService.getPrivatePractitioner(personOrHsaId);
+    return privatePractitonerDTO != null
+        ? ResponseEntity.ok(privatePractitonerDTO)
+        : ResponseEntity.notFound().build();
+  }
+
+  @GetMapping("/file")
+  public ResponseEntity<byte[]> getPrivatePractitionerFile() {
+    try {
+      final var privatePractitionerFile = privatePractitionerService.getPrivatePractitionerFile();
+
+      if (privatePractitionerFile == null) {
+        return ResponseEntity.noContent().build();
+      }
+
+      return ResponseEntity.ok()
+          .contentType(MediaType.APPLICATION_OCTET_STREAM)
+          .headers(getHttpHeaders())
+          .body(privatePractitionerFile);
+
+    } catch (IOException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+  }
 
-    @GetMapping("/{personOrHsaId}")
-    public ResponseEntity<PrivatePractitionerDTO> getPrivatePractitioner(@PathVariable String personOrHsaId) {
-        final var privatePractitonerDTO = privatePractitionerService.getPrivatePractitioner(personOrHsaId);
-        return privatePractitonerDTO != null ? ResponseEntity.ok(privatePractitonerDTO) : ResponseEntity.notFound().build();
-    }
+  @DeleteMapping("/{hsaId}")
+  public ResponseEntity<String> unregisterPrivatePractitioner(@PathVariable String hsaId) {
+    ppIntegrationRestService.unregisterPrivatePractitioner(hsaId);
+    return ResponseEntity.ok().build();
+  }
 
-    @GetMapping("/file")
-    public ResponseEntity<byte[]> getPrivatePractitionerFile() {
-        try {
-            final var privatePractitionerFile = privatePractitionerService.getPrivatePractitionerFile();
-
-            if (privatePractitionerFile == null) {
-                return ResponseEntity.noContent().build();
-            }
-
-            return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .headers(getHttpHeaders())
-                .body(privatePractitionerFile);
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @DeleteMapping("/{hsaId}")
-    public ResponseEntity<String> unregisterPrivatePractitioner(@PathVariable String hsaId) {
-        ppIntegrationRestService.unregisterPrivatePractitioner(hsaId);
-        return ResponseEntity.ok().build();
-    }
-
-    private HttpHeaders getHttpHeaders() {
-        final var header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=privatlakare.xlsx");
-        return header;
-    }
-
+  private HttpHeaders getHttpHeaders() {
+    final var header = new HttpHeaders();
+    header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=privatlakare.xlsx");
+    return header;
+  }
 }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.intygsadmin.web.integration;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,276 +60,303 @@ import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
 @ExtendWith(MockitoExtension.class)
 class WCIntegrationRestServiceImplTest {
 
-    @Mock
-    RestClient restClient;
+  @Mock RestClient restClient;
 
-    @InjectMocks
-    private WCIntegrationRestServiceImpl wcIntegrationRestService;
+  @InjectMocks private WCIntegrationRestServiceImpl wcIntegrationRestService;
+
+  @BeforeEach
+  public void init() {
+    ReflectionTestUtils.setField(wcIntegrationRestService, "webcertUrl", "Host");
+  }
+
+  @Nested
+  class SendStatusTest {
+
+    private ResponseSpec responseSpec;
+    private String statusId;
 
     @BeforeEach
-    public void init() {
-        ReflectionTestUtils.setField(wcIntegrationRestService, "webcertUrl", "Host");
+    void setUp() {
+      RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      statusId = UUID.randomUUID().toString();
+
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
+
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri("Host/internalapi/notification/" + statusId))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(SendStatusIntegrationRequestDTO.class)))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
-    @Nested
-    class SendStatusTest {
+    @Test
+    void shouldSendStatus() {
+      final var request = SendStatusIntegrationRequestDTO.builder().statusId(statusId).build();
 
-        private ResponseSpec responseSpec;
-        private String statusId;
+      final var response = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        @BeforeEach
-        void setUp() {
-            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            statusId = UUID.randomUUID().toString();
-
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
-
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/" + statusId)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(SendStatusIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
-
-        @Test
-        void shouldSendStatus() {
-            final var request = SendStatusIntegrationRequestDTO.builder()
-                .statusId(statusId)
-                .build();
-
-            final var response = SendStatusIntegrationResponseDTO.builder()
-                .count(1)
-                .build();
-
-            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-            assertNotNull(wcIntegrationRestService.sendStatus(request));
-        }
-
-        @Test
-        void shouldThrowException() {
-            final var request = SendStatusIntegrationRequestDTO.builder()
-                .statusId(statusId)
-                .build();
-
-            doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-
-            assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatus(request));
-        }
+      doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+      assertNotNull(wcIntegrationRestService.sendStatus(request));
     }
 
-    @Nested
-    class SendStatusForCertificatesTest {
+    @Test
+    void shouldThrowException() {
+      final var request = SendStatusIntegrationRequestDTO.builder().statusId(statusId).build();
 
-        private ResponseSpec responseSpec;
-        private String certificateId;
+      doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
+          .when(responseSpec)
+          .body(SendStatusIntegrationResponseDTO.class);
 
-        @BeforeEach
-        void setUp() {
-            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            certificateId = UUID.randomUUID().toString();
+      assertThrows(
+          HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatus(request));
+    }
+  }
 
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
+  @Nested
+  class SendStatusForCertificatesTest {
 
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/certificates")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(SendStatusForCertificatesIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
+    private ResponseSpec responseSpec;
+    private String certificateId;
 
-        @Test
-        void shouldSendStatusForCertificates() {
-            final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
-                .certificateIds(List.of(certificateId))
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .build();
+    @BeforeEach
+    void setUp() {
+      RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      certificateId = UUID.randomUUID().toString();
 
-            final var response = SendStatusIntegrationResponseDTO.builder()
-                .count(1)
-                .build();
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
 
-            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-            assertNotNull(wcIntegrationRestService.sendStatusForCertificates(request));
-        }
-
-        @Test
-        void shouldThrowException() {
-            final var request = SendStatusForCertificatesIntegrationRequestDTO.builder()
-                .certificateIds(List.of(certificateId))
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .build();
-
-            doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-
-            assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatusForCertificates(request));
-        }
-
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri("Host/internalapi/notification/certificates"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(SendStatusForCertificatesIntegrationRequestDTO.class)))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
-    @Nested
-    class SendStatusForUnitsTest {
+    @Test
+    void shouldSendStatusForCertificates() {
+      final var request =
+          SendStatusForCertificatesIntegrationRequestDTO.builder()
+              .certificateIds(List.of(certificateId))
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .build();
 
-        private ResponseSpec responseSpec;
-        private String unitId;
+      final var response = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        @BeforeEach
-        void setUp() {
-            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            unitId = UUID.randomUUID().toString();
-
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
-
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/units")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(SendStatusForUnitsIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
-
-        @Test
-        void shouldSendStatusForUnits() {
-            final var request = SendStatusForUnitsIntegrationRequestDTO.builder()
-                .unitIds(List.of(unitId))
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .activationTime(LocalDateTime.now())
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
-                .build();
-
-            final var response = SendStatusIntegrationResponseDTO.builder()
-                .count(1)
-                .build();
-
-            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-            assertNotNull(wcIntegrationRestService.sendStatusForUnits(request));
-        }
-
-        @Test
-        void shouldThrowException() {
-            final var request = SendStatusForUnitsIntegrationRequestDTO.builder()
-                .unitIds(List.of(unitId))
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .activationTime(LocalDateTime.now())
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
-                .build();
-
-            doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-
-            assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatusForUnits(request));
-        }
-
+      doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+      assertNotNull(wcIntegrationRestService.sendStatusForCertificates(request));
     }
 
-    @Nested
-    class SendStatusForCareGiverTest {
+    @Test
+    void shouldThrowException() {
+      final var request =
+          SendStatusForCertificatesIntegrationRequestDTO.builder()
+              .certificateIds(List.of(certificateId))
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .build();
 
-        private ResponseSpec responseSpec;
-        private String careGiverId;
+      doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
+          .when(responseSpec)
+          .body(SendStatusIntegrationResponseDTO.class);
 
-        @BeforeEach
-        void setUp() {
-            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            careGiverId = UUID.randomUUID().toString();
+      assertThrows(
+          HttpClientErrorException.class,
+          () -> wcIntegrationRestService.sendStatusForCertificates(request));
+    }
+  }
 
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
+  @Nested
+  class SendStatusForUnitsTest {
 
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/caregiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(SendStatusForCareGiverIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
+    private ResponseSpec responseSpec;
+    private String unitId;
 
-        @Test
-        void shouldSendStatusForCareGiver() {
-            final var request = SendStatusForCareGiverIntegrationRequestDTO.builder()
-                .careGiverId(careGiverId)
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .activationTime(LocalDateTime.now())
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
-                .build();
+    @BeforeEach
+    void setUp() {
+      RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      unitId = UUID.randomUUID().toString();
 
-            final var response = SendStatusIntegrationResponseDTO.builder()
-                .count(1)
-                .build();
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
 
-            doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-            assertNotNull(wcIntegrationRestService.sendStatusForCareGiver(request));
-        }
-
-        @Test
-        void shouldThrowException() {
-            final var request = SendStatusForCareGiverIntegrationRequestDTO.builder()
-                .careGiverId(careGiverId)
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .activationTime(LocalDateTime.now())
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
-                .build();
-
-            doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST)).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
-
-            assertThrows(HttpClientErrorException.class, () -> wcIntegrationRestService.sendStatusForCareGiver(request));
-        }
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri("Host/internalapi/notification/units"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(SendStatusForUnitsIntegrationRequestDTO.class)))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
-    @Nested
-    class CountStatusForCareGiverTest {
+    @Test
+    void shouldSendStatusForUnits() {
+      final var request =
+          SendStatusForUnitsIntegrationRequestDTO.builder()
+              .unitIds(List.of(unitId))
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .activationTime(LocalDateTime.now())
+              .start(LocalDateTime.now())
+              .end(LocalDateTime.now())
+              .build();
 
-        private ResponseSpec responseSpec;
-        private String careGiverId;
+      final var response = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        @BeforeEach
-        void setUp() {
-            RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            careGiverId = UUID.randomUUID().toString();
-
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
-
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/internalapi/notification/count/caregiver/" + careGiverId)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(CountStatusesForCareGiverIntegrationRequestDTO.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
-
-        @Test
-        void shouldCountStatusesForCareGiver() {
-            final var request = CountStatusesForCareGiverIntegrationRequestDTO.builder()
-                .careGiverId(careGiverId)
-                .statuses(List.of(NotificationStatusEnum.FAILURE))
-                .build();
-
-            final var response = CountStatusesIntegrationResponseDTO.builder()
-                .count(1)
-                .max(1)
-                .build();
-
-            doReturn(response).when(responseSpec).body(CountStatusesIntegrationResponseDTO.class);
-            assertNotNull(wcIntegrationRestService.countStatusesForCareGiver(request));
-        }
-
+      doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+      assertNotNull(wcIntegrationRestService.sendStatusForUnits(request));
     }
+
+    @Test
+    void shouldThrowException() {
+      final var request =
+          SendStatusForUnitsIntegrationRequestDTO.builder()
+              .unitIds(List.of(unitId))
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .activationTime(LocalDateTime.now())
+              .start(LocalDateTime.now())
+              .end(LocalDateTime.now())
+              .build();
+
+      doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
+          .when(responseSpec)
+          .body(SendStatusIntegrationResponseDTO.class);
+
+      assertThrows(
+          HttpClientErrorException.class,
+          () -> wcIntegrationRestService.sendStatusForUnits(request));
+    }
+  }
+
+  @Nested
+  class SendStatusForCareGiverTest {
+
+    private ResponseSpec responseSpec;
+    private String careGiverId;
+
+    @BeforeEach
+    void setUp() {
+      RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      careGiverId = UUID.randomUUID().toString();
+
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
+
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri("Host/internalapi/notification/caregiver/" + careGiverId))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(SendStatusForCareGiverIntegrationRequestDTO.class)))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+    }
+
+    @Test
+    void shouldSendStatusForCareGiver() {
+      final var request =
+          SendStatusForCareGiverIntegrationRequestDTO.builder()
+              .careGiverId(careGiverId)
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .activationTime(LocalDateTime.now())
+              .start(LocalDateTime.now())
+              .end(LocalDateTime.now())
+              .build();
+
+      final var response = SendStatusIntegrationResponseDTO.builder().count(1).build();
+
+      doReturn(response).when(responseSpec).body(SendStatusIntegrationResponseDTO.class);
+      assertNotNull(wcIntegrationRestService.sendStatusForCareGiver(request));
+    }
+
+    @Test
+    void shouldThrowException() {
+      final var request =
+          SendStatusForCareGiverIntegrationRequestDTO.builder()
+              .careGiverId(careGiverId)
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .activationTime(LocalDateTime.now())
+              .start(LocalDateTime.now())
+              .end(LocalDateTime.now())
+              .build();
+
+      doThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST))
+          .when(responseSpec)
+          .body(SendStatusIntegrationResponseDTO.class);
+
+      assertThrows(
+          HttpClientErrorException.class,
+          () -> wcIntegrationRestService.sendStatusForCareGiver(request));
+    }
+  }
+
+  @Nested
+  class CountStatusForCareGiverTest {
+
+    private ResponseSpec responseSpec;
+    private String careGiverId;
+
+    @BeforeEach
+    void setUp() {
+      RequestBodyUriSpec requestBodyUriSpec = mock(RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      careGiverId = UUID.randomUUID().toString();
+
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
+
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri("Host/internalapi/notification/count/caregiver/" + careGiverId))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(CountStatusesForCareGiverIntegrationRequestDTO.class)))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+    }
+
+    @Test
+    void shouldCountStatusesForCareGiver() {
+      final var request =
+          CountStatusesForCareGiverIntegrationRequestDTO.builder()
+              .careGiverId(careGiverId)
+              .statuses(List.of(NotificationStatusEnum.FAILURE))
+              .build();
+
+      final var response = CountStatusesIntegrationResponseDTO.builder().count(1).max(1).build();
+
+      doReturn(response).when(responseSpec).body(CountStatusesIntegrationResponseDTO.class);
+      assertNotNull(wcIntegrationRestService.countStatusesForCareGiver(request));
+    }
+  }
 }

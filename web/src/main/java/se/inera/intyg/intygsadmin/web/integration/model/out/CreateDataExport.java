@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,17 +27,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateDataExport {
 
-    private String creatorHSAId;
+  private String creatorHSAId;
 
-    private String creatorName;
+  private String creatorName;
 
-    private String hsaId;
+  private String hsaId;
 
-    private String organizationNumber;
+  private String organizationNumber;
 
-    private String personId;
+  private String personId;
 
-    private String emailAddress;
+  private String emailAddress;
 
-    private String phoneNumber;
+  private String phoneNumber;
 }

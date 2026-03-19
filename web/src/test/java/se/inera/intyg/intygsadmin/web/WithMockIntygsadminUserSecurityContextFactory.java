@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,26 +34,33 @@ import se.inera.intyg.intygsadmin.persistence.enums.IntygsadminRole;
 import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 
-public class WithMockIntygsadminUserSecurityContextFactory implements WithSecurityContextFactory<WithMockIntygsadminUser> {
+public class WithMockIntygsadminUserSecurityContextFactory
+    implements WithSecurityContextFactory<WithMockIntygsadminUser> {
 
-    @Override
-    public SecurityContext createSecurityContext(WithMockIntygsadminUser mockIntygsadminUser) {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
+  @Override
+  public SecurityContext createSecurityContext(WithMockIntygsadminUser mockIntygsadminUser) {
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(UUID.randomUUID());
-        userEntity.setName(mockIntygsadminUser.name());
-        userEntity.setEmployeeHsaId(mockIntygsadminUser.employeeHsaId());
-        userEntity.setIntygsadminRole(IntygsadminRole.valueOf(mockIntygsadminUser.intygsadminRole()));
+    UserEntity userEntity = new UserEntity();
+    userEntity.setId(UUID.randomUUID());
+    userEntity.setName(mockIntygsadminUser.name());
+    userEntity.setEmployeeHsaId(mockIntygsadminUser.employeeHsaId());
+    userEntity.setIntygsadminRole(IntygsadminRole.valueOf(mockIntygsadminUser.intygsadminRole()));
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name()));
+    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    authorities.add(new SimpleGrantedAuthority("ROLE_" + userEntity.getIntygsadminRole().name()));
 
-        final var oidcIdToken = new OidcIdToken("tokenValue", null, null, Map.of("employeeHsaId", "hsaId"));
-        final IntygsadminUser user = new IntygsadminUser(userEntity, AuthenticationMethod.FAKE, oidcIdToken,
-            Collections.emptySet(), "employeeHsaId");
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, authorities));
+    final var oidcIdToken =
+        new OidcIdToken("tokenValue", null, null, Map.of("employeeHsaId", "hsaId"));
+    final IntygsadminUser user =
+        new IntygsadminUser(
+            userEntity,
+            AuthenticationMethod.FAKE,
+            oidcIdToken,
+            Collections.emptySet(),
+            "employeeHsaId");
+    context.setAuthentication(new UsernamePasswordAuthenticationToken(user, null, authorities));
 
-        return context;
-    }
+    return context;
+  }
 }

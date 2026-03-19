@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,57 +39,50 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @ExtendWith(MockitoExtension.class)
 class SendStatusForCertificatesServiceImplTest {
 
-    @Mock
-    private WCIntegrationRestService wcIntegrationRestService;
+  @Mock private WCIntegrationRestService wcIntegrationRestService;
 
-    @Mock
-    private SendNotificationRequestValidator sendNotificationRequestValidator;
+  @Mock private SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @InjectMocks
-    private SendStatusForCertificatesServiceImpl sendStatusForCertificatesServiceImpl;
+  @InjectMocks private SendStatusForCertificatesServiceImpl sendStatusForCertificatesServiceImpl;
 
-    @Test
-    void shouldSendStatusForCertificates() {
+  @Test
+  void shouldSendStatusForCertificates() {
 
-        final var request = SendStatusForCertificatesRequestDTO.builder()
+    final var request =
+        SendStatusForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .build();
 
-        final var expected = SendStatusIntegrationResponseDTO.builder()
-            .count(1)
-            .build();
+    final var expected = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        when(wcIntegrationRestService.sendStatusForCertificates(any(SendStatusForCertificatesIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.sendStatusForCertificates(
+            any(SendStatusForCertificatesIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
-        final var response = sendStatusForCertificatesServiceImpl.send(request);
+    final var response = sendStatusForCertificatesServiceImpl.send(request);
 
-        assertEquals(1, response);
+    assertEquals(1, response);
+  }
 
-    }
+  @Test
+  void shouldCountStatusesForCertificates() {
 
-    @Test
-    void shouldCountStatusesForCertificates() {
-
-        final var request = CountStatusesForCertificatesRequestDTO.builder()
+    final var request =
+        CountStatusesForCertificatesRequestDTO.builder()
             .certificateIds(List.of("certificateId"))
             .statuses(List.of(NotificationStatusEnum.FAILURE))
             .build();
 
-        final var expected = CountStatusesIntegrationResponseDTO.builder()
-            .count(1)
-            .max(1)
-            .build();
+    final var expected = CountStatusesIntegrationResponseDTO.builder().count(1).max(1).build();
 
-        when(wcIntegrationRestService.countStatusesForCertificates(any(CountStatusesForCertificatesIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.countStatusesForCertificates(
+            any(CountStatusesForCertificatesIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
-        final var response = sendStatusForCertificatesServiceImpl.count(request);
+    final var response = sendStatusForCertificatesServiceImpl.count(request);
 
-
-        assertEquals(1, response.getCount());
-        assertEquals(1, response.getMax());
-    }
+    assertEquals(1, response.getCount());
+    assertEquals(1, response.getMax());
+  }
 }
-

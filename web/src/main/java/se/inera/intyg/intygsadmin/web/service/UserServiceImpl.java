@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,70 +38,71 @@ import se.inera.intyg.intygsadmin.web.mapper.UserMapper;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserPersistenceService userPersistenceService;
-    private UserMapper userMapper;
+  private UserPersistenceService userPersistenceService;
+  private UserMapper userMapper;
 
-    @Autowired
-    public UserServiceImpl(UserPersistenceService userPersistenceService, UserMapper userMapper) {
-        this.userPersistenceService = userPersistenceService;
-        this.userMapper = userMapper;
+  @Autowired
+  public UserServiceImpl(UserPersistenceService userPersistenceService, UserMapper userMapper) {
+    this.userPersistenceService = userPersistenceService;
+    this.userMapper = userMapper;
+  }
+
+  public IntygsadminUser getActiveUser() {
+    if (SecurityContextHolder.getContext().getAuthentication() == null
+        || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+            instanceof IntygsadminUser)) {
+      return null;
     }
 
-    public IntygsadminUser getActiveUser() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null
-            || !(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof IntygsadminUser)) {
-            return null;
-        }
+    return (IntygsadminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
 
-        return (IntygsadminUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  public Page<UserDTO> getUsers(Pageable pageable) {
+    Page<UserEntity> userEntities = userPersistenceService.findAll(pageable);
+
+    List<UserDTO> mapUsers = userMapper.toListDTO(userEntities.getContent());
+
+    return new PageImpl<>(mapUsers, pageable, userEntities.getTotalElements());
+  }
+
+  public void deleteUser(UUID id) {
+    if (getActiveUser().getId().equals(id)) {
+      throw new IaServiceException(IaErrorCode.BAD_STATE);
     }
 
-    public Page<UserDTO> getUsers(Pageable pageable) {
-        Page<UserEntity> userEntities = userPersistenceService.findAll(pageable);
+    userPersistenceService.delete(id);
+  }
 
-        List<UserDTO> mapUsers = userMapper.toListDTO(userEntities.getContent());
-
-        return new PageImpl<>(mapUsers, pageable, userEntities.getTotalElements());
+  public UserDTO updateUser(UserDTO userDTO) {
+    if (getActiveUser().getId().equals(userDTO.getId())) {
+      throw new IaServiceException(IaErrorCode.BAD_STATE);
     }
 
-    public void deleteUser(UUID id) {
-        if (getActiveUser().getId().equals(id)) {
-            throw new IaServiceException(IaErrorCode.BAD_STATE);
-        }
+    userDTO.setEmployeeHsaId(userDTO.getEmployeeHsaId().trim());
 
-        userPersistenceService.delete(id);
+    checkIfUserWithHsaIdExists(userDTO);
+
+    UserEntity upsertedUser = userPersistenceService.update(userMapper.toEntity(userDTO));
+    return userMapper.toDTO(upsertedUser);
+  }
+
+  public UserDTO addUser(UserDTO userDTO) {
+    userDTO.setId(null);
+    userDTO.setEmployeeHsaId(userDTO.getEmployeeHsaId().trim());
+
+    checkIfUserWithHsaIdExists(userDTO);
+
+    UserEntity upsertedUser = userPersistenceService.add(userMapper.toEntity(userDTO));
+
+    return userMapper.toDTO(upsertedUser);
+  }
+
+  private void checkIfUserWithHsaIdExists(UserDTO userDTO) {
+    Optional<UserEntity> foundUser =
+        userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId());
+
+    if (foundUser.isPresent() && !foundUser.get().getId().equals(userDTO.getId())) {
+      throw new IaServiceException(IaErrorCode.ALREADY_EXISTS);
     }
-
-    public UserDTO updateUser(UserDTO userDTO) {
-        if (getActiveUser().getId().equals(userDTO.getId())) {
-            throw new IaServiceException(IaErrorCode.BAD_STATE);
-        }
-
-        userDTO.setEmployeeHsaId(userDTO.getEmployeeHsaId().trim());
-
-        checkIfUserWithHsaIdExists(userDTO);
-
-        UserEntity upsertedUser = userPersistenceService.update(userMapper.toEntity(userDTO));
-        return userMapper.toDTO(upsertedUser);
-    }
-
-    public UserDTO addUser(UserDTO userDTO) {
-        userDTO.setId(null);
-        userDTO.setEmployeeHsaId(userDTO.getEmployeeHsaId().trim());
-
-        checkIfUserWithHsaIdExists(userDTO);
-
-        UserEntity upsertedUser = userPersistenceService.add(userMapper.toEntity(userDTO));
-
-        return userMapper.toDTO(upsertedUser);
-    }
-
-    private void checkIfUserWithHsaIdExists(UserDTO userDTO) {
-        Optional<UserEntity> foundUser = userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId());
-
-        if (foundUser.isPresent() && !foundUser.get().getId().equals(userDTO.getId())) {
-            throw new IaServiceException(IaErrorCode.ALREADY_EXISTS);
-        }
-    }
-
+  }
 }

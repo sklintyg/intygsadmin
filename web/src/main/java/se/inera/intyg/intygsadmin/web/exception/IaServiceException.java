@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,11 +27,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class IaServiceException extends RuntimeException {
 
-    private IaErrorCode errorCode;
-    private String logId;
+  private IaErrorCode errorCode;
+  private String logId;
 
-    public IaServiceException(IaErrorCode errorCode) {
-        super();
-        this.errorCode = errorCode;
-    }
+  public IaServiceException(IaErrorCode errorCode) {
+    super();
+    this.errorCode = errorCode;
+  }
 }

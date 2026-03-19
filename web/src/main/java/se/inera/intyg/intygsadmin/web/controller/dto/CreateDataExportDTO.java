@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,19 +29,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateDataExportDTO {
 
-    @Schema(description = "Care provider ID", requiredMode = RequiredMode.REQUIRED)
-    private String hsaId;
+  @Schema(description = "Care provider ID", requiredMode = RequiredMode.REQUIRED)
+  private String hsaId;
 
-    @Schema(description = "Organization ID", requiredMode = RequiredMode.REQUIRED)
-    private String organizationNumber;
+  @Schema(description = "Organization ID", requiredMode = RequiredMode.REQUIRED)
+  private String organizationNumber;
 
-    @Schema(description = "Personal id of the receiving person", requiredMode = RequiredMode.REQUIRED)
-    private String personId;
+  @Schema(description = "Personal id of the receiving person", requiredMode = RequiredMode.REQUIRED)
+  private String personId;
 
-    @Schema(description = "Email address for the receiving person", requiredMode = RequiredMode.REQUIRED)
-    private String emailAddress;
+  @Schema(
+      description = "Email address for the receiving person",
+      requiredMode = RequiredMode.REQUIRED)
+  private String emailAddress;
 
-    @Schema(description = "Phone number to the receiving person", requiredMode = RequiredMode.REQUIRED)
-    private String phoneNumber;
-
+  @Schema(
+      description = "Phone number to the receiving person",
+      requiredMode = RequiredMode.REQUIRED)
+  private String phoneNumber;
 }

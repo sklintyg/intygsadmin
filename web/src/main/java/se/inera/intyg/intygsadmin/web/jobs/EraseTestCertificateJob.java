@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,22 +29,21 @@ import se.inera.intyg.intygsadmin.web.service.TestCertificateService;
 @Component
 public class EraseTestCertificateJob {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EraseTestCertificateJob.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EraseTestCertificateJob.class);
 
-    private static final String JOB_NAME = "EraseTestCertificateJob.run";
-    private static final String LOCK_AT_MOST = "PT10M"; //10 * 60 * 1000
-    private static final String LOCK_AT_LEAST = "PT30S"; //30 * 1000
+  private static final String JOB_NAME = "EraseTestCertificateJob.run";
+  private static final String LOCK_AT_MOST = "PT10M"; // 10 * 60 * 1000
+  private static final String LOCK_AT_LEAST = "PT30S"; // 30 * 1000
 
-    @Autowired
-    private TestCertificateService testCertificateService;
+  @Autowired private TestCertificateService testCertificateService;
 
-    @Scheduled(cron = "${job.erasetestcertificate.cron}")
-    @SchedulerLock(name = JOB_NAME, lockAtLeastFor = LOCK_AT_LEAST, lockAtMostFor = LOCK_AT_MOST)
-    public void run() {
-        LOG.info("EraseTestCertificateJob started");
+  @Scheduled(cron = "${job.erasetestcertificate.cron}")
+  @SchedulerLock(name = JOB_NAME, lockAtLeastFor = LOCK_AT_LEAST, lockAtMostFor = LOCK_AT_MOST)
+  public void run() {
+    LOG.info("EraseTestCertificateJob started");
 
-        testCertificateService.eraseTestCertificates();
+    testCertificateService.eraseTestCertificates();
 
-        LOG.info("EraseTestCertificateJob stopped");
-    }
+    LOG.info("EraseTestCertificateJob stopped");
+  }
 }

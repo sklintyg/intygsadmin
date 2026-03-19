@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,53 +30,56 @@ import se.inera.intyg.intygsadmin.web.util.PrivatePractitionerFileWriter;
 @Service
 public class PrivatePractitionerServiceImpl implements PrivatePractitionerService {
 
-    private final PPIntegrationRestService ppIntegrationRestService;
-    private final ITIntegrationRestService itIntegrationRestService;
+  private final PPIntegrationRestService ppIntegrationRestService;
+  private final ITIntegrationRestService itIntegrationRestService;
 
-    public PrivatePractitionerServiceImpl(PPIntegrationRestService ppIntegrationRestService,
-        ITIntegrationRestService itIntegrationRestService) {
-        this.ppIntegrationRestService = ppIntegrationRestService;
-        this.itIntegrationRestService = itIntegrationRestService;
+  public PrivatePractitionerServiceImpl(
+      PPIntegrationRestService ppIntegrationRestService,
+      ITIntegrationRestService itIntegrationRestService) {
+    this.ppIntegrationRestService = ppIntegrationRestService;
+    this.itIntegrationRestService = itIntegrationRestService;
+  }
+
+  private static final String YES = "Ja";
+  private static final String NO = "Nej";
+  private static final String COUNT_FAILURE_MESSAGE =
+      "Uppgift om utfärdade intyg kunde inte hämtas. Prova igen om en stund.";
+
+  @Override
+  public PrivatePractitionerDTO getPrivatePractitioner(String personOrHsaId) {
+    final var privatePractitioner = ppIntegrationRestService.getPrivatePractitioner(personOrHsaId);
+
+    if (privatePractitioner == null) {
+      return null;
     }
 
-    private static final String YES = "Ja";
-    private static final String NO = "Nej";
-    private static final String COUNT_FAILURE_MESSAGE = "Uppgift om utfärdade intyg kunde inte hämtas. Prova igen om en stund.";
+    final var certificateCount =
+        itIntegrationRestService.getCertificateCount(privatePractitioner.getHsaId());
+    final var hasCertificates = getHasCertificates(certificateCount);
+    final var privatePractitionerDTO = new PrivatePractitionerDTO();
+    copyProperties(privatePractitioner, privatePractitionerDTO);
+    privatePractitionerDTO.setHasCertificates(hasCertificates);
 
-    @Override
-    public PrivatePractitionerDTO getPrivatePractitioner(String personOrHsaId) {
-        final var privatePractitioner = ppIntegrationRestService.getPrivatePractitioner(personOrHsaId);
+    return privatePractitionerDTO;
+  }
 
-        if (privatePractitioner == null) {
-            return null;
-        }
+  @Override
+  public byte[] getPrivatePractitionerFile() throws IOException {
+    final var privatePractitionerList = ppIntegrationRestService.getAllPrivatePractitioners();
 
-        final var certificateCount = itIntegrationRestService.getCertificateCount(privatePractitioner.getHsaId());
-        final var hasCertificates = getHasCertificates(certificateCount);
-        final var privatePractitionerDTO = new PrivatePractitionerDTO();
-        copyProperties(privatePractitioner, privatePractitionerDTO);
-        privatePractitionerDTO.setHasCertificates(hasCertificates);
-
-        return privatePractitionerDTO;
+    if (privatePractitionerList.isEmpty()) {
+      return null;
     }
 
-    @Override
-    public byte[] getPrivatePractitionerFile() throws IOException {
-        final var privatePractitionerList = ppIntegrationRestService.getAllPrivatePractitioners();
+    final var output = new PrivatePractitionerFileWriter().writeExcel(privatePractitionerList);
+    return output.toByteArray();
+  }
 
-        if (privatePractitionerList.isEmpty()) {
-            return null;
-        }
-
-        final var output = new PrivatePractitionerFileWriter().writeExcel(privatePractitionerList);
-        return output.toByteArray();
+  private String getHasCertificates(Integer certificateCount) {
+    if (certificateCount != null) {
+      return certificateCount > 0 ? YES : NO;
+    } else {
+      return COUNT_FAILURE_MESSAGE;
     }
-
-    private String getHasCertificates(Integer certificateCount) {
-        if (certificateCount != null) {
-            return certificateCount > 0 ? YES : NO;
-        } else {
-            return COUNT_FAILURE_MESSAGE;
-        }
-    }
+  }
 }

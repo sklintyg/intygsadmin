@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,48 +42,48 @@ import se.inera.intyg.intygsadmin.web.service.BannerService;
 @RequestMapping("/api/banner")
 public class BannerController {
 
-    private BannerService bannerService;
+  private BannerService bannerService;
 
-    public BannerController(BannerService bannerService) {
-        this.bannerService = bannerService;
-    }
+  public BannerController(BannerService bannerService) {
+    this.bannerService = bannerService;
+  }
 
-    @GetMapping
-    public ResponseEntity<Page<BannerDTO>> listBanners(
-        @PageableDefault(size = 20, sort = "createdAt")
-        Pageable pageable) {
-        Page<BannerDTO> bannerDTOS = bannerService.getBanners(pageable);
+  @GetMapping
+  public ResponseEntity<Page<BannerDTO>> listBanners(
+      @PageableDefault(size = 20, sort = "createdAt") Pageable pageable) {
+    Page<BannerDTO> bannerDTOS = bannerService.getBanners(pageable);
 
-        return ResponseEntity.ok(bannerDTOS);
-    }
+    return ResponseEntity.ok(bannerDTOS);
+  }
 
-    @GetMapping("/activeAndFuture")
-    public ResponseEntity<List<Banner>> listBannersActiveAndFutureBanners(
-        @RequestParam Application application) {
-        List<Banner> bannerDTOS = bannerService.getActiveAndFutureBanners(application);
+  @GetMapping("/activeAndFuture")
+  public ResponseEntity<List<Banner>> listBannersActiveAndFutureBanners(
+      @RequestParam Application application) {
+    List<Banner> bannerDTOS = bannerService.getActiveAndFutureBanners(application);
 
-        return ResponseEntity.ok(bannerDTOS);
-    }
+    return ResponseEntity.ok(bannerDTOS);
+  }
 
-    @PutMapping
-    public ResponseEntity<BannerDTO> createBanner(@RequestBody BannerDTO bannerDTO) {
-        BannerDTO savedDTO = bannerService.createBanner(bannerDTO);
+  @PutMapping
+  public ResponseEntity<BannerDTO> createBanner(@RequestBody BannerDTO bannerDTO) {
+    BannerDTO savedDTO = bannerService.createBanner(bannerDTO);
 
-        return ResponseEntity.ok(savedDTO);
-    }
+    return ResponseEntity.ok(savedDTO);
+  }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<BannerDTO> updateBanner(@PathVariable UUID id, @RequestBody BannerDTO bannerDTO) {
-        bannerDTO.setId(id);
-        BannerDTO savedDTO = bannerService.save(bannerDTO);
+  @PostMapping("/{id}")
+  public ResponseEntity<BannerDTO> updateBanner(
+      @PathVariable UUID id, @RequestBody BannerDTO bannerDTO) {
+    bannerDTO.setId(id);
+    BannerDTO savedDTO = bannerService.save(bannerDTO);
 
-        return ResponseEntity.ok(savedDTO);
-    }
+    return ResponseEntity.ok(savedDTO);
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteBanner(@PathVariable UUID id) {
-        bannerService.deleteBanner(id);
+  @DeleteMapping("/{id}")
+  public ResponseEntity deleteBanner(@PathVariable UUID id) {
+    bannerService.deleteBanner(id);
 
-        return ResponseEntity.ok().build();
-    }
+    return ResponseEntity.ok().build();
+  }
 }

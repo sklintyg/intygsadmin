@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,85 +30,87 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 public class PrivatePractitionerFileWriter {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public ByteArrayOutputStream writeExcel(List<PrivatePractitioner> privatePractitionerList) throws IOException {
-        final var workbook = new XSSFWorkbook();
-        final var sheet = workbook.createSheet("Privatläkare");
+  public ByteArrayOutputStream writeExcel(List<PrivatePractitioner> privatePractitionerList)
+      throws IOException {
+    final var workbook = new XSSFWorkbook();
+    final var sheet = workbook.createSheet("Privatläkare");
 
-        int rowCount = 0;
+    int rowCount = 0;
 
-        final var headerRow = sheet.createRow(rowCount++);
-        int lastColumnIndex = writeHeader(headerRow, workbook);
+    final var headerRow = sheet.createRow(rowCount++);
+    int lastColumnIndex = writeHeader(headerRow, workbook);
 
-        for (PrivatePractitioner privatePractitioner : privatePractitionerList) {
-            final var row = sheet.createRow(rowCount++);
-            writePrivatePractitioner(privatePractitioner, row);
-        }
-
-        for (int a = 0; a <= lastColumnIndex; a++) {
-            sheet.autoSizeColumn(a);
-        }
-
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            workbook.write(outputStream);
-            return outputStream;
-        }
+    for (PrivatePractitioner privatePractitioner : privatePractitionerList) {
+      final var row = sheet.createRow(rowCount++);
+      writePrivatePractitioner(privatePractitioner, row);
     }
 
-    private int writeHeader(Row row, XSSFWorkbook workbook) {
-        final var style = createHeaderStyle(workbook);
-
-        int columnCount = 0;
-
-        Cell cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Personnummer");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("HSA-id");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Namn");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Bolagsnamn");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("E-post");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Registreringsdatum");
-
-        return columnCount;
+    for (int a = 0; a <= lastColumnIndex; a++) {
+      sheet.autoSizeColumn(a);
     }
 
-    private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
-        final var style = workbook.createCellStyle();
-        final var font = workbook.createFont();
-        font.setBold(true);
-        style.setFont(font);
-        return style;
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+      workbook.write(outputStream);
+      return outputStream;
     }
+  }
 
-    private void writePrivatePractitioner(PrivatePractitioner privatePractitioner, Row row) {
-        int columnCount = 0;
+  private int writeHeader(Row row, XSSFWorkbook workbook) {
+    final var style = createHeaderStyle(workbook);
 
-        final var registrationDate =
-            privatePractitioner.getRegistrationDate() != null ? formatter.format(privatePractitioner.getRegistrationDate()) : "";
+    int columnCount = 0;
 
-        Cell cell = row.createCell(columnCount++);
-        cell.setCellValue(privatePractitioner.getPersonId());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(privatePractitioner.getHsaId());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(privatePractitioner.getName());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(privatePractitioner.getCareproviderName());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(privatePractitioner.getEmail());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(registrationDate);
-    }
+    Cell cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Personnummer");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("HSA-id");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Namn");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Bolagsnamn");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("E-post");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Registreringsdatum");
 
+    return columnCount;
+  }
+
+  private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
+    final var style = workbook.createCellStyle();
+    final var font = workbook.createFont();
+    font.setBold(true);
+    style.setFont(font);
+    return style;
+  }
+
+  private void writePrivatePractitioner(PrivatePractitioner privatePractitioner, Row row) {
+    int columnCount = 0;
+
+    final var registrationDate =
+        privatePractitioner.getRegistrationDate() != null
+            ? formatter.format(privatePractitioner.getRegistrationDate())
+            : "";
+
+    Cell cell = row.createCell(columnCount++);
+    cell.setCellValue(privatePractitioner.getPersonId());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(privatePractitioner.getHsaId());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(privatePractitioner.getName());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(privatePractitioner.getCareproviderName());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(privatePractitioner.getEmail());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(registrationDate);
+  }
 }

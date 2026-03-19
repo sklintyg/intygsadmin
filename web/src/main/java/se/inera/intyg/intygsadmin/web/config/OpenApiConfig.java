@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,23 +25,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-
 @Profile("dev")
 @Configuration
 public class OpenApiConfig {
 
-    private final BuildProperties buildProperties;
+  private final BuildProperties buildProperties;
 
-    public OpenApiConfig(BuildProperties buildProperties) {
-        this.buildProperties = buildProperties;
-    }
+  public OpenApiConfig(BuildProperties buildProperties) {
+    this.buildProperties = buildProperties;
+  }
 
-    @Bean
-    public OpenAPI intygsadminOpenAPI() {
-        return new OpenAPI()
-            .info(new Info().title("Intygsadmin API")
+  @Bean
+  public OpenAPI intygsadminOpenAPI() {
+    return new OpenAPI()
+        .info(
+            new Info()
+                .title("Intygsadmin API")
                 .description("Intygsadmin är en del av Inera Intygstjänster")
-                .version(buildProperties.getVersion())
-            );
-    }
+                .version(buildProperties.getVersion()));
+  }
 }

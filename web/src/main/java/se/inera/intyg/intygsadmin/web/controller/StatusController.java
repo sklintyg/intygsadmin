@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.controller;
 
 import lombok.AllArgsConstructor;
@@ -45,72 +44,66 @@ import se.inera.intyg.intygsadmin.web.service.status.SendStatusService;
 @RequestMapping("/api/status")
 public class StatusController {
 
-    private final SendStatusService sendStatusService;
-    private final SendStatusForCertificatesService sendStatusForCertificatesService;
-    private final SendStatusForUnitsService sendStatusForUnitsService;
-    private final SendStatusForCareGiverService sendStatusForCareGiverService;
+  private final SendStatusService sendStatusService;
+  private final SendStatusForCertificatesService sendStatusForCertificatesService;
+  private final SendStatusForUnitsService sendStatusForUnitsService;
+  private final SendStatusForCareGiverService sendStatusForCareGiverService;
 
+  @PostMapping("/{statusId}")
+  public SendStatusResponseDTO sendStatus(@PathVariable String statusId) {
+    final var response = sendStatusService.send(statusId);
+    return SendStatusResponseDTO.builder().count(response).build();
+  }
 
-    @PostMapping("/{statusId}")
-    public SendStatusResponseDTO sendStatus(@PathVariable String statusId) {
-        final var response = sendStatusService.send(statusId);
-        return SendStatusResponseDTO.builder()
-            .count(response)
-            .build();
-    }
+  @PostMapping("/certificates")
+  public SendStatusResponseDTO sendStatusForCertificate(
+      @RequestBody SendStatusForCertificatesRequestDTO request) {
+    final var response = sendStatusForCertificatesService.send(request);
+    return SendStatusResponseDTO.builder().count(response).build();
+  }
 
-    @PostMapping("/certificates")
-    public SendStatusResponseDTO sendStatusForCertificate(@RequestBody SendStatusForCertificatesRequestDTO request) {
-        final var response = sendStatusForCertificatesService.send(request);
-        return SendStatusResponseDTO.builder()
-            .count(response)
-            .build();
-    }
+  @PostMapping("/count/certificates")
+  public CountStatusesResponseDTO countStatusesForCertificates(
+      @RequestBody CountStatusesForCertificatesRequestDTO request) {
+    final var response = sendStatusForCertificatesService.count(request);
+    return CountStatusesResponseDTO.builder()
+        .count(response.getCount())
+        .max(response.getMax())
+        .build();
+  }
 
-    @PostMapping("/count/certificates")
-    public CountStatusesResponseDTO countStatusesForCertificates(@RequestBody CountStatusesForCertificatesRequestDTO request) {
-        final var response = sendStatusForCertificatesService.count(request);
-        return CountStatusesResponseDTO.builder()
-            .count(response.getCount())
-            .max(response.getMax())
-            .build();
-    }
+  @PostMapping("/units")
+  public SendStatusResponseDTO sendStatusForUnits(
+      @RequestBody SendStatusForUnitsRequestDTO request) {
+    final var response = sendStatusForUnitsService.send(request);
+    return SendStatusResponseDTO.builder().count(response).build();
+  }
 
-    @PostMapping("/units")
-    public SendStatusResponseDTO sendStatusForUnits(@RequestBody SendStatusForUnitsRequestDTO request) {
-        final var response = sendStatusForUnitsService.send(request);
-        return SendStatusResponseDTO.builder()
-            .count(response)
-            .build();
-    }
+  @PostMapping("/count/units")
+  public CountStatusesResponseDTO countStatusesForUnits(
+      @RequestBody CountStatusesForUnitsRequestDTO request) {
+    final var response = sendStatusForUnitsService.count(request);
+    return CountStatusesResponseDTO.builder()
+        .count(response.getCount())
+        .max(response.getMax())
+        .build();
+  }
 
-    @PostMapping("/count/units")
-    public CountStatusesResponseDTO countStatusesForUnits(@RequestBody CountStatusesForUnitsRequestDTO request) {
-        final var response = sendStatusForUnitsService.count(request);
-        return CountStatusesResponseDTO.builder()
-            .count(response.getCount())
-            .max(response.getMax())
-            .build();
-    }
+  @PostMapping("/caregiver/{careGiverId}")
+  public SendStatusResponseDTO sendStatusForCareGiver(
+      @PathVariable String careGiverId, @RequestBody SendStatusForCareGiverRequestDTO request) {
+    final var response = sendStatusForCareGiverService.send(careGiverId, request);
+    return SendStatusResponseDTO.builder().count(response).build();
+  }
 
-    @PostMapping("/caregiver/{careGiverId}")
-    public SendStatusResponseDTO sendStatusForCareGiver(@PathVariable String careGiverId,
-        @RequestBody SendStatusForCareGiverRequestDTO request) {
-        final var response = sendStatusForCareGiverService.send(careGiverId, request);
-        return SendStatusResponseDTO.builder()
-            .count(response)
-            .build();
-    }
-
-    @PostMapping("/count/caregiver/{careGiverId}")
-    public CountStatusesResponseDTO countStatusesForCareGiver(@PathVariable String careGiverId,
-        @RequestBody CountStatusesForCareGiverRequestDTO request) {
-        log.info("Count statuses for care giver with id: {}", careGiverId);
-        final var response = sendStatusForCareGiverService.count(careGiverId, request);
-        return CountStatusesResponseDTO.builder()
-            .count(response.getCount())
-            .max(response.getMax())
-            .build();
-    }
-
+  @PostMapping("/count/caregiver/{careGiverId}")
+  public CountStatusesResponseDTO countStatusesForCareGiver(
+      @PathVariable String careGiverId, @RequestBody CountStatusesForCareGiverRequestDTO request) {
+    log.info("Count statuses for care giver with id: {}", careGiverId);
+    final var response = sendStatusForCareGiverService.count(careGiverId, request);
+    return CountStatusesResponseDTO.builder()
+        .count(response.getCount())
+        .max(response.getMax())
+        .build();
+  }
 }

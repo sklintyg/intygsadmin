@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,16 +28,17 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 public class PrivatePractitionerFileWriterTest {
 
-    private List<PrivatePractitioner> createPrivatePractitioners() {
-        return List.of(new PrivatePractitioner("HSAID", "PERSON_ID", "NAME", "CAREPROIVIDER", "EMAIL@EMAIL.COM",
-            LocalDateTime.now()));
-    }
+  private List<PrivatePractitioner> createPrivatePractitioners() {
+    return List.of(
+        new PrivatePractitioner(
+            "HSAID", "PERSON_ID", "NAME", "CAREPROIVIDER", "EMAIL@EMAIL.COM", LocalDateTime.now()));
+  }
 
-    @Test
-    public void testWriteExcel() throws IOException {
-        final var byteArrayOutputStream = new PrivatePractitionerFileWriter().writeExcel(createPrivatePractitioners());
+  @Test
+  public void testWriteExcel() throws IOException {
+    final var byteArrayOutputStream =
+        new PrivatePractitionerFileWriter().writeExcel(createPrivatePractitioners());
 
-        assertTrue(byteArrayOutputStream.size() > 0);
-    }
-
+    assertTrue(byteArrayOutputStream.size() > 0);
+  }
 }

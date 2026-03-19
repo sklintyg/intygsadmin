@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,21 +29,22 @@ import java.util.UUID;
 
 public abstract class TestSupport {
 
-    private final DateTimeFormatter idFormatter = DateTimeFormatter.ofPattern("yyyyMMddmmss");
+  private final DateTimeFormatter idFormatter = DateTimeFormatter.ofPattern("yyyyMMddmmss");
 
-    private final EnhancedRandom enhancedRandom = EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
-        .randomizationDepth(10)
-        .collectionSizeRange(1, 20)
-        .charset(StandardCharsets.UTF_8)
-        .excludeField(named("id").and(ofType(UUID.class)))
-        .scanClasspathForConcreteTypes(true)
-        .build();
+  private final EnhancedRandom enhancedRandom =
+      EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
+          .randomizationDepth(10)
+          .collectionSizeRange(1, 20)
+          .charset(StandardCharsets.UTF_8)
+          .excludeField(named("id").and(ofType(UUID.class)))
+          .scanClasspathForConcreteTypes(true)
+          .build();
 
-    protected EnhancedRandom randomizer() {
-        return enhancedRandom;
-    }
+  protected EnhancedRandom randomizer() {
+    return enhancedRandom;
+  }
 
-    protected <T> T randomize(final Class<T> type, final String... excludedFields) {
-        return enhancedRandom.nextObject(type, excludedFields);
-    }
+  protected <T> T randomize(final Class<T> type, final String... excludedFields) {
+    return enhancedRandom.nextObject(type, excludedFields);
+  }
 }

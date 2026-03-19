@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,15 +26,13 @@ import se.inera.intyg.infra.security.common.cookie.IneraCookieSerializer;
 @Configuration
 public class SessionConfig {
 
-
-    @Bean
-    public CookieSerializer cookieSerializer() {
-        /*
-        This is needed to make IdP functionality work.
-        This will not satisfy all browsers, but it works for IE, Chrome and Edge.
-        Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
-         */
-        return new IneraCookieSerializer();
-    }
-
+  @Bean
+  public CookieSerializer cookieSerializer() {
+    /*
+    This is needed to make IdP functionality work.
+    This will not satisfy all browsers, but it works for IE, Chrome and Edge.
+    Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
+     */
+    return new IneraCookieSerializer();
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.auth;
 
 import java.util.Optional;
@@ -34,35 +33,38 @@ import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
 @RequiredArgsConstructor
 public class AuthenticationEventListener {
 
-    private final MonitoringLogService monitoringLogService;
+  private final MonitoringLogService monitoringLogService;
 
-    @EventListener
-    public void onLoginSuccess(InteractiveAuthenticationSuccessEvent success) {
-        final var intygsadminUser = getIntygsAdminUserUser(success.getAuthentication().getPrincipal());
-        intygsadminUser.ifPresent(user ->
-            monitoringLogService.logUserLogin(user.getEmployeeHsaId(), user.getAuthenticationMethod())
-        );
-    }
+  @EventListener
+  public void onLoginSuccess(InteractiveAuthenticationSuccessEvent success) {
+    final var intygsadminUser = getIntygsAdminUserUser(success.getAuthentication().getPrincipal());
+    intygsadminUser.ifPresent(
+        user ->
+            monitoringLogService.logUserLogin(
+                user.getEmployeeHsaId(), user.getAuthenticationMethod()));
+  }
 
-    @EventListener
-    public void onLogoutSuccess(LogoutSuccessEvent success) {
-        final var intygsadminUser = getIntygsAdminUserUser(success.getAuthentication().getPrincipal());
-        intygsadminUser.ifPresent(user ->
-            monitoringLogService.logUserLogout(user.getEmployeeHsaId(), user.getAuthenticationMethod())
-        );
-    }
+  @EventListener
+  public void onLogoutSuccess(LogoutSuccessEvent success) {
+    final var intygsadminUser = getIntygsAdminUserUser(success.getAuthentication().getPrincipal());
+    intygsadminUser.ifPresent(
+        user ->
+            monitoringLogService.logUserLogout(
+                user.getEmployeeHsaId(), user.getAuthenticationMethod()));
+  }
 
-    @EventListener
-    public void onAuthenticationFailure(AbstractAuthenticationFailureEvent authenticationFailureEvent) {
-        final var e = authenticationFailureEvent.getException();
-        monitoringLogService.logFailedLogin(e.getLocalizedMessage());
-    }
+  @EventListener
+  public void onAuthenticationFailure(
+      AbstractAuthenticationFailureEvent authenticationFailureEvent) {
+    final var e = authenticationFailureEvent.getException();
+    monitoringLogService.logFailedLogin(e.getLocalizedMessage());
+  }
 
-    private static Optional<IntygsadminUser> getIntygsAdminUserUser(Object principal) {
-        if (principal instanceof IntygsadminUser intygsadminUser) {
-            return Optional.of(intygsadminUser);
-        }
-        log.warn("Invalid principal [{}]", principal.getClass().getSimpleName());
-        return Optional.empty();
+  private static Optional<IntygsadminUser> getIntygsAdminUserUser(Object principal) {
+    if (principal instanceof IntygsadminUser intygsadminUser) {
+      return Optional.of(intygsadminUser);
     }
+    log.warn("Invalid principal [{}]", principal.getClass().getSimpleName());
+    return Optional.empty();
+  }
 }

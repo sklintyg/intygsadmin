@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,18 +30,20 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts;
 
 class UserControllerIT extends BaseRestIntegrationTest {
 
-    @Test
-    void getUser() {
-        RestAssured.sessionId = getAuthSession(ADMIN_USER);
+  @Test
+  void getUser() {
+    RestAssured.sessionId = getAuthSession(ADMIN_USER);
 
-        given().expect().statusCode(OK)
-            .when()
-            .get(API_ANVANDARE)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-user-response-schema.json"))
-            .body("logoutUrl", is(AuthenticationConstansts.LOGOUT_URL))
-            .body("employeeHsaId", is(ADMIN_USER.getEmployeeHsaId()))
-            .body("intygsadminRole", is(ADMIN_USER.getIntygsadminRole()))
-            .body("name", is(ADMIN_USER.getName()));
-    }
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(API_ANVANDARE)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-user-response-schema.json"))
+        .body("logoutUrl", is(AuthenticationConstansts.LOGOUT_URL))
+        .body("employeeHsaId", is(ADMIN_USER.getEmployeeHsaId()))
+        .body("intygsadminRole", is(ADMIN_USER.getIntygsadminRole()))
+        .body("name", is(ADMIN_USER.getName()));
+  }
 }

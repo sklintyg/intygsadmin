@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,19 +27,20 @@ import se.inera.intyg.intygsadmin.web.BaseRestIntegrationTest;
 
 public class BannerEndpointIT extends BaseRestIntegrationTest {
 
-    private static final String BANNER_ACTUATOR_ENDPOINT = "/actuator/banner";
+  private static final String BANNER_ACTUATOR_ENDPOINT = "/actuator/banner";
 
-    public BannerEndpointIT() {
-        baseUrl = System.getProperty("integration.tests.actuatorUrl", "http://localhost:8170");
-    }
+  public BannerEndpointIT() {
+    baseUrl = System.getProperty("integration.tests.actuatorUrl", "http://localhost:8170");
+  }
 
-    @Test
-    public void testGetBannersForWebcert() {
-        given().expect().statusCode(OK)
-            .when()
-            .get(BANNER_ACTUATOR_ENDPOINT + "/" + Application.WEBCERT)
-            .then()
-            .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
-    }
-
+  @Test
+  public void testGetBannersForWebcert() {
+    given()
+        .expect()
+        .statusCode(OK)
+        .when()
+        .get(BANNER_ACTUATOR_ENDPOINT + "/" + Application.WEBCERT)
+        .then()
+        .body(matchesJsonSchemaInClasspath("jsonschema/get-banners-actuator-response-schema.json"));
+  }
 }

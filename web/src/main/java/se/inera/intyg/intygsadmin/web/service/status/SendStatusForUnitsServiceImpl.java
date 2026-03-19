@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import lombok.RequiredArgsConstructor;
@@ -33,22 +32,23 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForUnitsIntegrat
 @RequiredArgsConstructor
 public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService {
 
-    private final WCIntegrationRestService wcIntegrationRestService;
-    private final SendNotificationRequestValidator sendNotificationRequestValidator;
+  private final WCIntegrationRestService wcIntegrationRestService;
+  private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @Value("${timeinterval.maxdays.unit:7}")
-    private int maxTimeInterval;
+  @Value("${timeinterval.maxdays.unit:7}")
+  private int maxTimeInterval;
 
-    @Value("${timelimit.daysback.start:365}")
-    private int maxDaysBackStartDate;
+  @Value("${timelimit.daysback.start:365}")
+  private int maxDaysBackStartDate;
 
-    @Override
-    public Integer send(SendStatusForUnitsRequestDTO request) {
-        sendNotificationRequestValidator.validateIds(request.getUnitIds());
-        sendNotificationRequestValidator.validateDate(request.getStart(), request.getEnd(),
-            maxTimeInterval, maxDaysBackStartDate);
+  @Override
+  public Integer send(SendStatusForUnitsRequestDTO request) {
+    sendNotificationRequestValidator.validateIds(request.getUnitIds());
+    sendNotificationRequestValidator.validateDate(
+        request.getStart(), request.getEnd(), maxTimeInterval, maxDaysBackStartDate);
 
-        final var integrationRequest = SendStatusForUnitsIntegrationRequestDTO.builder()
+    final var integrationRequest =
+        SendStatusForUnitsIntegrationRequestDTO.builder()
             .unitIds(request.getUnitIds())
             .statuses(request.getStatuses())
             .start(request.getStart())
@@ -56,23 +56,21 @@ public class SendStatusForUnitsServiceImpl implements SendStatusForUnitsService 
             .activationTime(request.getActivationTime())
             .build();
 
-        final var response = wcIntegrationRestService.sendStatusForUnits(integrationRequest);
-        return response.getCount();
-    }
+    final var response = wcIntegrationRestService.sendStatusForUnits(integrationRequest);
+    return response.getCount();
+  }
 
-    @Override
-    public CountStatusesDTO count(CountStatusesForUnitsRequestDTO request) {
-        final var integrationRequest = CountStatusesForUnitsIntegrationRequestDTO.builder()
+  @Override
+  public CountStatusesDTO count(CountStatusesForUnitsRequestDTO request) {
+    final var integrationRequest =
+        CountStatusesForUnitsIntegrationRequestDTO.builder()
             .unitIds(request.getUnitIds())
             .start(request.getStart())
             .end(request.getEnd())
             .statuses(request.getStatuses())
             .build();
 
-        final var response = wcIntegrationRestService.countStatusesForUnits(integrationRequest);
-        return CountStatusesDTO.builder()
-            .count(response.getCount())
-            .max(response.getMax())
-            .build();
-    }
+    final var response = wcIntegrationRestService.countStatusesForUnits(integrationRequest);
+    return CountStatusesDTO.builder().count(response.getCount()).max(response.getMax()).build();
+  }
 }

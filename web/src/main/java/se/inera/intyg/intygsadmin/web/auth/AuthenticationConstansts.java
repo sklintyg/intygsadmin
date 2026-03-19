@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,15 +20,14 @@ package se.inera.intyg.intygsadmin.web.auth;
 
 public final class AuthenticationConstansts {
 
-    public static final String LOGIN_URL = "/oauth2/authorization/siths";
-    public static final String LOGIN_REDIRECT_URL = "/login/inera";
-    public static final String LOGOUT_URL = "/logout";
-    public static final String FAKE_PROFILE = "fake";
-    public static final String FAKE_LOGIN_ENDPOINT = "/fake-api/login";
-    public static final String FAKE_LOGIN_URL = "/welcome.html";
-    public static final String SUCCESSFUL_LOGOUT_REDIRECT_URL = "/#/loggedout/m";
+  public static final String LOGIN_URL = "/oauth2/authorization/siths";
+  public static final String LOGIN_REDIRECT_URL = "/login/inera";
+  public static final String LOGOUT_URL = "/logout";
+  public static final String FAKE_PROFILE = "fake";
+  public static final String FAKE_LOGIN_ENDPOINT = "/fake-api/login";
+  public static final String FAKE_LOGIN_URL = "/welcome.html";
+  public static final String SUCCESSFUL_LOGOUT_REDIRECT_URL = "/#/loggedout/m";
 
-    // Prevent instantiation
-    private AuthenticationConstansts() {
-    }
+  // Prevent instantiation
+  private AuthenticationConstansts() {}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -47,83 +47,88 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @Service
 public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
 
-    private static final String UNIT_ID_1 = "SE4815162344-1A01";
-    private static final String UNIT_ID_2 = "SE4815162344-1A02";
-    private static final String UNIT_ID_3 = "SE4815162344-1A03";
-    private static final String UNIT_ID_4 = "SE4815162344-1A04";
+  private static final String UNIT_ID_1 = "SE4815162344-1A01";
+  private static final String UNIT_ID_2 = "SE4815162344-1A02";
+  private static final String UNIT_ID_3 = "SE4815162344-1A03";
+  private static final String UNIT_ID_4 = "SE4815162344-1A04";
 
-    public static final String INTYG_ID_1 = "1edf4f03-0c48-4fe8-9a64-64946aae212a";
-    private static final String INTYG_ID_2 = "9afbe083-4da3-41e6-a2a6-43a8dee9d5a4";
+  public static final String INTYG_ID_1 = "1edf4f03-0c48-4fe8-9a64-64946aae212a";
+  private static final String INTYG_ID_2 = "9afbe083-4da3-41e6-a2a6-43a8dee9d5a4";
 
-    private Map<String, IntegratedUnitDTO> validUnit = new HashMap<>();
-    private Map<String, WcIntygInfo> intygInfoMap = new HashMap<>();
+  private Map<String, IntegratedUnitDTO> validUnit = new HashMap<>();
+  private Map<String, WcIntygInfo> intygInfoMap = new HashMap<>();
 
-    public WCIntegrationRestServiceStub() {
-        addUnit(UNIT_ID_1);
-        addUnit(UNIT_ID_2);
-        addUnit(UNIT_ID_3);
-        addUnit(UNIT_ID_4);
+  public WCIntegrationRestServiceStub() {
+    addUnit(UNIT_ID_1);
+    addUnit(UNIT_ID_2);
+    addUnit(UNIT_ID_3);
+    addUnit(UNIT_ID_4);
 
-        addIntyg(INTYG_ID_1);
-        addIntyg(INTYG_ID_2, INTYG_ID_1); // Only WC
+    addIntyg(INTYG_ID_1);
+    addIntyg(INTYG_ID_2, INTYG_ID_1); // Only WC
+  }
+
+  @Override
+  public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
+    if (validUnit.containsKey(hsaId)) {
+      return validUnit.get(hsaId);
+    }
+    return null;
+  }
+
+  @Override
+  public List<IntegratedUnitDTO> getAllIntegratedUnits() {
+    return new ArrayList<>(validUnit.values());
+  }
+
+  @Override
+  public WcIntygInfo getIntygInfo(String intygId) {
+    if (intygInfoMap.containsKey(intygId)) {
+      return intygInfoMap.get(intygId);
     }
 
-    @Override
-    public IntegratedUnitDTO getIntegratedUnit(String hsaId) {
-        if (validUnit.containsKey(hsaId)) {
-            return validUnit.get(hsaId);
-        }
-        return null;
-    }
+    return null;
+  }
 
-    @Override
-    public List<IntegratedUnitDTO> getAllIntegratedUnits() {
-        return new ArrayList<>(validUnit.values());
-    }
+  @Override
+  public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
+    return TestCertificateEraseResult.create(0, 0);
+  }
 
-    @Override
-    public WcIntygInfo getIntygInfo(String intygId) {
-        if (intygInfoMap.containsKey(intygId)) {
-            return intygInfoMap.get(intygId);
-        }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
+    return SendStatusIntegrationResponseDTO.builder().build();
+  }
 
-        return null;
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatusForCertificates(
+      SendStatusForCertificatesIntegrationRequestDTO request) {
+    return SendStatusIntegrationResponseDTO.builder().build();
+  }
 
-    @Override
-    public TestCertificateEraseResult eraseTestCertificates(LocalDateTime from, LocalDateTime to) {
-        return TestCertificateEraseResult.create(0, 0);
-    }
+  @Override
+  public CountStatusesIntegrationResponseDTO countStatusesForCertificates(
+      CountStatusesForCertificatesIntegrationRequestDTO request) {
+    return CountStatusesIntegrationResponseDTO.builder().build();
+  }
 
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatus(SendStatusIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatusForUnits(
+      SendStatusForUnitsIntegrationRequestDTO request) {
+    return SendStatusIntegrationResponseDTO.builder().build();
+  }
 
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatusForCertificates(SendStatusForCertificatesIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
-    }
+  @Override
+  public CountStatusesIntegrationResponseDTO countStatusesForUnits(
+      CountStatusesForUnitsIntegrationRequestDTO request) {
+    return CountStatusesIntegrationResponseDTO.builder().build();
+  }
 
-    @Override
-    public CountStatusesIntegrationResponseDTO countStatusesForCertificates(CountStatusesForCertificatesIntegrationRequestDTO request) {
-        return CountStatusesIntegrationResponseDTO.builder().build();
-    }
-
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatusForUnits(SendStatusForUnitsIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
-    }
-
-    @Override
-    public CountStatusesIntegrationResponseDTO countStatusesForUnits(CountStatusesForUnitsIntegrationRequestDTO request) {
-        return CountStatusesIntegrationResponseDTO.builder().build();
-    }
-
-    @Override
-    public SendStatusIntegrationResponseDTO sendStatusForCareGiver(SendStatusForCareGiverIntegrationRequestDTO request) {
-        return SendStatusIntegrationResponseDTO.builder().build();
-    }
+  @Override
+  public SendStatusIntegrationResponseDTO sendStatusForCareGiver(
+      SendStatusForCareGiverIntegrationRequestDTO request) {
+    return SendStatusIntegrationResponseDTO.builder().build();
+  }
 
   @Override
   public CountStatusesIntegrationResponseDTO countStatusesForCareGiver(
@@ -131,72 +136,96 @@ public class WCIntegrationRestServiceStub implements WCIntegrationRestService {
     return CountStatusesIntegrationResponseDTO.builder().build();
   }
 
-    private void addUnit(String unitId) {
-        int number = validUnit.size() + 1;
+  private void addUnit(String unitId) {
+    int number = validUnit.size() + 1;
 
-        IntegratedUnitDTO enhet = new IntegratedUnitDTO(unitId,
+    IntegratedUnitDTO enhet =
+        new IntegratedUnitDTO(
+            unitId,
             "enhetsnamn" + number,
             "VardgivareId" + number,
             "vargivarenamn" + number,
             LocalDateTime.now(),
             LocalDateTime.now());
 
-        validUnit.put(unitId, enhet);
+    validUnit.put(unitId, enhet);
+  }
+
+  private void addIntyg(String intygId) {
+    addIntyg(intygId, null);
+  }
+
+  private void addIntyg(String intygId, String intygId2) {
+    LocalDateTime date = LocalDateTime.now();
+
+    WcIntygInfo intygInfo = new WcIntygInfo();
+    intygInfo.setCreatedInWC(true);
+    intygInfo.setIntygId(intygId);
+    intygInfo.setIntygType("lisjp");
+    intygInfo.setIntygVersion("1.0");
+    intygInfo.setDraftCreated(date);
+    intygInfo.setSignedDate(date.plusHours(1));
+    intygInfo.setSentToRecipient(date.plusHours(1));
+    intygInfo.setCareGiverHsaId("vg1-id");
+    intygInfo.setCareGiverName("vg1");
+    intygInfo.setCareUnitName("ve1");
+    intygInfo.setCareUnitHsaId("ve1-id");
+    intygInfo.setSignedByName("name");
+    intygInfo.setSignedByHsaId("hsaId");
+    intygInfo.setTestCertificate(false);
+
+    if (!Objects.isNull(intygId2)) {
+      intygInfo.getEvents().add(createEvent(date, IntygInfoEventType.IS019, "intygsId", intygId2));
     }
 
-    private void addIntyg(String intygId) {
-        addIntyg(intygId, null);
+    intygInfo
+        .getEvents()
+        .add(
+            createEvent(
+                date,
+                IntygInfoEventType.IS001,
+                "hsaId",
+                "created-by-id",
+                "name",
+                "created-by-name"));
+    intygInfo.getEvents().add(createEvent(date.plusMinutes(20), IntygInfoEventType.IS018));
+    intygInfo
+        .getEvents()
+        .add(
+            createEvent(
+                date.plusHours(1), IntygInfoEventType.IS004, "hsaId", "hsaId", "name", "name"));
+    intygInfo
+        .getEvents()
+        .add(createEvent(date.plusHours(1), IntygInfoEventType.IS006, "intygsmottagare", "FK"));
+
+    intygInfoMap.put(intygInfo.getIntygId(), intygInfo);
+  }
+
+  private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type) {
+    return createEvent(date, type, null, null);
+  }
+
+  private IntygInfoEvent createEvent(
+      LocalDateTime date, IntygInfoEventType type, String key1, String data1) {
+    return createEvent(date, type, key1, data1, null, null);
+  }
+
+  private IntygInfoEvent createEvent(
+      LocalDateTime date,
+      IntygInfoEventType type,
+      String key1,
+      String data1,
+      String key2,
+      String data2) {
+    IntygInfoEvent event = new IntygInfoEvent(Source.WEBCERT, date, type);
+
+    if (!Objects.isNull(key1)) {
+      event.addData(key1, data1);
     }
 
-    private void addIntyg(String intygId, String intygId2) {
-        LocalDateTime date = LocalDateTime.now();
-
-        WcIntygInfo intygInfo = new WcIntygInfo();
-        intygInfo.setCreatedInWC(true);
-        intygInfo.setIntygId(intygId);
-        intygInfo.setIntygType("lisjp");
-        intygInfo.setIntygVersion("1.0");
-        intygInfo.setDraftCreated(date);
-        intygInfo.setSignedDate(date.plusHours(1));
-        intygInfo.setSentToRecipient(date.plusHours(1));
-        intygInfo.setCareGiverHsaId("vg1-id");
-        intygInfo.setCareGiverName("vg1");
-        intygInfo.setCareUnitName("ve1");
-        intygInfo.setCareUnitHsaId("ve1-id");
-        intygInfo.setSignedByName("name");
-        intygInfo.setSignedByHsaId("hsaId");
-        intygInfo.setTestCertificate(false);
-
-        if (!Objects.isNull(intygId2)) {
-            intygInfo.getEvents().add(createEvent(date, IntygInfoEventType.IS019, "intygsId", intygId2));
-        }
-
-        intygInfo.getEvents().add(createEvent(date, IntygInfoEventType.IS001, "hsaId", "created-by-id", "name", "created-by-name"));
-        intygInfo.getEvents().add(createEvent(date.plusMinutes(20), IntygInfoEventType.IS018));
-        intygInfo.getEvents().add(createEvent(date.plusHours(1), IntygInfoEventType.IS004, "hsaId", "hsaId", "name", "name"));
-        intygInfo.getEvents().add(createEvent(date.plusHours(1), IntygInfoEventType.IS006, "intygsmottagare", "FK"));
-
-        intygInfoMap.put(intygInfo.getIntygId(), intygInfo);
+    if (!Objects.isNull(key2)) {
+      event.addData(key2, data2);
     }
-
-    private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type) {
-        return createEvent(date, type, null, null);
-    }
-
-    private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type, String key1, String data1) {
-        return createEvent(date, type, key1, data1, null, null);
-    }
-
-    private IntygInfoEvent createEvent(LocalDateTime date, IntygInfoEventType type, String key1, String data1, String key2, String data2) {
-        IntygInfoEvent event = new IntygInfoEvent(Source.WEBCERT, date, type);
-
-        if (!Objects.isNull(key1)) {
-            event.addData(key1, data1);
-        }
-
-        if (!Objects.isNull(key2)) {
-            event.addData(key2, data2);
-        }
-        return event;
-    }
+    return event;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,12 +24,10 @@ import org.springframework.context.annotation.Import;
 import se.inera.intyg.intygsadmin.persistence.PersistenceConfig;
 
 @SpringBootApplication
-@Import({
-    PersistenceConfig.class
-})
+@Import({PersistenceConfig.class})
 public class IntygsadminApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(IntygsadminApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(IntygsadminApplication.class, args);
+  }
 }

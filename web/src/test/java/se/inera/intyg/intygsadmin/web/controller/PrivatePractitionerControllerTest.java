@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,40 +34,38 @@ import se.inera.intyg.intygsadmin.web.service.PrivatePractitionerService;
 @ExtendWith(MockitoExtension.class)
 class PrivatePractitionerControllerTest {
 
-    @Mock
-    private PrivatePractitionerService privatePractitionerService;
+  @Mock private PrivatePractitionerService privatePractitionerService;
 
-    @InjectMocks
-    private PrivatePractitionerController privatePractitionerController;
+  @InjectMocks private PrivatePractitionerController privatePractitionerController;
 
-    @Test
-    public void shouldReturnStatusNoContentIfNoPrivatePractitioners() throws IOException {
-        when(privatePractitionerService.getPrivatePractitionerFile()).thenReturn(null);
+  @Test
+  public void shouldReturnStatusNoContentIfNoPrivatePractitioners() throws IOException {
+    when(privatePractitionerService.getPrivatePractitionerFile()).thenReturn(null);
 
-        final var response = privatePractitionerController.getPrivatePractitionerFile();
+    final var response = privatePractitionerController.getPrivatePractitionerFile();
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-    }
+    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+  }
 
-    @Test
-    public void shouldReturnStatusInternalServerErrorOnIOExeptkon() throws IOException {
-        when(privatePractitionerService.getPrivatePractitionerFile()).thenThrow(new IOException("IOException"));
+  @Test
+  public void shouldReturnStatusInternalServerErrorOnIOExeptkon() throws IOException {
+    when(privatePractitionerService.getPrivatePractitionerFile())
+        .thenThrow(new IOException("IOException"));
 
-        final var response = privatePractitionerController.getPrivatePractitionerFile();
+    final var response = privatePractitionerController.getPrivatePractitionerFile();
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+  }
 
-    @Test
-    public void shouldReturnOkOnNonNullResponse() throws IOException {
-        final var byteArray = "Private practitioner file".getBytes();
-        when(privatePractitionerService.getPrivatePractitionerFile()).thenReturn(byteArray);
+  @Test
+  public void shouldReturnOkOnNonNullResponse() throws IOException {
+    final var byteArray = "Private practitioner file".getBytes();
+    when(privatePractitionerService.getPrivatePractitionerFile()).thenReturn(byteArray);
 
-        final var response = privatePractitionerController.getPrivatePractitionerFile();
+    final var response = privatePractitionerController.getPrivatePractitionerFile();
 
-        assertAll(
-            () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
-            () -> assertEquals(byteArray, response.getBody())
-        );
-    }
+    assertAll(
+        () -> assertEquals(HttpStatus.OK, response.getStatusCode()),
+        () -> assertEquals(byteArray, response.getBody()));
+  }
 }

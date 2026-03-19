@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,74 +42,74 @@ import se.inera.intyg.intygsadmin.web.auth.AuthenticationMethod;
 @ExtendWith(MockitoExtension.class)
 public class MonitoringLogServiceImplTest {
 
-    @Mock
-    private Appender<ILoggingEvent> appender;
+  @Mock private Appender<ILoggingEvent> appender;
 
-    @Captor
-    private ArgumentCaptor<ILoggingEvent> captor;
+  @Captor private ArgumentCaptor<ILoggingEvent> captor;
 
-    @InjectMocks
-    private MonitoringLogServiceImpl monitoringLogService;
+  @InjectMocks private MonitoringLogServiceImpl monitoringLogService;
 
-    @BeforeEach
-    public void setup() {
-        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory
-            .getLogger(Logger.ROOT_LOGGER_NAME);
-        logger.addAppender(appender);
-    }
+  @BeforeEach
+  public void setup() {
+    ch.qos.logback.classic.Logger logger =
+        (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+    logger.addAppender(appender);
+  }
 
-    @Test
-    public void testLogUserLogin() {
-        monitoringLogService.logUserLogin("HSA1", AuthenticationMethod.FAKE);
+  @Test
+  public void testLogUserLogin() {
+    monitoringLogService.logUserLogin("HSA1", AuthenticationMethod.FAKE);
 
-        verify(appender, times(1)).doAppend(captor.capture());
+    verify(appender, times(1)).doAppend(captor.capture());
 
-        List<ILoggingEvent> allValues = captor.getAllValues();
-        assertNotNull(allValues);
-        assertEquals(1, allValues.size());
+    List<ILoggingEvent> allValues = captor.getAllValues();
+    assertNotNull(allValues);
+    assertEquals(1, allValues.size());
 
-        ILoggingEvent iLoggingEvent = allValues.get(0);
+    ILoggingEvent iLoggingEvent = allValues.get(0);
 
-        assertEquals(Level.INFO, iLoggingEvent.getLevel());
+    assertEquals(Level.INFO, iLoggingEvent.getLevel());
 
-        // This must match the Logtash filter/pattern. Changes must bu reflected in these as well.
-        assertEquals("USER_LOGIN Login user 'HSA1' using scheme 'FAKE'", iLoggingEvent.getFormattedMessage());
-    }
+    // This must match the Logtash filter/pattern. Changes must bu reflected in these as well.
+    assertEquals(
+        "USER_LOGIN Login user 'HSA1' using scheme 'FAKE'", iLoggingEvent.getFormattedMessage());
+  }
 
-    @Test
-    public void testLogUserLogout() {
-        monitoringLogService.logUserLogout("HSA1", AuthenticationMethod.FAKE);
+  @Test
+  public void testLogUserLogout() {
+    monitoringLogService.logUserLogout("HSA1", AuthenticationMethod.FAKE);
 
-        verify(appender, times(1)).doAppend(captor.capture());
+    verify(appender, times(1)).doAppend(captor.capture());
 
-        List<ILoggingEvent> allValues = captor.getAllValues();
-        assertNotNull(allValues);
-        assertEquals(1, allValues.size());
+    List<ILoggingEvent> allValues = captor.getAllValues();
+    assertNotNull(allValues);
+    assertEquals(1, allValues.size());
 
-        ILoggingEvent iLoggingEvent = allValues.get(0);
+    ILoggingEvent iLoggingEvent = allValues.get(0);
 
-        assertEquals(Level.INFO, iLoggingEvent.getLevel());
+    assertEquals(Level.INFO, iLoggingEvent.getLevel());
 
-        // This must match the Logtash filter/pattern. Changes must bu reflected in these as well.
-        assertEquals("USER_LOGOUT Logout user 'HSA1' using scheme 'FAKE'", iLoggingEvent.getFormattedMessage());
-    }
+    // This must match the Logtash filter/pattern. Changes must bu reflected in these as well.
+    assertEquals(
+        "USER_LOGOUT Logout user 'HSA1' using scheme 'FAKE'", iLoggingEvent.getFormattedMessage());
+  }
 
-    @Test
-    public void testLogUserSessionExpired() {
-        monitoringLogService.logUserSessionExpired("HSA1", AuthenticationMethod.FAKE);
+  @Test
+  public void testLogUserSessionExpired() {
+    monitoringLogService.logUserSessionExpired("HSA1", AuthenticationMethod.FAKE);
 
-        verify(appender, times(1)).doAppend(captor.capture());
+    verify(appender, times(1)).doAppend(captor.capture());
 
-        List<ILoggingEvent> allValues = captor.getAllValues();
-        assertNotNull(allValues);
-        assertEquals(1, allValues.size());
+    List<ILoggingEvent> allValues = captor.getAllValues();
+    assertNotNull(allValues);
+    assertEquals(1, allValues.size());
 
-        ILoggingEvent iLoggingEvent = allValues.get(0);
+    ILoggingEvent iLoggingEvent = allValues.get(0);
 
-        assertEquals(Level.INFO, iLoggingEvent.getLevel());
+    assertEquals(Level.INFO, iLoggingEvent.getLevel());
 
-        // This must match the Logtash filter/pattern. Changes must bu reflected in these as well.
-        assertEquals("USER_SESSION_EXPIRY Session expired for user 'HSA1' using scheme 'FAKE'", iLoggingEvent.getFormattedMessage());
-    }
-
+    // This must match the Logtash filter/pattern. Changes must bu reflected in these as well.
+    assertEquals(
+        "USER_SESSION_EXPIRY Session expired for user 'HSA1' using scheme 'FAKE'",
+        iLoggingEvent.getFormattedMessage());
+  }
 }

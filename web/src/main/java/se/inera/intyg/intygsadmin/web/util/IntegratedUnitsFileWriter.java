@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,86 +32,91 @@ import se.inera.intyg.infra.integreradeenheter.IntegratedUnitDTO;
 
 public class IntegratedUnitsFileWriter {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+  private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public ByteArrayOutputStream writeExcel(List<IntegratedUnitDTO> integratedUnitDTOList) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Integrerade enheter");
+  public ByteArrayOutputStream writeExcel(List<IntegratedUnitDTO> integratedUnitDTOList)
+      throws IOException {
+    XSSFWorkbook workbook = new XSSFWorkbook();
+    XSSFSheet sheet = workbook.createSheet("Integrerade enheter");
 
-        int rowCount = 0;
+    int rowCount = 0;
 
-        Row headerRow = sheet.createRow(rowCount++);
-        int lastColumnIndex = writeHeader(headerRow, workbook);
+    Row headerRow = sheet.createRow(rowCount++);
+    int lastColumnIndex = writeHeader(headerRow, workbook);
 
-        for (IntegratedUnitDTO integratedUnitDTO : integratedUnitDTOList) {
-            Row row = sheet.createRow(rowCount++);
-            writeIntegratedUnit(integratedUnitDTO, row);
-        }
-
-        for (int a = 0; a <= lastColumnIndex; a++) {
-            sheet.autoSizeColumn(a);
-        }
-
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            workbook.write(outputStream);
-            return outputStream;
-        }
+    for (IntegratedUnitDTO integratedUnitDTO : integratedUnitDTOList) {
+      Row row = sheet.createRow(rowCount++);
+      writeIntegratedUnit(integratedUnitDTO, row);
     }
 
-    private int writeHeader(Row row, XSSFWorkbook workbook) {
-        XSSFCellStyle style = createHeaderStyle(workbook);
-
-        int columnCount = 0;
-
-        Cell cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Enhet");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Enhetsnamn");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Vårdgivar-id");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Vårdgivar namn");
-        cell = row.createCell(columnCount++);
-        cell.setCellStyle(style);
-        cell.setCellValue("Tillagd");
-        cell = row.createCell(columnCount);
-        cell.setCellStyle(style);
-        cell.setCellValue("Senast kontrollerad");
-
-        return columnCount;
+    for (int a = 0; a <= lastColumnIndex; a++) {
+      sheet.autoSizeColumn(a);
     }
 
-    private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
-        XSSFCellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setBold(true);
-        style.setFont(font);
-        return style;
+    try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+      workbook.write(outputStream);
+      return outputStream;
     }
+  }
 
-    private void writeIntegratedUnit(IntegratedUnitDTO integratedUnitDTO, Row row) {
-        int columnCount = 0;
+  private int writeHeader(Row row, XSSFWorkbook workbook) {
+    XSSFCellStyle style = createHeaderStyle(workbook);
 
-        final String skapadDatum = integratedUnitDTO.getSkapadDatum() != null ? formatter.format(integratedUnitDTO.getSkapadDatum()) : "";
-        final String kontrollDatum = integratedUnitDTO.getSenasteKontrollDatum() != null
-            ? formatter.format(integratedUnitDTO.getSenasteKontrollDatum()) : "";
+    int columnCount = 0;
 
-        Cell cell = row.createCell(columnCount++);
-        cell.setCellValue(integratedUnitDTO.getEnhetsId());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(integratedUnitDTO.getEnhetsNamn());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(integratedUnitDTO.getVardgivarId());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(integratedUnitDTO.getVardgivarNamn());
-        cell = row.createCell(columnCount++);
-        cell.setCellValue(skapadDatum);
-        cell = row.createCell(columnCount);
-        cell.setCellValue(kontrollDatum);
-    }
+    Cell cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Enhet");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Enhetsnamn");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Vårdgivar-id");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Vårdgivar namn");
+    cell = row.createCell(columnCount++);
+    cell.setCellStyle(style);
+    cell.setCellValue("Tillagd");
+    cell = row.createCell(columnCount);
+    cell.setCellStyle(style);
+    cell.setCellValue("Senast kontrollerad");
 
+    return columnCount;
+  }
+
+  private XSSFCellStyle createHeaderStyle(XSSFWorkbook workbook) {
+    XSSFCellStyle style = workbook.createCellStyle();
+    XSSFFont font = workbook.createFont();
+    font.setBold(true);
+    style.setFont(font);
+    return style;
+  }
+
+  private void writeIntegratedUnit(IntegratedUnitDTO integratedUnitDTO, Row row) {
+    int columnCount = 0;
+
+    final String skapadDatum =
+        integratedUnitDTO.getSkapadDatum() != null
+            ? formatter.format(integratedUnitDTO.getSkapadDatum())
+            : "";
+    final String kontrollDatum =
+        integratedUnitDTO.getSenasteKontrollDatum() != null
+            ? formatter.format(integratedUnitDTO.getSenasteKontrollDatum())
+            : "";
+
+    Cell cell = row.createCell(columnCount++);
+    cell.setCellValue(integratedUnitDTO.getEnhetsId());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(integratedUnitDTO.getEnhetsNamn());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(integratedUnitDTO.getVardgivarId());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(integratedUnitDTO.getVardgivarNamn());
+    cell = row.createCell(columnCount++);
+    cell.setCellValue(skapadDatum);
+    cell = row.createCell(columnCount);
+    cell.setCellValue(kontrollDatum);
+  }
 }

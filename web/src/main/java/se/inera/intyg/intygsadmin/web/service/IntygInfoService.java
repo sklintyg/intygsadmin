@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,7 +26,7 @@ import se.inera.intyg.intygsadmin.web.controller.dto.IntygInfoListDTO;
 
 public interface IntygInfoService {
 
-    Page<IntygInfoListDTO> getIntygInfoList(Pageable pageable);
+  Page<IntygInfoListDTO> getIntygInfoList(Pageable pageable);
 
-    Optional<IntygInfoDTO> getIntygInfo(String intygId);
+  Optional<IntygInfoDTO> getIntygInfo(String intygId);
 }

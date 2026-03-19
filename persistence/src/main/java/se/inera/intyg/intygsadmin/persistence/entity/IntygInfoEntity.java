@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -39,16 +39,15 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor
 public class IntygInfoEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JdbcTypeCode(SqlTypes.CHAR)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @JdbcTypeCode(SqlTypes.CHAR)
+  private UUID id;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    private String intygId;
-    private String employeeHsaId;
-    private String employeeName;
-    private String vardgivarId;
-    private String enhetsId;
+  @CreationTimestamp private LocalDateTime createdAt;
+  private String intygId;
+  private String employeeHsaId;
+  private String employeeName;
+  private String vardgivarId;
+  private String enhetsId;
 }

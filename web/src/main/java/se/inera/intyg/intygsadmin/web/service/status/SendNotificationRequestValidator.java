@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import java.time.LocalDateTime;
@@ -27,51 +26,52 @@ import org.springframework.stereotype.Component;
 @Component
 public class SendNotificationRequestValidator {
 
-    public void validateId(String id) {
-        if (id == null || id.isBlank() || id.isEmpty()) {
-            throw new IllegalArgumentException(
-                "Id is empty, cannot send notifications"
-            );
-        }
+  public void validateId(String id) {
+    if (id == null || id.isBlank() || id.isEmpty()) {
+      throw new IllegalArgumentException("Id is empty, cannot send notifications");
+    }
+  }
+
+  public void validateIds(List<String> ids) {
+    if (ids == null || ids.isEmpty()) {
+      throw new IllegalArgumentException("Ids are empty, cannot send notifications");
+    }
+  }
+
+  public void validateDate(LocalDateTime start, LocalDateTime end, Integer maxDaysBackSinceStart) {
+    validateDate(start, end, null, maxDaysBackSinceStart);
+  }
+
+  public void validateDate(
+      LocalDateTime start,
+      LocalDateTime end,
+      Integer maxDaysTimeInterval,
+      Integer maxDaysBackSinceStart) {
+    if (end != null && end.isBefore(start)) {
+      throw new IllegalArgumentException("Time period is invalid, end is before start");
     }
 
-    public void validateIds(List<String> ids) {
-        if (ids == null || ids.isEmpty()) {
-            throw new IllegalArgumentException(
-                "Ids are empty, cannot send notifications"
-            );
-        }
+    if (maxDaysTimeInterval != null && !isTimePeriodValid(start, end, maxDaysTimeInterval)) {
+      throw new IllegalArgumentException(
+          String.format(
+              "Time period is larger than allowed '%s' days, cannot send notifications",
+              maxDaysTimeInterval));
     }
 
-    public void validateDate(LocalDateTime start, LocalDateTime end, Integer maxDaysBackSinceStart) {
-        validateDate(start, end, null, maxDaysBackSinceStart);
+    if (!isStartDateValid(start, maxDaysBackSinceStart)) {
+      throw new IllegalArgumentException(
+          String.format(
+              "Start date is larger than allowed '%s' days, cannot send notifications",
+              maxDaysBackSinceStart));
     }
+  }
 
-    public void validateDate(LocalDateTime start, LocalDateTime end, Integer maxDaysTimeInterval, Integer maxDaysBackSinceStart) {
-        if (end != null && end.isBefore(start)) {
-            throw new IllegalArgumentException("Time period is invalid, end is before start");
-        }
+  private boolean isTimePeriodValid(LocalDateTime start, LocalDateTime end, int maxDaysBetween) {
+    final var daysBetween = ChronoUnit.DAYS.between(start, end != null ? end : LocalDateTime.now());
+    return daysBetween <= maxDaysBetween;
+  }
 
-        if (maxDaysTimeInterval != null && !isTimePeriodValid(start, end, maxDaysTimeInterval)) {
-            throw new IllegalArgumentException(
-                String.format("Time period is larger than allowed '%s' days, cannot send notifications", maxDaysTimeInterval)
-            );
-        }
-
-        if (!isStartDateValid(start, maxDaysBackSinceStart)) {
-            throw new IllegalArgumentException(
-                String.format("Start date is larger than allowed '%s' days, cannot send notifications", maxDaysBackSinceStart)
-            );
-        }
-    }
-
-    private boolean isTimePeriodValid(LocalDateTime start, LocalDateTime end, int maxDaysBetween) {
-        final var daysBetween = ChronoUnit.DAYS.between(start, end != null ? end : LocalDateTime.now());
-        return daysBetween <= maxDaysBetween;
-    }
-
-    private boolean isStartDateValid(LocalDateTime start, int maxDaysBack) {
-        return isTimePeriodValid(start, LocalDateTime.now(), maxDaysBack);
-    }
-
+  private boolean isStartDateValid(LocalDateTime start, int maxDaysBack) {
+    return isTimePeriodValid(start, LocalDateTime.now(), maxDaysBack);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -31,13 +31,10 @@ import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser.FakeUserBuilder;
 @AllArgsConstructor
 public class FakeUser {
 
-    String employeeHsaId;
-    String intygsadminRole;
-    String name;
+  String employeeHsaId;
+  String intygsadminRole;
+  String name;
 
-    @JsonPOJOBuilder(withPrefix = "")
-    public static class FakeUserBuilder {
-
-    }
-
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class FakeUserBuilder {}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,42 +29,34 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "inera.idp")
 public class IdpProperties {
 
-    /**
-     * The ID that this client is registered with at the OP.
-     */
-    private String clientId;
+  /** The ID that this client is registered with at the OP. */
+  private String clientId;
 
-    /**
-     * The password that this client has at the OP.
-     */
-    private String clientSecret;
+  /** The password that this client has at the OP. */
+  private String clientSecret;
 
-    /**
-     * The URL at the client (this application) where the OP should redirect the user when authentication is completed.
-     * This URL must be registered at the OP.
-     */
-    private URL redirectUri;
+  /**
+   * The URL at the client (this application) where the OP should redirect the user when
+   * authentication is completed. This URL must be registered at the OP.
+   */
+  private URL redirectUri;
 
-    /**
-     * The URL at the client (this application) where the OP should redirect the user when logout is completed.
-     * This URL must be registered at the OP.
-     */
-    private URL logoutRedirectUri;
+  /**
+   * The URL at the client (this application) where the OP should redirect the user when logout is
+   * completed. This URL must be registered at the OP.
+   */
+  private URL logoutRedirectUri;
 
-    /**
-     * The ID of the OP/issuer.
-     * This is normally a URL with /oidc at the end. The application will use this to access the OP's configuration
-     * via the default path for .well-known-location
-     */
-    private String issuerUri;
+  /**
+   * The ID of the OP/issuer. This is normally a URL with /oidc at the end. The application will use
+   * this to access the OP's configuration via the default path for .well-known-location
+   */
+  private String issuerUri;
 
-    /**
-     * A list of claims that should be requested from this OP.
-     */
-    private List<String> requestedClaims = List.of("employeeHsaId", "given_name", "family_name");
+  /** A list of claims that should be requested from this OP. */
+  private List<String> requestedClaims = List.of("employeeHsaId", "given_name", "family_name");
 
-    private String clientRegistrationId;
-    private String userNameAttributeName;
-    private String scope;
-
+  private String clientRegistrationId;
+  private String userNameAttributeName;
+  private String scope;
 }

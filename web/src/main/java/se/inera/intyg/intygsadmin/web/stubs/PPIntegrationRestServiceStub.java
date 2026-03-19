@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,43 +32,49 @@ import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 @Service
 public class PPIntegrationRestServiceStub implements PPIntegrationRestService {
 
-    private final Map<String, PrivatePractitioner> ppHsaList = new HashMap<>();
-    private final Map<String, PrivatePractitioner> ppPnrList = new HashMap<>();
+  private final Map<String, PrivatePractitioner> ppHsaList = new HashMap<>();
+  private final Map<String, PrivatePractitioner> ppPnrList = new HashMap<>();
 
-    private static final int NUMBER_OF_PRIVATE_PRACTITIONERS = 5;
+  private static final int NUMBER_OF_PRIVATE_PRACTITIONERS = 5;
 
-    public PPIntegrationRestServiceStub() {
-        for (int i = 0; i < NUMBER_OF_PRIVATE_PRACTITIONERS; i++) {
-            var hsaId = "SE123456-X" + i;
-            var pnr = "19121212121" + i; // Will not validate, but OK in this context
-            var privatePractitioner = new PrivatePractitioner(hsaId, pnr, "Förnamn" + i + " Efternamn" + i, "Bolag" + i,
-                "mail" + i + "@example.com", LocalDateTime.now().minusDays(i));
-            ppHsaList.put(hsaId, privatePractitioner);
-            ppPnrList.put(pnr, privatePractitioner);
-        }
+  public PPIntegrationRestServiceStub() {
+    for (int i = 0; i < NUMBER_OF_PRIVATE_PRACTITIONERS; i++) {
+      var hsaId = "SE123456-X" + i;
+      var pnr = "19121212121" + i; // Will not validate, but OK in this context
+      var privatePractitioner =
+          new PrivatePractitioner(
+              hsaId,
+              pnr,
+              "Förnamn" + i + " Efternamn" + i,
+              "Bolag" + i,
+              "mail" + i + "@example.com",
+              LocalDateTime.now().minusDays(i));
+      ppHsaList.put(hsaId, privatePractitioner);
+      ppPnrList.put(pnr, privatePractitioner);
     }
+  }
 
-    @Override
-    public PrivatePractitioner getPrivatePractitioner(String personOrHsaId) {
-        if (ppHsaList.containsKey(personOrHsaId)) {
-            return ppHsaList.get(personOrHsaId);
-        } else if (ppPnrList.containsKey(personOrHsaId)) {
-            return ppPnrList.get(personOrHsaId);
-        }
-        return null;
+  @Override
+  public PrivatePractitioner getPrivatePractitioner(String personOrHsaId) {
+    if (ppHsaList.containsKey(personOrHsaId)) {
+      return ppHsaList.get(personOrHsaId);
+    } else if (ppPnrList.containsKey(personOrHsaId)) {
+      return ppPnrList.get(personOrHsaId);
     }
+    return null;
+  }
 
-    @Override
-    public List<PrivatePractitioner> getAllPrivatePractitioners() {
-        return new ArrayList<>(ppHsaList.values());
-    }
+  @Override
+  public List<PrivatePractitioner> getAllPrivatePractitioners() {
+    return new ArrayList<>(ppHsaList.values());
+  }
 
-    @Override
-    public void unregisterPrivatePractitioner(String hsaId) {
-        final var privatePractitioner = ppHsaList.get(hsaId);
-        if (privatePractitioner != null) {
-            ppPnrList.remove(privatePractitioner.getPersonId());
-            ppHsaList.remove(hsaId);
-        }
+  @Override
+  public void unregisterPrivatePractitioner(String hsaId) {
+    final var privatePractitioner = ppHsaList.get(hsaId);
+    if (privatePractitioner != null) {
+      ppPnrList.remove(privatePractitioner.getPersonId());
+      ppHsaList.remove(hsaId);
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,26 +34,21 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @ExtendWith(MockitoExtension.class)
 class SendStatusServiceImplTest {
 
-    @Mock
-    private WCIntegrationRestService wcIntegrationRestService;
+  @Mock private WCIntegrationRestService wcIntegrationRestService;
 
-    @Mock
-    private SendNotificationRequestValidator sendNotificationRequestValidator;
+  @Mock private SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @InjectMocks
-    private SendStatusServiceImpl sendStatusServiceImpl;
+  @InjectMocks private SendStatusServiceImpl sendStatusServiceImpl;
 
-    @Test
-    void shouldSendStatus() {
-        final var expected = SendStatusIntegrationResponseDTO.builder()
-            .count(1)
-            .build();
+  @Test
+  void shouldSendStatus() {
+    final var expected = SendStatusIntegrationResponseDTO.builder().count(1).build();
 
-        when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class)))
-            .thenReturn(expected);
+    when(wcIntegrationRestService.sendStatus(any(SendStatusIntegrationRequestDTO.class)))
+        .thenReturn(expected);
 
-        final var response = sendStatusServiceImpl.send("statusId");
+    final var response = sendStatusServiceImpl.send("statusId");
 
-        assertEquals(1, response);
-    }
+    assertEquals(1, response);
+  }
 }

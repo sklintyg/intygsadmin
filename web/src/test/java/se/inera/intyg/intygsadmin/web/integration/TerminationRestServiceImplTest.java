@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,8 +26,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
 import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.intygsadmin.logging.MdcHelper.LOG_TRACE_ID_HEADER;
 import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.SESSION_ID_KEY;
 import static se.inera.intyg.intygsadmin.logging.MdcLogConstants.TRACE_ID_KEY;
 
@@ -56,214 +56,239 @@ import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 @ExtendWith(MockitoExtension.class)
 class TerminationRestServiceImplTest {
 
-    @Mock
-    private RestClient restClient;
+  @Mock private RestClient restClient;
 
-    @InjectMocks
-    private TerminationRestServiceImpl terminationRestService;
+  @InjectMocks private TerminationRestServiceImpl terminationRestService;
+
+  @BeforeEach
+  public void init() {
+    ReflectionTestUtils.setField(terminationRestService, "terminationServiceUrl", "Host");
+  }
+
+  @Nested
+  class GetDataExportsTest {
+
+    private RequestHeadersUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
 
     @BeforeEach
-    public void init() {
-        ReflectionTestUtils.setField(terminationRestService, "terminationServiceUrl", "Host");
+    void setUp() {
+      requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
+
+      when(restClient.get()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri("Host/api/v1/terminations")).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
-    @Nested
-    class GetDataExportsTest {
+    @Test
+    void getDataExports() {
+      doReturn(List.of()).when(responseSpec).body(any(ParameterizedTypeReference.class));
 
-        private RequestHeadersUriSpec requestBodyUriSpec;
-        private ResponseSpec responseSpec;
-
-        @BeforeEach
-        void setUp() {
-            requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
-
-            when(restClient.get()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri("Host/api/v1/terminations")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
-
-        @Test
-        void getDataExports() {
-            doReturn(List.of()).when(responseSpec).body(any(ParameterizedTypeReference.class));
-
-            assertNotNull(terminationRestService.getDataExports());
-        }
-
-        @Test
-        void shouldThrowException() {
-            doThrow(new RestClientException("Error!")).when(responseSpec).body(any(ParameterizedTypeReference.class));
-
-            assertThrows(RestClientException.class, () -> terminationRestService.getDataExports());
-        }
+      assertNotNull(terminationRestService.getDataExports());
     }
 
-    @Nested
-    class CreateDataExportTest {
+    @Test
+    void shouldThrowException() {
+      doThrow(new RestClientException("Error!"))
+          .when(responseSpec)
+          .body(any(ParameterizedTypeReference.class));
 
-        private RequestBodyUriSpec requestBodyUriSpec;
-        private ResponseSpec responseSpec;
+      assertThrows(RestClientException.class, () -> terminationRestService.getDataExports());
+    }
+  }
 
-        @BeforeEach
-        void setUp() {
-            requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
+  @Nested
+  class CreateDataExportTest {
 
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
+    private RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
 
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations"))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(CreateDataExport.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
+    @BeforeEach
+    void setUp() {
+      requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
 
-        @Test
-        void createDataExport() {
-            final var createDataExport = new CreateDataExport();
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
 
-            doReturn(new DataExportResponse()).when(responseSpec).body(DataExportResponse.class);
-
-            assertNotNull(terminationRestService.createDataExport(createDataExport));
-        }
-
-        @Test
-        void shouldThrowException() {
-            final var createDataExport = new CreateDataExport();
-
-            doThrow(new RestClientException("Error!")).when(responseSpec).body(DataExportResponse.class);
-
-            assertThrows(RestClientException.class, () -> terminationRestService.createDataExport(createDataExport));
-        }
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations"))).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(CreateDataExport.class))).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
-    @Nested
-    class UpdateDataExportTest {
+    @Test
+    void createDataExport() {
+      final var createDataExport = new CreateDataExport();
 
-        private RequestBodyUriSpec requestBodyUriSpec;
-        private ResponseSpec responseSpec;
-        private String terminationId;
+      doReturn(new DataExportResponse()).when(responseSpec).body(DataExportResponse.class);
 
-        @BeforeEach
-        void setUp() {
-            requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            terminationId = UUID.randomUUID().toString();
-
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
-
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations/" + terminationId))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.body(any(UpdateDataExportDTO.class))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
-
-        @Test
-        void shouldUpdateDataExport() {
-            final var updateDataExportDTO = new UpdateDataExportDTO();
-
-            doReturn(new DataExportResponse()).when(responseSpec).body(DataExportResponse.class);
-
-            assertNotNull(terminationRestService.updateDataExport(terminationId, updateDataExportDTO));
-        }
-
-        @Test
-        void shouldThrowException() {
-            final var updateDataExportDTO = new UpdateDataExportDTO();
-
-            doThrow(new RestClientException("Error!")).when(responseSpec).body(DataExportResponse.class);
-
-            assertThrows(RestClientException.class, () -> terminationRestService.updateDataExport(terminationId, updateDataExportDTO));
-        }
+      assertNotNull(terminationRestService.createDataExport(createDataExport));
     }
 
-    @Nested
-    class EraseDataExportTest {
+    @Test
+    void shouldThrowException() {
+      final var createDataExport = new CreateDataExport();
 
-        private RequestBodyUriSpec requestBodyUriSpec;
-        private ResponseSpec responseSpec;
-        private String terminationId;
+      doThrow(new RestClientException("Error!")).when(responseSpec).body(DataExportResponse.class);
 
-        @BeforeEach
-        void setUp() {
-            requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            terminationId = UUID.randomUUID().toString();
+      assertThrows(
+          RestClientException.class,
+          () -> terminationRestService.createDataExport(createDataExport));
+    }
+  }
 
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
+  @Nested
+  class UpdateDataExportTest {
 
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations/" + terminationId + "/erase"))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
+    private RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
+    private String terminationId;
 
-        @Test
-        void eraseDataExport() {
-            doReturn("Avslutad").when(responseSpec).body(String.class);
+    @BeforeEach
+    void setUp() {
+      requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      terminationId = UUID.randomUUID().toString();
 
-            assertNotNull(terminationRestService.eraseDataExport(terminationId));
-        }
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
 
-        @Test
-        void shouldThrowException() {
-            doThrow(new RestClientException("Error!")).when(responseSpec).body(String.class);
-
-            assertThrows(RestClientException.class, () -> terminationRestService.eraseDataExport(terminationId));
-        }
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations/" + terminationId)))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.body(any(UpdateDataExportDTO.class))).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
     }
 
-    @Nested
-    class ResendDataExportKeyTest {
+    @Test
+    void shouldUpdateDataExport() {
+      final var updateDataExportDTO = new UpdateDataExportDTO();
 
-        private RequestBodyUriSpec requestBodyUriSpec;
-        private ResponseSpec responseSpec;
-        private String terminationId;
+      doReturn(new DataExportResponse()).when(responseSpec).body(DataExportResponse.class);
 
-        @BeforeEach
-        void setUp() {
-            requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
-            responseSpec = mock(RestClient.ResponseSpec.class);
-            terminationId = UUID.randomUUID().toString();
-
-            MDC.put(TRACE_ID_KEY, "traceId");
-            MDC.put(SESSION_ID_KEY, "sessionId");
-
-            when(restClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations/" + terminationId + "/resendpassword"))).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId")).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
-        }
-
-        @Test
-        void resendDataExportKey() {
-            doReturn("Kryptonyckel skickad igen").when(responseSpec).body(String.class);
-
-            assertNotNull(terminationRestService.resendDataExportKey(terminationId));
-        }
-
-        @Test
-        void shouldThrowException() {
-            doThrow(new RestClientException("Error!")).when(responseSpec).body(String.class);
-
-            assertThrows(RestClientException.class, () -> terminationRestService.resendDataExportKey(terminationId));
-        }
+      assertNotNull(terminationRestService.updateDataExport(terminationId, updateDataExportDTO));
     }
+
+    @Test
+    void shouldThrowException() {
+      final var updateDataExportDTO = new UpdateDataExportDTO();
+
+      doThrow(new RestClientException("Error!")).when(responseSpec).body(DataExportResponse.class);
+
+      assertThrows(
+          RestClientException.class,
+          () -> terminationRestService.updateDataExport(terminationId, updateDataExportDTO));
+    }
+  }
+
+  @Nested
+  class EraseDataExportTest {
+
+    private RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
+    private String terminationId;
+
+    @BeforeEach
+    void setUp() {
+      requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      terminationId = UUID.randomUUID().toString();
+
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
+
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri(eq("Host/api/v1/terminations/" + terminationId + "/erase")))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+    }
+
+    @Test
+    void eraseDataExport() {
+      doReturn("Avslutad").when(responseSpec).body(String.class);
+
+      assertNotNull(terminationRestService.eraseDataExport(terminationId));
+    }
+
+    @Test
+    void shouldThrowException() {
+      doThrow(new RestClientException("Error!")).when(responseSpec).body(String.class);
+
+      assertThrows(
+          RestClientException.class, () -> terminationRestService.eraseDataExport(terminationId));
+    }
+  }
+
+  @Nested
+  class ResendDataExportKeyTest {
+
+    private RequestBodyUriSpec requestBodyUriSpec;
+    private ResponseSpec responseSpec;
+    private String terminationId;
+
+    @BeforeEach
+    void setUp() {
+      requestBodyUriSpec = mock(RestClient.RequestBodyUriSpec.class);
+      responseSpec = mock(RestClient.ResponseSpec.class);
+      terminationId = UUID.randomUUID().toString();
+
+      MDC.put(TRACE_ID_KEY, "traceId");
+      MDC.put(SESSION_ID_KEY, "sessionId");
+
+      when(restClient.post()).thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.uri(
+              eq("Host/api/v1/terminations/" + terminationId + "/resendpassword")))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_TRACE_ID_HEADER, "traceId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.header(LOG_SESSION_ID_HEADER, "sessionId"))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.contentType(MediaType.APPLICATION_JSON))
+          .thenReturn(requestBodyUriSpec);
+      when(requestBodyUriSpec.retrieve()).thenReturn(responseSpec);
+    }
+
+    @Test
+    void resendDataExportKey() {
+      doReturn("Kryptonyckel skickad igen").when(responseSpec).body(String.class);
+
+      assertNotNull(terminationRestService.resendDataExportKey(terminationId));
+    }
+
+    @Test
+    void shouldThrowException() {
+      doThrow(new RestClientException("Error!")).when(responseSpec).body(String.class);
+
+      assertThrows(
+          RestClientException.class,
+          () -> terminationRestService.resendDataExportKey(terminationId));
+    }
+  }
 }

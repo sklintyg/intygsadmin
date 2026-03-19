@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,27 +35,24 @@ import se.inera.intyg.intygsadmin.web.service.IntygInfoService;
 @RequestMapping("/api/intygInfo")
 public class IntygInfoController {
 
-    private IntygInfoService intygInfoService;
+  private IntygInfoService intygInfoService;
 
-    public IntygInfoController(IntygInfoService intygInfoService) {
-        this.intygInfoService = intygInfoService;
-    }
+  public IntygInfoController(IntygInfoService intygInfoService) {
+    this.intygInfoService = intygInfoService;
+  }
 
-    @GetMapping
-    public ResponseEntity<Page<IntygInfoListDTO>> listHistory(
-        @PageableDefault(size = 20, sort = "createdAt")
-        Pageable pageable) {
-        Page<IntygInfoListDTO> intygInfoList = intygInfoService.getIntygInfoList(pageable);
+  @GetMapping
+  public ResponseEntity<Page<IntygInfoListDTO>> listHistory(
+      @PageableDefault(size = 20, sort = "createdAt") Pageable pageable) {
+    Page<IntygInfoListDTO> intygInfoList = intygInfoService.getIntygInfoList(pageable);
 
-        return ResponseEntity.ok(intygInfoList);
-    }
+    return ResponseEntity.ok(intygInfoList);
+  }
 
-    @GetMapping("/{intygId}")
-    public ResponseEntity<IntygInfoDTO> getIntygInfo(@PathVariable String intygId) {
+  @GetMapping("/{intygId}")
+  public ResponseEntity<IntygInfoDTO> getIntygInfo(@PathVariable String intygId) {
 
-        Optional<IntygInfoDTO> intygInfoDTO = intygInfoService.getIntygInfo(intygId);
-        return intygInfoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
-    }
-
+    Optional<IntygInfoDTO> intygInfoDTO = intygInfoService.getIntygInfo(intygId);
+    return intygInfoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  }
 }

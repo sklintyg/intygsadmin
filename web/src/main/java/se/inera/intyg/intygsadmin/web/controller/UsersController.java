@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -40,41 +40,39 @@ import se.inera.intyg.intygsadmin.web.service.UserService;
 @PreAuthorize("hasRole('FULL')")
 public class UsersController {
 
-    private UserService userService;
+  private UserService userService;
 
-    public UsersController(UserService userService) {
-        this.userService = userService;
-    }
+  public UsersController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @GetMapping
-    public ResponseEntity<Page<UserDTO>> listUsers(
-        @PageableDefault(size = 20, sort = "createdAt")
-        Pageable pageable) {
-        Page<UserDTO> users = userService.getUsers(pageable);
+  @GetMapping
+  public ResponseEntity<Page<UserDTO>> listUsers(
+      @PageableDefault(size = 20, sort = "createdAt") Pageable pageable) {
+    Page<UserDTO> users = userService.getUsers(pageable);
 
-        return ResponseEntity.ok(users);
-    }
+    return ResponseEntity.ok(users);
+  }
 
-    @PutMapping
-    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
-        UserDTO savedDTO = userService.addUser(userDTO);
+  @PutMapping
+  public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
+    UserDTO savedDTO = userService.addUser(userDTO);
 
-        return ResponseEntity.ok(savedDTO);
-    }
+    return ResponseEntity.ok(savedDTO);
+  }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
-        userDTO.setId(id);
-        UserDTO savedDTO = userService.updateUser(userDTO);
+  @PostMapping("/{id}")
+  public ResponseEntity<UserDTO> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
+    userDTO.setId(id);
+    UserDTO savedDTO = userService.updateUser(userDTO);
 
-        return ResponseEntity.ok(savedDTO);
-    }
+    return ResponseEntity.ok(savedDTO);
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable UUID id) {
-        userService.deleteUser(id);
+  @DeleteMapping("/{id}")
+  public ResponseEntity deleteUser(@PathVariable UUID id) {
+    userService.deleteUser(id);
 
-        return ResponseEntity.ok().build();
-    }
+    return ResponseEntity.ok().build();
+  }
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,13 +25,13 @@ import se.inera.intyg.intygsadmin.web.integration.model.out.CreateDataExport;
 
 public interface TerminationRestService {
 
-    List<DataExportResponse> getDataExports();
+  List<DataExportResponse> getDataExports();
 
-    DataExportResponse createDataExport(CreateDataExport createDataExport);
+  DataExportResponse createDataExport(CreateDataExport createDataExport);
 
-    DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO dataExportResponse);
+  DataExportResponse updateDataExport(String terminationId, UpdateDataExportDTO dataExportResponse);
 
-    String eraseDataExport(String terminationId);
+  String eraseDataExport(String terminationId);
 
-    String resendDataExportKey(String terminationId);
+  String resendDataExportKey(String terminationId);
 }

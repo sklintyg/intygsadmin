@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,20 +30,30 @@ import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.intygsadmin.persistence.entity.BannerEntity;
 
 @Repository
-public interface BannerRepository extends JpaRepository<BannerEntity, UUID>,
-    QuerydslPredicateExecutor<BannerEntity> {
+public interface BannerRepository
+    extends JpaRepository<BannerEntity, UUID>, QuerydslPredicateExecutor<BannerEntity> {
 
-    List<BannerEntity> findAllByApplicationEqualsAndDisplayToAfter(Application application, LocalDateTime displayTo);
+  List<BannerEntity> findAllByApplicationEqualsAndDisplayToAfter(
+      Application application, LocalDateTime displayTo);
 
-    @Query(value = "SELECT count(t.id) FROM BannerEntity t WHERE t.application = :application AND t.id <> :id AND "
-        + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
-        + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
-    long countByApplicationEqualsAndIdNot(@Param("application") Application application, @Param("id") UUID id,
-        @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
+  @Query(
+      value =
+          "SELECT count(t.id) FROM BannerEntity t WHERE t.application = :application AND t.id <> :id AND "
+              + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
+              + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
+  long countByApplicationEqualsAndIdNot(
+      @Param("application") Application application,
+      @Param("id") UUID id,
+      @Param("fromDate") LocalDateTime fromDate,
+      @Param("toDate") LocalDateTime toDate);
 
-    @Query(value = "SELECT count(t.id) FROM BannerEntity t WHERE t.application = :application AND "
-        + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
-        + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
-    long countByApplicationEquals(@Param("application") Application application,
-        @Param("fromDate") LocalDateTime fromDate, @Param("toDate") LocalDateTime toDate);
+  @Query(
+      value =
+          "SELECT count(t.id) FROM BannerEntity t WHERE t.application = :application AND "
+              + "(t.displayFrom BETWEEN :fromDate AND :toDate OR t.displayTo BETWEEN :fromDate AND :toDate "
+              + " OR :toDate BETWEEN t.displayFrom AND t.displayTo)")
+  long countByApplicationEquals(
+      @Param("application") Application application,
+      @Param("fromDate") LocalDateTime fromDate,
+      @Param("toDate") LocalDateTime toDate);
 }

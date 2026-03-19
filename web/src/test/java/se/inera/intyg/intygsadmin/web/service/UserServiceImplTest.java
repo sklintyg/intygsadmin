@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -59,173 +59,183 @@ import se.inera.intyg.intygsadmin.web.mapper.UserMapper;
 @ContextConfiguration
 class UserServiceImplTest {
 
-    @Spy
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+  @Spy private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
-    @Mock
-    private UserPersistenceService userPersistenceService;
+  @Mock private UserPersistenceService userPersistenceService;
 
-    @InjectMocks
-    private UserServiceImpl userService;
+  @InjectMocks private UserServiceImpl userService;
 
-    @Test
-    @WithMockIntygsadminUser
-    void testGetActiveUser_found() throws NoSuchMethodException {
-        IntygsadminUser activeUser = userService.getActiveUser();
+  @Test
+  @WithMockIntygsadminUser
+  void testGetActiveUser_found() throws NoSuchMethodException {
+    IntygsadminUser activeUser = userService.getActiveUser();
 
-        assertNotNull(activeUser);
-        assertEquals(WithMockIntygsadminUser.class.getMethod("employeeHsaId").getDefaultValue(), activeUser.getEmployeeHsaId());
-        assertEquals(WithMockIntygsadminUser.class.getMethod("intygsadminRole").getDefaultValue(), activeUser.getIntygsadminRole().name());
-        assertEquals(WithMockIntygsadminUser.class.getMethod("name").getDefaultValue(), activeUser.getName());
+    assertNotNull(activeUser);
+    assertEquals(
+        WithMockIntygsadminUser.class.getMethod("employeeHsaId").getDefaultValue(),
+        activeUser.getEmployeeHsaId());
+    assertEquals(
+        WithMockIntygsadminUser.class.getMethod("intygsadminRole").getDefaultValue(),
+        activeUser.getIntygsadminRole().name());
+    assertEquals(
+        WithMockIntygsadminUser.class.getMethod("name").getDefaultValue(), activeUser.getName());
+  }
+
+  @Test
+  void testGetActiveUser_notFound() {
+    assertNull(userService.getActiveUser());
+  }
+
+  @Test
+  void testGetUsers() {
+    Pageable pageable = PageRequest.of(0, 10);
+
+    UserEntity ue1 =
+        new UserEntity(
+            UUID.randomUUID(), LocalDateTime.now(), "HSA1", "name1", IntygsadminRole.BAS);
+    UserEntity ue2 =
+        new UserEntity(
+            UUID.randomUUID(), LocalDateTime.now(), "HSA2", "name2", IntygsadminRole.FULL);
+    List<UserEntity> userEntities = List.of(ue1, ue2);
+
+    Page<UserEntity> persistenceResult =
+        new PageImpl<>(userEntities, pageable, userEntities.size());
+    when(userPersistenceService.findAll(any(Pageable.class))).thenReturn(persistenceResult);
+
+    Page<UserDTO> users = userService.getUsers(pageable);
+
+    verify(userPersistenceService, times(1)).findAll(eq(pageable));
+    assertEquals(2, users.getTotalElements());
+  }
+
+  @Test
+  @WithMockIntygsadminUser
+  void testDeleteUser() {
+    UUID id = UUID.randomUUID();
+
+    userService.deleteUser(id);
+    verify(userPersistenceService, times(1)).delete(id);
+  }
+
+  @Test
+  @WithMockIntygsadminUser
+  void testDeleteUser_currentUser() {
+    UUID id = userService.getActiveUser().getId();
+
+    try {
+      userService.deleteUser(id);
+      fail();
+    } catch (IaServiceException e) {
+      assertEquals(IaErrorCode.BAD_STATE, e.getErrorCode());
     }
 
-    @Test
-    void testGetActiveUser_notFound() {
-        assertNull(userService.getActiveUser());
+    verify(userPersistenceService, times(0)).delete(id);
+  }
+
+  @Test
+  @WithMockIntygsadminUser
+  void testUpdateUser() {
+    UUID id = UUID.randomUUID();
+    UserDTO userDTO = new UserDTO();
+    userDTO.setId(id);
+    userDTO.setName("name");
+    userDTO.setEmployeeHsaId("HSA-1");
+    userDTO.setIntygsadminRole(IntygsadminRole.FULL);
+
+    UserEntity entity = new UserEntity();
+    entity.setId(id);
+
+    Optional<UserEntity> userEntity = Optional.of(entity);
+
+    when(userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId()))
+        .thenReturn(userEntity);
+
+    userService.updateUser(userDTO);
+    verify(userPersistenceService, times(1)).update(any());
+  }
+
+  @Test
+  @WithMockIntygsadminUser
+  void testUpdateUser_currentUser() {
+    UUID id = userService.getActiveUser().getId();
+    UserDTO userDTO = new UserDTO();
+    userDTO.setId(id);
+    userDTO.setName("name");
+    userDTO.setEmployeeHsaId("HSA-1");
+    userDTO.setIntygsadminRole(IntygsadminRole.BAS);
+
+    try {
+      userService.updateUser(userDTO);
+      fail();
+    } catch (IaServiceException e) {
+      assertEquals(IaErrorCode.BAD_STATE, e.getErrorCode());
     }
 
-    @Test
-    void testGetUsers() {
-        Pageable pageable = PageRequest.of(0, 10);
+    verify(userPersistenceService, times(0)).update(any());
+  }
 
-        UserEntity ue1 = new UserEntity(UUID.randomUUID(), LocalDateTime.now(), "HSA1", "name1", IntygsadminRole.BAS);
-        UserEntity ue2 = new UserEntity(UUID.randomUUID(), LocalDateTime.now(), "HSA2", "name2", IntygsadminRole.FULL);
-        List<UserEntity> userEntities = List.of(ue1, ue2);
+  @Test
+  @WithMockIntygsadminUser
+  void testUpdateUser_hsaExists() {
+    UUID id = UUID.randomUUID();
 
-        Page<UserEntity> persistenceResult = new PageImpl<>(userEntities, pageable, userEntities.size());
-        when(userPersistenceService.findAll(any(Pageable.class))).thenReturn(persistenceResult);
+    UserDTO userDTO = new UserDTO();
+    userDTO.setId(id);
+    userDTO.setName("name");
+    userDTO.setEmployeeHsaId("HSA-1");
+    userDTO.setIntygsadminRole(IntygsadminRole.FULL);
 
-        Page<UserDTO> users = userService.getUsers(pageable);
+    UserEntity entity = new UserEntity();
+    entity.setId(UUID.randomUUID());
 
-        verify(userPersistenceService, times(1)).findAll(eq(pageable));
-        assertEquals(2, users.getTotalElements());
+    Optional<UserEntity> userEntity = Optional.of(entity);
+
+    when(userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId()))
+        .thenReturn(userEntity);
+
+    try {
+      userService.updateUser(userDTO);
+      fail();
+    } catch (IaServiceException e) {
+      assertEquals(IaErrorCode.ALREADY_EXISTS, e.getErrorCode());
     }
 
-    @Test
-    @WithMockIntygsadminUser
-    void testDeleteUser() {
-        UUID id = UUID.randomUUID();
+    verify(userPersistenceService, times(0)).update(any());
+  }
 
-        userService.deleteUser(id);
-        verify(userPersistenceService, times(1)).delete(id);
+  @Test
+  void testAddUser() {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("name");
+    userDTO.setEmployeeHsaId("HSA-1");
+    userDTO.setIntygsadminRole(IntygsadminRole.FULL);
+
+    userService.addUser(userDTO);
+    verify(userPersistenceService, times(1)).add(any());
+  }
+
+  @Test
+  void testAddUser_hsaExists() {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setName("name");
+    userDTO.setEmployeeHsaId("HSA-1");
+    userDTO.setIntygsadminRole(IntygsadminRole.FULL);
+
+    UserEntity entity = new UserEntity();
+    entity.setId(UUID.randomUUID());
+
+    Optional<UserEntity> userEntity = Optional.of(entity);
+
+    when(userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId()))
+        .thenReturn(userEntity);
+
+    try {
+      userService.addUser(userDTO);
+      fail();
+    } catch (IaServiceException e) {
+      assertEquals(IaErrorCode.ALREADY_EXISTS, e.getErrorCode());
     }
 
-    @Test
-    @WithMockIntygsadminUser
-    void testDeleteUser_currentUser() {
-        UUID id = userService.getActiveUser().getId();
-
-        try {
-            userService.deleteUser(id);
-            fail();
-        } catch (IaServiceException e) {
-            assertEquals(IaErrorCode.BAD_STATE, e.getErrorCode());
-        }
-
-        verify(userPersistenceService, times(0)).delete(id);
-    }
-
-    @Test
-    @WithMockIntygsadminUser
-    void testUpdateUser() {
-        UUID id = UUID.randomUUID();
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(id);
-        userDTO.setName("name");
-        userDTO.setEmployeeHsaId("HSA-1");
-        userDTO.setIntygsadminRole(IntygsadminRole.FULL);
-
-        UserEntity entity = new UserEntity();
-        entity.setId(id);
-
-        Optional<UserEntity> userEntity = Optional.of(entity);
-
-        when(userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId())).thenReturn(userEntity);
-
-        userService.updateUser(userDTO);
-        verify(userPersistenceService, times(1)).update(any());
-    }
-
-    @Test
-    @WithMockIntygsadminUser
-    void testUpdateUser_currentUser() {
-        UUID id = userService.getActiveUser().getId();
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(id);
-        userDTO.setName("name");
-        userDTO.setEmployeeHsaId("HSA-1");
-        userDTO.setIntygsadminRole(IntygsadminRole.BAS);
-
-        try {
-            userService.updateUser(userDTO);
-            fail();
-        } catch (IaServiceException e) {
-            assertEquals(IaErrorCode.BAD_STATE, e.getErrorCode());
-        }
-
-        verify(userPersistenceService, times(0)).update(any());
-    }
-
-    @Test
-    @WithMockIntygsadminUser
-    void testUpdateUser_hsaExists() {
-        UUID id = UUID.randomUUID();
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(id);
-        userDTO.setName("name");
-        userDTO.setEmployeeHsaId("HSA-1");
-        userDTO.setIntygsadminRole(IntygsadminRole.FULL);
-
-        UserEntity entity = new UserEntity();
-        entity.setId(UUID.randomUUID());
-
-        Optional<UserEntity> userEntity = Optional.of(entity);
-
-        when(userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId())).thenReturn(userEntity);
-
-        try {
-            userService.updateUser(userDTO);
-            fail();
-        } catch (IaServiceException e) {
-            assertEquals(IaErrorCode.ALREADY_EXISTS, e.getErrorCode());
-        }
-
-        verify(userPersistenceService, times(0)).update(any());
-    }
-
-    @Test
-    void testAddUser() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("name");
-        userDTO.setEmployeeHsaId("HSA-1");
-        userDTO.setIntygsadminRole(IntygsadminRole.FULL);
-
-        userService.addUser(userDTO);
-        verify(userPersistenceService, times(1)).add(any());
-    }
-
-    @Test
-    void testAddUser_hsaExists() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("name");
-        userDTO.setEmployeeHsaId("HSA-1");
-        userDTO.setIntygsadminRole(IntygsadminRole.FULL);
-
-        UserEntity entity = new UserEntity();
-        entity.setId(UUID.randomUUID());
-
-        Optional<UserEntity> userEntity = Optional.of(entity);
-
-        when(userPersistenceService.findByEmployeeHsaId(userDTO.getEmployeeHsaId())).thenReturn(userEntity);
-
-        try {
-            userService.addUser(userDTO);
-            fail();
-        } catch (IaServiceException e) {
-            assertEquals(IaErrorCode.ALREADY_EXISTS, e.getErrorCode());
-        }
-
-        verify(userPersistenceService, times(0)).add(any());
-    }
+    verify(userPersistenceService, times(0)).add(any());
+  }
 }

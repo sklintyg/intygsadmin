@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.intygsadmin.web.service.status;
 
 import lombok.RequiredArgsConstructor;
@@ -33,21 +32,23 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusForCareGiverInte
 @RequiredArgsConstructor
 public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiverService {
 
-    private final WCIntegrationRestService wcIntegrationRestService;
-    private final SendNotificationRequestValidator sendNotificationRequestValidator;
+  private final WCIntegrationRestService wcIntegrationRestService;
+  private final SendNotificationRequestValidator sendNotificationRequestValidator;
 
-    @Value("${timeinterval.maxdays.caregiver:1}")
-    private int maxTimeInterval;
+  @Value("${timeinterval.maxdays.caregiver:1}")
+  private int maxTimeInterval;
 
-    @Value("${timelimit.daysback.start:365}")
-    private int maxDaysBackStartDate;
+  @Value("${timelimit.daysback.start:365}")
+  private int maxDaysBackStartDate;
 
-    @Override
-    public Integer send(String careGiverId, SendStatusForCareGiverRequestDTO request) {
-        sendNotificationRequestValidator.validateId(careGiverId);
-        sendNotificationRequestValidator.validateDate(request.getStart(), request.getEnd(), maxTimeInterval, maxDaysBackStartDate);
+  @Override
+  public Integer send(String careGiverId, SendStatusForCareGiverRequestDTO request) {
+    sendNotificationRequestValidator.validateId(careGiverId);
+    sendNotificationRequestValidator.validateDate(
+        request.getStart(), request.getEnd(), maxTimeInterval, maxDaysBackStartDate);
 
-        final var integrationRequest = SendStatusForCareGiverIntegrationRequestDTO.builder()
+    final var integrationRequest =
+        SendStatusForCareGiverIntegrationRequestDTO.builder()
             .careGiverId(careGiverId)
             .start(request.getStart())
             .end(request.getEnd())
@@ -55,23 +56,21 @@ public class SendStatusForCareGiverServiceImpl implements SendStatusForCareGiver
             .statuses(request.getStatuses())
             .build();
 
-        final var response = wcIntegrationRestService.sendStatusForCareGiver(integrationRequest);
-        return response.getCount();
-    }
+    final var response = wcIntegrationRestService.sendStatusForCareGiver(integrationRequest);
+    return response.getCount();
+  }
 
-    @Override
-    public CountStatusesDTO count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
-        final var integrationRequest = CountStatusesForCareGiverIntegrationRequestDTO.builder()
+  @Override
+  public CountStatusesDTO count(String caregiverId, CountStatusesForCareGiverRequestDTO request) {
+    final var integrationRequest =
+        CountStatusesForCareGiverIntegrationRequestDTO.builder()
             .careGiverId(caregiverId)
             .start(request.getStart())
             .end(request.getEnd())
             .statuses(request.getStatuses())
             .build();
 
-        final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);
-        return CountStatusesDTO.builder()
-            .count(response.getCount())
-            .max(response.getMax())
-            .build();
-    }
+    final var response = wcIntegrationRestService.countStatusesForCareGiver(integrationRequest);
+    return CountStatusesDTO.builder().count(response.getCount()).max(response.getMax()).build();
+  }
 }

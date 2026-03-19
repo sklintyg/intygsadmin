@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,46 +35,47 @@ import se.inera.intyg.intygsadmin.persistence.util.PersistenceUtil;
 @Transactional
 public class BannerPersistenceService {
 
-    private BannerRepository bannerRepository;
+  private BannerRepository bannerRepository;
 
-    public BannerPersistenceService(BannerRepository bannerRepository) {
-        this.bannerRepository = bannerRepository;
+  public BannerPersistenceService(BannerRepository bannerRepository) {
+    this.bannerRepository = bannerRepository;
+  }
+
+  public Page<BannerEntity> findAll(Pageable pageable) {
+    return bannerRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
+  }
+
+  public List<BannerEntity> findActiveAndFuture(LocalDateTime from, Application application) {
+    return bannerRepository.findAllByApplicationEqualsAndDisplayToAfter(application, from);
+  }
+
+  public Optional<BannerEntity> findOne(UUID id) {
+    return bannerRepository.findById(id);
+  }
+
+  public BannerEntity create(BannerEntity bannerEntity) {
+    return bannerRepository.save(bannerEntity);
+  }
+
+  public BannerEntity update(BannerEntity bannerEntity) {
+    BannerEntity entity = bannerRepository.getOne(bannerEntity.getId());
+
+    bannerEntity.setCreatedAt(entity.getCreatedAt());
+
+    return bannerRepository.save(bannerEntity);
+  }
+
+  public long countByApplicationAndTime(
+      Application application, LocalDateTime from, LocalDateTime to, UUID id) {
+
+    if (id == null) {
+      return bannerRepository.countByApplicationEquals(application, from, to);
     }
 
-    public Page<BannerEntity> findAll(Pageable pageable) {
-        return bannerRepository.findAll(PersistenceUtil.alwaysTrue(), pageable);
-    }
+    return bannerRepository.countByApplicationEqualsAndIdNot(application, id, from, to);
+  }
 
-    public List<BannerEntity> findActiveAndFuture(LocalDateTime from, Application application) {
-        return bannerRepository.findAllByApplicationEqualsAndDisplayToAfter(application, from);
-    }
-
-    public Optional<BannerEntity> findOne(UUID id) {
-        return bannerRepository.findById(id);
-    }
-
-    public BannerEntity create(BannerEntity bannerEntity) {
-        return bannerRepository.save(bannerEntity);
-    }
-
-    public BannerEntity update(BannerEntity bannerEntity) {
-        BannerEntity entity = bannerRepository.getOne(bannerEntity.getId());
-
-        bannerEntity.setCreatedAt(entity.getCreatedAt());
-
-        return bannerRepository.save(bannerEntity);
-    }
-
-    public long countByApplicationAndTime(Application application, LocalDateTime from, LocalDateTime to, UUID id) {
-
-        if (id == null) {
-            return bannerRepository.countByApplicationEquals(application, from, to);
-        }
-
-        return bannerRepository.countByApplicationEqualsAndIdNot(application, id, from, to);
-    }
-
-    public void delete(UUID id) {
-        bannerRepository.deleteById(id);
-    }
+  public void delete(UUID id) {
+    bannerRepository.deleteById(id);
+  }
 }

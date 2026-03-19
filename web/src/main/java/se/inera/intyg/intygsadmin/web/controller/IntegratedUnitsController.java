@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,45 +37,45 @@ import se.inera.intyg.intygsadmin.web.util.IntegratedUnitsFileWriter;
 @RequestMapping("/api/integratedUnits")
 public class IntegratedUnitsController {
 
-    private WCIntegrationRestService wcIntegratedUnitsService;
+  private WCIntegrationRestService wcIntegratedUnitsService;
 
-    public IntegratedUnitsController(WCIntegrationRestService wcIntegratedUnitsService) {
-        this.wcIntegratedUnitsService = wcIntegratedUnitsService;
+  public IntegratedUnitsController(WCIntegrationRestService wcIntegratedUnitsService) {
+    this.wcIntegratedUnitsService = wcIntegratedUnitsService;
+  }
+
+  @GetMapping("/{hsaId}")
+  public ResponseEntity<IntegratedUnitDTO> getIntegratedUnit(@PathVariable String hsaId) {
+
+    IntegratedUnitDTO integratedUnitDTO = wcIntegratedUnitsService.getIntegratedUnit(hsaId);
+    if (integratedUnitDTO == null) {
+      return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{hsaId}")
-    public ResponseEntity<IntegratedUnitDTO> getIntegratedUnit(@PathVariable String hsaId) {
+    return ResponseEntity.ok(integratedUnitDTO);
+  }
 
-        IntegratedUnitDTO integratedUnitDTO = wcIntegratedUnitsService.getIntegratedUnit(hsaId);
-        if (integratedUnitDTO == null) {
-            return ResponseEntity.notFound().build();
-        }
+  @GetMapping("/file")
+  public ResponseEntity getIntegratedUnitsFile() {
 
-        return ResponseEntity.ok(integratedUnitDTO);
+    List<IntegratedUnitDTO> integratedUnitDTOList =
+        wcIntegratedUnitsService.getAllIntegratedUnits();
+    if (integratedUnitDTOList.isEmpty()) {
+      return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/file")
-    public ResponseEntity getIntegratedUnitsFile() {
-
-        List<IntegratedUnitDTO> integratedUnitDTOList = wcIntegratedUnitsService.getAllIntegratedUnits();
-        if (integratedUnitDTOList.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        ByteArrayOutputStream byteArrayOutputStream;
-        try {
-            byteArrayOutputStream = new IntegratedUnitsFileWriter().writeExcel(integratedUnitDTOList);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-        HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=integrerade_enheter.xlsx");
-
-        return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .headers(header)
-            .body(byteArrayOutputStream.toByteArray());
+    ByteArrayOutputStream byteArrayOutputStream;
+    try {
+      byteArrayOutputStream = new IntegratedUnitsFileWriter().writeExcel(integratedUnitDTOList);
+    } catch (IOException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    HttpHeaders header = new HttpHeaders();
+    header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=integrerade_enheter.xlsx");
+
+    return ResponseEntity.ok()
+        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        .headers(header)
+        .body(byteArrayOutputStream.toByteArray());
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -46,160 +46,169 @@ import se.inera.intyg.intygsadmin.web.exception.IaValidationException;
 @ExtendWith(MockitoExtension.class)
 public class BannerValidationServiceImplTest {
 
-    @Mock
-    private BannerPersistenceService bannerPersistenceService;
+  @Mock private BannerPersistenceService bannerPersistenceService;
 
-    @InjectMocks
-    private BannerValidationServiceImpl bannerValidationService;
+  @InjectMocks private BannerValidationServiceImpl bannerValidationService;
 
-    @Test
-    public void testValidation_missingFields() {
-        BannerDTO bannerDTO = new BannerDTO();
+  @Test
+  public void testValidation_missingFields() {
+    BannerDTO bannerDTO = new BannerDTO();
 
-        try {
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
+    try {
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
 
-            assertFalse(validationErrors.isEmpty());
-        }
-
-        // Missing application
-        try {
-            bannerDTO = getBannerDTO();
-            bannerDTO.setApplication(null);
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertEquals(1, validationErrors.size());
-        }
-
-        // Missing priority
-        try {
-            bannerDTO = getBannerDTO();
-            bannerDTO.setPriority(null);
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertEquals(1, validationErrors.size());
-        }
-
-        // Missing message
-        try {
-            bannerDTO = getBannerDTO();
-            bannerDTO.setMessage("");
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertEquals(1, validationErrors.size());
-        }
-
-        // Missing displayFrom
-        try {
-            bannerDTO = getBannerDTO();
-            bannerDTO.setDisplayFrom(null);
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertEquals(1, validationErrors.size());
-        }
-
-        // Missing displayTo
-        try {
-            bannerDTO = getBannerDTO();
-            bannerDTO.setDisplayTo(null);
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertEquals(1, validationErrors.size());
-        }
-
-        verify(bannerPersistenceService, times(0)).countByApplicationAndTime(any(), any(), any(), any());
+      assertFalse(validationErrors.isEmpty());
     }
 
-    @Test
-    public void testValidation_dates() {
-        BannerDTO bannerDTO = getBannerDTO();
+    // Missing application
+    try {
+      bannerDTO = getBannerDTO();
+      bannerDTO.setApplication(null);
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
 
-        // To before from
-        try {
-            bannerDTO.setDisplayTo(bannerDTO.getDisplayFrom().minusDays(1));
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertFalse(validationErrors.isEmpty());
-        }
-
-        verify(bannerPersistenceService, times(0)).countByApplicationAndTime(any(), any(), any(), any());
-
-        // To before today
-        try {
-            bannerDTO.setDisplayFrom(LocalDateTime.now().minusDays(10));
-            bannerDTO.setDisplayTo(LocalDateTime.now().minusDays(2));
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaValidationException e) {
-            List<ValidationDTO> validationErrors = e.getValidationErrors();
-
-            assertFalse(validationErrors.isEmpty());
-        }
-
-        verify(bannerPersistenceService, times(0)).countByApplicationAndTime(any(), any(), any(), any());
+      assertEquals(1, validationErrors.size());
     }
 
-    @Test
-    public void testValidation_bannerInInterval() {
-        BannerDTO bannerDTO = getBannerDTO();
+    // Missing priority
+    try {
+      bannerDTO = getBannerDTO();
+      bannerDTO.setPriority(null);
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
 
-        when(bannerPersistenceService.countByApplicationAndTime(
-            eq(bannerDTO.getApplication()), eq(bannerDTO.getDisplayFrom()), eq(bannerDTO.getDisplayTo()), any()))
-            .thenReturn(1L);
-
-        try {
-            bannerValidationService.validateBanner(bannerDTO);
-            fail();
-        } catch (IaServiceException e) {
-            IaErrorCode errorCode = e.getErrorCode();
-            assertEquals(IaErrorCode.ALREADY_EXISTS, errorCode);
-        }
-
-        verify(bannerPersistenceService, times(1)).countByApplicationAndTime(any(), any(), any(), any());
+      assertEquals(1, validationErrors.size());
     }
 
-    @Test
-    public void testValidation_valid() {
-        BannerDTO bannerDTO = getBannerDTO();
+    // Missing message
+    try {
+      bannerDTO = getBannerDTO();
+      bannerDTO.setMessage("");
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
 
-        when(bannerPersistenceService.countByApplicationAndTime(
-            eq(bannerDTO.getApplication()), eq(bannerDTO.getDisplayFrom()), eq(bannerDTO.getDisplayTo()), any()))
-            .thenReturn(0L);
-
-        bannerValidationService.validateBanner(bannerDTO);
-
-        verify(bannerPersistenceService, times(1)).countByApplicationAndTime(any(), any(), any(), any());
+      assertEquals(1, validationErrors.size());
     }
 
-    private BannerDTO getBannerDTO() {
-        BannerDTO bannerDTO = new BannerDTO();
-        bannerDTO.setMessage("Hej");
-        bannerDTO.setApplication(Application.WEBCERT);
-        bannerDTO.setPriority(BannerPriority.HOG);
-        bannerDTO.setDisplayFrom(LocalDateTime.now().plusMinutes(1));
-        bannerDTO.setDisplayTo(LocalDateTime.now().plusDays(1));
+    // Missing displayFrom
+    try {
+      bannerDTO = getBannerDTO();
+      bannerDTO.setDisplayFrom(null);
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
 
-        return bannerDTO;
+      assertEquals(1, validationErrors.size());
     }
+
+    // Missing displayTo
+    try {
+      bannerDTO = getBannerDTO();
+      bannerDTO.setDisplayTo(null);
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
+
+      assertEquals(1, validationErrors.size());
+    }
+
+    verify(bannerPersistenceService, times(0))
+        .countByApplicationAndTime(any(), any(), any(), any());
+  }
+
+  @Test
+  public void testValidation_dates() {
+    BannerDTO bannerDTO = getBannerDTO();
+
+    // To before from
+    try {
+      bannerDTO.setDisplayTo(bannerDTO.getDisplayFrom().minusDays(1));
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
+
+      assertFalse(validationErrors.isEmpty());
+    }
+
+    verify(bannerPersistenceService, times(0))
+        .countByApplicationAndTime(any(), any(), any(), any());
+
+    // To before today
+    try {
+      bannerDTO.setDisplayFrom(LocalDateTime.now().minusDays(10));
+      bannerDTO.setDisplayTo(LocalDateTime.now().minusDays(2));
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaValidationException e) {
+      List<ValidationDTO> validationErrors = e.getValidationErrors();
+
+      assertFalse(validationErrors.isEmpty());
+    }
+
+    verify(bannerPersistenceService, times(0))
+        .countByApplicationAndTime(any(), any(), any(), any());
+  }
+
+  @Test
+  public void testValidation_bannerInInterval() {
+    BannerDTO bannerDTO = getBannerDTO();
+
+    when(bannerPersistenceService.countByApplicationAndTime(
+            eq(bannerDTO.getApplication()),
+            eq(bannerDTO.getDisplayFrom()),
+            eq(bannerDTO.getDisplayTo()),
+            any()))
+        .thenReturn(1L);
+
+    try {
+      bannerValidationService.validateBanner(bannerDTO);
+      fail();
+    } catch (IaServiceException e) {
+      IaErrorCode errorCode = e.getErrorCode();
+      assertEquals(IaErrorCode.ALREADY_EXISTS, errorCode);
+    }
+
+    verify(bannerPersistenceService, times(1))
+        .countByApplicationAndTime(any(), any(), any(), any());
+  }
+
+  @Test
+  public void testValidation_valid() {
+    BannerDTO bannerDTO = getBannerDTO();
+
+    when(bannerPersistenceService.countByApplicationAndTime(
+            eq(bannerDTO.getApplication()),
+            eq(bannerDTO.getDisplayFrom()),
+            eq(bannerDTO.getDisplayTo()),
+            any()))
+        .thenReturn(0L);
+
+    bannerValidationService.validateBanner(bannerDTO);
+
+    verify(bannerPersistenceService, times(1))
+        .countByApplicationAndTime(any(), any(), any(), any());
+  }
+
+  private BannerDTO getBannerDTO() {
+    BannerDTO bannerDTO = new BannerDTO();
+    bannerDTO.setMessage("Hej");
+    bannerDTO.setApplication(Application.WEBCERT);
+    bannerDTO.setPriority(BannerPriority.HOG);
+    bannerDTO.setDisplayFrom(LocalDateTime.now().plusMinutes(1));
+    bannerDTO.setDisplayTo(LocalDateTime.now().plusDays(1));
+
+    return bannerDTO;
+  }
 }
