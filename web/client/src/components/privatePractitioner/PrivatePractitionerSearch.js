@@ -1,15 +1,30 @@
-import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Form, UncontrolledTooltip } from 'reactstrap'
 import * as modalActions from '../../store/actions/modal'
-import PrivatePractitionerSearchResult, { PrivatePractitionerSearchResultId } from './PrivatePractitionerSearchResult.dialog'
+import PrivatePractitionerSearchResult, {
+  PrivatePractitionerSearchResultId
+} from './PrivatePractitionerSearchResult.dialog'
 import { IaTypo03 } from '../styles/iaTypography'
 import styled from 'styled-components'
 import * as actions from '../../store/actions/privatePractitioner'
-import { getErrorMessage, getIsFetching, getPrivatePractitioner } from '../../store/reducers/privatePractitioner'
+import {
+  getErrorMessage,
+  getIsFetching,
+  getPrivatePractitioner
+} from '@/store/reducers/privatePractitioner.js'
 import colors from '../styles/iaColors'
 import LoadingSpinner from '../loadingSpinner'
-import { COULD_NOT_FIND_PRIVATE_PRACTITIONER, validatePrivatePractitioner } from './PrivatePractitionerValidator'
+import {
+  COULD_NOT_FIND_PRIVATE_PRACTITIONER,
+  validatePrivatePractitioner
+} from './PrivatePractitionerValidator'
 import HsaInput from '../styles/HsaInput'
 
 const SpinnerWrapper = styled.div`
@@ -118,7 +133,7 @@ const PrivatePractitionerSearch = () => {
         <Form onSubmit={(event) => searchPrivatePractitioner(event, searchString)}>
           <FlexDiv>
             <Container className={validationSearchMessage !== undefined ? 'error' : ''}>
-              <HsaInput id="searchInput" value={searchString} inputRef={inputRef} onChange={setSearchString} placeholder="ÅÅMMDDXXXX" />
+              <HsaInput id="searchInput" value={searchString} inputRef={inputRef} onChange={setSearchString} placeholder="ÅÅÅÅMMDDXXXX" />
             </Container>
             <Button id={'searchBtn'} color={'success'}>
               Sök privatläkare
