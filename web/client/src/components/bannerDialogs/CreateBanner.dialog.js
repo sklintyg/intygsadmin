@@ -185,7 +185,7 @@ const CreateBanner = ({ handleClose, isOpen, onComplete, data }) => {
           compareValue = newBanner[currentValue] + 'T' + newBanner['displayToTime'] + ':00'
         }
 
-        return accumulator || (data.banner && data.banner[currentValue] !== compareValue)
+        return accumulator || (data && data.banner && data.banner[currentValue] !== compareValue)
       }, false)
 
       enable = enable && changed
