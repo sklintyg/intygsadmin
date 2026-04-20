@@ -103,7 +103,7 @@ const CreateUser = ({ handleClose, isOpen, onComplete, data }) => {
       let changed = fields.reduce((accumulator, currentValue) => {
         let compareValue = newUser[currentValue]
 
-        return accumulator || (data.user && data.user[currentValue] !== compareValue)
+        return accumulator || (data && data.user && data.user[currentValue] !== compareValue)
       }, false)
 
       enable = enable && changed
