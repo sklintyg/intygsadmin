@@ -1,4 +1,3 @@
-import legacy from '@vitejs/plugin-legacy'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
@@ -38,13 +37,7 @@ export default ({ mode }) => {
         include: /\.(jsx|js|tsx|ts)$/,
         jsxRuntime: 'automatic',
       }),
-    ].concat(
-      env.LEGACY_SUPPORT !== 'false'
-        ? legacy({
-            targets: ['defaults', 'not IE 11'],
-          })
-        : []
-    ),
+    ],
     css: {
       preprocessorOptions: {
         scss: {
@@ -69,6 +62,7 @@ export default ({ mode }) => {
     build: {
       outDir: 'build',
       sourcemap: true,
+      target: 'es2022',
       rollupOptions: {
         output: {
           manualChunks: {
