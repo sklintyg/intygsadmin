@@ -208,6 +208,7 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
     }
   }
 
+
   const handleKeyPress = (evt) => {
     if (textArea.current.innerText.length >= limit) {
       switch (evt.keyCode) {
