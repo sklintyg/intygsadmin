@@ -187,18 +187,27 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
     const sel = extractSelection()
     let range = sel.getRangeAt(0)
     range.deleteContents()
-    let textElement = document.createTextNode(text)
-    range.insertNode(textElement)
-    range.setStartAfter(textElement)
+
+    const lines = text.split(/\r?\n/)
+    const fragment = document.createDocumentFragment()
+    lines.forEach((line, index) => {
+      fragment.appendChild(document.createTextNode(line))
+      if (index < lines.length - 1) {
+        fragment.appendChild(document.createElement('br'))
+      }
+    })
+    const lastNode = fragment.lastChild
+    range.insertNode(fragment)
+    range.setStartAfter(lastNode)
     range.collapse(true)
     sel.removeAllRanges()
     sel.addRange(range)
 
-    // Klipp bort allt efter limit om man klistrar in för mycket text.
     if (textArea.current.innerText.length > limit) {
       textArea.current.innerText = textArea.current.innerText.substring(0, limit)
     }
   }
+
 
   const handleKeyPress = (evt) => {
     if (textArea.current.innerText.length >= limit) {
