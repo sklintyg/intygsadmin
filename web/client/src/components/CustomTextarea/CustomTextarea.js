@@ -105,12 +105,23 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
   const popup = useRef()
   const [popupOpen, setPopupOpen] = useState(false)
   const isInitialized = useRef(false)
+  const prevValue = useRef(value)
 
   useEffect(() => {
-    if (textArea.current && !isInitialized.current && value) {
-      textArea.current.innerHTML = value
-      isInitialized.current = true
+    if (!textArea.current) {
+      return
     }
+    if (!isInitialized.current) {
+      textArea.current.innerHTML = value || ''
+      isInitialized.current = true
+      prevValue.current = value
+      return
+    }
+    if (!value && prevValue.current) {
+      textArea.current.innerHTML = ''
+      isInitialized.current = false
+    }
+    prevValue.current = value
   }, [value])
 
   const onInput = () => {
@@ -178,6 +189,10 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
     range.deleteContents()
     let textElement = document.createTextNode(text)
     range.insertNode(textElement)
+    range.setStartAfter(textElement)
+    range.collapse(true)
+    sel.removeAllRanges()
+    sel.addRange(range)
 
     // Klipp bort allt efter limit om man klistrar in för mycket text.
     if (textArea.current.innerText.length > limit) {
@@ -211,6 +226,13 @@ const CustomTextarea = ({ onChange, className, value, limit, inputId }) => {
       let br = document.createElement('br')
       range.insertNode(br)
       range.setStartAfter(br)
+      range.collapse(true)
+      sel.removeAllRanges()
+      sel.addRange(range)
+      const lastChild = textArea.current.lastChild
+      if (!lastChild || lastChild.nodeName !== 'BR') {
+        textArea.current.appendChild(document.createElement('br'))
+      }
     }
   }
 
