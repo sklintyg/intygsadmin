@@ -94,7 +94,8 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
           .uri(privatlakarportalUrl + "/internalapi/privatepractitioner/erase/" + hsaId)
           .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
           .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-          .retrieve();
+          .retrieve()
+          .toBodilessEntity();
     } catch (RestClientException e) {
       LOG.error("Failure unregistering private practitioner {}.", hsaId, e);
       throw e;
