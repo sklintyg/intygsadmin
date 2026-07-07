@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponentsBuilder;
 import se.inera.intyg.intygsadmin.web.integration.model.PrivatePractitioner;
 
 @Profile("!pp-stub")
@@ -46,8 +47,8 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
 
   private final RestClient restClient;
 
-  @Value("${privatlakarportal.internalapi}")
-  private String privatlakarportalUrl;
+  @Value("${privatepractitionerservice.base.url}")
+  private String privatePractitionerServiceBaseUrl;
 
   @Autowired
   public PPIntegrationRestRestServiceImpl(RestClient restClient) {
@@ -60,9 +61,10 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
       return restClient
           .get()
           .uri(
-              privatlakarportalUrl
-                  + "/internalapi/privatepractitioner?personOrHsaId="
-                  + personOrHsaId)
+              UriComponentsBuilder.fromUriString(privatePractitionerServiceBaseUrl)
+                  .queryParam("personOrHsaId", personOrHsaId)
+                  .build()
+                  .toUri())
           .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
           .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
           .retrieve()
@@ -79,7 +81,7 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
   public List<PrivatePractitioner> getAllPrivatePractitioners() {
     return restClient
         .get()
-        .uri(privatlakarportalUrl + "/internalapi/privatepractitioner/all")
+        .uri(privatePractitionerServiceBaseUrl + "/all")
         .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
         .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
         .retrieve()
@@ -91,7 +93,11 @@ public class PPIntegrationRestRestServiceImpl implements PPIntegrationRestServic
     try {
       restClient
           .delete()
-          .uri(privatlakarportalUrl + "/internalapi/privatepractitioner/erase/" + hsaId)
+          .uri(
+              UriComponentsBuilder.fromUriString(privatePractitionerServiceBaseUrl)
+                  .path("/{hsaId}")
+                  .buildAndExpand(hsaId)
+                  .toUri())
           .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
           .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
           .retrieve()
