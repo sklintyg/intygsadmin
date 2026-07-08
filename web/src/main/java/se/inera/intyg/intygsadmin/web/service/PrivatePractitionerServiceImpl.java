@@ -58,6 +58,7 @@ public class PrivatePractitionerServiceImpl implements PrivatePractitionerServic
     final var hasCertificates = getHasCertificates(certificateCount);
     final var privatePractitionerDTO = new PrivatePractitionerDTO();
     copyProperties(privatePractitioner, privatePractitionerDTO);
+    privatePractitionerDTO.setCareproviderName(privatePractitioner.getCareProviderName());
     privatePractitionerDTO.setHasCertificates(hasCertificates);
 
     return privatePractitionerDTO;
