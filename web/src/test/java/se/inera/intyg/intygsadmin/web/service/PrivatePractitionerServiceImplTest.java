@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
@@ -56,13 +57,14 @@ class PrivatePractitionerServiceImplTest {
   private static final String PERSON_ID = "191212121212";
   private static final String HSA_ID = "SE23210000055-TEST5";
   private static final String CARE_PROVIDER_NAME = "Vårdgivare Vesslan";
-  private static final LocalDateTime REGISTRATION_DATE = LocalDateTime.now();
+  private static final LocalDateTime REGISTRATION_DATE =
+      LocalDateTime.of(2026, Month.APRIL, 15, 10, 0);
 
   @Nested
-  public class testGetPrivatePractitioner {
+  class testGetPrivatePractitioner {
 
     @Test
-    public void shouldReturnNullWhenNoPrivatePractitioner() {
+    void shouldReturnNullWhenNoPrivatePractitioner() {
       when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID)).thenReturn(null);
 
       final var response = privatePractitionerService.getPrivatePractitioner(HSA_ID);
@@ -71,7 +73,7 @@ class PrivatePractitionerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnHasCertificatesNoWhenCertificateCountIsZero() {
+    void shouldReturnHasCertificatesNoWhenCertificateCountIsZero() {
       when(ppIntegrationRestService.getPrivatePractitioner(PERSON_ID))
           .thenReturn(getPrivatePractitioner());
       when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(0);
@@ -82,7 +84,7 @@ class PrivatePractitionerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnHasCertificatesYesWhenCertificateCountIsNotZero() {
+    void shouldReturnHasCertificatesYesWhenCertificateCountIsNotZero() {
       when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID))
           .thenReturn(getPrivatePractitioner());
       when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(1);
@@ -93,7 +95,7 @@ class PrivatePractitionerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnErrorMessageStringWhenCertificateCountIsNull() {
+    void shouldReturnErrorMessageStringWhenCertificateCountIsNull() {
       when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID))
           .thenReturn(getPrivatePractitioner());
       when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(null);
@@ -104,7 +106,7 @@ class PrivatePractitionerServiceImplTest {
     }
 
     @Test
-    public void shouldCopyAllFieldsFromPrivatePractitionerToDto() {
+    void shouldCopyAllFieldsFromPrivatePractitionerToDto() {
       when(ppIntegrationRestService.getPrivatePractitioner(HSA_ID))
           .thenReturn(getPrivatePractitioner());
       when(itIntegrationRestService.getCertificateCount(HSA_ID)).thenReturn(null);
@@ -122,10 +124,10 @@ class PrivatePractitionerServiceImplTest {
   }
 
   @Nested
-  public class testGetPrivatePractitionerFile {
+  class testGetPrivatePractitionerFile {
 
     @Test
-    public void shouldReturnNullIfListEmptyList() {
+    void shouldReturnNullIfListEmptyList() {
       when(ppIntegrationRestService.getAllPrivatePractitioners())
           .thenReturn(Collections.emptyList());
 
@@ -136,7 +138,7 @@ class PrivatePractitionerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnByteArrayOfPrivatePractitonerFile() {
+    void shouldReturnByteArrayOfPrivatePractitonerFile() {
       final var privatePractitionerList = List.of(getPrivatePractitioner());
       when(ppIntegrationRestService.getAllPrivatePractitioners())
           .thenReturn(privatePractitionerList);
@@ -154,7 +156,7 @@ class PrivatePractitionerServiceImplTest {
     privatePractitioner.setPersonId(PERSON_ID);
     privatePractitioner.setEmail(EMAIL);
     privatePractitioner.setName(NAME);
-    privatePractitioner.setCareproviderName(CARE_PROVIDER_NAME);
+    privatePractitioner.setCareProviderName(CARE_PROVIDER_NAME);
     privatePractitioner.setRegistrationDate(REGISTRATION_DATE);
     return privatePractitioner;
   }

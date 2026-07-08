@@ -107,7 +107,7 @@ public class PrivatePractitionerFileWriter {
     cell = row.createCell(columnCount++);
     cell.setCellValue(privatePractitioner.getName());
     cell = row.createCell(columnCount++);
-    cell.setCellValue(privatePractitioner.getCareproviderName());
+    cell.setCellValue(privatePractitioner.getCareProviderName());
     cell = row.createCell(columnCount++);
     cell.setCellValue(privatePractitioner.getEmail());
     cell = row.createCell(columnCount++);

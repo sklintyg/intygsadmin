@@ -31,7 +31,7 @@ public class PrivatePractitioner {
   private String hsaId;
   private String personId;
   private String name;
-  private String careproviderName;
+  private String careProviderName;
   private String email;
   private LocalDateTime registrationDate;
 }
