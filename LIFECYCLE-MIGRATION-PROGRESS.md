@@ -3,7 +3,7 @@
 ## Phase checklist
 
 - [x] Phase 0 — Baseline and documentation
-- [ ] Phase 1 — Gradle 9 wrapper
+- [x] Phase 1 — Gradle 9 wrapper
 - [ ] Phase 2 — intyg-bom + CI images
 - [ ] Phase 3 — Spring Boot 4 compile + modular starters
 - [ ] Phase 4 — Jackson 3 migration
