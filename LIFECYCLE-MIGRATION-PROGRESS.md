@@ -5,7 +5,7 @@
 - [x] Phase 0 — Baseline and documentation
 - [x] Phase 1 — Gradle 9 wrapper
 - [x] Phase 2 — intyg-bom + CI images
-- [ ] Phase 3 — Spring Boot 4 compile + modular starters
+- [x] Phase 3 — Spring Boot 4 compile + modular starters
 - [ ] Phase 4 — Jackson 3 migration
 - [ ] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
 - [ ] Phase 6 — Integration tests + dependency audit
@@ -31,7 +31,7 @@
   Gradle 9 (details via `--warning-mode all`) — expected, to be resolved in Phase 1.
 - See `LIFECYCLE-MIGRATION-PLAN.md` for full inventory.
 
-### Phase 1 — Gradle 9 wrapper (pending)
+### Phase 1 — Gradle 9 wrapper (done)
 
 ### Phase 2 — intyg-bom + CI images (done)
 
@@ -45,7 +45,14 @@
   coordinates.
 - `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` is green.
 
-### Phase 3 — Spring Boot 4 compile + starters (pending)
+### Phase 3 — Spring Boot 4 compile + starters (done)
+
+- Replaced `spring-boot-starter-web` with `spring-boot-starter-webmvc` in `web/build.gradle`.
+- Replaced raw `spring-session-data-redis` with `spring-boot-starter-session-data-redis` in
+  `web/build.gradle`.
+- Replaced `aspectjweaver` + `spring-webmvc` with `spring-boot-starter-aspectj` + `spring-web` in
+  `logging/build.gradle` to align shared-module dependencies with Boot 4 starter layout.
+- `build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` is green.
 
 ### Phase 4 — Jackson 3 migration (pending)
 

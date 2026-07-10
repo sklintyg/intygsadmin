@@ -130,7 +130,7 @@ dependencies {
     implementation "se.inera.intyg.infra:security-common:${infraVersion}"
     implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
 
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-webmvc"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
@@ -147,7 +147,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct"
     implementation "org.springdoc:springdoc-openapi-ui"
     implementation "org.springdoc:springdoc-openapi-data-rest"
-    implementation "org.springframework.session:spring-session-data-redis"
+    implementation "org.springframework.boot:spring-boot-starter-session-data-redis"
     implementation "redis.clients:jedis"
 
     annotationProcessor "jakarta.servlet:jakarta.servlet-api"
