@@ -18,14 +18,19 @@
  */
 package se.inera.intyg.intygsadmin.web.config;
 
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.StdSerializer;
 
 @Configuration
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
@@ -35,11 +40,30 @@ public class ObjectMapperConfig {
   private static final String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
 
   @Bean
-  public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
+  public JsonMapperBuilderCustomizer jsonCustomizer() {
     return builder -> {
-      builder.simpleDateFormat(dateTimeFormat);
-      builder.serializers(new LocalDateSerializer(DateTimeFormatter.ofPattern(dateFormat)));
-      builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(dateTimeFormat)));
+      final var dateTimeModule = new SimpleModule();
+      dateTimeModule.addSerializer(
+          LocalDate.class,
+          new StdSerializer<>(LocalDate.class) {
+            @Override
+            public void serialize(
+                LocalDate value, JsonGenerator gen, SerializationContext serializers)
+                throws JacksonException {
+              gen.writeString(value.format(DateTimeFormatter.ofPattern(dateFormat)));
+            }
+          });
+      dateTimeModule.addSerializer(
+          LocalDateTime.class,
+          new StdSerializer<>(LocalDateTime.class) {
+            @Override
+            public void serialize(
+                LocalDateTime value, JsonGenerator gen, SerializationContext serializers)
+                throws JacksonException {
+              gen.writeString(value.format(DateTimeFormatter.ofPattern(dateTimeFormat)));
+            }
+          });
+      builder.addModule(dateTimeModule);
     };
   }
 }

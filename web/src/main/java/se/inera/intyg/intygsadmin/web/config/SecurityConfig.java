@@ -53,7 +53,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
@@ -173,7 +173,7 @@ public class SecurityConfig {
         .logout(
             httpSecurityLogoutConfigurer ->
                 httpSecurityLogoutConfigurer
-                    .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
+                    .logoutRequestMatcher(PathPatternRequestMatcher.pathPattern(LOGOUT_URL))
                     .logoutSuccessHandler(customLogoutSuccessHandler)
                     .invalidateHttpSession(true)
                     .clearAuthentication(true))

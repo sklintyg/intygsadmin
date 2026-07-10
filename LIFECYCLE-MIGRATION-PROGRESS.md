@@ -4,7 +4,7 @@
 
 - [x] Phase 0 — Baseline and documentation
 - [x] Phase 1 — Gradle 9 wrapper
-- [ ] Phase 2 — intyg-bom + CI images
+- [x] Phase 2 — intyg-bom + CI images
 - [ ] Phase 3 — Spring Boot 4 compile + modular starters
 - [ ] Phase 4 — Jackson 3 migration
 - [ ] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
@@ -33,7 +33,17 @@
 
 ### Phase 1 — Gradle 9 wrapper (pending)
 
-### Phase 2 — intyg-bom + CI images (pending)
+### Phase 2 — intyg-bom + CI images (done)
+
+- Updated `gradle.properties` to `intygBomVersion=1.0.0.16`.
+- Updated `Jenkins.properties` builder/runtime image tags to `25.0.3` / `25.0.1`.
+- Restored legacy SBOM output names on `intygsadmin-web` (`bom.json` / `bom.xml`) so CI keeps
+  matching the aggregation module output.
+- Spring Boot 4 compile fixes applied for `EntityScan`, error controller classes, security logout
+  matcher, and Jackson 3 customizers.
+- Rest Assured test dependencies were pinned to `5.5.2` because the BOM no longer supplied those
+  coordinates.
+- `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` is green.
 
 ### Phase 3 — Spring Boot 4 compile + starters (pending)
 

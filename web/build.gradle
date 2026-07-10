@@ -1,7 +1,7 @@
 plugins {
     id 'com.netflix.nebula.node'
-    id 'org.cyclonedx.bom'
-    id 'org.springframework.boot'
+    alias(libs.plugins.org.cyclonedx.bom)
+    alias(libs.plugins.org.springframework.boot)
 }
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
@@ -22,6 +22,11 @@ node {
 }
 
 springBoot { buildInfo() }
+
+tasks.named('cyclonedxBom') {
+    jsonOutput.set(file("build/reports/cyclonedx/bom.json"))
+    xmlOutput.set(file("build/reports/cyclonedx/bom.xml"))
+}
 
 tasks.named("jar") {
     enabled = false
@@ -127,6 +132,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
@@ -152,6 +158,7 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.security:spring-security-test"
+    testImplementation platform("io.rest-assured:rest-assured-bom:6.0.0")
     testImplementation("commons-io:commons-io")
     testImplementation("io.rest-assured:json-path")
     testImplementation("io.rest-assured:json-schema-validator")
