@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.intygsadmin.web.integration.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Value;
 import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRequestDTO.SendStatusIntegrationRequestDTOBuilder;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder

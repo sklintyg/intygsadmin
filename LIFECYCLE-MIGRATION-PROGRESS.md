@@ -6,10 +6,10 @@
 - [x] Phase 1 — Gradle 9 wrapper
 - [x] Phase 2 — intyg-bom + CI images
 - [x] Phase 3 — Spring Boot 4 compile + modular starters
-- [ ] Phase 4 — Jackson 3 migration
+- [x] Phase 4 — Jackson 3 migration
 - [ ] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
 - [ ] Phase 6 — Integration tests + dependency audit
-- [ ] Phase 7 — WebClient.Builder + webclient starter
+- [ ] Phase 7 — WebClient.Builder + webclient starter — **N/A** (no WebClient beans)
 - [ ] Phase 8 — Final sign-off (remove migrator)
 - [ ] Phase 9 — Friendliness audit (documentation)
 
@@ -33,16 +33,23 @@
 
 ### Phase 1 — Gradle 9 wrapper (done)
 
+- Upgraded Gradle wrapper to **9.6.1** (`gradle-wrapper.properties`, wrapper JAR, `gradlew` scripts).
+- Applied CycloneDX Gradle 9 fix in root `build.gradle`: replaced `tasks.matching { …
+  cyclonedxDirectBom … }` with `pluginManager.withPlugin('org.cyclonedx.bom') { … }`.
+- Baseline Gradle 9 deprecation warnings from pre-migration build resolved.
+
 ### Phase 2 — intyg-bom + CI images (done)
 
-- Updated `gradle.properties` to `intygBomVersion=1.0.0.16`.
+- Updated `gradle.properties` to `intygBomVersion=1.0.0.17` (landed at `.17`, not `.16`).
 - Updated `Jenkins.properties` builder/runtime image tags to `25.0.3` / `25.0.1`.
 - Restored legacy SBOM output names on `intygsadmin-web` (`bom.json` / `bom.xml`) so CI keeps
-  matching the aggregation module output.
-- Spring Boot 4 compile fixes applied for `EntityScan`, error controller classes, security logout
-  matcher, and Jackson 3 customizers.
-- Rest Assured test dependencies were pinned to `5.5.2` because the BOM no longer supplied those
-  coordinates.
+  matching the aggregation module output; moved CycloneDX plugin from root to `web` module.
+- Spring Boot 4 compile fixes: `EntityScan` import, `RequestErrorController` / `ErrorController`
+  API, security logout matcher, `spring.session.data.redis.*` property rename.
+- **Partial Jackson 3** (compile-only): `ObjectMapperConfig` migrated to `JsonMapperBuilderCustomizer`
+  + `tools.jackson.*` serializers — remaining Jackson 2 imports deferred to Phase 4.
+- Liquibase: `org.liquibase:liquibase-core` → `spring-boot-starter-liquibase` in persistence.
+- Rest Assured test dependencies pinned via `rest-assured-bom:6.0.0` (BOM no longer supplies coords).
 - `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` is green.
 
 ### Phase 3 — Spring Boot 4 compile + starters (done)
@@ -54,13 +61,32 @@
   `logging/build.gradle` to align shared-module dependencies with Boot 4 starter layout.
 - `build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` is green.
 
-### Phase 4 — Jackson 3 migration (pending)
+### Phase 4 — Jackson 3 migration (done)
+
+- Updated `persistence/build.gradle`: `com.fasterxml.jackson.core:jackson-databind` →
+  `tools.jackson.core:jackson-databind`.
+- Migrated all remaining Jackson 2 imports to Jackson 3 (`tools.jackson.*`); kept
+  `com.fasterxml.jackson.annotation.*` where used (`IntygInfoDTO`, `DataExportResponse`).
+- Replaced `ObjectMapper` / `JsonProcessingException` with `JsonMapper` / `JacksonException` in
+  `CustomAuthorizationResolver`, `FakeApiController` (injected), `TestDataBootstrapper`,
+  `BaseRestIntegrationTest`.
+- Migrated 10 builder DTOs (`@JsonDeserialize` / `@JsonPOJOBuilder`) to
+  `tools.jackson.databind.annotation.*`.
+- `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` — **green**.
+- `appRunDebug` smoke test — **Started IntygsadminApplication** on ports 8070/8170; test data
+  bootstrap via Jackson 3 `JsonMapper` succeeded; process killed afterwards.
+- Note: Jackson 2.21.4 still appears transitively via `se.inera.intyg.infra` artifacts — not
+  introduced by this project; no application code imports `com.fasterxml.jackson.databind|core`.
 
 ### Phase 5 — Autoconfig audit (pending)
 
 ### Phase 6 — Integration tests + dependency audit (pending)
 
-### Phase 7 — WebClient auto-config (pending — expected N/A, confirm no WebClient usage introduced)
+See plan for intygsadmin-specific scope (`restAssuredTest`, not Testcontainers).
+
+### Phase 7 — WebClient auto-config — **N/A**
+
+No `WebClient` beans in codebase.
 
 ### Phase 8 — Final sign-off (pending)
 
@@ -68,8 +94,17 @@
 
 ## Lessons learned
 
-_(to be filled in as phases complete)_
+- BOM landed at `1.0.0.17` and Gradle at `9.6.1` (newer than skill defaults `1.0.0.16` / `9.6.0`).
+- Until Phase 4, web compile classpath carried **both** Jackson 2.21.4 and 3.1.4 — persistence
+  direct `com.fasterxml.jackson.core:jackson-databind` was the main Jackson 2 source.
+- `ObjectMapperConfig` had to move to Jackson 3 APIs in Phase 2 for Boot 4 compile; document as
+  partial Phase 4 work to avoid phase-boundary confusion.
 
 ## Accepted deviations / deferred follow-ups
 
-_(to be filled in as phases complete)_
+- `spring-boot-properties-migrator` not added — session properties already migrated manually;
+  revisit in Phase 5 if startup logs suggest missing renames.
+- `SessionConfig` / `IneraCookieSerializer` — keep manual bean (Inera IdP requirement).
+- `CustomAuthorizationResolver` uses manual `JsonMapper` (not injected) — instantiated in
+  `SecurityConfig`; inject via bean refactor deferred to Phase 5.
+- `restAssuredTest` verification deferred to Phase 6 (not part of default `build`).

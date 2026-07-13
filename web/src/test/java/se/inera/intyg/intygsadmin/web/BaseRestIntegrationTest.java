@@ -22,9 +22,6 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_LOGIN_ENDPOINT;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.config.SessionConfig;
 import io.restassured.http.ContentType;
@@ -33,6 +30,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.http.HttpStatus;
 import se.inera.intyg.intygsadmin.web.auth.fake.FakeUser;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class BaseRestIntegrationTest {
 
@@ -45,8 +45,8 @@ public abstract class BaseRestIntegrationTest {
   private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
   private static final String SESSION_COOKIE = "SESSION";
 
-  protected final ObjectMapper objectMapper =
-      new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  protected final JsonMapper jsonMapper =
+      JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build();
   protected String baseUrl =
       System.getProperty("integration.tests.baseUrl", "http://localhost:8070");
 
@@ -68,9 +68,9 @@ public abstract class BaseRestIntegrationTest {
   protected String getAuthSession(FakeUser fakeUser) {
     String credentialsJson;
     try {
-      credentialsJson = objectMapper.writeValueAsString(fakeUser);
+      credentialsJson = jsonMapper.writeValueAsString(fakeUser);
       return getAuthSession(credentialsJson);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }
