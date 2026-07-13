@@ -53,7 +53,7 @@ import se.inera.intyg.intygsadmin.web.integration.dto.SendStatusIntegrationRespo
 @Service
 public class WCIntegrationRestServiceImpl implements WCIntegrationRestService {
 
-  private RestClient restClient;
+  private final RestClient restClient;
 
   @Value("${webcert.internalapi}")
   private String webcertUrl;
