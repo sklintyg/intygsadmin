@@ -53,9 +53,7 @@ No separate `integration-test` module; ITs live in `web/src/test` (`*IT*` patter
 - No intyg-common dependency → `dependencies.common.version` N/A
 - No external schema artifacts / analytics `schemaVersion` in this app → N/A unless discovered later
 - Gradle wrapper upgrade: performed and verified (9.6.1)
-- `spring-boot-properties-migrator`: **skipped** — `spring.session.data.redis.*` already migrated
-  manually in Phase 2; no other property renames known. Revisit in Phase 5 if migrator reports
-  anything at runtime.
+- `spring-boot-properties-migrator`: added in Phase 5; no renames reported at startup; remove in Phase 8
 
 ## Phases
 

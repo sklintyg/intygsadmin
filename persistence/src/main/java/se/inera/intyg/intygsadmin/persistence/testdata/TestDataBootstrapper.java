@@ -40,7 +40,6 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
-import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 @Component
@@ -54,11 +53,14 @@ public class TestDataBootstrapper {
 
   private final BannerRepository bannerRepository;
   private final UserRepository userRepository;
+  private final JsonMapper jsonMapper;
 
   @Autowired
-  public TestDataBootstrapper(BannerRepository bannerRepository, UserRepository userRepository) {
+  public TestDataBootstrapper(
+      BannerRepository bannerRepository, UserRepository userRepository, JsonMapper jsonMapper) {
     this.bannerRepository = bannerRepository;
     this.userRepository = userRepository;
+    this.jsonMapper = jsonMapper;
   }
 
   @PostConstruct
@@ -75,8 +77,6 @@ public class TestDataBootstrapper {
       Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
 
       List<UserEntity> userEntities = new ArrayList<>();
-      JsonMapper jsonMapper =
-          JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES).build();
       for (Resource resource : resources) {
         try (InputStream jsonUserStream = resource.getInputStream()) {
           var userEntity = jsonMapper.readValue(jsonUserStream, UserEntity.class);

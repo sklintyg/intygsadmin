@@ -7,7 +7,7 @@
 - [x] Phase 2 — intyg-bom + CI images
 - [x] Phase 3 — Spring Boot 4 compile + modular starters
 - [x] Phase 4 — Jackson 3 migration
-- [ ] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
+- [x] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
 - [ ] Phase 6 — Integration tests + dependency audit
 - [ ] Phase 7 — WebClient.Builder + webclient starter — **N/A** (no WebClient beans)
 - [ ] Phase 8 — Final sign-off (remove migrator)
@@ -78,7 +78,38 @@
 - Note: Jackson 2.21.4 still appears transitively via `se.inera.intyg.infra` artifacts — not
   introduced by this project; no application code imports `com.fasterxml.jackson.databind|core`.
 
-### Phase 5 — Autoconfig audit (pending)
+### Phase 5 — Autoconfig audit (done)
+
+**Audit areas (intygsadmin):**
+
+| Area | Finding | Action |
+| ---- | ------- | ------ |
+| Redis cache | No `@Bean RedisCacheManager` | N/A |
+| JMS | Not used | N/A |
+| Jackson | Manual `JsonMapper` instances | Inject Boot `JsonMapper` bean |
+| Session | `SessionConfig` / `IneraCookieSerializer` | Keep — Inera IdP requirement |
+| ShedLock | `JobConfig` / `RedisLockProvider` | Keep — ShedLock requires explicit provider |
+| RestClient | `ApplicationConfig` / `RestClient.create()` | Deferred — separate ticket |
+| Properties | `spring-boot-properties-migrator` at startup | No renames reported |
+
+**Changes:**
+
+- Registered `CustomAuthorizationResolver` as `@Bean`; injects Boot `JsonMapper` (replaces manual
+  `JsonMapper.builder().build()`).
+- `TestDataBootstrapper` injects Boot `JsonMapper` (replaces manual builder).
+- Added `runtimeOnly spring-boot-properties-migrator` for property audit (remove in Phase 8).
+
+**Accepted deviations (unchanged):**
+
+- `ObjectMapperConfig` / `JsonMapperBuilderCustomizer` — custom `LocalDate`/`LocalDateTime`
+  serializers required by API contract.
+- `SessionConfig` / `IneraCookieSerializer` — Inera IdP cookie behaviour.
+- `JobConfig` / `RedisLockProvider` — ShedLock distributed locking.
+- `ApplicationConfig` / `RestClient.create()` — deferred to separate RestClient autoconfig ticket.
+
+- `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` — **green**.
+- `appRunDebug` smoke test with properties migrator — **Started IntygsadminApplication**; no property
+  renames logged; process killed afterwards.
 
 ### Phase 6 — Integration tests + dependency audit (pending)
 
@@ -99,12 +130,15 @@ No `WebClient` beans in codebase.
   direct `com.fasterxml.jackson.core:jackson-databind` was the main Jackson 2 source.
 - `ObjectMapperConfig` had to move to Jackson 3 APIs in Phase 2 for Boot 4 compile; document as
   partial Phase 4 work to avoid phase-boundary confusion.
+- Properties migrator at startup reported no further renames after manual `spring.session.data.redis.*`
+  migration in Phase 2.
 
 ## Accepted deviations / deferred follow-ups
 
-- `spring-boot-properties-migrator` not added — session properties already migrated manually;
-  revisit in Phase 5 if startup logs suggest missing renames.
+- `spring-boot-properties-migrator` added in Phase 5 — remove in Phase 8; startup reported no
+  property renames needed.
 - `SessionConfig` / `IneraCookieSerializer` — keep manual bean (Inera IdP requirement).
-- `CustomAuthorizationResolver` uses manual `JsonMapper` (not injected) — instantiated in
-  `SecurityConfig`; inject via bean refactor deferred to Phase 5.
+- `ObjectMapperConfig` / `JsonMapperBuilderCustomizer` — keep for custom date serialization.
+- `JobConfig` / `RedisLockProvider` — keep for ShedLock.
+- `ApplicationConfig` / `RestClient.create()` — deferred to separate RestClient autoconfig ticket.
 - `restAssuredTest` verification deferred to Phase 6 (not part of default `build`).

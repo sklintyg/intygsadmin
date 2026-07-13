@@ -31,11 +31,12 @@ import tools.jackson.databind.json.JsonMapper;
 
 public class CustomAuthorizationResolver implements OAuth2AuthorizationRequestResolver {
 
-  private final JsonMapper jsonMapper = JsonMapper.builder().build();
+  private final JsonMapper jsonMapper;
   private final OAuth2AuthorizationRequestResolver defaultResolver;
   private final Map<String, IdToken> idToken = Map.of("id_token", new IdToken());
 
-  public CustomAuthorizationResolver(ClientRegistrationRepository repo) {
+  public CustomAuthorizationResolver(ClientRegistrationRepository repo, JsonMapper jsonMapper) {
+    this.jsonMapper = jsonMapper;
     defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
   }
 
