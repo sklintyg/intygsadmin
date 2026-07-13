@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.intygsadmin.web.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +26,17 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2Authorization
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import se.inera.intyg.intygsadmin.web.controller.dto.IdToken;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 public class CustomAuthorizationResolver implements OAuth2AuthorizationRequestResolver {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final JsonMapper jsonMapper;
   private final OAuth2AuthorizationRequestResolver defaultResolver;
   private final Map<String, IdToken> idToken = Map.of("id_token", new IdToken());
 
-  public CustomAuthorizationResolver(ClientRegistrationRepository repo) {
+  public CustomAuthorizationResolver(ClientRegistrationRepository repo, JsonMapper jsonMapper) {
+    this.jsonMapper = jsonMapper;
     defaultResolver = new DefaultOAuth2AuthorizationRequestResolver(repo, "/oauth2/authorization");
   }
 
@@ -60,12 +61,12 @@ public class CustomAuthorizationResolver implements OAuth2AuthorizationRequestRe
       OAuth2AuthorizationRequest authRequest) {
     try {
       final var extraParams = new HashMap<String, Object>();
-      extraParams.put("claims", objectMapper.writeValueAsString(idToken));
+      extraParams.put("claims", jsonMapper.writeValueAsString(idToken));
       return OAuth2AuthorizationRequest.from(authRequest)
           .additionalParameters(extraParams)
           .scope("openid")
           .build();
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new IllegalArgumentException(e);
     }
   }

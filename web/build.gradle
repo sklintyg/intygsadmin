@@ -1,7 +1,7 @@
 plugins {
     id 'com.netflix.nebula.node'
-    id 'org.cyclonedx.bom'
-    id 'org.springframework.boot'
+    alias(libs.plugins.org.cyclonedx.bom)
+    alias(libs.plugins.org.springframework.boot)
 }
 
 def applicationDir = "${rootProject.projectDir}/devops/dev"
@@ -22,6 +22,11 @@ node {
 }
 
 springBoot { buildInfo() }
+
+tasks.named('cyclonedxBom') {
+    jsonOutput.set(file("build/reports/cyclonedx/bom.json"))
+    xmlOutput.set(file("build/reports/cyclonedx/bom.xml"))
+}
 
 tasks.named("jar") {
     enabled = false
@@ -125,8 +130,10 @@ dependencies {
     implementation "se.inera.intyg.infra:security-common:${infraVersion}"
     implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
 
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-webmvc"
+    implementation "org.springframework.boot:spring-boot-starter-restclient"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
 
@@ -141,7 +148,7 @@ dependencies {
     implementation "org.mapstruct:mapstruct"
     implementation "org.springdoc:springdoc-openapi-ui"
     implementation "org.springdoc:springdoc-openapi-data-rest"
-    implementation "org.springframework.session:spring-session-data-redis"
+    implementation "org.springframework.boot:spring-boot-starter-session-data-redis"
     implementation "redis.clients:jedis"
 
     annotationProcessor "jakarta.servlet:jakarta.servlet-api"
@@ -152,6 +159,7 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.security:spring-security-test"
+    testImplementation platform("io.rest-assured:rest-assured-bom:6.0.0")
     testImplementation("commons-io:commons-io")
     testImplementation("io.rest-assured:json-path")
     testImplementation("io.rest-assured:json-schema-validator")

@@ -20,7 +20,6 @@ package se.inera.intyg.intygsadmin.web.auth.fake;
 
 import static se.inera.intyg.intygsadmin.web.auth.AuthenticationConstansts.FAKE_PROFILE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -41,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.intygsadmin.web.service.FakeLoginService;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
+import tools.jackson.databind.json.JsonMapper;
 
 @Profile(FAKE_PROFILE)
 @Slf4j
@@ -51,6 +51,7 @@ public class FakeApiController {
 
   private final FakeLoginService fakeLoginService;
   private final MonitoringLogService monitoringLogService;
+  private final JsonMapper jsonMapper;
 
   public static final String FAKE_API_REQUEST_MAPPING = "/fake-api";
 
@@ -63,10 +64,9 @@ public class FakeApiController {
     Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
 
     fakeUsers = new ArrayList<>();
-    ObjectMapper objectMapper = new ObjectMapper();
     for (Resource resource : resources) {
       try (InputStream jsonUserStream = resource.getInputStream()) {
-        fakeUsers.add(objectMapper.readValue(jsonUserStream, FakeUser.class));
+        fakeUsers.add(jsonMapper.readValue(jsonUserStream, FakeUser.class));
       }
     }
   }

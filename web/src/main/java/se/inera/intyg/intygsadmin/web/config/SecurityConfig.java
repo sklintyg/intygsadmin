@@ -53,7 +53,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.service.UserPersistenceService;
@@ -64,6 +64,7 @@ import se.inera.intyg.intygsadmin.web.auth.IdpProperties;
 import se.inera.intyg.intygsadmin.web.auth.IntygsadminUser;
 import se.inera.intyg.intygsadmin.web.auth.filter.SessionTimeoutFilter;
 import se.inera.intyg.intygsadmin.web.service.monitoring.MonitoringLogService;
+import tools.jackson.databind.json.JsonMapper;
 
 @Configuration
 @EnableWebSecurity
@@ -114,8 +115,17 @@ public class SecurityConfig {
   }
 
   @Bean
+  public CustomAuthorizationResolver customAuthorizationResolver(
+      ClientRegistrationRepository clientRegistrationRepository, JsonMapper jsonMapper) {
+    return new CustomAuthorizationResolver(clientRegistrationRepository, jsonMapper);
+  }
+
+  @Bean
   public SecurityFilterChain filterChain(
-      HttpSecurity http, CustomLogoutSuccessHandler customLogoutSuccessHandler) throws Exception {
+      HttpSecurity http,
+      CustomLogoutSuccessHandler customLogoutSuccessHandler,
+      CustomAuthorizationResolver customAuthorizationResolver)
+      throws Exception {
 
     configureFakeLogin(http, profiles);
     configureOpenApi(http);
@@ -159,7 +169,7 @@ public class SecurityConfig {
                 httpSecurityOAuth2ClientConfigurer.authorizationCodeGrant(
                     authorizationCodeGrantConfigurer ->
                         authorizationCodeGrantConfigurer.authorizationRequestResolver(
-                            new CustomAuthorizationResolver(clientRegistrationRepository()))))
+                            customAuthorizationResolver)))
         .oauth2Login(
             httpSecurityOAuth2LoginConfigurer ->
                 httpSecurityOAuth2LoginConfigurer
@@ -173,7 +183,7 @@ public class SecurityConfig {
         .logout(
             httpSecurityLogoutConfigurer ->
                 httpSecurityLogoutConfigurer
-                    .logoutRequestMatcher(new AntPathRequestMatcher(LOGOUT_URL))
+                    .logoutRequestMatcher(PathPatternRequestMatcher.pathPattern(LOGOUT_URL))
                     .logoutSuccessHandler(customLogoutSuccessHandler)
                     .invalidateHttpSession(true)
                     .clearAuthentication(true))

@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.intygsadmin.persistence.testdata;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
@@ -42,6 +40,7 @@ import se.inera.intyg.intygsadmin.persistence.entity.UserEntity;
 import se.inera.intyg.intygsadmin.persistence.enums.BannerPriority;
 import se.inera.intyg.intygsadmin.persistence.repository.BannerRepository;
 import se.inera.intyg.intygsadmin.persistence.repository.UserRepository;
+import tools.jackson.databind.json.JsonMapper;
 
 @Component
 @Profile({"dev", "init-bootstrap-data"})
@@ -54,11 +53,14 @@ public class TestDataBootstrapper {
 
   private final BannerRepository bannerRepository;
   private final UserRepository userRepository;
+  private final JsonMapper jsonMapper;
 
   @Autowired
-  public TestDataBootstrapper(BannerRepository bannerRepository, UserRepository userRepository) {
+  public TestDataBootstrapper(
+      BannerRepository bannerRepository, UserRepository userRepository, JsonMapper jsonMapper) {
     this.bannerRepository = bannerRepository;
     this.userRepository = userRepository;
+    this.jsonMapper = jsonMapper;
   }
 
   @PostConstruct
@@ -75,11 +77,9 @@ public class TestDataBootstrapper {
       Resource[] resources = resolver.getResources("classpath:bootstrap/users/*.json");
 
       List<UserEntity> userEntities = new ArrayList<>();
-      ObjectMapper objectMapper =
-          new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       for (Resource resource : resources) {
         try (InputStream jsonUserStream = resource.getInputStream()) {
-          var userEntity = objectMapper.readValue(jsonUserStream, UserEntity.class);
+          var userEntity = jsonMapper.readValue(jsonUserStream, UserEntity.class);
           if (userRepository.findByEmployeeHsaId(userEntity.getEmployeeHsaId()).isEmpty()) {
             userEntities.add(userEntity);
           }
