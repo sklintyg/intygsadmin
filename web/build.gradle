@@ -12,13 +12,13 @@ def devPortInternal = 8170 + (instance as Integer)
 def debugPort = 8870 + (instance as Integer)
 
 node {
-    version = "${nodeVersion}"
-    npmVersion = "${npmVersion}"
+    version = rootProject.ext.nodeVersion
+    npmVersion = rootProject.ext.npmVersion
     download = true
     distBaseUrl = 'https://nodejs.org/dist/'
     workDir = file("${rootProject.projectDir}/.gradle/nodejs")
     npmWorkDir = file("${rootProject.projectDir}/.gradle/npm")
-    nodeModulesDir = file("${project.projectDir}/client")
+    nodeProjectDir = file("${project.projectDir}/client")
 }
 
 springBoot { buildInfo() }
