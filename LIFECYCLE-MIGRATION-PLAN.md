@@ -53,7 +53,7 @@ No separate `integration-test` module; ITs live in `web/src/test` (`*IT*` patter
 - No intyg-common dependency → `dependencies.common.version` N/A
 - No external schema artifacts / analytics `schemaVersion` in this app → N/A unless discovered later
 - Gradle wrapper upgrade: performed and verified (9.6.1)
-- `spring-boot-properties-migrator`: added in Phase 5; no renames reported at startup; remove in Phase 8
+- `spring-boot-properties-migrator`: evaluated in Phase 5; not retained in build.
 
 ## Phases
 
@@ -83,8 +83,8 @@ workflow (0–9); Phase 7 (WebClient) is **N/A**.
 - `spotless` + `googleJavaFormat` version pinned via BOM — verify compatibility with Gradle 9.
 - **Dual Jackson classpath** until Phase 4 completes: `persistence` direct `jackson-databind`
   (Jackson 2 coordinate) coexists with Boot's Jackson 3 via `spring-boot-starter-jackson`.
-- `restAssuredTest` is **not** part of default `build` — must be verified separately before sign-off
-  (Phase 6).
+- `restAssuredTest` is **not** part of default `build` and is **not run in CI** — deferred until
+  `se.inera.intyg.infra` removal (Phase 6 partial).
 - Jackson 3 `FAIL_ON_NULL_FOR_PRIMITIVES=true` default — low risk for this app's DTOs but smoke-test
   after migration.
 

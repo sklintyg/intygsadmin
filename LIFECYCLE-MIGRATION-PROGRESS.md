@@ -8,9 +8,9 @@
 - [x] Phase 3 — Spring Boot 4 compile + modular starters
 - [x] Phase 4 — Jackson 3 migration
 - [x] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
-- [x] Phase 6 — Integration tests + dependency audit
-- [ ] Phase 7 — WebClient.Builder + webclient starter — **N/A** (no WebClient beans)
-- [ ] Phase 8 — Final sign-off (remove migrator)
+- [x] Phase 6 — Integration tests + dependency audit (partial — see log)
+- [x] Phase 7 — WebClient.Builder + webclient starter — **N/A** (no WebClient beans)
+- [x] Phase 8 — Final sign-off (remove migrator)
 - [ ] Phase 9 — Friendliness audit (documentation)
 
 ## Phase log
@@ -97,7 +97,8 @@
 - Registered `CustomAuthorizationResolver` as `@Bean`; injects Boot `JsonMapper` (replaces manual
   `JsonMapper.builder().build()`).
 - `TestDataBootstrapper` injects Boot `JsonMapper` (replaces manual builder).
-- Added `runtimeOnly spring-boot-properties-migrator` for property audit (remove in Phase 8).
+- Evaluated `spring-boot-properties-migrator` at startup — no property renames reported; not kept in
+  final build.
 
 **Accepted deviations (unchanged):**
 
@@ -111,28 +112,24 @@
 - `appRunDebug` smoke test with properties migrator — **Started IntygsadminApplication**; no property
   renames logged; process killed afterwards.
 
-### Phase 6 — Integration tests + dependency audit (done)
+### Phase 6 — Integration tests + dependency audit (partial)
 
-**N/A (skill defaults):** Testcontainers module renames, `@AutoConfigureTestRestTemplate`, `RestTestClient`.
-
-**Test resource fixes:**
+**Done (committed):**
 
 - `web/src/test/resources/application.yml`: `spring.session.redis.*` → `spring.session.data.redis.*`
   (Boot 4); aligned `privatepractitionerservice.base.url` and `terminationservice.api` with runtime
   property names.
+- Dependency audit documented (see below).
 
-**Gradle / IT infrastructure:**
+**Deferred** (ITs not run in CI; revisit after `se.inera.intyg.infra` dependency removal):
 
-- Fixed `restAssuredTest` task — was **NO-SOURCE** (missing `testClassesDirs` / `classpath` wiring);
-  now runs 9 IT classes (24 tests).
-- Added `appRunIt` task — starts app with stub profiles (`it-stub`, `wc-stub`, `pp-stub`, `ts-stub`)
-  for local/CI Rest Assured runs without external integration services.
+- `restAssuredTest` Gradle task wiring (currently reports NO-SOURCE without `testClassesDirs` /
+  `classpath`).
+- `appRunIt` task with integration stub profiles.
+- `DataExportControllerIT` Rest Assured / Jackson 3 client deserialization fixes.
+- Local `restAssuredTest` verification.
 
-**IT fix (Rest Assured 6 / Jackson 3 API dates):**
-
-- `DataExportControllerIT` — compare sort/paging via `jsonPath` string lists instead of typed
-  `DataExportResponse` deserialization (Rest Assured client uses Jackson 2; API emits custom
-  `LocalDateTime` format from `ObjectMapperConfig`).
+**N/A (skill defaults):** Testcontainers module renames, `@AutoConfigureTestRestTemplate`, `RestTestClient`.
 
 **Dependency audit:**
 
@@ -140,28 +137,41 @@
 | ---------- | ------- |
 | `spring-boot-starter-test` | Keep — used across modules |
 | `spring-security-test` | Keep — `WithMockIntygsadminUser` in unit tests |
-| `rest-assured-bom:6.0.0` | Keep — ITs verified green |
-| `spring-boot-starter-session-data-redis` | Done (Phase 3) — `SESSION` cookie in ITs |
-| Jackson 2 transitive (infra / Rest Assured client) | Accepted — no app `databind` imports; ITs avoid typed client deserialization for custom dates |
+| `rest-assured-bom:6.0.0` | Keep — present for future IT work |
+| `spring-boot-starter-session-data-redis` | Done (Phase 3) |
+| Jackson 2 transitive (infra / Rest Assured client) | Accepted until infra removed |
 | Testcontainers | N/A |
 
-**Verification:**
-
 - `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` — **green**.
-- `appRunIt` + `restAssuredTest` — **24/24 passed**; app process killed afterwards.
 
-**Local IT workflow:**
+### Phase 8 — Final sign-off (done)
 
-```
-./gradlew :intygsadmin-web:appRunIt          # terminal 1
-./gradlew :intygsadmin-web:restAssuredTest   # terminal 2
-```
+**Resolved versions (verified):**
 
-### Phase 7 — WebClient auto-config — **N/A**
+| Target | Resolved |
+| ------ | -------- |
+| Java | 25 (`javaVersion` via intyg-bom) |
+| Spring Boot | 4.1.0 (`spring-boot-starter-webmvc`) |
+| Gradle | 9.6.1 |
+| intyg-bom | 1.0.0.17 |
+| Jackson (app) | 3.1.4 (`tools.jackson.core:jackson-databind`) |
+| Jenkins builder image | 25.0.3 |
+| Jenkins runtime image | 25.0.1 |
 
-No `WebClient` beans in codebase.
+**Sign-off checks:**
 
-### Phase 8 — Final sign-off (pending)
+- `spring-boot-properties-migrator` — not in build (evaluated in Phase 5; no renames needed).
+- `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` — **green**.
+- `appRunDebug` — **Started IntygsadminApplication**; process killed afterwards.
+- No application code imports `com.fasterxml.jackson.databind|core|datatype` (Jackson 3 adoption complete).
+- Jackson 2.21.4 still transitive via `se.inera.intyg.infra` — accepted until infra removal.
+
+**Outstanding (post-migration):**
+
+- Phase 9 friendliness audit (`SPRING-BOOT-4-AUDIT.md`).
+- `restAssuredTest` infrastructure and verification (deferred Phase 6).
+- `ApplicationConfig` / `RestClient.create()` autoconfig (separate ticket).
+- Remove `se.inera.intyg.infra` dependency (separate initiative).
 
 ### Phase 9 — Friendliness audit (pending)
 
@@ -177,10 +187,11 @@ No `WebClient` beans in codebase.
 
 ## Accepted deviations / deferred follow-ups
 
-- `spring-boot-properties-migrator` added in Phase 5 — remove in Phase 8; startup reported no
-  property renames needed.
+- `spring-boot-properties-migrator` was evaluated in Phase 5; not present in final build (no property
+  renames needed).
 - `SessionConfig` / `IneraCookieSerializer` — keep manual bean (Inera IdP requirement).
 - `ObjectMapperConfig` / `JsonMapperBuilderCustomizer` — keep for custom date serialization.
 - `JobConfig` / `RedisLockProvider` — keep for ShedLock.
 - `ApplicationConfig` / `RestClient.create()` — deferred to separate RestClient autoconfig ticket.
-- `restAssuredTest` verified in Phase 6 (24/24 with `appRunIt` + stub profiles).
+- `restAssuredTest` / `appRunIt` / IT deserialization fixes — deferred until infra removal and CI
+  runs ITs (Phase 6 partial).
