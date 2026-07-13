@@ -35,19 +35,19 @@ tasks.named("jar") {
 
 tasks.register('buildReactApp', NpmTask) {
     dependsOn npmInstall
-    environment = ["CI": true]
+    environment = ["CI": "true"]
     args = ["run", "build"]
 }
 
 tasks.register('startReactApp', NpmTask) {
     dependsOn npmInstall
-    environment = ["CI": true]
+    environment = ["CI": "true"]
     args = ["run", "start"]
 }
 
 tasks.register('testReactApp', NpmTask) {
     dependsOn npmInstall
-    environment = ["CI": true]
+    environment = ["CI": "true"]
     args = ["run", "test", "--", "--coverage"]
 }
 
