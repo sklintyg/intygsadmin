@@ -131,6 +131,7 @@ dependencies {
     implementation "se.inera.intyg.infra:testcertificate:${infraVersion}"
 
     implementation "org.springframework.boot:spring-boot-starter-webmvc"
+    implementation "org.springframework.boot:spring-boot-starter-restclient"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-actuator"

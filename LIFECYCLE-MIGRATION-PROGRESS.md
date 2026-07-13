@@ -11,7 +11,7 @@
 - [x] Phase 6 — Integration tests + dependency audit (partial — see log)
 - [x] Phase 7 — WebClient.Builder + webclient starter — **N/A** (no WebClient beans)
 - [x] Phase 8 — Final sign-off (remove migrator)
-- [ ] Phase 9 — Friendliness audit (documentation)
+- [x] Phase 9 — Friendliness audit (documentation)
 
 ## Phase log
 
@@ -89,7 +89,7 @@
 | Jackson | Manual `JsonMapper` instances | Inject Boot `JsonMapper` bean |
 | Session | `SessionConfig` / `IneraCookieSerializer` | Keep — Inera IdP requirement |
 | ShedLock | `JobConfig` / `RedisLockProvider` | Keep — ShedLock requires explicit provider |
-| RestClient | `ApplicationConfig` / `RestClient.create()` | Deferred — separate ticket |
+| RestClient | `ApplicationConfig` / `RestClient.Builder` | Done — `spring-boot-starter-restclient` |
 | Properties | `spring-boot-properties-migrator` at startup | No renames reported |
 
 **Changes:**
@@ -168,12 +168,15 @@
 
 **Outstanding (post-migration):**
 
-- Phase 9 friendliness audit (`SPRING-BOOT-4-AUDIT.md`).
 - `restAssuredTest` infrastructure and verification (deferred Phase 6).
-- `ApplicationConfig` / `RestClient.create()` autoconfig (separate ticket).
+- `ApplicationConfig` / `RestClient.Builder` via `spring-boot-starter-restclient` (post Phase 9).
 - Remove `se.inera.intyg.infra` dependency (separate initiative).
 
-### Phase 9 — Friendliness audit (pending)
+### Phase 9 — Friendliness audit (done)
+
+- Created `SPRING-BOOT-4-AUDIT.md` mapping Jira acceptance criteria to migration outcome.
+- Classified findings as aligned, accepted deviation, deferred follow-up, or N/A.
+- K1J-2265 lifecycle migration **ready for closure** (CI scope); IT verification deferred per audit M2/L1/L2.
 
 ## Lessons learned
 
