@@ -8,7 +8,7 @@
 - [x] Phase 3 — Spring Boot 4 compile + modular starters
 - [x] Phase 4 — Jackson 3 migration
 - [x] Phase 5 — Autoconfig audit (Redis, JMS, Jackson)
-- [ ] Phase 6 — Integration tests + dependency audit
+- [x] Phase 6 — Integration tests + dependency audit
 - [ ] Phase 7 — WebClient.Builder + webclient starter — **N/A** (no WebClient beans)
 - [ ] Phase 8 — Final sign-off (remove migrator)
 - [ ] Phase 9 — Friendliness audit (documentation)
@@ -111,9 +111,51 @@
 - `appRunDebug` smoke test with properties migrator — **Started IntygsadminApplication**; no property
   renames logged; process killed afterwards.
 
-### Phase 6 — Integration tests + dependency audit (pending)
+### Phase 6 — Integration tests + dependency audit (done)
 
-See plan for intygsadmin-specific scope (`restAssuredTest`, not Testcontainers).
+**N/A (skill defaults):** Testcontainers module renames, `@AutoConfigureTestRestTemplate`, `RestTestClient`.
+
+**Test resource fixes:**
+
+- `web/src/test/resources/application.yml`: `spring.session.redis.*` → `spring.session.data.redis.*`
+  (Boot 4); aligned `privatepractitionerservice.base.url` and `terminationservice.api` with runtime
+  property names.
+
+**Gradle / IT infrastructure:**
+
+- Fixed `restAssuredTest` task — was **NO-SOURCE** (missing `testClassesDirs` / `classpath` wiring);
+  now runs 9 IT classes (24 tests).
+- Added `appRunIt` task — starts app with stub profiles (`it-stub`, `wc-stub`, `pp-stub`, `ts-stub`)
+  for local/CI Rest Assured runs without external integration services.
+
+**IT fix (Rest Assured 6 / Jackson 3 API dates):**
+
+- `DataExportControllerIT` — compare sort/paging via `jsonPath` string lists instead of typed
+  `DataExportResponse` deserialization (Rest Assured client uses Jackson 2; API emits custom
+  `LocalDateTime` format from `ObjectMapperConfig`).
+
+**Dependency audit:**
+
+| Dependency | Verdict |
+| ---------- | ------- |
+| `spring-boot-starter-test` | Keep — used across modules |
+| `spring-security-test` | Keep — `WithMockIntygsadminUser` in unit tests |
+| `rest-assured-bom:6.0.0` | Keep — ITs verified green |
+| `spring-boot-starter-session-data-redis` | Done (Phase 3) — `SESSION` cookie in ITs |
+| Jackson 2 transitive (infra / Rest Assured client) | Accepted — no app `databind` imports; ITs avoid typed client deserialization for custom dates |
+| Testcontainers | N/A |
+
+**Verification:**
+
+- `clean build spotlessCheck test -x buildReactApp -x copyReactbuild -x testReactApp` — **green**.
+- `appRunIt` + `restAssuredTest` — **24/24 passed**; app process killed afterwards.
+
+**Local IT workflow:**
+
+```
+./gradlew :intygsadmin-web:appRunIt          # terminal 1
+./gradlew :intygsadmin-web:restAssuredTest   # terminal 2
+```
 
 ### Phase 7 — WebClient auto-config — **N/A**
 
@@ -141,4 +183,4 @@ No `WebClient` beans in codebase.
 - `ObjectMapperConfig` / `JsonMapperBuilderCustomizer` — keep for custom date serialization.
 - `JobConfig` / `RedisLockProvider` — keep for ShedLock.
 - `ApplicationConfig` / `RestClient.create()` — deferred to separate RestClient autoconfig ticket.
-- `restAssuredTest` verification deferred to Phase 6 (not part of default `build`).
+- `restAssuredTest` verified in Phase 6 (24/24 with `appRunIt` + stub profiles).

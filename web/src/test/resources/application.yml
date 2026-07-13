@@ -26,9 +26,10 @@ spring:
       enabled: true
   session:
     store-type: redis
-    redis:
-      namespace: "${app.name}:session"
-      flush-mode: immediate
+    data:
+      redis:
+        namespace: "${app.name}:session"
+        flush-mode: immediate
 
 intyg:
   redis:
@@ -55,8 +56,12 @@ webcert:
 intygstjansten:
   internalapi: http://localhost:8180/inera-certificate
 
-privatlakarportal:
-  internalapi: http://localhost:8190
+privatepractitionerservice:
+  base:
+    url: http://localhost:18070/internalapi/privatepractitioner
+
+terminationservice:
+  api: http://localhost:18010
 
 job:
   erasetestcertificate:
