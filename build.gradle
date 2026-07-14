@@ -1,3 +1,13 @@
+buildscript {
+    dependencies {
+        constraints {
+            classpath("com.fasterxml.jackson.core:jackson-databind:2.22.1") {
+                because("Nebula Node and CycloneDX require compatible Jackson versions (https://github.com/node-gradle/gradle-node-plugin/pull/317)")
+            }
+        }
+    }
+}
+
 plugins {
     id "com.netflix.nebula.node" version "5.0.1" apply false
     alias(libs.plugins.com.diffplug.spotless)
