@@ -23,11 +23,6 @@ node {
 
 springBoot { buildInfo() }
 
-tasks.named('cyclonedxBom') {
-    jsonOutput.set(file("build/reports/cyclonedx/bom.json"))
-    xmlOutput.set(file("build/reports/cyclonedx/bom.xml"))
-}
-
 tasks.named("jar") {
     enabled = false
     archiveClassifier.set("")
