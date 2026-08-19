@@ -20,11 +20,18 @@ package se.inera.intyg.intygsadmin.web.integration.dto;
 
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesIntegrationResponseDTO.CountStatusesIntegrationResponseDTOBuilder;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder
+@JsonDeserialize(builder = CountStatusesIntegrationResponseDTOBuilder.class)
 public class CountStatusesIntegrationResponseDTO {
 
   Integer count;
   Integer max;
+
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class CountStatusesIntegrationResponseDTOBuilder {}
 }

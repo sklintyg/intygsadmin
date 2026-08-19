@@ -26,43 +26,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode;
-import tools.jackson.core.JacksonException;
-import tools.jackson.core.JsonGenerator;
-import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ext.javatime.ser.LocalDateSerializer;
+import tools.jackson.databind.ext.javatime.ser.LocalDateTimeSerializer;
 import tools.jackson.databind.module.SimpleModule;
-import tools.jackson.databind.ser.std.StdSerializer;
 
 @Configuration
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
 public class ObjectMapperConfig {
 
-  private static final String dateFormat = "yyyy-MM-dd";
-  private static final String dateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss";
+  private static final String DATE_FORMAT = "yyyy-MM-dd";
+  private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
   @Bean
   public JsonMapperBuilderCustomizer jsonCustomizer() {
     return builder -> {
       final var dateTimeModule = new SimpleModule();
       dateTimeModule.addSerializer(
-          LocalDate.class,
-          new StdSerializer<>(LocalDate.class) {
-            @Override
-            public void serialize(
-                LocalDate value, JsonGenerator gen, SerializationContext serializers)
-                throws JacksonException {
-              gen.writeString(value.format(DateTimeFormatter.ofPattern(dateFormat)));
-            }
-          });
+          LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DATE_FORMAT)));
       dateTimeModule.addSerializer(
           LocalDateTime.class,
-          new StdSerializer<>(LocalDateTime.class) {
-            @Override
-            public void serialize(
-                LocalDateTime value, JsonGenerator gen, SerializationContext serializers)
-                throws JacksonException {
-              gen.writeString(value.format(DateTimeFormatter.ofPattern(dateTimeFormat)));
-            }
-          });
+          new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
       builder.addModule(dateTimeModule);
     };
   }
