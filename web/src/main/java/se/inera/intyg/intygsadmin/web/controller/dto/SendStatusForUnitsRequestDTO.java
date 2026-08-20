@@ -22,10 +22,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusForUnitsRequestDTO.SendStatusForUnitsRequestDTOBuilder;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder
+@JsonDeserialize(builder = SendStatusForUnitsRequestDTOBuilder.class)
 public class SendStatusForUnitsRequestDTO {
 
   List<String> unitIds;
@@ -33,4 +37,7 @@ public class SendStatusForUnitsRequestDTO {
   LocalDateTime end;
   List<NotificationStatusEnum> statuses;
   LocalDateTime activationTime;
+
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class SendStatusForUnitsRequestDTOBuilder {}
 }

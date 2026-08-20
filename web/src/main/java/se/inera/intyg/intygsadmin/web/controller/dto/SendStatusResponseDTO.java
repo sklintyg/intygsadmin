@@ -20,10 +20,17 @@ package se.inera.intyg.intygsadmin.web.controller.dto;
 
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.controller.dto.SendStatusResponseDTO.SendStatusResponseDTOBuilder;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder
+@JsonDeserialize(builder = SendStatusResponseDTOBuilder.class)
 public class SendStatusResponseDTO {
 
   Integer count;
+
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class SendStatusResponseDTOBuilder {}
 }
