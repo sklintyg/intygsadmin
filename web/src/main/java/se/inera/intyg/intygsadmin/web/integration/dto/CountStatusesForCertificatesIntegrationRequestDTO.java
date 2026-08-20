@@ -21,12 +21,19 @@ package se.inera.intyg.intygsadmin.web.integration.dto;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
+import se.inera.intyg.intygsadmin.web.integration.dto.CountStatusesForCertificatesIntegrationRequestDTO.CountStatusesForCertificatesIntegrationRequestDTOBuilder;
 import se.inera.intyg.intygsadmin.web.service.status.NotificationStatusEnum;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonPOJOBuilder;
 
 @Value
 @Builder
+@JsonDeserialize(builder = CountStatusesForCertificatesIntegrationRequestDTOBuilder.class)
 public class CountStatusesForCertificatesIntegrationRequestDTO {
 
   List<String> certificateIds;
   List<NotificationStatusEnum> statuses;
+
+  @JsonPOJOBuilder(withPrefix = "")
+  public static class CountStatusesForCertificatesIntegrationRequestDTOBuilder {}
 }
